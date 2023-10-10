@@ -1,28 +1,46 @@
-stages:
-  - unittest
-  - build
-  
-unittest:
-  stage: unittest
-  image: node:16
-  script:
-    - echo "Testing App"
-    - npm install
-    - CI=true npm run test
-    - echo "Test successfully"
+name: CI/CD
 
-build:
-  stage: build
-  image: node:16
-  script:
-    - echo "Start building App"
-    - npm install
-    - echo "$ENV_VAR_DEV" > .env
-    - npm run build
-    - echo "Build successfully!"
-  artifacts:
-    expire_in: 1 hour
-    paths:
-      - build
-  except:
-    - prod
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  unittest:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Test App
+      run: |
+        echo "Testing App"
+        npm install
+        CI=true npm run test
+        echo "Test successfully"
+
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Build App
+      run: |
+        echo "Start building App"
+        npm install
+        echo "$ENV_VAR_DEV" > .env
+        npm run build
+        echo "Build successfully!"
+
+    - name: Upload Build Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: build
+        path: build
+
+    # You can add additional steps here for deployment or other tasks
+
+# You can add more jobs or customize this workflow as needed
