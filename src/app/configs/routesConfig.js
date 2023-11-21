@@ -1,7 +1,6 @@
 import FuseUtils from "@fuse/utils";
 import { Navigate } from "react-router-dom";
 import settingsConfig from "app/configs/settingsConfig";
-import OverviewConfig from "../main/overview/overviewConfig";
 import SignInConfig from "../main/sign-in/SignInConfig";
 import LandingConfig from "../main/landing/landingConfig";
 import HomeConfig from "../main/home/homeConfig";
@@ -34,7 +33,6 @@ import CommunicationsConfig from "../main/communications/communicationsConfig";
 
 const routeConfigs = [
   LandingConfig,
-  OverviewConfig,
   SignInConfig,
   HomeConfig,
   CpdConfig,
