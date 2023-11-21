@@ -34,7 +34,11 @@ export const setUser = (user) => async (dispatch) => {
   }
 
   dispatch(userSlice.actions.setUserDetails({ userData, role: user.role }))
-  history.push('/overview')
+  const data = window.location.href.split("/");
+  if (data[data.length - 1] === "sign-in") {
+    history.push("/home")
+  }
+  history.push(window.location.href)
 }
 
 
