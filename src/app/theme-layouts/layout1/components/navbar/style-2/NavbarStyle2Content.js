@@ -46,6 +46,8 @@ function NavbarStyle2Content(props) {
 
       <StyledContent option={{ suppressScrollX: true, wheelPropagation: false }}>
         <Navigation layout="vertical" />
+        <div style={{ height: "8rem" }}>
+        </div>
       </StyledContent>
     </Root>
   );
