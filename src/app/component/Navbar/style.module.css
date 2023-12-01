@@ -1,0 +1,59 @@
+.navbar_container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    box-shadow: 0px 0px 5px 1px gray;
+    height: 7vh;
+    z-index: 999;
+    background-color: white;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    margin: 1rem;
+}
+
+.menu {
+    display: flex;
+    justify-content: center;
+    gap: 5vw;
+}
+
+.navbar_link {
+    cursor: pointer;
+}
+
+.screenshort {
+    margin-top: 7vh;
+    height: 70vh;
+    background-color: rgb(41, 173, 156);
+}
+
+.features_container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.features_list,
+.whylocker_list {
+    border: 1px solid blue;
+    margin: 1rem
+}
+
+.whylocker_container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+@media screen and (max-width:426px) {
+    .features_container {
+        flex-direction: column;
+    }
+    .whylocker_container {
+        flex-direction: column-reverse;
+    }
+}
