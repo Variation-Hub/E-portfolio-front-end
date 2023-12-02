@@ -3,6 +3,7 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import jwtService from '../../auth/services/jwtService';
+import { SecondaryButton } from 'src/app/component/Buttons';
 
 const SignInPage = () => {
 
@@ -57,16 +58,7 @@ const SignInPage = () => {
               fullWidth
             />
 
-            <Button
-              variant="contained"
-              color="secondary"
-              className=" w-full mt-16"
-              aria-label="Sign in"
-              type="submit"
-              size="large"
-            >
-              Sign in
-            </Button>
+            <SecondaryButton name="Sign in" />
 
           </form>
         </div>

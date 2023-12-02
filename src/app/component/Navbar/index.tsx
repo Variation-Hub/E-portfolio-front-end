@@ -21,7 +21,7 @@ const Index = () => {
             <li className={Style.navbar_link}>Why Locker?</li>
           </ul>
         </div>
-        <div onClick={navigateLogin} className={Style.navbar_link}>
+        <div onClick={navigateLogin} className={`${Style.navbar_link} ${Style.login_button}`}>
           Log in
         </div>
       </div>

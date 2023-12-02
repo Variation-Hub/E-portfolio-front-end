@@ -26,7 +26,7 @@ function ToolbarLayout1(props) {
         sx={{
           backgroundColor: (theme) =>
             theme.palette.mode === 'light'
-              ? toolbarTheme.palette.background.paper
+              ? toolbarTheme.palette.background.navbar
               : toolbarTheme.palette.background.default,
         }}
         position="static"

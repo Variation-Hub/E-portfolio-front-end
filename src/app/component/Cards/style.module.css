@@ -1,0 +1,31 @@
+.home_card {
+    background-color: antiquewhite;
+    width: 20rem;
+    height: 9rem;
+    padding: 1rem;
+    margin: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.home_card:active {
+    background-color: var(--pc5);
+}
+
+@media screen and (max-width:426px) {
+    .home_card {
+        margin: 1rem 0.5rem;
+    }
+}
+
+@media screen and (max-width:376px) {
+    .home_card {
+        width: 80vw;
+        margin: 1rem 0.5rem;
+    }
+}

@@ -13,6 +13,7 @@ import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
 import { selectUser } from 'app/store/userSlice';
 import { useAuth } from 'src/app/auth/AuthContext'
 import jwtService from 'src/app/auth/services/jwtService';
+import { style } from './Style';
 
 function UserMenu(props) {
   const user = useSelector(selectUser);
@@ -34,12 +35,13 @@ function UserMenu(props) {
         className="min-h-40 min-w-40 px-0 md:px-16 py-0 md:py-6"
         onClick={userMenuClick}
         color="inherit"
+        sx={style}
       >
         <div className="hidden md:flex flex-col mx-4 items-end">
           <Typography component="span" className="font-semibold flex">
             {user.data.displayName}
           </Typography>
-          <Typography className="text-11 font-medium capitalize" color="text.secondary">
+          <Typography className="text-11 font-medium capitalize" color="text.white">
             {user.role.toString()}
             {(!user.role || (Array.isArray(user.role) && user.role.length === 0)) && 'Guest'}
           </Typography>
@@ -70,17 +72,17 @@ function UserMenu(props) {
       >
         {isAuthenticated ? (
           <MenuItem onClick={() => logout()} >
-            <ListItemIcon className="min-w-40">
+            {/* <ListItemIcon className="min-w-40">
               <FuseSvgIcon>heroicons-outline:logout</FuseSvgIcon>
-            </ListItemIcon>
+            </ListItemIcon> */}
             <ListItemText primary="Sign Out" />
           </MenuItem>
         ) : (
           <Link to="/sign-in">
             <MenuItem>
-              <ListItemIcon className="min-w-40">
+              {/* <ListItemIcon className="min-w-40">
                 <FuseSvgIcon>heroicons-outline:lock-closed</FuseSvgIcon>
-              </ListItemIcon>
+              </ListItemIcon> */}
               <ListItemText primary="Sign In" />
             </MenuItem>
           </Link>

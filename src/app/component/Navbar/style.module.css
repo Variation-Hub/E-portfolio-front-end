@@ -4,15 +4,15 @@
     left: 0;
     width: 100%;
     box-shadow: 0px 0px 5px 1px gray;
-    height: 7vh;
-    z-index: 999;
-    background-color: white;
+    height: 8vh;
+    background-color: #5B718F;
 }
 
 .navbar {
     display: flex;
     justify-content: space-between;
-    margin: 1rem;
+    align-items: center;
+    height: 100%;
 }
 
 .menu {
@@ -23,6 +23,20 @@
 
 .navbar_link {
     cursor: pointer;
+    color: white;
+    font-weight: 600;
+    transition: 0.2s;
+    padding: 0.2rem 1rem;
+    border-radius: 5rem;
+}
+
+.navbar_link:hover {
+    transform: scale(1.1);
+    background-color:#709FA3;
+}
+
+.login_button {
+    margin-right: 2rem;
 }
 
 .screenshort {
@@ -53,6 +67,7 @@
     .features_container {
         flex-direction: column;
     }
+
     .whylocker_container {
         flex-direction: column-reverse;
     }
