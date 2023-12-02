@@ -6,6 +6,7 @@ import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
 import reducer from './store';
 import { selectNotifications } from './store/dataSlice';
 import { toggleNotificationPanel } from './store/stateSlice';
+import { style } from '../Style';
 
 function NotificationPanelToggleButton(props) {
   const notifications = useSelector(selectNotifications);
@@ -17,8 +18,9 @@ function NotificationPanelToggleButton(props) {
       className="w-40 h-40"
       onClick={(ev) => dispatch(toggleNotificationPanel())}
       size="large"
+      sx={style}
     >
-      <Badge color="secondary" variant="dot" invisible={notifications.length === 0}>
+      <Badge color="error" variant="dot" invisible={notifications.length === 0}>
         {props.children}
       </Badge>
     </IconButton>
