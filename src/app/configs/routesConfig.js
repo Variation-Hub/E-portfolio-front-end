@@ -29,48 +29,50 @@ import FormsConfig from "../main/forms/formsConfig";
 import EnrolmentsConfig from "../main/enrolments/enrolmentsConfig";
 import SurverysConfig from "../main/surverys/surverysConfig";
 import CommunicationsConfig from "../main/communications/communicationsConfig";
+import ForgotConfig from "../main/forgotPassword/forgotConfig";
 
 
 const routeConfigs = [
-  LandingConfig,
-  SignInConfig,
-  HomeConfig,
-  CpdConfig,
-  LearnerOverviewConfig,
-  CaseloadConfig,
-  ReportsConfig,
-  ResourcesConfig,
-  ForumConfig,
-  CalendarConfig,
-  SupportConfig,
-  ProposeYourInnovationsConfig,
-  SkillsScanConfig,
-  CreateAssignmentConfig,
-  PortfolioConfig,
-  OffTheJobConfig,
-  TrainerRiskRatingConfig,
-  SamplingPlanConfig,
-  SamplingPlanAllocationConfig,
-  CreateResourcesConfig,
-  LearnerPortfolioConfig,
-  AdminConfig,
-  CourseBuilderConfig,
-  AllLearnersConfig,
-  FormsConfig,
-  EnrolmentsConfig,
-  SurverysConfig,
-  CommunicationsConfig
+    LandingConfig,
+    SignInConfig,
+    HomeConfig,
+    CpdConfig,
+    LearnerOverviewConfig,
+    CaseloadConfig,
+    ReportsConfig,
+    ResourcesConfig,
+    ForumConfig,
+    CalendarConfig,
+    SupportConfig,
+    ProposeYourInnovationsConfig,
+    SkillsScanConfig,
+    CreateAssignmentConfig,
+    PortfolioConfig,
+    OffTheJobConfig,
+    TrainerRiskRatingConfig,
+    SamplingPlanConfig,
+    SamplingPlanAllocationConfig,
+    CreateResourcesConfig,
+    LearnerPortfolioConfig,
+    AdminConfig,
+    CourseBuilderConfig,
+    AllLearnersConfig,
+    FormsConfig,
+    EnrolmentsConfig,
+    SurverysConfig,
+    CommunicationsConfig,
+    ForgotConfig
 ];
 
 const routes = [
-  ...FuseUtils.generateRoutesFromConfigs(
-    routeConfigs,
-    settingsConfig.defaultAuth
-  ),
-  {
-    path: "*",
-    element: <Navigate to="/" />,
-  }
+    ...FuseUtils.generateRoutesFromConfigs(
+        routeConfigs,
+        settingsConfig.defaultAuth
+    ),
+    {
+        path: "*",
+        element: < Navigate to = "/" / > ,
+    }
 ];
 
 export default routes;

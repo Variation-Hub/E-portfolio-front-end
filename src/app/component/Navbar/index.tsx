@@ -28,10 +28,10 @@ const Index = () => {
     </div>
     <div className={Style.screenshort}></div>
     <div className={Style.features_container}>
-      <div className={Style.features}>
-        <h2>Features</h2>
-      </div>
-      <div className={Style.features_list}>
+        <div className={Style.features_list}>
+          <div className={Style.features}>
+            <h2>Features</h2>
+          </div>
         <ol>
           <li><i>&#10003;</i> Bespoke Management Reporting</li>
           <li><i>&#10003;</i> Online Enrolments- Free template provided</li>
@@ -45,18 +45,20 @@ const Index = () => {
           <li><i>&#10003;</i> Learner Forums</li>
         </ol>
       </div>
+      <div className={Style.features_img_div}><img src="assets/images/svgImage/features.svg" alt="Features" className={Style.features_img}/></div>
     </div>
     <div className={Style.whylocker_container}>
+    <div className={Style.why_img_div}><img src="assets/images/svgImage/why.svg" alt="Why Locker" className={Style.why_img}/></div>
       <div className={Style.whylocker_list}>
+        {/* <div className={Style.whylocker}>
+          <h2>Why Locker?</h2>
+        </div> */}
         <ol>
           <li><i>&#10003;</i> Ofsted and ESFA compliance</li>
           <li><i>&#10003;</i> Real time skills assessment</li>
           <li><i>&#10003;</i> Engaging all users</li>
           <li><i>&#10003;</i> Created by industry experts</li>
           </ol>
-      </div>
-      <div className={Style.whylocker}>
-        <h2>Why Locker?</h2>
       </div>
     </div>
     </>
