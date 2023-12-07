@@ -1,20 +1,23 @@
 import { Button } from '@mui/material'
 
 export const SecondaryButton = (props) => {
-    const {name} = props;
+    const {name, disable=false, onClick=()=>{}} = props;
     return (
         <Button
             variant="contained"
             color="secondary"
-            className=" w-full mt-16"
+            className=" w-full"
             aria-label="Sign in"
             type="submit"
-            size="large"
+            size="small"
+            disabled={disable}
             sx={{
+                borderRadius: "4px",
                 '&:hover':{
                     backgroundColor: "#6D81A3"
                 }
             }}
+            onClick={onClick}
         >
            {name}
         </Button>

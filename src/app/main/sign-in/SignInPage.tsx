@@ -4,6 +4,7 @@ import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import jwtService from '../../auth/services/jwtService';
 import { SecondaryButton } from 'src/app/component/Buttons';
+import { Link } from 'react-router-dom';
 
 const SignInPage = () => {
 
@@ -44,21 +45,24 @@ const SignInPage = () => {
               autoFocus
               type="email"
               variant="outlined"
+              size="small"
               required
               fullWidth
             />
 
             <TextField
-              className="mb-24"
+              className="mb-2"
               label="Password"
               value={password}
               type="password"
               variant="outlined"
+              size="small"
               required
               fullWidth
             />
+            <Link to="/forgot" className='mb-24'>Forgot password?</Link>
 
-            <SecondaryButton name="Sign in" />
+            <SecondaryButton name="Sign in"/>
 
           </form>
         </div>
