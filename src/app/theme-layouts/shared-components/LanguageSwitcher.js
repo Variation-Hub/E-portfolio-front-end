@@ -8,6 +8,7 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { changeLanguage, selectCurrentLanguage, selectLanguages } from 'app/store/i18nSlice';
+import { style } from './Style';
 
 function LanguageSwitcher(props) {
   const currentLanguage = useSelector(selectCurrentLanguage);
@@ -31,14 +32,14 @@ function LanguageSwitcher(props) {
 
   return (
     <>
-      <Button className="h-40 w-64" onClick={langMenuClick}>
+      <Button className="h-40 w-64" onClick={langMenuClick} sx={style}>
         <img
           className="mx-4 min-w-20"
           src={`assets/images/flags/${currentLanguage.flag}.svg`}
           alt={currentLanguage.title}
         />
 
-        <Typography className="mx-4 font-semibold uppercase" color="text.secondary">
+        <Typography className="mx-4 font-semibold uppercase" color="text.white">
           {currentLanguage.id}
         </Typography>
       </Button>

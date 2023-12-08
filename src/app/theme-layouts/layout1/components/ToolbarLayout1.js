@@ -26,12 +26,12 @@ function ToolbarLayout1(props) {
         sx={{
           backgroundColor: (theme) =>
             theme.palette.mode === 'light'
-              ? toolbarTheme.palette.background.paper
+              ? toolbarTheme.palette.background.navbar
               : toolbarTheme.palette.background.default,
         }}
         position="static"
       >
-        <Toolbar className="p-0 min-h-40 md:min-h-64">
+        <Toolbar className="p-0 min-h-64 md:min-h-64" >
           <div className="flex flex-1 px-16">
             {config.navbar.display && config.navbar.position === 'left' && (
               <>

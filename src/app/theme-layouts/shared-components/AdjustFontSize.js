@@ -5,6 +5,7 @@ import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
 import clsx from 'clsx';
 import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
+import { style } from './Style';
 
 const marks = [
   { value: 0.7, label: '70%' },
@@ -15,6 +16,7 @@ const marks = [
   { value: 1.2, label: '120%' },
   { value: 1.3, label: '130%' },
 ];
+
 
 function AdjustFontSize(props) {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -41,6 +43,7 @@ function AdjustFontSize(props) {
         aria-haspopup="true"
         onClick={handleClick}
         size="large"
+        sx={style}
       >
         <FuseSvgIcon>material-outline:format_size</FuseSvgIcon>
       </IconButton>
