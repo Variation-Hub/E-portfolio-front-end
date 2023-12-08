@@ -1,5 +1,7 @@
 import { lazy } from "react";
 const AdminView = lazy(() => import("./admin"));
+const UserManagement = lazy(() => import("./userManagement"));
+const LearnerManagement = lazy(() => import("./learnerManagement"));
 import authRoles from 'src/app/auth/authRoles';
 
 const AdminConfig = {
@@ -28,7 +30,15 @@ const AdminConfig = {
   routes: [
     {
       path: "/admin",
-      element: <AdminView />
+      element: <AdminView />,
+    },
+    {
+      path: "/admin/user",
+      element: <UserManagement />,
+    },
+    {
+      path: "/admin/learner",
+      element: <LearnerManagement />,
     },
   ],
 };
