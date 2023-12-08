@@ -1,4 +1,5 @@
 import { styled } from '@mui/material/styles';
+import { useNavigate } from "react-router-dom";
 
 const Root = styled('div')(({ theme }) => ({
   '& > .logo-icon': {
@@ -16,9 +17,14 @@ const Root = styled('div')(({ theme }) => ({
 }));
 
 function Logo() {
+
+  const navigate = useNavigate();
+
   return (
-    <Root className="flex items-center">
-      <img className="w-96" src="assets/images/logo/logo-text.svg" alt="logo" />
+    <Root className="flex items-center" onClick={()=>{
+      navigate("/")
+    }} style={{cursor: "pointer"}}>
+      <img className="w-96" style={{width:"50%"}}src="assets/images/logo/logo-text.svg" alt="logo" />
     </Root>
   );
 }

@@ -1,32 +1,32 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  state: null,
-  options: {
-    anchorOrigin: {
-      vertical: 'top',
-      horizontal: 'center',
+    state: null,
+    options: {
+        anchorOrigin: {
+            vertical: 'bottom',
+            horizontal: 'right',
+        },
+        autoHideDuration: 2000,
+        message: 'Hi',
+        variant: null,
     },
-    autoHideDuration: 2000,
-    message: 'Hi',
-    variant: null,
-  },
 };
 const messageSlice = createSlice({
-  name: 'message',
-  initialState,
-  reducers: {
-    showMessage: (state, action) => {
-      state.state = true;
-      state.options = {
-        ...initialState.options,
-        ...action.payload,
-      };
+    name: 'message',
+    initialState,
+    reducers: {
+        showMessage: (state, action) => {
+            state.state = true;
+            state.options = {
+                ...initialState.options,
+                ...action.payload,
+            };
+        },
+        hideMessage: (state, action) => {
+            state.state = null;
+        },
     },
-    hideMessage: (state, action) => {
-      state.state = null;
-    },
-  },
 });
 
 export const { hideMessage, showMessage } = messageSlice.actions;
