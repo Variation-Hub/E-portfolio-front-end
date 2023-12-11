@@ -35,40 +35,38 @@ const forgot = () => {
           </Typography>
 
           <div className="flex flex-col justify-center w-full mt-24">
-            <div className="">
-              <TextField
-                className="mb-8"
-                label="Email"
-                value={email}
-                autoFocus
-                type="email"
-                variant="outlined"
-                size="small"
-                required
-                fullWidth
-                onChange={emailHandler}
+            <TextField
+              className="mb-8"
+              label="Email"
+              value={email}
+              autoFocus
+              type="email"
+              variant="outlined"
+              size="small"
+              required
+              fullWidth
+              onChange={emailHandler}
+            />
+            {otp.otp && (
+              <OtpValidation
+                numberOfDigits={6}
+                setOtpError={setOtpError}
+                setOtp={setOtp}
               />
-              {otp.otp && (
-                <OtpValidation
-                  numberOfDigits={6}
-                  setOtpError={setOtpError}
-                  setOtp={setOtp}
-                />
-              )}
-              {otp.otp ? (
-                <SecondaryButton
-                  name="Verify"
-                  disable={otp.otpValue.length === 6 ? false : true}
-                  onClick={sendOTPHandler}
-                />
-              ) : (
-                <SecondaryButton
-                  name="Sent OTP"
-                  disable={email ? false : true}
-                  onClick={sendOTPHandler}
-                />
-              )}
-            </div>
+            )}
+            {otp.otp ? (
+              <SecondaryButton
+                name="Verify"
+                disable={otp.otpValue.length === 6 ? false : true}
+                onClick={sendOTPHandler}
+              />
+            ) : (
+              <SecondaryButton
+                name="Sent OTP"
+                disable={email ? false : true}
+                onClick={sendOTPHandler}
+              />
+            )}
           </div>
         </div>
       </Paper>

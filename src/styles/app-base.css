@@ -27,6 +27,17 @@
     outline: none !important;
 }
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
 html {
     font-size: 62.5%;
     font-family: 'Inter var', Roboto, Helvetica Neue, Arial, sans-serif;

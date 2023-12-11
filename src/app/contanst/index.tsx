@@ -179,3 +179,36 @@ export const AdminRedirect = {
   link: "/admin",
   name: "Admin",
 };
+
+export const userManagementTableColumn = [
+  { id: 'name', label: 'Name', minWidth: 170, align: "left" },
+  { id: 'email', label: 'Email', minWidth: 200, align: "left" },
+  { id: 'role', label: 'Role', minWidth: 170, align: "center" },
+  { id: 'actions', label: 'Actions', minWidth: 170, align: "center" }
+];
+
+export const roles = [{
+  value: "admin",
+  label: "Admin"
+},
+{
+  value: "trainer",
+  label: "Trainer"
+},
+{
+  value: "employer",
+  label: "Employer"
+},
+{
+  value: "iqa",
+  label: "IQA"
+},
+{
+  value: "eqa",
+  label: "EQA"
+},
+{
+  value: "learner",
+  label: "Learner"
+}
+]
