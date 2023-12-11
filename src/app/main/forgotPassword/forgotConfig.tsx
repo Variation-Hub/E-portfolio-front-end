@@ -1,6 +1,7 @@
 import { lazy } from "react";
 const ForgotView = lazy(() => import("./forgot"));
 import authRoles from 'src/app/auth/authRoles';
+import Reset from "./resetPassword/reset";
 
 const ForgotConfig = {
   settings: {
@@ -29,6 +30,10 @@ const ForgotConfig = {
     {
       path: "/forgot",
       element: <ForgotView />
+    },
+    {
+      path: "/reset",
+      element: <Reset />
     },
   ],
 };
