@@ -38,11 +38,12 @@ function OtpValidation({ numberOfDigits, setOtpError, setOtp }) {
     <div className="w-full mb-10">
       <p className="text-base mt-4 mb-4">One Time Password (OTP)</p>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center justify-between">
         {otp.map((digit, index) => (
           <input
             key={index}
             value={digit}
+            type="number"
             maxLength={1}
             onChange={(e) => handleChange(e.target.value, index)}
             onKeyUp={(e) => handleBackspaceAndEnter(e, index)}

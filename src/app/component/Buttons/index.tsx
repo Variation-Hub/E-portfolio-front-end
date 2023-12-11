@@ -6,7 +6,6 @@ export const SecondaryButton = (props) => {
         <Button
             variant="contained"
             color="secondary"
-            className=" w-full"
             aria-label="Sign in"
             type="submit"
             size="small"
