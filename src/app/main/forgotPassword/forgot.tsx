@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { SecondaryButton } from "src/app/component/Buttons";
 import OtpValidation from "./otpValidation";
 import Logo from "app/theme-layouts/shared-components/Logo";
+import { useNavigate } from "react-router-dom";
 
 const forgot = () => {
   const [email, setEmail] = useState("");
@@ -12,13 +13,19 @@ const forgot = () => {
     otp: false,
   });
 
+  const navigate = useNavigate();
   const emailHandler = (e) => {
     setEmail(e.target.value);
   };
 
   const sendOTPHandler = () => {
     setOtp((prev) => ({ ...prev, otp: true }));
+    
   };
+
+  const verifyOTPHandler = ()=>{
+    navigate("/reset")
+  }
 
   return (
     <div className="flex flex-col sm:flex-row items-center md:items-start sm:justify-center md:justify-center flex-1 min-w-0">
@@ -58,7 +65,7 @@ const forgot = () => {
               <SecondaryButton
                 name="Verify"
                 disable={otp.otpValue.length === 6 ? false : true}
-                onClick={sendOTPHandler}
+                onClick={verifyOTPHandler}
               />
             ) : (
               <SecondaryButton
