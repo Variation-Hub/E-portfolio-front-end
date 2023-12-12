@@ -4,6 +4,8 @@ import { SecondaryButton } from "src/app/component/Buttons";
 import OtpValidation from "./otpValidation";
 import Logo from "app/theme-layouts/shared-components/Logo";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { sendOTPMailHandler, verifyOTPMailHandler } from "app/store/userManagement";
 
 const forgot = () => {
   const [email, setEmail] = useState("");
@@ -12,6 +14,7 @@ const forgot = () => {
     otpValue: "",
     otp: false,
   });
+  const dispatch:any = useDispatch();
 
   const navigate = useNavigate();
   const emailHandler = (e) => {
@@ -19,12 +22,13 @@ const forgot = () => {
   };
 
   const sendOTPHandler = () => {
+    dispatch(sendOTPMailHandler(email));
     setOtp((prev) => ({ ...prev, otp: true }));
     
   };
 
   const verifyOTPHandler = ()=>{
-    navigate("/reset")
+    dispatch(verifyOTPMailHandler({email, otp: otp.otpValue}, navigate));
   }
 
   return (
