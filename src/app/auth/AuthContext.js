@@ -15,7 +15,7 @@ function AuthProvider({ children }) {
 
   useEffect(() => {
     jwtService.on('onAutoLogin', () => {
-      dispatch(showMessage({ message: 'Signing in with JWT' }));
+      dispatch(showMessage({ message: 'Signing in with JWT', variant:"success" }));
 
       /**
        * Sign in and retrieve user data with stored token
@@ -54,7 +54,7 @@ function AuthProvider({ children }) {
     function success(user, message) {
       console.log(user, message)
       if (message) {
-        dispatch(showMessage({ message }));
+        dispatch(showMessage({ message, variant:"success" }));
       }
 
       Promise.all([
@@ -70,7 +70,7 @@ function AuthProvider({ children }) {
       console.log(message)
 
       if (message) {
-        dispatch(showMessage({ message }));
+        dispatch(showMessage({ message , variant:"success"}));
       }
 
       setWaitAuthCheck(false);
