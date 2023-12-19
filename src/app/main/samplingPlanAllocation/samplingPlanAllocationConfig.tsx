@@ -24,7 +24,7 @@ const SamplingPlanAllocationConfig = {
       },
     },
   },
-  auth: authRoles.admin, 
+  auth: [authRoles.IQA], 
   routes: [
     {
       path: "/samplingPlanAllocation",

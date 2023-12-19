@@ -26,7 +26,7 @@ const AdminConfig = {
       },
     },
   },
-  auth: authRoles.admin, 
+  auth: [authRoles.Admin], 
   routes: [
     {
       path: "/admin",

@@ -24,7 +24,7 @@ const PortfolioConfig = {
       },
     },
   },
-  auth: authRoles.admin, 
+  auth: [authRoles.Learner], 
   routes: [
     {
       path: "/portfolio",

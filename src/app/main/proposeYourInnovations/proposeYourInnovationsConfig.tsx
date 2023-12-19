@@ -24,7 +24,7 @@ const ProposeYourInnovationsConfig = {
       },
     },
   },
-  auth: authRoles.admin, 
+  auth: [authRoles.Admin, authRoles.Trainer, authRoles.Learner, authRoles.Employer, authRoles.EQA, authRoles.IQA], 
   routes: [
     {
       path: "/proposeYourInnovations",

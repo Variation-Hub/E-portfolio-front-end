@@ -24,7 +24,7 @@ const FormsConfig = {
       },
     },
   },
-  auth: authRoles.admin, 
+  auth: [authRoles.Admin], 
   routes: [
     {
       path: "/forms",

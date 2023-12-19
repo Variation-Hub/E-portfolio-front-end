@@ -24,7 +24,7 @@ const OffTheJobConfig = {
       },
     },
   },
-  auth: authRoles.admin, 
+  auth: [authRoles.Trainer],
   routes: [
     {
       path: "/offTheJob",

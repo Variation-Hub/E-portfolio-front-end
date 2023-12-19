@@ -24,7 +24,7 @@ const AllLearnersConfig = {
       },
     },
   },
-  auth: authRoles.admin, 
+  auth: [authRoles.Admin], 
   routes: [
     {
       path: "/allLearners",

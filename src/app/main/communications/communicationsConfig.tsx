@@ -24,7 +24,7 @@ const CommunicationsConfig = {
       },
     },
   },
-  auth: authRoles.admin, 
+  auth: [authRoles.Admin], 
   routes: [
     {
       path: "/communications",
