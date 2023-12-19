@@ -136,4 +136,5 @@ export const updateUserAPI = (id, data) => async (dispatch) => {
             dispatch(slice.setUpdatingLoader());
         });
 }
+
 export default userManagementSlice.reducer;
