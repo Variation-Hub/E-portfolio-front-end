@@ -24,7 +24,7 @@ const CourseBuilderConfig = {
       },
     },
   },
-  auth: authRoles.admin, 
+  auth: [authRoles.Admin], 
   routes: [
     {
       path: "/courseBuilder",

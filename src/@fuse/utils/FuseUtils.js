@@ -137,6 +137,13 @@ class FuseUtils {
   static setRoutes(config, defaultAuth) {
     let routes = [...config.routes];
 
+    if (config.auth) {
+      config = {
+        ...config,
+        auth : config.auth.flat()
+      }
+    }
+    // config = Array.isArray(config.auth) ? [...config.auth] : null
     routes = routes.map((route) => {
       let auth = config.auth || config.auth === null ? config.auth : defaultAuth || null;
       auth = route.auth || route.auth === null ? route.auth : auth;
@@ -364,27 +371,27 @@ class FuseUtils {
     return !data
       ? null
       : data.reduce((list, entry) => {
-          let clone = null;
-          if (predicate(entry)) {
-            // if the object matches the filter, clone it as it is
-            clone = { ...entry };
+        let clone = null;
+        if (predicate(entry)) {
+          // if the object matches the filter, clone it as it is
+          clone = { ...entry };
+        }
+        if (entry.children != null) {
+          // if the object has childrens, filter the list of children
+          const children = this.filterRecursive(entry.children, predicate);
+          if (children.length > 0) {
+            // if any of the children matches, clone the parent object, overwrite
+            // the children list with the filtered list
+            clone = { ...entry, children };
           }
-          if (entry.children != null) {
-            // if the object has childrens, filter the list of children
-            const children = this.filterRecursive(entry.children, predicate);
-            if (children.length > 0) {
-              // if any of the children matches, clone the parent object, overwrite
-              // the children list with the filtered list
-              clone = { ...entry, children };
-            }
-          }
+        }
 
-          // if there's a cloned object, push it to the output list
-          if (clone) {
-            list.push(clone);
-          }
-          return list;
-        }, []);
+        // if there's a cloned object, push it to the output list
+        if (clone) {
+          list.push(clone);
+        }
+        return list;
+      }, []);
   }
 }
 

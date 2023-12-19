@@ -8,6 +8,7 @@ import PendingActionsOutlinedIcon from "@mui/icons-material/PendingActionsOutlin
 import PortraitOutlinedIcon from "@mui/icons-material/PortraitOutlined";
 import RemoveFromQueueOutlinedIcon from "@mui/icons-material/RemoveFromQueueOutlined";
 import DomainVerificationOutlinedIcon from "@mui/icons-material/DomainVerificationOutlined";
+import { UserRole } from "src/enum";
 
 export const HomePageData = [
   {
@@ -181,34 +182,41 @@ export const AdminRedirect = {
 };
 
 export const userManagementTableColumn = [
-  { id: 'name', label: 'Name', minWidth: 170, align: "left" },
-  { id: 'email', label: 'Email', minWidth: 200, align: "left" },
-  { id: 'role', label: 'Role', minWidth: 170, align: "center" },
+  { id: 'first_name', label: 'First Name', minWidth: 170, align: "left" },
+  { id: 'last_name', label: 'Last Name', minWidth: 170, align: "left" },
+  { id: 'user_name', label: 'Username', minWidth: 170, align: "left" },
+  { id: 'email', label: 'Email', minWidth: 170, align: "left" },
+  { id: 'sso_id', label: 'SSO ID', minWidth: 170, align: "left" },
+  { id: 'mobile', label: 'Mobile', minWidth: 170, align: "left" },
+  { id: 'phone', label: 'Phone', minWidth: 170, align: "left" },
+  { id: 'role', label: 'Role', minWidth: 100, align: "left" },
   { id: 'actions', label: 'Actions', minWidth: 170, align: "center" }
 ];
 
 export const roles = [{
-  value: "admin",
+  value: UserRole.Admin,
   label: "Admin"
 },
 {
-  value: "trainer",
+  value: UserRole.Trainer,
   label: "Trainer"
 },
 {
-  value: "employer",
+  value: UserRole.Employer,
   label: "Employer"
 },
 {
-  value: "iqa",
+  value: UserRole.IQA,
   label: "IQA"
 },
 {
-  value: "eqa",
+  value: UserRole.EQA,
   label: "EQA"
 },
 {
-  value: "learner",
+  value: UserRole.Learner,
   label: "Learner"
 }
 ]
+
+export const emailReg = /^[\a-z0-9\.]+@([\a-z0-9]+\.)+[\a-z]{2,4}$/;

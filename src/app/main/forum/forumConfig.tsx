@@ -24,7 +24,7 @@ const ForumConfig = {
       },
     },
   },
-  auth: authRoles.admin, 
+  auth: [authRoles.Admin, authRoles.Trainer, authRoles.Learner, authRoles.Employer, authRoles.IQA], 
   routes: [
     {
       path: "/forum",
