@@ -24,7 +24,7 @@ const CreateResourcesConfig = {
       },
     },
   },
-  auth: authRoles.admin, 
+  auth: [authRoles.IQA], 
   routes: [
     {
       path: "/createResources",

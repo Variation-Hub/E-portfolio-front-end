@@ -24,7 +24,7 @@ const LearnerPortfolioConfig = {
       },
     },
   },
-  auth: authRoles.admin, 
+  auth: [authRoles.IQA],
   routes: [
     {
       path: "/learnerPortfolio",

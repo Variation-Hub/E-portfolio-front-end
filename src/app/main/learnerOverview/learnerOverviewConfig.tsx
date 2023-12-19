@@ -24,7 +24,7 @@ const LearnerOverviewConfig = {
       },
     },
   },
-  auth: authRoles.admin, 
+  auth: [authRoles.Trainer, authRoles.Employer],
   routes: [
     {
       path: "/learnerOverview",

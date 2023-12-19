@@ -24,7 +24,7 @@ const SkillsScanConfig = {
       },
     },
   },
-  auth: authRoles.admin, 
+  auth: [authRoles.Learner],
   routes: [
     {
       path: "/skillsScan",

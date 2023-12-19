@@ -24,7 +24,7 @@ const ReportsConfig = {
       },
     },
   },
-  auth: authRoles.admin, 
+  auth: [authRoles.Admin, authRoles.Trainer, authRoles.Employer, authRoles.IQA],
   routes: [
     {
       path: "/reports",

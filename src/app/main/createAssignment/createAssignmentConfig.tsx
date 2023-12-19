@@ -24,7 +24,7 @@ const CreateAssignmentConfig = {
       },
     },
   },
-  auth: authRoles.admin, 
+  auth: [authRoles.Learner],
   routes: [
     {
       path: "/createAssignment",

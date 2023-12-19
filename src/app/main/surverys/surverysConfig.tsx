@@ -24,7 +24,7 @@ const SurverysConfig = {
       },
     },
   },
-  auth: authRoles.admin, 
+  auth: [authRoles.Admin], 
   routes: [
     {
       path: "/surverys",

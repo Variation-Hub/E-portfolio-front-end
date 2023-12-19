@@ -24,7 +24,7 @@ const TrainerRiskRatingConfig = {
       },
     },
   },
-  auth: authRoles.admin, 
+  auth: [authRoles.IQA], 
   routes: [
     {
       path: "/trainerRiskRating",

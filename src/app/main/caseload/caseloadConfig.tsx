@@ -24,7 +24,7 @@ const CaseloadConfig = {
       },
     },
   },
-  auth: authRoles.admin, 
+  auth: [authRoles.Trainer], 
   routes: [
     {
       path: "/caseload",

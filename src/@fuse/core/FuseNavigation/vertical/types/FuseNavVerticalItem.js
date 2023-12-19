@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import { useMemo } from 'react';
 import FuseNavBadge from '../../FuseNavBadge';
 import FuseSvgIcon from '../../../FuseSvgIcon';
+import { useSelector } from 'react-redux';
 
 const Root = styled(ListItem)(({ theme, ...props }) => ({
   minHeight: 44,
@@ -47,11 +48,15 @@ const Root = styled(ListItem)(({ theme, ...props }) => ({
 
 function FuseNavVerticalItem(props) {
   const { item, nestedLevel, onItemClick } = props;
+  const { role } = useSelector(state => state.user)
 
   const itempadding = nestedLevel > 0 ? 38 + nestedLevel * 16 : 16;
 
+  console.log();
+
   return useMemo(
     () => (
+      item?.visible.includes(...role) &&
       <Root
         button
         component={NavLinkAdapter}

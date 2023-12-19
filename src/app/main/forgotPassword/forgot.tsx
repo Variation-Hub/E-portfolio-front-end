@@ -1,34 +1,53 @@
 import { Paper, TextField, Typography } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SecondaryButton } from "src/app/component/Buttons";
 import OtpValidation from "./otpValidation";
 import Logo from "app/theme-layouts/shared-components/Logo";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { sendOTPMailHandler, verifyOTPMailHandler } from "app/store/userManagement";
+import { emailReg } from "src/app/contanst";
 
 const forgot = () => {
   const [email, setEmail] = useState("");
   const [otpError, setOtpError] = useState(false);
+  const [timer, setTimer] = useState(0);
   const [otp, setOtp] = useState({
     otpValue: "",
     otp: false,
   });
-  const dispatch:any = useDispatch();
+  const dispatch: any = useDispatch();
 
   const navigate = useNavigate();
   const emailHandler = (e) => {
     setEmail(e.target.value);
   };
 
+  useEffect(() => {
+
+    if (timer <= 0) {
+      return;
+    }
+    const interval = setInterval(() => {
+      if (timer === 1) {
+        setTimer(0);
+        clearInterval(interval)
+      }
+      setTimer(timer - 1);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [timer]);
+
   const sendOTPHandler = () => {
+    setTimer(59);
     dispatch(sendOTPMailHandler(email));
     setOtp((prev) => ({ ...prev, otp: true }));
-    
+
   };
 
-  const verifyOTPHandler = ()=>{
-    dispatch(verifyOTPMailHandler({email, otp: otp.otpValue}, navigate));
+  const verifyOTPHandler = () => {
+    dispatch(verifyOTPMailHandler({ email, otp: otp.otpValue }, navigate));
   }
 
   return (
@@ -58,25 +77,35 @@ const forgot = () => {
               fullWidth
               onChange={emailHandler}
             />
-            {otp.otp && (
-              <OtpValidation
-                numberOfDigits={6}
-                setOtpError={setOtpError}
-                setOtp={setOtp}
-              />
-            )}
-            {otp.otp ? (
+            {otp.otp ?
+              <Typography
+                variant="caption"
+                className="flex justify-end">
+                {timer === 0 ?
+                  <span className="cursor-pointer text-blue underline" onClick={sendOTPHandler}>Resend OTP</span> :
+                  timer < 10 ? `00:0${timer}` : `00:${timer}`
+                }
+              </Typography>
+              :
               <SecondaryButton
-                name="Verify"
-                disable={otp.otpValue.length === 6 ? false : true}
-                onClick={verifyOTPHandler}
-              />
-            ) : (
-              <SecondaryButton
-                name="Sent OTP"
-                disable={email ? false : true}
+                name={otp.otp ? "Resend OTP" : "Sent OTP"}
+                disable={email.match(emailReg) ? false : true}
                 onClick={sendOTPHandler}
               />
+            }
+            {otp.otp && (
+              <>
+                <OtpValidation
+                  numberOfDigits={6}
+                  setOtpError={setOtpError}
+                  setOtp={setOtp}
+                />
+                <SecondaryButton
+                  name="Verify"
+                  disable={otp.otpValue.length === 6 ? false : true}
+                  onClick={verifyOTPHandler}
+                />
+              </>
             )}
           </div>
         </div>

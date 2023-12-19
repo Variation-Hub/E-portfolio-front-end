@@ -1,10 +1,11 @@
 import FuseUtils from '@fuse/utils/FuseUtils';
 import axios from 'axios';
 import jwtDecode from 'jwt-decode';
-import jwtServiceConfig from './jwtServiceConfig';
+import jsonData from 'src/url.json';
 
 /* eslint-disable camelcase */
 
+const URL_BASE_LINK = jsonData.API_LOCAL_URL;
 class JwtService extends FuseUtils.EventEmitter {
     init() {
         this.setInterceptors();
@@ -60,20 +61,19 @@ class JwtService extends FuseUtils.EventEmitter {
     //   });
     // };
 
-    signInWithEmailAndPassword = (email, password) => {
+    signInWithEmailAndPassword = (credentials) => {
+
+        const payload = { ...credentials };
+
         return new Promise((resolve, reject) => {
             axios
-                .get(jwtServiceConfig.signIn, {
-                    data: {
-                        email,
-                        password,
-                    },
-                })
+                .post(`${URL_BASE_LINK}/user/login`, payload)
                 .then((response) => {
-                    if (response.data.user) {
-                        this.setSession(response.data.access_token);
-                        resolve(response.data.user);
-                        this.emit('onLogin', response.data.user);
+                    if (response.data.status) {
+                        this.setSession(response.data.data.accessToken);
+                        const decoded = jwtDecode(response.data.data.accessToken);
+                        resolve(decoded);
+                        this.emit('onLogin', decoded);
                     } else {
                         reject(response.data.error);
                     }
@@ -83,31 +83,28 @@ class JwtService extends FuseUtils.EventEmitter {
 
     signInWithToken = () => {
         return new Promise((resolve, reject) => {
-            axios
-                .get(jwtServiceConfig.accessToken, {
-                    data: {
-                        access_token: this.getAccessToken(),
-                    },
-                })
-                .then((response) => {
-                    if (response.data.user) {
-                        this.setSession(response.data.access_token);
-                        resolve(response.data.user);
-                    } else {
-                        this.logout();
-                        reject(new Error('Failed to login with token.'));
-                    }
-                })
-                .catch((error) => {
-                    this.logout();
-                    reject(new Error('Failed to login with token.'));
-                });
-        });
-    };
-
-    updateUserData = (user) => {
-        return axios.post(jwtServiceConfig.updateUser, {
-            user,
+            console.log(this.getAccessToken())
+            const decoded = jwtDecode(this.getAccessToken());
+            resolve(decoded);
+            // axios
+            //     .get(jwtServiceConfig.accessToken, {
+            //         data: {
+            //             access_token: this.getAccessToken(),
+            //         },
+            //     })
+            //     .then((response) => {
+            //         if (response.data.user) {
+            //             this.setSession(response.data.access_token);
+            //             resolve(response.data.user);
+            //         } else {
+            //             this.logout();
+            //             reject(new Error('Failed to login with token.'));
+            //         }
+            //     })
+            //     .catch((error) => {
+            //         this.logout();
+            //         reject(new Error('Failed to login with token.'));
+            //     });
         });
     };
 
