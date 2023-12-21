@@ -5,32 +5,34 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
-import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import { Avatar, IconButton } from '@mui/material';
+import { Avatar, IconButton, Pagination } from '@mui/material';
 import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import Style from "./style.module.css";
 import { useDispatch } from 'react-redux';
-import { fetchUserAPI } from 'app/store/userManagement';
+import { deleteUserHandler, fetchUserAPI } from 'app/store/userManagement';
+import { userTableMetaData } from 'src/app/contanst/metaData';
+import AlertDialog from '../Dialogs/AlertDialog';
+import { DangerButton, LoadingButton, SecondaryButtonOutlined } from '../Buttons';
 
 export default function UserManagementTable(props) {
 
-    const { columns, rows, handleOpen, setUserData, setUpdateData } = props
+    const { columns,
+        rows,
+        handleOpen,
+        setUserData,
+        setUpdateData,
+        meta_data,
+        dataUpdatingLoadding,
+        search_keyword = "",
+        search_role = "" } = props
 
-    const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(10);
-
+    const [deleteId, setDeleteId] = useState("");
     const dispatch: any = useDispatch();
 
     const handleChangePage = (event: unknown, newPage: number) => {
-        dispatch(fetchUserAPI({ page: newPage, limit: rowsPerPage }))
-    };
-
-    const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setRowsPerPage(+event.target.value);
-        setPage(0);
-        dispatch(fetchUserAPI({ page: 1, limit: +event.target.value }))
+        dispatch(fetchUserAPI({ page: newPage, page_size: userTableMetaData.page_size }))
     };
 
     const editIcon = (id) => {
@@ -59,66 +61,85 @@ export default function UserManagementTable(props) {
         })
         handleOpen();
     }
+
+    const deleteIcon = (id) => {
+        setDeleteId(id);
+    }
+
+    const deleteConfromation = async () => {
+        await dispatch(deleteUserHandler(deleteId, meta_data, search_keyword, search_role));
+        setDeleteId("");
+    }
     return (
-        <Paper sx={{ width: '100%', overflow: 'hidden', margin: "2rem 0rem" }}>
-            <TableContainer sx={{ maxHeight: 440 }}>
-                <Table stickyHeader aria-label="sticky table">
-                    <TableHead>
-                        <TableRow>
-                            {columns?.map((column) => (
-                                <TableCell
-                                    key={column.id}
-                                    align={column.align}
-                                    style={{ minWidth: column.minWidth }}
-                                    sx={{ backgroundColor: "#5B718F" }}
-                                >
-                                    {column.label}
-                                </TableCell>
-                            ))}
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {rows?.map((row) => {
-                            return (
-                                <TableRow hover role="checkbox" tabIndex={-1} key={row.user_id}>
-                                    {columns?.map((column) => {
-                                        const value = row[column.id];
-                                        if (column.id === "actions") {
+        <>
+            <Paper sx={{ width: '100%', overflow: 'hidden', marginTop: "1rem", borderRadius: "4px" }}>
+                <TableContainer sx={{ maxHeight: 480, minHeight: 480 }}>
+                    <Table stickyHeader aria-label="sticky table">
+                        <TableHead>
+                            <TableRow>
+                                {columns?.map((column) => (
+                                    <TableCell
+                                        key={column.id}
+                                        align={column.align}
+                                        style={{ minWidth: column.minWidth }}
+                                        sx={{ backgroundColor: "#5B718F" }}
+                                    >
+                                        {column.label}
+                                    </TableCell>
+                                ))}
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {rows?.map((row) => {
+                                return (
+                                    <TableRow hover role="checkbox" tabIndex={-1} key={row.user_id}>
+                                        {columns?.map((column) => {
+                                            const value = row[column.id];
+                                            if (column.id === "actions") {
+                                                return (
+                                                    <TableCell key={column.id} align={column.align}>
+                                                        <IconButton size="small" sx={{ color: "#5B718F", marginRight: "4px" }} onClick={() => editIcon(row.user_id)}>
+                                                            <ModeEditOutlineOutlinedIcon fontSize='small' />
+                                                        </IconButton>
+                                                        <IconButton size="small" sx={{ color: "maroon", marginLeft: "4px" }} onClick={() => deleteIcon(row.user_id)}>
+                                                            <DeleteOutlineOutlinedIcon fontSize='small' />
+                                                        </IconButton>
+                                                    </TableCell>
+                                                )
+                                            }
                                             return (
-                                                <TableCell key={column.id} align={column.align}>
-                                                    <IconButton size="small" sx={{ color: "#5B718F", marginRight: "4px" }} onClick={() => editIcon(row.user_id)}>
-                                                        <ModeEditOutlineOutlinedIcon fontSize='small' />
-                                                    </IconButton>
-                                                    <IconButton size="small" sx={{ color: "maroon", marginLeft: "4px" }}>
-                                                        <DeleteOutlineOutlinedIcon fontSize='small' />
-                                                    </IconButton>
+                                                <TableCell key={column.id} align={column.align} >
+                                                    <div className={Style.avatar}>
+                                                        {column.id === "first_name" && <Avatar alt={value} src={row?.avatar?.url} sx={{ marginRight: "8px" }} />}
+                                                        {value}
+                                                    </div>
                                                 </TableCell>
-                                            )
-                                        }
-                                        return (
-                                            <TableCell key={column.id} align={column.align}>
-                                                <div className={Style.avatar}>
-                                                    {column.id === "first_name" && <Avatar alt={value} src="/static/images/avatar/1.jpg" sx={{ marginRight: "8px" }} />}
-                                                </div>
-                                                {value}
-                                            </TableCell>
-                                        );
-                                    })}
-                                </TableRow>
-                            );
-                        })}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-            <TablePagination
-                rowsPerPageOptions={[10, 25, 100]}
-                component="div"
-                count={rows.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
+                                            );
+                                        })}
+                                    </TableRow>
+                                );
+                            })}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+                <div className="flex justify-center p-8">
+                    <Pagination
+                        page={meta_data.page}
+                        count={Math.ceil(meta_data?.items / userTableMetaData.page_size)}
+                        showFirstButton
+                        showLastButton
+                        onChange={handleChangePage}
+                    />
+                </div>
+            </Paper>
+            <AlertDialog
+                open={Boolean(deleteId)}
+                close={() => deleteIcon("")}
+                title="Delete user"
+                content="Deleting this user will also remove all associated data and relationships. Proceed with deletion?"
+                actionButton={dataUpdatingLoadding ? <LoadingButton /> : <DangerButton onClick={deleteConfromation} name="Delete user" />}
+                cancelButton={<SecondaryButtonOutlined onClick={() => deleteIcon("")} name="Cancel" />}
             />
-        </Paper>
+        </>
     );
 }
