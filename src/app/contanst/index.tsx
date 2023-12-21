@@ -218,5 +218,3 @@ export const roles = [{
   label: "Learner"
 }
 ]
-
-export const emailReg = /^[\a-z0-9\.]+@([\a-z0-9]+\.)+[\a-z]{2,4}$/;

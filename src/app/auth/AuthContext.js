@@ -52,7 +52,6 @@ function AuthProvider({ children }) {
     jwtService.init();
 
     function success(user, message) {
-      console.log(user, message)
       if (message) {
         dispatch(showMessage({ message, variant:"success" }));
       }
@@ -67,7 +66,6 @@ function AuthProvider({ children }) {
     }
 
     function pass(message) {
-      console.log(message)
 
       if (message) {
         dispatch(showMessage({ message , variant:"success"}));
