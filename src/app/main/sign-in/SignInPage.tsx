@@ -3,27 +3,38 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import jwtService from '../../auth/services/jwtService';
-import { SecondaryButton } from 'src/app/component/Buttons';
-import { Link } from 'react-router-dom';
+import { LoadingButton, SecondaryButton } from 'src/app/component/Buttons';
+import { Link, useNavigate } from 'react-router-dom';
 import Logo from 'app/theme-layouts/shared-components/Logo';
 import { useState } from 'react';
+import { emailReg } from 'src/app/contanst/regValidation';
+import { showMessage } from 'app/store/fuse/messageSlice';
+import { useDispatch } from 'react-redux';
 
 const SignInPage = () => {
 
   const [credentials, setCredentials] = useState({
-    email: "admin@gmail.com",
-    password: "123456"
+    email: "",
+    password: ""
   })
+
+  const [loading, setLoading] = useState(false);
+  const dispatch: any = useDispatch();
+  const navigate = useNavigate();
 
   function onSubmit(e) {
     e.preventDefault();
+    setLoading(true);
     jwtService
       .signInWithEmailAndPassword(credentials)
       .then((user) => {
-        console.log("user", user)
+        setLoading(false);
+        navigate('/reset');
+        sessionStorage.setItem("reset", JSON.stringify(user));
       })
-      .catch((_errors) => {
-        console.log(_errors)
+      .catch(err => {
+        dispatch(showMessage({ message: err.response.data.message, variant: "error" }))
+        setLoading(false);
       });
   }
 
@@ -74,7 +85,10 @@ const SignInPage = () => {
             />
             <Link to="/forgot" className='mb-24'>Forgot password?</Link>
 
-            <SecondaryButton name="Sign in" />
+            {loading ? <LoadingButton />
+              :
+              <SecondaryButton name="Sign in" disable={!emailReg.test(credentials.email) || credentials.password.length < 1} />
+            }
 
           </form>
         </div>

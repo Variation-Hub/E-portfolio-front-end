@@ -28,14 +28,14 @@ export const { userLoggedOut } = userSlice.actions;
 
 export const setUser = (user) => async (dispatch) => {
   const userData = {
-    displayName: user.displayName,
-    photoURL: user.avatar.url,
-    email: user.email,
+    displayName: user?.displayName,
+    photoURL: user?.avatar?.url,
+    email: user?.email,
   }
 
   dispatch(userSlice.actions.setUserDetails({ userData, role: user.role }))
   const data = window.location.href.split("/");
-  if (data[data.length - 1] === "sign-in") {
+  if (data[data.length - 1] === "sign-in" || data[data.length - 1] === "forgot" || data[data.length - 1] === "reset") {
     history.push("/home")
   }
   history.push(window.location.href)

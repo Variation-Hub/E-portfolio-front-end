@@ -70,41 +70,26 @@ class JwtService extends FuseUtils.EventEmitter {
                 .post(`${URL_BASE_LINK}/user/login`, payload)
                 .then((response) => {
                     if (response.data.status) {
-                        this.setSession(response.data.data.accessToken);
                         const decoded = jwtDecode(response.data.data.accessToken);
-                        resolve(decoded);
-                        this.emit('onLogin', decoded);
+
+                        if (response.data.data.password_changed) {
+                            this.setSession(response.data.data.accessToken);
+                            this.emit('onLogin', decoded);
+                        } else {
+                            sessionStorage.setItem("email", decoded?.email)
+                            resolve({ token: response.data.data.accessToken, decoded })
+                        }
                     } else {
                         reject(response.data.error);
                     }
-                });
+                }).catch(err => reject(err));
         });
     };
 
     signInWithToken = () => {
         return new Promise((resolve, reject) => {
-            console.log(this.getAccessToken())
             const decoded = jwtDecode(this.getAccessToken());
             resolve(decoded);
-            // axios
-            //     .get(jwtServiceConfig.accessToken, {
-            //         data: {
-            //             access_token: this.getAccessToken(),
-            //         },
-            //     })
-            //     .then((response) => {
-            //         if (response.data.user) {
-            //             this.setSession(response.data.access_token);
-            //             resolve(response.data.user);
-            //         } else {
-            //             this.logout();
-            //             reject(new Error('Failed to login with token.'));
-            //         }
-            //     })
-            //     .catch((error) => {
-            //         this.logout();
-            //         reject(new Error('Failed to login with token.'));
-            //     });
         });
     };
 

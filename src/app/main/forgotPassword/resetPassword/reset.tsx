@@ -3,27 +3,37 @@ import { resetPasswordHandler } from "app/store/userManagement";
 import Logo from "app/theme-layouts/shared-components/Logo";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { SecondaryButton } from "src/app/component/Buttons";
+import { useNavigate } from "react-router-dom";
+import { LoadingButton, SecondaryButton } from "src/app/component/Buttons";
+import { passwordReg } from "src/app/contanst/regValidation";
 
 const Reset = () => {
 
-  const[newPassword, setNewPassword] = useState({
-    password:"",
-    confirmPassword:""
+  const [newPassword, setNewPassword] = useState({
+    password: "",
+    confirmPassword: ""
   })
 
-  const dispatch:any = useDispatch();
+  const [loading, setLoading] = useState(false);
 
-  const resetHandler = () => {
-    if(newPassword.password === newPassword.confirmPassword){
-      dispatch(resetPasswordHandler({email:"", password:newPassword.password}));
+  const dispatch: any = useDispatch();
+  const navigate = useNavigate();
+
+  const resetHandler = async () => {
+    if (newPassword.password === newPassword.confirmPassword && passwordReg.test(newPassword.password)) {
+      setLoading(true);
+      const response = await dispatch(resetPasswordHandler({ email: "", password: newPassword.password }));
+      if (response) {
+        navigate(response)
+      }
+      setLoading(false);
     }
   };
 
-  const passwordHandler =(e) =>{
-    setNewPassword((prev)=>({
+  const passwordHandler = (e) => {
+    setNewPassword((prev) => ({
       ...prev,
-      [e.target.name]:e.target.value
+      [e.target.name]: e.target.value
     }))
   }
   return (
@@ -35,7 +45,8 @@ const Reset = () => {
             Reset password
           </Typography>
           <Typography className="mt-3">
-            Please enter your new password to continue your account.
+            Please enter a secure password.
+            It must be at least 6 characters long, containing at least one lowercase letter, one uppercase letter, and one digit.
           </Typography>
           <div className="flex flex-col justify-center w-full mt-24">
             <TextField
@@ -55,7 +66,7 @@ const Reset = () => {
             <TextField
               className="mb-8"
               label="Confirm password"
-              name="confrimPassword"
+              name="confirmPassword"
               value={newPassword.confirmPassword}
               type="password"
               variant="outlined"
@@ -64,8 +75,10 @@ const Reset = () => {
               fullWidth
               onChange={passwordHandler}
             />
-
-            <SecondaryButton name="Reset" onClick={resetHandler} />
+            {loading ? <LoadingButton />
+              :
+              <SecondaryButton name="Reset" onClick={resetHandler} disable={newPassword.password !== newPassword.confirmPassword || !passwordReg.test(newPassword.password)} />
+            }
           </div>
         </div>
       </Paper>

@@ -1,16 +1,20 @@
 import { Paper, TextField, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { SecondaryButton } from "src/app/component/Buttons";
+import { LoadingButton, SecondaryButton } from "src/app/component/Buttons";
 import OtpValidation from "./otpValidation";
 import Logo from "app/theme-layouts/shared-components/Logo";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { sendOTPMailHandler, verifyOTPMailHandler } from "app/store/userManagement";
-import { emailReg } from "src/app/contanst";
+import { emailReg } from "src/app/contanst/regValidation";
 
 const forgot = () => {
   const [email, setEmail] = useState("");
   const [otpError, setOtpError] = useState(false);
+  const [loading, setLoading] = useState({
+    otp: false,
+    mail: false,
+  });
   const [timer, setTimer] = useState(0);
   const [otp, setOtp] = useState({
     otpValue: "",
@@ -39,15 +43,20 @@ const forgot = () => {
     return () => clearInterval(interval);
   }, [timer]);
 
-  const sendOTPHandler = () => {
-    setTimer(59);
-    dispatch(sendOTPMailHandler(email));
-    setOtp((prev) => ({ ...prev, otp: true }));
-
+  const sendOTPHandler = async () => {
+    setLoading((prev) => ({ ...prev, mail: true }));
+    const response = await dispatch(sendOTPMailHandler(email));
+    if (response) {
+      setTimer(59);
+      setOtp((prev) => ({ ...prev, otp: true }));
+    }
+    setLoading((prev) => ({ ...prev, mail: false }));
   };
 
-  const verifyOTPHandler = () => {
-    dispatch(verifyOTPMailHandler({ email, otp: otp.otpValue }, navigate));
+  const verifyOTPHandler = async () => {
+    setLoading((prev) => ({ ...prev, otp: true }));
+    await dispatch(verifyOTPMailHandler(otp.otpValue, navigate));
+    setLoading((prev) => ({ ...prev, otp: false }));
   }
 
   return (
@@ -87,11 +96,14 @@ const forgot = () => {
                 }
               </Typography>
               :
-              <SecondaryButton
-                name={otp.otp ? "Resend OTP" : "Sent OTP"}
-                disable={email.match(emailReg) ? false : true}
-                onClick={sendOTPHandler}
-              />
+              loading.mail ?
+                <LoadingButton />
+                :
+                <SecondaryButton
+                  name="Sent OTP"
+                  disable={email.match(emailReg) ? false : true}
+                  onClick={sendOTPHandler}
+                />
             }
             {otp.otp && (
               <>
@@ -100,11 +112,15 @@ const forgot = () => {
                   setOtpError={setOtpError}
                   setOtp={setOtp}
                 />
-                <SecondaryButton
-                  name="Verify"
-                  disable={otp.otpValue.length === 6 ? false : true}
-                  onClick={verifyOTPHandler}
-                />
+                {loading.otp ?
+                  <LoadingButton />
+                  :
+                  <SecondaryButton
+                    name="Verify"
+                    disable={otp.otpValue.length === 6 ? false : true}
+                    onClick={verifyOTPHandler}
+                  />
+                }
               </>
             )}
           </div>
