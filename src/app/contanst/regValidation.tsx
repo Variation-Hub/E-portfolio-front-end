@@ -4,8 +4,8 @@ export const emailValidationMsg = "Enter a valid email address. It should contai
 export const nameReg = /^[\a-zA-Z\]]{3,20}$/;
 export const nameValidationMsg = "Enter a valid name. It should consist of 3 to 20 characters, containing only letters (uppercase or lowercase)."
 
-export const usernameReg = /^[\a-zA-Z_0-9\]]{3,20}$/;
-export const usernameValidationMsg = "Enter a valid username. It should consist of 3 to 20 characters, including letters (uppercase or lowercase), numbers, and underscores."
+export const usernameReg = /^[\a-zA-Z_0-9.\]]{3,20}$/;
+export const usernameValidationMsg = "Enter a valid username. It should consist of 3 to 20 characters, including letters (uppercase or lowercase), numbers, dots, and underscores."
 
 export const mobileReg = /^(?:\d{10})?$/;
 export const mobileValidationMsg = "Enter a valid number. It should be a 10-digit number."
