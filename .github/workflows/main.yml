@@ -29,11 +29,11 @@ jobs:
           echo "${{ secrets.AWS_SECRET_ACCESS_KEY }}" > private_key.pem
           chmod 600 private_key.pem
 
-      # - name: SSH into the server and modify directory
-      #   run: |
-      #     ssh -i private_key.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_PUBLIC_IP }} 'cd /home/ubuntu/actions-runner/_work/Company-page/Company-page && rm -rf build && mkdir build'
-      #     npm run build
+      - name: SSH into the server and modify directory
+        run: |
+          ssh -i private_key.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_PUBLIC_IP }} 'cd /home/ubuntu/actions-runner/_work/E-portfolio-front-end/E-portfolio-front-end && rm -rf develop && mkdir develop'
+          npm run build
           
-      # - name: Deploy to server
-      #   run: |
-      #     scp -i private_key.pem -r build/ ubuntu@${{ secrets.EC2_PUBLIC_IP }}:/home/ubuntu/actions-runner/_work/Company-page/Company-page/
+      - name: Deploy to server
+        run: |
+          scp -i private_key.pem -r build/* ubuntu@${{ secrets.EC2_PUBLIC_IP }}:/home/ubuntu/actions-runner/_work/E-portfolio-front-end/E-portfolio-front-end/develop
