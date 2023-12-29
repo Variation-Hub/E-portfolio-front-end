@@ -32,7 +32,6 @@ jobs:
       - name: SSH into the server and modify directory
         run: |
           ssh -i private_key.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_PUBLIC_IP }} 'cd /home/ubuntu/actions-runner/_work/E-portfolio-front-end/E-portfolio-front-end && rm -rf develop && mkdir develop'
-          npm run build
           
       - name: Deploy to server
         run: |
