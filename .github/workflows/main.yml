@@ -1,45 +1,39 @@
-name: CI/CD
+name: Deploy React App
 
 on:
   push:
     branches:
-      - "*"
+      - main
 
 jobs:
-  unittest:
-    runs-on: ubuntu-latest
+  deploy:
+    runs-on: self-hosted
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
+      - name: Install Node.js and dependencies
+        uses: actions/setup-node@v2
         with:
-          node-version: 16
+          node-version: '16'
 
-      - name: Test App
-        run: |
-          echo "Testing App"
-          npm install
-          CI=true npm run test
-          echo "Test successfully"
+      - name: Install dependencies
+        run: npm install
 
-  build:
-    runs-on: ubuntu-latest
+      - name: Build React app
+        run: npm run build
+        
+      # - name: Debugging Info Before Deploy
+      #   run: |
+      #     echo "${{ secrets.AWS_SECRET_ACCESS_KEY }}" > private_key.pem
+      #     chmod 600 private_key.pem
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-        with:
-          node-version: 16
-
-      - name: Build App
-        run: |
-          echo "Start building App"
-          npm install
-          npm run build
-          echo "Build successfully!"
-
-      - name: Upload Build Artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: build
-          path: build
+      # - name: SSH into the server and modify directory
+      #   run: |
+      #     ssh -i private_key.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_PUBLIC_IP }} 'cd /home/ubuntu/actions-runner/_work/Company-page/Company-page && rm -rf build && mkdir build'
+      #     npm run build
+          
+      # - name: Deploy to server
+      #   run: |
+      #     scp -i private_key.pem -r build/ ubuntu@${{ secrets.EC2_PUBLIC_IP }}:/home/ubuntu/actions-runner/_work/Company-page/Company-page/
