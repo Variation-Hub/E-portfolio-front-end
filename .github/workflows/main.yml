@@ -23,7 +23,7 @@ jobs:
           echo "Start building App"
           npm install
           npm run build
-          echo "Build successfully!
+          echo "Build successfully!"
         
       - name: Debugging Info Before Deploy
         run: |
