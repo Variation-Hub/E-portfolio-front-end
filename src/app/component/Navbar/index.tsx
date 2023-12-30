@@ -38,7 +38,7 @@ const Index = () => {
           <div>
             <ul className={Style.menu}>
               <li className={Style.navbar_link}>About Us</li>
-              <li className={Style.navbar_link}>Products</li>
+              <li className={Style.navbar_link}>Product</li>
               <a href="#features">
                 <li className={Style.navbar_link}>Features</li>
               </a>
