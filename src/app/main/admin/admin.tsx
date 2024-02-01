@@ -3,7 +3,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { AdminPageData } from "src/app/contanst";
 import HelpOutlinedIcon from "@mui/icons-material/HelpOutlined";
-
 const Admin = () => {
   return (
     <div className="w-full h-full flex flex-wrap justify-center items-center">
