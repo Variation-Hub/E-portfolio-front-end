@@ -168,11 +168,13 @@ export const AdminPageData = [
     path: "/admin/user",
     name: "User Management",
     info: "Efficiently manage users with streamlined operations including add, delete, and update functionalities within the User Management tab.",
+    svg: "assets/images/svgImage/usermanagement.svg"
   },
   {
     path: "/admin/learner",
     name: "Learner Management",
     info: "Optimize learner administration by seamlessly adding, updating, and deleting learners, while also facilitating the assignment of courses, trainers, employers, IQAs, and EQAs within the dedicated Learner Management tab.",
+    svg: "assets/images/svgImage/learnermanagement.svg"
   },
 ];
 
@@ -182,13 +184,13 @@ export const AdminRedirect = {
 };
 
 export const userManagementTableColumn = [
-  { id: 'first_name', label: 'First Name', minWidth: 170, align: "left" },
+  { id: 'first_name', label: 'Name', minWidth: 170, align: "left" },
   { id: 'last_name', label: 'Last Name', minWidth: 170, align: "left" },
   { id: 'user_name', label: 'Username', minWidth: 170, align: "left" },
   { id: 'email', label: 'Email', minWidth: 170, align: "left" },
-  { id: 'sso_id', label: 'SSO ID', minWidth: 170, align: "left" },
+  // { id: 'sso_id', label: 'SSO ID', minWidth: 170, align: "left" },
   { id: 'mobile', label: 'Mobile', minWidth: 170, align: "left" },
-  { id: 'phone', label: 'Phone', minWidth: 170, align: "left" },
+  // { id: 'phone', label: 'Phone', minWidth: 170, align: "left" },
   { id: 'role', label: 'Role', minWidth: 100, align: "left" },
   { id: 'actions', label: 'Actions', minWidth: 170, align: "center" }
 ];

@@ -105,7 +105,7 @@ const UserDetails = (props) => {
                         required={!updateData}
                         fullWidth
                         onChange={handleUpdate}
-                        disabled={updateData}
+                        // disabled={updateData}
                         error={userDataError?.password}
                         InputProps={{
                             endAdornment:
@@ -124,7 +124,7 @@ const UserDetails = (props) => {
                         required={!updateData}
                         fullWidth
                         onChange={handleUpdate}
-                        disabled={updateData}
+                        // disabled={updateData}
                         error={userDataError?.confrimpassword}
                         InputProps={{
                             endAdornment:
@@ -136,7 +136,7 @@ const UserDetails = (props) => {
                 </Box>
 
                 <Box className="m-12 flex flex-col justify-between gap-12 sm:flex-row">
-                    <TextField
+                    {/* <TextField
                         name="sso_id"
                         label="SSO ID"
                         value={userData?.sso_id}
@@ -150,7 +150,7 @@ const UserDetails = (props) => {
                                 <Tooltip title="Enter a valid ID. It should be at least 3 characters long." placement="bottom" arrow>
                                     <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
                                 </Tooltip>
-                        }} />
+                        }} /> */}
 
                     <TextField
                         name="mobile"
@@ -170,7 +170,7 @@ const UserDetails = (props) => {
                 </Box>
 
                 <Box className="m-12 flex flex-col justify-between gap-12 sm:flex-row">
-                    <TextField
+                    {/* <TextField
                         name="phone"
                         label="Phone"
                         value={userData?.phone}
@@ -184,7 +184,7 @@ const UserDetails = (props) => {
                                     <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
                                 </Tooltip>
                         }}
-                    />
+                    /> */}
 
                     <Autocomplete
                         freeSolo
