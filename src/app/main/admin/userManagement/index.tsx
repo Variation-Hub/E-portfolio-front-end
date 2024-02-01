@@ -36,10 +36,8 @@ const Index = () => {
     user_name: "",
     email: "",
     password: "",
-    sso_id: "",
     confrimpassword: "",
     mobile: "",
-    phone: "",
     role: "",
     time_zone: ""
   })
@@ -50,10 +48,8 @@ const Index = () => {
     user_name: false,
     email: false,
     password: false,
-    sso_id: false,
     confrimpassword: false,
     mobile: false,
-    phone: false,
     role: false,
   })
 
@@ -81,9 +77,7 @@ const Index = () => {
       email: "",
       password: "",
       confrimpassword: "",
-      sso_id: "",
       mobile: "",
-      phone: "",
       role: "",
       time_zone: "",
     });
@@ -93,10 +87,10 @@ const Index = () => {
       user_name: false,
       email: false,
       password: false,
-      sso_id: false,
+      // sso_id: false,
       confrimpassword: false,
       mobile: false,
-      phone: false,
+      // phone: false,
       role: false,
     })
   }
@@ -145,10 +139,10 @@ const Index = () => {
       user_name: !usernameReg.test(userData?.user_name),
       email: !emailReg.test(userData?.email),
       password: !passwordReg.test(userData?.password),
-      sso_id: userData?.sso_id.length <= 2,
+      // sso_id: userData?.sso_id.length <= 2,
       confrimpassword: userData?.password !== userData?.confrimpassword || !passwordReg.test(userData?.password),
       mobile: !mobileReg.test(userData.mobile),
-      phone: !mobileReg.test(userData.phone),
+      // phone: !mobileReg.test(userData.phone),
       role: userData?.role === "",
     })
     if (nameReg.test(userData?.first_name) &&
@@ -156,10 +150,10 @@ const Index = () => {
       usernameReg.test(userData?.user_name) &&
       emailReg.test(userData?.email) &&
       passwordReg.test(userData?.password) &&
-      userData?.sso_id.length > 2 &&
+      // userData?.sso_id.length > 2 &&
       userData?.password === userData?.confrimpassword &&
       mobileReg.test(userData.mobile) &&
-      mobileReg.test(userData.phone) &&
+      // mobileReg.test(userData.phone) &&
       userData?.role !== "") {
       return true;
     }

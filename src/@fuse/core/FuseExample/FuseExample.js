@@ -31,7 +31,7 @@ function FuseExample(props) {
 
   return (
     <Card
-      className={clsx(className, 'shadow')}
+      className={clsx(className='shadow')}
       sx={{
         backgroundColor: (theme) =>
           darken(theme.palette.background.paper, theme.palette.mode === 'light' ? 0.01 : 0.1),
