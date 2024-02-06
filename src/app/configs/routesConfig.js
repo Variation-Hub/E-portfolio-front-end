@@ -30,6 +30,7 @@ import EnrolmentsConfig from "../main/enrolments/enrolmentsConfig";
 import SurverysConfig from "../main/surverys/surverysConfig";
 import CommunicationsConfig from "../main/communications/communicationsConfig";
 import ForgotConfig from "../main/forgotPassword/forgotConfig";
+import MyProfileConfig from "../main/myProfile/myProfileConfig";
 
 
 const routeConfigs = [
@@ -61,7 +62,8 @@ const routeConfigs = [
     EnrolmentsConfig,
     SurverysConfig,
     CommunicationsConfig,
-    ForgotConfig
+    ForgotConfig,
+    MyProfileConfig
 ];
 
 const routes = [
