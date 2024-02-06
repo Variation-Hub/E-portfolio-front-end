@@ -8,7 +8,7 @@ import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
 import { selectUser } from 'app/store/userSlice';
 import { useAuth } from 'src/app/auth/AuthContext'
@@ -20,6 +20,8 @@ function UserMenu(props) {
   const { isAuthenticated } = useAuth();
   const { logout } = jwtService
   const [userMenu, setUserMenu] = useState(null);
+
+  const navigate = useNavigate();
 
   const userMenuClick = (event) => {
     setUserMenu(event.currentTarget);
@@ -71,12 +73,20 @@ function UserMenu(props) {
         }}
       >
         {isAuthenticated ? (
+          <>
+          <MenuItem onClick={() => navigate('/profile')} >
+          {/* <ListItemIcon className="min-w-40">
+            <FuseSvgIcon>heroicons-outline:logout</FuseSvgIcon>
+          </ListItemIcon> */}
+          <ListItemText primary="My Profile" />
+        </MenuItem>
           <MenuItem onClick={() => logout()} >
             {/* <ListItemIcon className="min-w-40">
               <FuseSvgIcon>heroicons-outline:logout</FuseSvgIcon>
             </ListItemIcon> */}
             <ListItemText primary="Sign Out" />
           </MenuItem>
+          </>
         ) : (
           <Link to="/sign-in">
             <MenuItem>
