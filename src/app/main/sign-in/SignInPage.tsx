@@ -10,6 +10,9 @@ import { useState } from "react";
 import { emailReg } from "src/app/contanst/regValidation";
 import { showMessage } from "app/store/fuse/messageSlice";
 import { useDispatch } from "react-redux";
+import { Box, IconButton, InputAdornment } from "@mui/material";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import Visibility from "@mui/icons-material/Visibility";
 
 const SignInPage = () => {
   const [credentials, setCredentials] = useState({
@@ -18,6 +21,8 @@ const SignInPage = () => {
   });
 
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
   const dispatch: any = useDispatch();
   const navigate = useNavigate();
 
@@ -43,9 +48,22 @@ const SignInPage = () => {
     const { name, value } = e.target;
     setCredentials((prev) => ({ ...prev, [name]: value }));
   };
+
+  const handleClickShowPassword = (e) => {
+    setShowPassword(prev => !prev);
+  }
   return (
     <>
       <div className="flex h-full">
+        {/* <Box
+        // sx={{
+        //   display:{
+        //     xs: "none",
+        //     sm:"none",
+        //     md:"flex"
+        //   }
+        // }}
+        > */}
         <div className="relative flex-shrink-0 w-full lg:w-1/2 h-64 lg:h-full flex flex-col items-center justify-center bg-[#5B718F]">
           <div className="text-white text-center mb-4">
             <h2 className="text-4xl font-bold">Lorem Ipsum</h2>
@@ -63,6 +81,7 @@ const SignInPage = () => {
             className="w-1/2 h-auto max-w-lg mx-auto"
           />
         </div>
+        {/* </Box> */}
         <div className="flex flex-col sm:flex-row items-center md:items-start sm:justify-center md:justify-center flex-1 min-w-0">
           <Paper className="h-full flex items-center sm:h-auto md:flex md:items-center md:justify-center w-full sm:w-auto md:h-full md:w-1/2 py-8 px-16 sm:p-48 md:p-64 sm:rounded-2xl md:rounded-none sm:shadow md:shadow-none">
             <div className="w-full min-w-320 sm:w-320 mx-auto sm:mx-0 shadow-md rounded-md">
@@ -92,32 +111,44 @@ const SignInPage = () => {
                 />
 
                 <TextField
-                  className="mb-2"
+                  className="mb-24"
                   label="Password"
                   name="password"
                   value={credentials.password}
-                  type="password"
+                  type={showPassword ? "text":"password"}
                   variant="outlined"
                   size="small"
                   required
                   fullWidth
                   onChange={credentialHandler}
+                  InputProps={{
+                    endAdornment: <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        edge="end"
+                      >
+                        {showPassword ? <VisibilityOff sx={{color:"#2D2D2D", opacity:0.7, fontSize:"16px"}}/> : <Visibility sx={{color:"#2D2D2D", opacity:0.7, fontSize:"16px"}}/>}
+                      </IconButton>
+                    </InputAdornment>,
+                  }}
                 />
-                <Link to="/forgot" className="mb-24">
-                  Forgot password?
-                </Link>
 
                 {loading ? (
                   <LoadingButton />
                 ) : (
                   <SecondaryButton
-                    name="Login"
+                    name="Sign in"
                     disable={
                       !emailReg.test(credentials.email) ||
                       credentials.password.length < 1
                     }
                   />
                 )}
+
+                <Link to="/forgot" className="mt-2" style={{fontSize:"14px", textAlign:"right", textDecoration: "none"}}>
+                  Forgot password?
+                </Link>
               </form>
             </div>
           </Paper>
