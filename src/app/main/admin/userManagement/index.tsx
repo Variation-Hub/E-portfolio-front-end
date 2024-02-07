@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 import { createUserAPI, fetchUserAPI, selectUserManagement, updateUserAPI } from "app/store/userManagement";
 import UserManagementTable from "src/app/component/Table/UserManagementTable";
 import { userManagementTableColumn } from "src/app/contanst";
-import { Autocomplete, Drawer, IconButton, InputAdornment, OutlinedInput, TextField } from "@mui/material";
+import { Autocomplete, Dialog, Drawer, IconButton, InputAdornment, OutlinedInput, TextField, Typography } from "@mui/material";
 import UserDetails from "./usetDetails";
 import { useDispatch } from "react-redux";
 import FuseLoading from '@fuse/core/FuseLoading';
@@ -161,8 +161,10 @@ const Index = () => {
   }
 
   return (
-    <div className="p-12">
+    <div className="p-12 w-full h-full">
       <Breadcrumb linkData={[AdminRedirect]} currPage="User" />
+
+      {data.length && (
       <div className={Style.create_user}>
         <div className={Style.search_filed}>
           <TextField
@@ -217,8 +219,9 @@ const Index = () => {
           />
         </div>
         <SecondaryButton name="Create user" onClick={handleOpen} />
+        
       </div>
-
+      )}
       {
         dataFetchLoading ? <FuseLoading /> :
           data.length ?
@@ -234,13 +237,15 @@ const Index = () => {
               search_role={filterValue}
             />
             :
-            <div className="flex justify-center">
-              <DataNotFound width="15%" />
+            <div className="flex flex-col justify-center items-center gap-10 " style={{height:"94%"}}>
+              <DataNotFound width="25%" />
+              <Typography variant="h5">No data found</Typography>
+              <Typography variant="body2" className="text-center">It is a long established fact that a reader will be <br/>distracted by the readable content.</Typography>
+        <SecondaryButton name="Create user" onClick={handleOpen} />
             </div>
 
       }
-      <Drawer
-        anchor="right"
+      <Dialog
         open={open}
         onClose={handleClose}
         sx={{
@@ -263,7 +268,7 @@ const Index = () => {
           dataUpdatingLoadding={dataUpdatingLoadding}
           userDataError={userDataError}
         />
-      </Drawer>
+      </Dialog>
     </div >
   );
 };
