@@ -1,7 +1,7 @@
 import { Button, CircularProgress } from '@mui/material'
 
 export const SecondaryButton = (props) => {
-    const { name, disable = false, onClick = () => { } } = props;
+    const { name, disable = false, onClick = () => { }, className="", style={}} = props;
     return (
         <Button
             variant="contained"
@@ -16,7 +16,9 @@ export const SecondaryButton = (props) => {
                     backgroundColor: "#6D81A3"
                 }
             }}
+            style={style}
             onClick={onClick}
+            className={className}
         >
             {name}
         </Button>
@@ -24,7 +26,7 @@ export const SecondaryButton = (props) => {
 }
 
 export const SecondaryButtonOutlined = (props) => {
-    const { name, disable = false, onClick = () => { } } = props;
+    const { name, disable = false, onClick = () => { },className="", style={} } = props;
     return (
         <Button
             variant="outlined"
@@ -39,6 +41,8 @@ export const SecondaryButtonOutlined = (props) => {
                     color: "black"
                 }
             }}
+            className={className}
+            style={style}
             onClick={onClick}
         >
             {name}
