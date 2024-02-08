@@ -1,8 +1,8 @@
 .navbar_container {
     width: 100%;
-    box-shadow: 0px 0px 5px 1px gray;
+    box-shadow: 0px 0px 5px 3px rgb(0, 0, 0);
     height: 8vh;
-    background-color: #5B718F;
+    background-color: white;
 }
 
 .navbar {
@@ -15,7 +15,11 @@
 .menu {
     display: flex;
     justify-content: center;
-    gap: 5vw;
+    gap: 2vw;
+}
+
+.menu a{
+    text-decoration: none !important;
 }
 
 .menu_open_icon {
@@ -24,11 +28,12 @@
 
 .navbar_link {
     cursor: pointer;
-    color: white;
+    color: black;
     font-weight: 600;
     transition: 0.2s;
     padding: 0.2rem 1rem;
 }
+
 
 .navbar_link_mobile {
     cursor: pointer;
@@ -46,6 +51,9 @@
 
 .login_button {
     margin-right: 2rem;
+    margin-left: 2vw;
+    color: white;
+    padding: 0.5rem;
 }
 
 @media screen and (max-width:426px) {

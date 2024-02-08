@@ -249,13 +249,10 @@ const Index = () => {
         open={open}
         onClose={handleClose}
         sx={{
-          "& .MuiDrawer-paper": {
-            width: {
-              xs: "90vw",
-              sm: "50vw",
-              md: "50vw"
-            },
-          },
+          '.MuiDialog-paper':{
+            borderRadius:"4px",
+            padding: "1rem"
+          }
         }}
       >
         <UserDetails

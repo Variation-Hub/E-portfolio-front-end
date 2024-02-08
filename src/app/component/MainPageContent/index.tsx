@@ -6,8 +6,9 @@ const MainPageContent = () => {
     <>
       <div>
         {/* <div className={Style.screenshort}></div> */}
-        <div className="flex justify-center items-center bg-[#F9F9FD]">
-          <div className="w-1/2 p-4 ml-60">
+        <div className="flex justify-evenly py-24 items-center bg-[#F9F9FD]">
+
+          <div className="w-1/3 p-4 ml-60">
             <p className="font-bold">
               Welcome to{" "}
               <span className="inline-block bg-[#6D81A3] p-4 rounded text-white">
@@ -27,7 +28,8 @@ const MainPageContent = () => {
               Read More
             </button>
           </div>
-          <div className="w-1/2">
+
+          <div className="w-1/3">
             <img
               src="assets/images/svgImage/landing1.svg"
               alt="img1"
@@ -36,15 +38,15 @@ const MainPageContent = () => {
           </div>
         </div>
 
-        <div className="flex justify-center items-center">
-          <div className="w-1/2">
+        <div className="flex justify-evenly items-center py-48">
+          <div className="w-1/4">
             <img
               src="assets/images/svgImage/landing2.svg"
               alt="img1"
-              className="w-full h-auto mt-60"
+              className="w-full h-auto"
             />
           </div>
-          <div className="w-1/2 p-4 ml-60 mt-60">
+          <div className="w-2/4">
             <p>Enter Small Title here</p>
             <h2 className="text-3xl font-extrabold mt-2 sm:text-4xl lg:text-5xl">
               LOREM IPSUM IS SIMPLY DUMMY TEXT OF THE PRINTING.
@@ -57,28 +59,29 @@ const MainPageContent = () => {
               successful case studies and learn the secrets your own e-commerce
               business.
             </p>
-            <div className="flex mt-32">
-              <div className="flex w-1/2">
+
+            <div className="flex items-center justify-between mt-32">
+              <div className="flex w-2/5">
                 <img
                   src="assets/images/svgImage/landing2-1.svg"
                   alt="img1"
-                  className="w-32 h-auto"
+                  className="w-32 h-auto mr-10"
                 />
                 <div>
-                  <h4>Lorem ipsum context</h4>
+                  <h4 className=" font-bold ">Lorem ipsum context</h4>
                   <p>
                     Lorem ipsum dolor sit amet, consectetur adipisicing elit.
                   </p>
                 </div>
               </div>
-              <div className="flex w-1/2">
+              <div className="flex w-2/5">
                 <img
                   src="assets/images/svgImage/landing2-2.svg"
                   alt="img1"
-                  className="w-32 h-auto"
+                  className="w-32 h-auto mr-10"
                 />
                 <div>
-                  <h4>Lorem ipsum context</h4>
+                  <h4 className=" font-bold ">Lorem ipsum context</h4>
                   <p>
                     Lorem ipsum dolor sit amet, consectetur adipisicing elit.
                   </p>
@@ -86,7 +89,7 @@ const MainPageContent = () => {
               </div>
             </div>
 
-            <button className="mt-12 p-8 sm:p-8 bg-[#6D81A3] text-white rounded text-sm sm:text-base">
+            <button className="mt-12 p-8 w-2/12 sm:p-8 bg-[#6D81A3] text-white rounded text-sm sm:text-base">
               Read More
             </button>
           </div>
