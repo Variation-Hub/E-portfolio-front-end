@@ -135,10 +135,10 @@ export default function UserManagementTable(props) {
             <AlertDialog
                 open={Boolean(deleteId)}
                 close={() => deleteIcon("")}
-                title="Delete user"
+                title="Delete user?"
                 content="Deleting this user will also remove all associated data and relationships. Proceed with deletion?"
                 actionButton={dataUpdatingLoadding ? <LoadingButton /> : <DangerButton onClick={deleteConfromation} name="Delete user" />}
-                cancelButton={<SecondaryButtonOutlined onClick={() => deleteIcon("")} name="Cancel" />}
+                cancelButton={<SecondaryButtonOutlined className="px-24" onClick={() => deleteIcon("")} name="Cancel" />}
             />
         </>
     );
