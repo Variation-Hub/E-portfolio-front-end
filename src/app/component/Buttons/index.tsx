@@ -1,7 +1,7 @@
 import { Button, CircularProgress } from '@mui/material'
 
 export const SecondaryButton = (props) => {
-    const { name, disable = false, onClick = () => { }, className="", style={}} = props;
+    const { name, disable = false, onClick = () => { }, startIcon, className="", style={}} = props;
     return (
         <Button
             variant="contained"
@@ -19,6 +19,7 @@ export const SecondaryButton = (props) => {
             style={style}
             onClick={onClick}
             className={className}
+            startIcon={startIcon}
         >
             {name}
         </Button>
