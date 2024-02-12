@@ -12,6 +12,8 @@ import LanguageSwitcher from '../../shared-components/LanguageSwitcher';
 import NotificationPanelToggleButton from '../../shared-components/notificationPanel/NotificationPanelToggleButton';
 import NavbarToggleButton from '../../shared-components/NavbarToggleButton';
 import UserMenu from '../../shared-components/UserMenu';
+import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
+import { Typography } from '@mui/material';
 function ToolbarLayout1(props) {
   const config = useSelector(selectFuseCurrentLayoutConfig);
   const navbar = useSelector(selectFuseNavbar);
@@ -31,7 +33,11 @@ function ToolbarLayout1(props) {
         }}
         position="static"
       >
+
         <Toolbar className="p-0 min-h-64 md:min-h-64" >
+
+          <Typography className='ml-12' variant='h6'>Welcome</Typography>
+          
           <div className="flex flex-1 px-16">
             {config.navbar.display && config.navbar.position === 'left' && (
               <>

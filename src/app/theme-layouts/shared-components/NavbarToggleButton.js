@@ -5,8 +5,8 @@ import _ from '@lodash';
 import useThemeMediaQuery from '@fuse/hooks/useThemeMediaQuery';
 import { navbarToggle, navbarToggleMobile } from 'app/store/fuse/navbarSlice';
 import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
-
 function NavbarToggleButton(props) {
+  
   const dispatch = useDispatch();
   const isMobile = useThemeMediaQuery((theme) => theme.breakpoints.down('lg'));
   const settings = useSelector(selectFuseCurrentSettings);
@@ -31,17 +31,11 @@ function NavbarToggleButton(props) {
         }
       }}
     >
-      {props.children}
+      <FuseSvgIcon size={20} color="action" sx={{ color: "#000000" }}>
+        {!settings.layout.config.navbar.folded ? "material-outline:lock" : "material-outline:lock_open"}
+      </FuseSvgIcon>
     </IconButton>
   );
 }
-
-NavbarToggleButton.defaultProps = {
-  children: (
-    <FuseSvgIcon size={20} color="action">
-      heroicons-outline:view-list
-    </FuseSvgIcon>
-  ),
-};
 
 export default NavbarToggleButton;

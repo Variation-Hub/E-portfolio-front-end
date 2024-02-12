@@ -22,7 +22,7 @@ const UserDetails = (props) => {
         <div className='h-full flex flex-col'>
             <Box>
                 <Box className="m-12 flex flex-col justify-between gap-12 sm:flex-row">
-                    <div>
+                    <div className='w-1/2'>
                         <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>First Name<sup>*</sup></Typography>
                         <TextField
                             name="first_name"
@@ -42,7 +42,7 @@ const UserDetails = (props) => {
                             }}
                         />
                     </div>
-                    <div>
+                    <div className='w-1/2'>
                         <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>Last Name<sup>*</sup></Typography>
                         <TextField
                             name="last_name"
@@ -63,18 +63,18 @@ const UserDetails = (props) => {
                     </div>
                 </Box>
                 <Box className="m-12 flex flex-col justify-between gap-12 sm:flex-row">
-                    <div>
+                    <div className='w-1/2'>
                         <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>User Name<sup>*</sup></Typography>
                         <TextField
-                            name="user_name"
+                            name="username"
                             // label="Username"
-                            value={userData?.user_name}
+                            value={userData?.username}
                             size="small"
                             placeholder='Enter username'
                             required
                             fullWidth
                             onChange={handleUpdate}
-                            error={userDataError?.user_name}
+                            error={userDataError?.username}
                             InputProps={{
                                 endAdornment:
                                     <Tooltip title={usernameValidationMsg} placement="bottom" arrow>
@@ -84,7 +84,7 @@ const UserDetails = (props) => {
                         />
                     </div>
 
-                    <div>
+                    <div className='w-1/2'>
                         <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>Email<sup>*</sup></Typography>
                         <TextField
                             name="email"
@@ -105,7 +105,7 @@ const UserDetails = (props) => {
                     </div>
                 </Box>
                 <Box className="m-12 flex flex-col justify-between gap-12 sm:flex-row">
-                    <div>
+                    <div className='w-1/2'>
                         <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>Password<sup>*</sup></Typography>
 
                         <TextField
@@ -127,7 +127,7 @@ const UserDetails = (props) => {
                         />
                     </div>
 
-                    <div>
+                    <div className='w-1/2'>
                         <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>Confirm Password<sup>*</sup></Typography>
                         <TextField
                             name="confrimpassword"
@@ -151,7 +151,25 @@ const UserDetails = (props) => {
                 </Box>
 
                 <Box className="m-12 flex flex-col justify-between gap-12 sm:flex-row">
-                    <div>
+                    <div className='w-1/2'>
+                        <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>Employer<sup>*</sup></Typography>
+                        <Autocomplete
+                            freeSolo
+                            fullWidth
+                            size="small"
+                            value={userData?.time_zone}
+                            options={timezones.map((option) => option)}
+                            renderInput={(params) => <TextField {...params} placeholder="Select employer" name="time_zone" />}
+                            onChange={(e, value) => handleUpdate({ target: { name: "time_zone", value: value } })}
+                            sx={{
+                                '.MuiAutocomplete-clearIndicator': {
+                                    color: "#5B718F"
+                                }
+                            }}
+                        />
+                    </div>
+
+                    <div className='w-1/2'>
                         <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>Mobile<sup>*</sup></Typography>
                         <TextField
                             name="mobile"
@@ -170,47 +188,46 @@ const UserDetails = (props) => {
                             }}
                         />
                     </div>
-                    <div className='w-1/2'>
-                        <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>Time Zone<sup>*</sup></Typography>
-                        <Autocomplete
-                            freeSolo
-                            fullWidth
-                            size="small"
-                            value={userData?.time_zone}
-                            options={timezones.map((option) => option)}
-                            renderInput={(params) => <TextField {...params} placeholder="Select timezone" name="time_zone" />}
-                            onChange={(e, value) => handleUpdate({ target: { name: "time_zone", value: value } })}
-                            sx={{
-                                '.MuiAutocomplete-clearIndicator': {
-                                    color: "#5B718F"
-                                }
-                            }}
-                        />
-                    </div>
+
                 </Box>
 
                 <Box className="m-12 flex flex-col justify-between gap-12 sm:flex-row">
-                    <div className='w-full'>
-                        <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>Role<sup>*</sup></Typography>
+                    <div className='w-1/2'>
+                        <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>National Insurance Number<sup>*</sup></Typography>
+
                         <TextField
-                            name="role"
-                            select
-                            defaultValue="Learner"
-                            value={userData?.role}
+                            name="password"
+                            placeholder="Enter national insurance number"
+                            value={userData?.password}
                             size="small"
-                            required
+                            type="text"
                             fullWidth
                             onChange={handleUpdate}
-                            error={userDataError?.role}>
-                            {roles.map((option) => (
-                                <MenuItem key={option.value} value={option.value}>
-                                    {option.label}
-                                </MenuItem>
-                            ))}
-                        </TextField>
+                            error={userDataError?.password}
+                            InputProps={{
+                                endAdornment:
+                                    <Tooltip title={passwordValidation} placement="bottom" arrow>
+                                        <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
+                                    </Tooltip>
+                            }}
+                        />
+                    </div>
+
+                    <div className='w-1/2'>
+                        <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>Funding Body<sup>*</sup></Typography>
+                        <TextField
+                            name="mobile"
+                            value={userData?.mobile}
+                            size="small"
+                            placeholder='Enter funding details'
+                            fullWidth
+                            onChange={handleUpdate}
+                            error={userDataError?.mobile}
+                        />
                     </div>
 
                 </Box>
+
             </Box>
             <Box style={{ margin: "auto 1rem 1rem auto" }}>
                 {dataUpdatingLoadding ?

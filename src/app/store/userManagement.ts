@@ -149,11 +149,11 @@ export const createUserAPI = (data) => async (dispatch) => {
 }
 
 // get user
-export const fetchUserAPI = (data = { page: 1, page_size: 10 }, search_keyword = "", search_role = "") => async (dispatch) => {
+export const fetchUserAPI = (data = { page: 1, page_size: 25 }, search_keyword = "", search_role = "") => async (dispatch) => {
 
     try {
         dispatch(slice.setLoader());
-        const { page = 1, page_size = 10 } = data;
+        const { page = 1, page_size = 25 } = data;
 
         let url = `${URL_BASE_LINK}/user/list?page=${page}&limit=${page_size}&meta=true`;
 

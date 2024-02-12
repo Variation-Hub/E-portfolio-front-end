@@ -10,7 +10,7 @@ const Breadcrumb = (props) => {
   };
 
   return (
-    <Breadcrumbs className="py-12">
+    <Breadcrumbs className="p-10">
       {linkData.map((item) => {
         return (
           <Link
@@ -18,6 +18,7 @@ const Breadcrumb = (props) => {
             color="inherit"
             onClick={() => redirect(item.link)}
             key={item.link}
+            style={{cursor: 'pointer'}}
           >
             {item.name}
           </Link>

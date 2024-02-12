@@ -5,6 +5,7 @@ const navbarSlice = createSlice({
   initialState: {
     open: true,
     mobileOpen: false,
+    foldedOpen: false
   },
   reducers: {
     navbarToggleFolded: (state, action) => {

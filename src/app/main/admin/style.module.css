@@ -1,6 +1,7 @@
 .create_user {
     display: flex;
     justify-content: space-between;
+    padding: 0 0.8rem
 }
 
 .create_user .search_filed{

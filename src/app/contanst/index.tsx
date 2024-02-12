@@ -185,13 +185,11 @@ export const AdminRedirect = {
 
 export const userManagementTableColumn = [
   { id: 'first_name', label: 'Name', minWidth: 170, align: "left" },
-  { id: 'last_name', label: 'Last Name', minWidth: 170, align: "left" },
   { id: 'user_name', label: 'Username', minWidth: 170, align: "left" },
   { id: 'email', label: 'Email', minWidth: 170, align: "left" },
-  // { id: 'sso_id', label: 'SSO ID', minWidth: 170, align: "left" },
   { id: 'mobile', label: 'Mobile', minWidth: 170, align: "left" },
-  // { id: 'phone', label: 'Phone', minWidth: 170, align: "left" },
   { id: 'role', label: 'Role', minWidth: 100, align: "left" },
+  { id: 'status', label: 'Status', minWidth: 100, align: "left" },
   { id: 'actions', label: 'Actions', minWidth: 170, align: "center" }
 ];
 
@@ -214,9 +212,23 @@ export const roles = [{
 {
   value: UserRole.EQA,
   label: "EQA"
-},
-{
-  value: UserRole.Learner,
-  label: "Learner"
 }
+]
+
+export const courseManagementTableColumn = [
+  { id: 'course_name', label: 'Course Name', minWidth: 200, align: "left" },
+  { id: 'code', label: 'Code', minWidth: 70, align: "left" },
+  { id: 'level', label: 'Level', minWidth: 170, align: "left" },
+  { id: 'sector', label: 'Sector', minWidth: 170, align: "left" },
+  { id: 'learning_hours', label: 'Learning Hours', minWidth: 100, align: "left" },
+  { id: 'actions', label: 'Actions', minWidth: 170, align: "center" }
+];
+
+export const courseManagementUnitColumn = [
+  { id: "unit_ref", label: "Unint Ref", minWidth: 80, align: "left" },
+  { id: "title", label: "Title", minWidth: 800, align: "left" },
+  { id: "level", label: "Level", minWidth: 80, align: "left" },
+  { id: "glh", label: "GLH", minWidth: 80, align: "left" },
+  { id: "credit_value", label: "Credit Value", minWidth: 80, align: "left" },
+  { id: "actions", label: "Action", minWidth: 80, align: "center" }
 ]
