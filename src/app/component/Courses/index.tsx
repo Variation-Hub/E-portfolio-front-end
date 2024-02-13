@@ -3,12 +3,70 @@ import React, { useState } from 'react'
 import { SecondaryButton, SecondaryButtonOutlined } from '../Buttons'
 import UnitManagementTable from '../Table/UnitManagementTable'
 import { courseManagementUnitColumn } from 'src/app/contanst'
+import { useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { createCourseAPI, selectCourseManagement } from 'app/store/courseManagement'
+import { useSelector } from 'react-redux'
+
+const generateUnitObject = (unitDataArray = [], unit = '') => {
+    const unitObject = {};
+    unitDataArray.forEach((unitData, index) => {
+        const id = Date.now() + index + unit; // Generate unique ID for each unit
+        unitObject[id] = {
+            id,
+            unit_ref: unitData.unit_ref || "",
+            title: unitData.title || "",
+            level: unitData.level || 0,
+            glh: unitData.glh || 0,
+            credit_value: unitData.credit_value || 0
+        };
+    });
+    return unitObject;
+};
+
+function formatText(text = "") {
+    let formattedText = text.replace(/\n/g, ' ');
+    return formattedText;
+}
 
 const CourseBuilder = () => {
 
-    const [mandatoryUnit, setMandatoryUnit] = useState({})
+    const navigate = useNavigate();
+    const dispatch: any = useDispatch();
+    const { preFillData } = useSelector(selectCourseManagement)
 
-    const [optionalUnit, setOptionalUnit] = useState({})
+    const [courseData, setCourseData] = useState(() => {
+        return {
+            assessment_language: preFillData?.assessment_language || "",
+            assessment_methods: preFillData?.assessment_methods || "",
+            brand_guidelines: formatText(preFillData?.brand_guidelines) || "",
+            course_code: preFillData?.course_code || "",
+            course_name: preFillData?.course_name || "",
+            guided_learning_hours: preFillData?.guided_learning_hours || "",
+            internal_external: preFillData?.internal_external || "",
+            level: preFillData?.level || "",
+            operational_start_date: preFillData?.operational_start_date || "",
+            overall_grading_type: preFillData?.overall_grading_type || "",
+            permitted_delivery_types: preFillData?.permitted_delivery_types || "",
+            qualification_status: preFillData?.qualification_status || "",
+            qualification_type: preFillData?.qualification_type || "",
+            recommended_minimum_age: preFillData?.recommended_minimum_age || "",
+            sector: preFillData?.sector || "",
+            total_credits: preFillData?.total_credits || "",
+        }
+    })
+
+    const [mandatoryUnit, setMandatoryUnit] = useState(generateUnitObject(preFillData?.mandatory_units, 'M'))
+
+    const [optionalUnit, setOptionalUnit] = useState(generateUnitObject(preFillData?.optional_units, 'O'))
+
+    const courseHandler = (event) => {
+        const { name, value } = event.target;
+        setCourseData((prev) => ({
+            ...prev,
+            [name]: value
+        }))
+    }
 
     const addUnitHandler = (unitType) => {
         const id = Date.now();
@@ -69,6 +127,34 @@ const CourseBuilder = () => {
         }
     };
 
+    const cancleCourseHandler = () => {
+        navigate("/courseBuilder")
+    }
+
+    const createCouserHandler = () => {
+
+        const mandatory_units = Object.values(mandatoryUnit).map((item: any) => {
+            return {
+                unit_ref: item.unit_ref,
+                title: item.title,
+                level: item.level,
+                glh: item.glh,
+                credit_value: item.credit_value
+            }
+        });
+
+        const optional_units = Object.values(optionalUnit).map((item: any) => {
+            return {
+                unit_ref: item.unit_ref,
+                title: item.title,
+                level: item.level,
+                glh: item.glh,
+                credit_value: item.credit_value
+            }
+        });
+
+        dispatch(createCourseAPI({ data: { ...courseData, mandatory_units, optional_units } }));
+    }
     return (
         <div className='p-12'>
             <Box className="m-12 flex flex-col justify-between gap-12 sm:flex-row">
@@ -80,6 +166,8 @@ const CourseBuilder = () => {
                         placeholder='Enter Course Name'
                         required
                         fullWidth
+                        value={courseData.course_name}
+                        onChange={courseHandler}
                     />
                 </div>
                 <div className='w-1/3'>
@@ -90,6 +178,8 @@ const CourseBuilder = () => {
                         placeholder='Enter Course Code'
                         required
                         fullWidth
+                        value={courseData.course_code}
+                        onChange={courseHandler}
                     />
                 </div>
                 <div className='w-1/3'>
@@ -100,6 +190,8 @@ const CourseBuilder = () => {
                         placeholder='Enter Level'
                         required
                         fullWidth
+                        value={courseData.level}
+                        onChange={courseHandler}
                     />
                 </div>
             </Box>
@@ -112,6 +204,8 @@ const CourseBuilder = () => {
                         size="small"
                         placeholder='Enter Sector'
                         fullWidth
+                        value={courseData.sector}
+                        onChange={courseHandler}
                     />
                 </div>
                 <div className='w-1/3'>
@@ -121,6 +215,8 @@ const CourseBuilder = () => {
                         size="small"
                         placeholder='Enter Internal/External'
                         fullWidth
+                        value={courseData.internal_external}
+                        onChange={courseHandler}
                     />
                 </div>
                 <div className='w-1/3'>
@@ -130,6 +226,8 @@ const CourseBuilder = () => {
                         size="small"
                         placeholder='Enter Qualification Type'
                         fullWidth
+                        value={courseData.qualification_type}
+                        onChange={courseHandler}
                     />
                 </div>
             </Box>
@@ -142,15 +240,19 @@ const CourseBuilder = () => {
                         size="small"
                         placeholder='Enter Assessment Language'
                         fullWidth
+                        value={courseData.assessment_language}
+                        onChange={courseHandler}
                     />
                 </div>
                 <div className='w-1/3'>
                     <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>Recommended Minimum age</Typography>
                     <TextField
-                        name="min_age"
+                        name="recommended_minimum_age"
                         size="small"
                         placeholder='Enter Recommended Minimum age'
                         fullWidth
+                        value={courseData.recommended_minimum_age}
+                        onChange={courseHandler}
                     />
                 </div>
                 <div className='w-1/3'>
@@ -160,6 +262,8 @@ const CourseBuilder = () => {
                         size="small"
                         placeholder='Enter Total Credits'
                         fullWidth
+                        value={courseData.total_credits}
+                        onChange={courseHandler}
                     />
                 </div>
             </Box>
@@ -172,6 +276,8 @@ const CourseBuilder = () => {
                         size="small"
                         placeholder='Enter Operational start date'
                         fullWidth
+                        value={courseData.operational_start_date}
+                        onChange={courseHandler}
                     />
                 </div>
                 <div className='w-1/3'>
@@ -181,6 +287,8 @@ const CourseBuilder = () => {
                         size="small"
                         placeholder='Enter Assessment methods'
                         fullWidth
+                        value={courseData.assessment_methods}
+                        onChange={courseHandler}
                     />
                 </div>
                 <div className='w-1/3'>
@@ -190,6 +298,8 @@ const CourseBuilder = () => {
                         size="small"
                         placeholder='Enter Qualification status'
                         fullWidth
+                        value={courseData.qualification_status}
+                        onChange={courseHandler}
                     />
                 </div>
             </Box>
@@ -198,10 +308,12 @@ const CourseBuilder = () => {
                 <div className='w-1/3'>
                     <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>Permitted Delivery Types</Typography>
                     <TextField
-                        name="delivery_types"
+                        name="permitted_delivery_types"
                         size="small"
                         placeholder='Enter Permitted Delivery Types'
                         fullWidth
+                        value={courseData.permitted_delivery_types}
+                        onChange={courseHandler}
                     />
                 </div>
                 <div className='w-1/3'>
@@ -211,15 +323,19 @@ const CourseBuilder = () => {
                         size="small"
                         placeholder='Enter Guided Learning Hours'
                         fullWidth
+                        value={courseData.guided_learning_hours}
+                        onChange={courseHandler}
                     />
                 </div>
                 <div className='w-1/3'>
                     <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>Overall Grading Type</Typography>
                     <TextField
-                        name="grading_type"
+                        name="overall_grading_type"
                         size="small"
                         placeholder='Enter Overall Grading Type'
                         fullWidth
+                        value={courseData.overall_grading_type}
+                        onChange={courseHandler}
                     />
                 </div>
             </Box>
@@ -228,12 +344,14 @@ const CourseBuilder = () => {
                 <div className='w-full'>
                     <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>Course Guidelines</Typography>
                     <TextField
-                        name="course_guidelines"
+                        name="brand_guidelines"
                         size="small"
                         placeholder='Enter Course Guidelines'
                         fullWidth
                         multiline
-                        rows={3}
+                        rows={5}
+                        value={courseData.brand_guidelines}
+                        onChange={courseHandler}
                     />
                 </div>
             </Box>
@@ -268,8 +386,8 @@ const CourseBuilder = () => {
             </Box>
 
             <Box className="flex items-center justify-end m-12 mt-24">
-                <SecondaryButtonOutlined name="Cancle" className=" w-1/12"/>
-                <SecondaryButton name="Create" className=" w-1/12 ml-10"/>
+                <SecondaryButtonOutlined name="Cancle" className=" w-1/12" onClick={cancleCourseHandler} />
+                <SecondaryButton name="Create" className=" w-1/12 ml-10" onClick={createCouserHandler} />
             </Box>
         </div>
     )

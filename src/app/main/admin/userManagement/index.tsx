@@ -6,7 +6,7 @@ import { AdminRedirect, roles } from "src/app/contanst";
 import Style from '../style.module.css'
 import { useSelector } from "react-redux";
 import { createUserAPI, fetchUserAPI, selectUserManagement, updateUserAPI } from "app/store/userManagement";
-import UserManagementTable from "src/app/component/Table/ManagementTable";
+import UserManagementTable from "src/app/component/Table/UserManagementTable";
 import { userManagementTableColumn } from "src/app/contanst";
 import {
   Autocomplete,
@@ -15,6 +15,7 @@ import {
   IconButton,
   InputAdornment,
   OutlinedInput,
+  Paper,
   TextField,
   Typography,
 } from "@mui/material";
@@ -53,7 +54,7 @@ const Index = () => {
     password: "",
     confrimpassword: "",
     mobile: "",
-    role: "",
+    role: "Trainer",
     time_zone: "",
   });
 
@@ -93,7 +94,7 @@ const Index = () => {
       password: "",
       confrimpassword: "",
       mobile: "",
-      role: "",
+      role: "Trainer",
       time_zone: "",
     });
     setUserDataError({
@@ -225,7 +226,7 @@ const Index = () => {
               }}
             />
             <Autocomplete
-              freeSolo
+              
               fullWidth
               size="small"
               value={filterValue}
@@ -239,6 +240,9 @@ const Index = () => {
                   color: "#5B718F",
                 },
               }}
+              PaperComponent={({ children }) => (
+                <Paper style={{ borderRadius:"4px" }}>{children}</Paper>
+              )}
             />
           </div>
           <SecondaryButton
@@ -248,9 +252,9 @@ const Index = () => {
                 src="assets/images/svgimage/createcourseicon.svg"
                 alt="Create user"
                 className="w-6 h-6 mr-2 sm:w-8 sm:h-8 lg:w-10 lg:h-10"
-                onClick={handleOpen}
               />
             }
+            onClick={handleOpen}
           />
         </div>
       ) : null}

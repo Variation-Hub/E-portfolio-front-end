@@ -1,14 +1,34 @@
 import React, { useState } from "react";
-import { SecondaryButton, SecondaryButtonOutlined } from "../Buttons";
+import { LoadingButton, SecondaryButton, SecondaryButtonOutlined } from "../Buttons";
 import { FileUploader } from "react-drag-drop-files";
+import { useDispatch } from "react-redux";
+import { jsonConverter, selectCourseManagement } from "app/store/courseManagement";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
-const CourseUploadDialog = () => {
+const CourseUploadDialog = (props) => {
+
+  const { handleClose } = props.dialogFn;
+  const { dataUpdatingLoadding } = useSelector(selectCourseManagement)
+  const dispatch: any = useDispatch();
+  const navigate = useNavigate();
+
   const fileTypes = ["PDF"];
   const [file, setFile] = useState(null);
   const handleChange = (file) => {
     setFile(file);
+    console.log(file);
   };
 
+  const uploadHandler = async () => {
+    const fromData = new FormData();
+    fromData.append("pdf", file);
+
+    const response = await dispatch(jsonConverter(fromData));
+    if (response) {
+      navigate("/courseBuilder/course")
+    }
+  }
   return (
     <>
       <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded border border-gray-300 max-w-md w-full shadow-md">
@@ -17,7 +37,7 @@ const CourseUploadDialog = () => {
 
         <FileUploader
           children={
-            <div style={{border:'1px dotted lightgray', padding:'6rem'}}>
+            <div style={{ border: '1px dotted lightgray', padding: '5rem' }}>
 
               <div className="flex justify-center mt-8">
                 <img
@@ -48,11 +68,18 @@ const CourseUploadDialog = () => {
           </div>
         </div>
         <div className="flex justify-end mt-4">
-          <SecondaryButtonOutlined
-            name="Cancel"
-            style={{ width: "10rem", marginRight: "2rem" }}
-          />
-          <SecondaryButton name="Upload" style={{ width: "10rem" }} />
+          {dataUpdatingLoadding ?
+            <LoadingButton style={{ width: "10rem" }} />
+            :
+            <>
+              <SecondaryButtonOutlined
+                name="Cancel"
+                style={{ width: "10rem", marginRight: "2rem" }}
+                onClick={handleClose}
+              />
+              <SecondaryButton name="Upload" style={{ width: "10rem" }} onClick={uploadHandler} />
+            </>
+          }
         </div>
       </div>
     </>

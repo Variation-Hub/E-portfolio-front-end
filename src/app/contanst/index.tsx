@@ -193,6 +193,15 @@ export const userManagementTableColumn = [
   { id: 'actions', label: 'Actions', minWidth: 170, align: "center" }
 ];
 
+export const learnerManagementTableColumn = [
+  { id: 'first_name', label: 'Name', minWidth: 170, align: "left" },
+  { id: 'user_name', label: 'Username', minWidth: 170, align: "left" },
+  { id: 'email', label: 'Email', minWidth: 170, align: "left" },
+  { id: 'mobile', label: 'Mobile', minWidth: 170, align: "left" },
+  { id: 'status', label: 'Status', minWidth: 100, align: "left" },
+  { id: 'actions', label: 'Actions', minWidth: 170, align: "center" }
+];
+
 export const roles = [{
   value: UserRole.Admin,
   label: "Admin"
@@ -217,10 +226,10 @@ export const roles = [{
 
 export const courseManagementTableColumn = [
   { id: 'course_name', label: 'Course Name', minWidth: 200, align: "left" },
-  { id: 'code', label: 'Code', minWidth: 70, align: "left" },
+  { id: 'course_code', label: 'Code', minWidth: 70, align: "left" },
   { id: 'level', label: 'Level', minWidth: 170, align: "left" },
   { id: 'sector', label: 'Sector', minWidth: 170, align: "left" },
-  { id: 'learning_hours', label: 'Learning Hours', minWidth: 100, align: "left" },
+  { id: 'guided_learning_hours', label: 'Learning Hours', minWidth: 100, align: "left" },
   { id: 'actions', label: 'Actions', minWidth: 170, align: "center" }
 ];
 

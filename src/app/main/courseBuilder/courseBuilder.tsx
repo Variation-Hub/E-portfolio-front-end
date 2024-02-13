@@ -1,26 +1,27 @@
-import { Dialog } from "@mui/material";
-import React, { useState } from "react";
+import { Dialog, IconButton, InputAdornment, TextField, Typography } from "@mui/material";
+import React, { useEffect, useState } from "react";
 import { SecondaryButton } from "src/app/component/Buttons";
 import CourseUploadDialog from "src/app/component/Dialogs/courseUploadDialog";
 import { courseManagementTableColumn } from "src/app/contanst";
 import { selectUserManagement } from "app/store/userManagement";
 import { useSelector } from "react-redux";
-import ManagementTable from "src/app/component/Table/ManagementTable";
-import CourseBuilderComponent from "src/app/component/Courses";
+import CourseManagementTable from "src/app/component/Table/CourseManagementTable";
+import SearchIcon from "@mui/icons-material/Search";
+import DataNotFound from "src/app/component/Pages/dataNotFound";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { fetchCourseAPI, selectCourseManagement } from "app/store/courseManagement";
 
 const CourseBuilder = () => {
-  const courses = [
-    {
-      course_name: "Course A",
-      code: "C001",
-      level: "Intermediate",
-      sector: "Learn",
-      learning_hours: 20,
-    },
-  ];
 
-  const { dataUpdatingLoadding, meta_data } = useSelector(selectUserManagement)
+  const { dataUpdatingLoadding, meta_data, data } = useSelector(selectCourseManagement)
+  const dispatch: any = useDispatch();
 
+  useEffect(() => {
+    dispatch(fetchCourseAPI());
+  }, [])
+
+  const navigate = useNavigate();
 
   const handleEdit = (course) => {
     console.log(`Editing course: ${course.name}`);
@@ -37,80 +38,92 @@ const CourseBuilder = () => {
   const handleClose = () => {
     setOpen(false);
   };
+
+  const handleCreateCourse = () => {
+    navigate("/courseBuilder/course");
+  }
   return (
     <>
+      {data.length ?
+        <>
+          <div className="m-4 flex items-center justify-between">
+            <TextField
+              label="Search by keyword"
+              fullWidth
+              size="small"
+              // onKeyDown={searchByKeywordUser}
+              // onChange={searchHandler}
+              // value={searchKeyword}
+              className="w-1/4"
+              InputProps={{
+                endAdornment:
+                  <InputAdornment position="end" >
+                    {/* {
+                      searchKeyword ? (
+                        <Close
+                          onClick={() => {
+                            setSearchKeyword("");
+                            dispatch(fetchUserAPI({ page: 1, page_size: 25 }, "", filterValue));
+                          }}
+                          sx={{
+                            color: "#5B718F",
+                            fontSize: 18,
+                            cursor: "pointer",
+                          }}
+                        />
+                      ) : ( */}
+                    <IconButton
+                      id="dashboard-search-events-btn"
+                      disableRipple
+                      sx={{ color: "#5B718F" }}
+                      // onClick={() => searchAPIHandler()}
+                      size="small"
+                    >
+                      <SearchIcon fontSize="small" />
+                    </IconButton>
+                    {/* )} */}
+                  </InputAdornment>
+              }}
+            />
 
-      {/* <CourseBuilderComponent /> */}
-
-
-      <Dialog
-        open={!open}
-        onClose={handleClose}
-        sx={{
-          ".MuiDialog-paper": {
-            borderRadius: "4px",
-            padding: "1rem",
-          },
-        }}
-      >
-        <CourseUploadDialog />
-      </Dialog>
-
-      {courses.length ?
-        <ManagementTable
-          columns={courseManagementTableColumn}
-          rows={courses}
-          meta_data={meta_data}
-          dataUpdatingLoadding={dataUpdatingLoadding}
-        />
-        :
-        <div className="m-4 flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <div className="relative flex items-center">
-              <input
-                className="p-4 pr-16 border border-gray-300 rounded h-24 sm:h-32 lg:h-40 w-full sm:w-auto"
-                type="text"
-                placeholder="Search by keyword"
-              />
-              <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
-                <svg
-                  className="w-16 h-16 text-gray-400"
-                  fill="none"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path d="M21 21l-5.2-5.2"></path>
-                  <circle cx="10" cy="10" r="8"></circle>
-                </svg>
-              </div>
-            </div>
-
-            <div className="relative flex items-center">
-              <input
-                className="p-4 pr-16 border border-gray-300 rounded h-24 sm:h-32 lg:h-40 w-full sm:w-auto"
-                type="text"
-                placeholder="Search by role"
-              />
-              <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
-                <svg
-                  className="w-16 h-16 text-gray-400"
-                  fill="none"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path d="M21 21l-5.2-5.2"></path>
-                  <circle cx="10" cy="10" r="8"></circle>
-                </svg>
-              </div>
+            <div className="flex items-center space-x-4">
+              <SecondaryButton
+                name="Upload Files"
+                startIcon={
+                  <img
+                    src="assets/images/svgimage/uploadfileicon.svg"
+                    alt="Create File"
+                    className="w-6 h-6 mr-2 sm:w-8 sm:h-8 lg:w-10 lg:h-10"
+                  />
+                }
+                onClick={handleOpen}
+              ></SecondaryButton>
+              <SecondaryButton
+                name="Create Course"
+                startIcon={
+                  <img
+                    src="assets/images/svgimage/createcourseicon.svg"
+                    alt="Create File"
+                    className="w-6 h-6 mr-2 sm:w-8 sm:h-8 lg:w-10 lg:h-10"
+                  />
+                }
+              ></SecondaryButton>
             </div>
           </div>
 
+          <CourseManagementTable
+            columns={courseManagementTableColumn}
+            rows={data}
+            meta_data={meta_data}
+            dataUpdatingLoadding={dataUpdatingLoadding}
+          />
+        </>
+        :
+
+        <div className="flex flex-col justify-center items-center gap-10 " style={{ height: "94%" }}>
+          <DataNotFound width="25%" />
+          <Typography variant="h5">No data found</Typography>
+          <Typography variant="body2" className="text-center">It is a long established fact that a reader will be <br />distracted by the readable content.</Typography>
           <div className="flex items-center space-x-4">
             <SecondaryButton
               name="Upload Files"
@@ -122,7 +135,8 @@ const CourseBuilder = () => {
                 />
               }
               onClick={handleOpen}
-            ></SecondaryButton>
+            />
+            <div className="w-48 text-center">OR</div>
             <SecondaryButton
               name="Create Course"
               startIcon={
@@ -132,10 +146,23 @@ const CourseBuilder = () => {
                   className="w-6 h-6 mr-2 sm:w-8 sm:h-8 lg:w-10 lg:h-10"
                 />
               }
-            ></SecondaryButton>
+              onClick={handleCreateCourse}
+            />
           </div>
         </div>
       }
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        sx={{
+          ".MuiDialog-paper": {
+            borderRadius: "4px",
+            padding: "1rem",
+          },
+        }}
+      >
+        <CourseUploadDialog dialogFn={{ handleClose }} />
+      </Dialog>
     </>
   );
 };

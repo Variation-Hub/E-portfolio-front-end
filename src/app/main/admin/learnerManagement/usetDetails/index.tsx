@@ -1,4 +1,4 @@
-import { Autocomplete, Box, IconButton, MenuItem, TextField, Tooltip, Typography } from '@mui/material';
+import { Autocomplete, Box, IconButton, MenuItem, Paper, TextField, Tooltip, Typography } from '@mui/material';
 import CloseIcon from "@mui/icons-material/Close";
 import { roles } from 'src/app/contanst';
 import { LoadingButton, SecondaryButton, SecondaryButtonOutlined } from 'src/app/component/Buttons';
@@ -34,12 +34,12 @@ const UserDetails = (props) => {
                             fullWidth
                             onChange={handleUpdate}
                             error={userDataError?.first_name}
-                            InputProps={{
-                                endAdornment:
-                                    <Tooltip title={nameValidationMsg} placement="bottom" arrow>
-                                        <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
-                                    </Tooltip>
-                            }}
+                        // InputProps={{
+                        //     endAdornment:
+                        //         <Tooltip title={nameValidationMsg} placement="bottom" arrow>
+                        //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
+                        //         </Tooltip>
+                        // }}
                         />
                     </div>
                     <div className='w-1/2'>
@@ -53,12 +53,12 @@ const UserDetails = (props) => {
                             fullWidth
                             onChange={handleUpdate}
                             error={userDataError?.last_name}
-                            InputProps={{
-                                endAdornment:
-                                    <Tooltip title={nameValidationMsg} placement="bottom" arrow>
-                                        <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
-                                    </Tooltip>
-                            }}
+                        // InputProps={{
+                        //     endAdornment:
+                        //         <Tooltip title={nameValidationMsg} placement="bottom" arrow>
+                        //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
+                        //         </Tooltip>
+                        // }}
                         />
                     </div>
                 </Box>
@@ -66,15 +66,15 @@ const UserDetails = (props) => {
                     <div className='w-1/2'>
                         <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>User Name<sup>*</sup></Typography>
                         <TextField
-                            name="username"
+                            name="user_name"
                             // label="Username"
-                            value={userData?.username}
+                            value={userData?.user_name}
                             size="small"
                             placeholder='Enter username'
                             required
                             fullWidth
                             onChange={handleUpdate}
-                            error={userDataError?.username}
+                            error={userDataError?.user_name}
                             InputProps={{
                                 endAdornment:
                                     <Tooltip title={usernameValidationMsg} placement="bottom" arrow>
@@ -95,12 +95,12 @@ const UserDetails = (props) => {
                             fullWidth
                             onChange={handleUpdate}
                             error={userDataError?.email}
-                            InputProps={{
-                                endAdornment:
-                                    <Tooltip title={emailValidationMsg} placement="bottom" arrow>
-                                        <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
-                                    </Tooltip>
-                            }}
+                        // InputProps={{
+                        //     endAdornment:
+                        //         <Tooltip title={emailValidationMsg} placement="bottom" arrow>
+                        //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
+                        //         </Tooltip>
+                        // }}
                         />
                     </div>
                 </Box>
@@ -139,12 +139,12 @@ const UserDetails = (props) => {
                             fullWidth
                             onChange={handleUpdate}
                             error={userDataError?.confrimpassword}
-                            InputProps={{
-                                endAdornment:
-                                    <Tooltip title="Password must be same" placement="bottom" arrow>
-                                        <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
-                                    </Tooltip>
-                            }}
+                        // InputProps={{
+                        //     endAdornment:
+                        //         <Tooltip title="Password must be same" placement="bottom" arrow>
+                        //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
+                        //         </Tooltip>
+                        // }}
                         />
                     </div>
 
@@ -154,18 +154,23 @@ const UserDetails = (props) => {
                     <div className='w-1/2'>
                         <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>Employer<sup>*</sup></Typography>
                         <Autocomplete
-                            freeSolo
+                            disableClearable
                             fullWidth
                             size="small"
-                            value={userData?.time_zone}
-                            options={timezones.map((option) => option)}
-                            renderInput={(params) => <TextField {...params} placeholder="Select employer" name="time_zone" />}
-                            onChange={(e, value) => handleUpdate({ target: { name: "time_zone", value: value } })}
+                            options={[{ id: "1", name: "Jenis Savaliya" }, { id: "2", name: "Mohan Sharma" }]}
+                            getOptionLabel={(option) => option.name}
+                            renderInput={(params) => <TextField {...params} placeholder="Select employer"
+                                value={userData?.employer_id}
+                                name="employer_id" />}
+                            onChange={(e, value) => handleUpdate({ target: { name: "employer_id", value: value.id } })}
                             sx={{
                                 '.MuiAutocomplete-clearIndicator': {
                                     color: "#5B718F"
                                 }
                             }}
+                            PaperComponent={({ children }) => (
+                                <Paper style={{ borderRadius: "4px" }}>{children}</Paper>
+                            )}
                         />
                     </div>
 
@@ -180,12 +185,13 @@ const UserDetails = (props) => {
                             fullWidth
                             onChange={handleUpdate}
                             error={userDataError?.mobile}
-                            InputProps={{
-                                endAdornment:
-                                    <Tooltip title={mobileValidationMsg} placement="bottom" arrow>
-                                        <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
-                                    </Tooltip>
-                            }}
+
+                        // InputProps={{
+                        //     endAdornment:
+                        //         <Tooltip title={mobileValidationMsg} placement="bottom" arrow>
+                        //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
+                        //         </Tooltip>
+                        // }}
                         />
                     </div>
 
@@ -196,33 +202,50 @@ const UserDetails = (props) => {
                         <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>National Insurance Number<sup>*</sup></Typography>
 
                         <TextField
-                            name="password"
+                            name="national_ins_no"
                             placeholder="Enter national insurance number"
-                            value={userData?.password}
+                            value={userData?.national_ins_no}
                             size="small"
                             type="text"
                             fullWidth
                             onChange={handleUpdate}
-                            error={userDataError?.password}
-                            InputProps={{
-                                endAdornment:
-                                    <Tooltip title={passwordValidation} placement="bottom" arrow>
-                                        <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
-                                    </Tooltip>
-                            }}
+                            error={userDataError?.national_ins_no}
+                        // InputProps={{
+                        //     endAdornment:
+                        //         <Tooltip title={passwordValidation} placement="bottom" arrow>
+                        //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
+                        //         </Tooltip>
+                        // }}
                         />
                     </div>
 
                     <div className='w-1/2'>
                         <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>Funding Body<sup>*</sup></Typography>
-                        <TextField
-                            name="mobile"
-                            value={userData?.mobile}
+                        {/* <TextField
+                            name="funding_body"
+                            value={userData?.funding_body}
                             size="small"
                             placeholder='Enter funding details'
                             fullWidth
                             onChange={handleUpdate}
-                            error={userDataError?.mobile}
+                            error={userDataError?.funding_body}
+                        /> */}
+                        <Autocomplete
+                            disableClearable
+                            fullWidth
+                            size="small"
+                            value={userData?.funding_body}
+                            options={["Advance Learning Loan", "Employer", "ITA", "Self", "Student Loan", "Other"].map((option) => option)}
+                            renderInput={(params) => <TextField {...params} placeholder="Select funding body" name="funding_body" />}
+                            onChange={(e, value) => handleUpdate({ target: { name: "funding_body", value: value } })}
+                            sx={{
+                                '.MuiAutocomplete-clearIndicator': {
+                                    color: "#5B718F"
+                                }
+                            }}
+                            PaperComponent={({ children }) => (
+                                <Paper style={{ borderRadius: "4px" }}>{children}</Paper>
+                            )}
                         />
                     </div>
 
