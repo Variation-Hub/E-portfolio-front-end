@@ -75,7 +75,7 @@ export const DangerButton = (props) => {
 }
 
 export const LoadingButton = (props) => {
-    const { variant = "contained", style } = props;
+    const { variant = "contained", style, className="" } = props;
     return (
         <Button
             variant={variant}
@@ -89,6 +89,7 @@ export const LoadingButton = (props) => {
                     backgroundColor: "#5B718F"
                 }
             }}
+            className={className}
             style={style}
         >
             <CircularProgress size={20} sx={{ color: "white" }} />

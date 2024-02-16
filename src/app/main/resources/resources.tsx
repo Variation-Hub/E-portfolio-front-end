@@ -1,30 +1,23 @@
 import { Autocomplete, Dialog, IconButton, InputAdornment, Paper, TextField, Typography } from "@mui/material";
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import { SecondaryButton } from "src/app/component/Buttons";
-import { courseManagementTableColumn } from "src/app/contanst";
-import { selectUserManagement } from "app/store/userManagement";
 import { useSelector } from "react-redux";
 import SearchIcon from "@mui/icons-material/Search";
 import DataNotFound from "src/app/component/Pages/dataNotFound";
 import { useNavigate } from "react-router-dom";
 import ResourceUploadDialog from "src/app/component/Dialogs/resourceUploadDialog";
+import { useDispatch } from "react-redux";
+import { fetchResourceAPI, selectResourceManagement } from "app/store/resourcesManagement";
+import FuseLoading from "@fuse/core/FuseLoading";
+import ResouresManagementTable from "src/app/component/Table/ResourseManagementTable";
+import { resourceManagementTableColumn } from "src/app/contanst";
 
 const Resources = () => {
-  const courses = [];
 
-  const { dataUpdatingLoadding, meta_data } = useSelector(selectUserManagement)
-
-  const navigate = useNavigate();
-
-  const handleEdit = (course) => {
-    console.log(`Editing course: ${course.name}`);
-  };
-
-  const handleDelete = (course) => {
-    console.log(`Deleting course: ${course.name}`);
-  };
-
+  const { data, dataFetchLoading } = useSelector(selectResourceManagement)
   const [open, setOpen] = useState(false);
+  const dispatch: any = useDispatch();
+
   const handleOpen = () => {
     setOpen(true);
   };
@@ -32,24 +25,27 @@ const Resources = () => {
     setOpen(false);
   };
 
+  useEffect(() => {
+    dispatch(fetchResourceAPI())
+  }, []);
+
   return (
     <>
-      {!courses.length ?
-        <>
-          <div className="m-4 flex items-center justify-between">
-            <div className="w-2/4 flex gap-12">
-              <TextField
-                label="Search by keyword"
-                fullWidth
-                size="small"
-                // onKeyDown={searchByKeywordUser}
-                // onChange={searchHandler}
-                // value={searchKeyword}
-                className="w-1/2"
-                InputProps={{
-                  endAdornment:
-                    <InputAdornment position="end" >
-                      {/* {
+      {data.length ?
+        <div className="m-4 flex items-center justify-between">
+          <div className="w-2/4 flex gap-12">
+            {/* <TextField
+              label="Search by keyword"
+              fullWidth
+              size="small"
+              onKeyDown={searchByKeywordUser}
+              onChange={searchHandler}
+              value={searchKeyword}
+              className="w-1/2"
+              InputProps={{
+                endAdornment:
+                  <InputAdornment position="end" >
+                    {
                       searchKeyword ? (
                         <Close
                           onClick={() => {
@@ -62,80 +58,81 @@ const Resources = () => {
                             cursor: "pointer",
                           }}
                         />
-                      ) : ( */}
-                      <IconButton
-                        id="dashboard-search-events-btn"
-                        disableRipple
-                        sx={{ color: "#5B718F" }}
-                        // onClick={() => searchAPIHandler()}
-                        size="small"
-                      >
-                        <SearchIcon fontSize="small" />
-                      </IconButton>
-                      {/* )} */}
-                    </InputAdornment>
-                }}
-              />
+                      ) : (
+                    <IconButton
+                      id="dashboard-search-events-btn"
+                      disableRipple
+                      sx={{ color: "#5B718F" }}
+                      onClick={() => searchAPIHandler()}
+                      size="small"
+                    >
+                      <SearchIcon fontSize="small" />
+                    </IconButton>
+                     )} 
+                  </InputAdornment>
+              }}
+            /> */}
 
-              <Autocomplete
-                
-                className="w-1/2"
-                fullWidth
-                size="small"
-                options={["Course 1", "Course 2"].map((option) => option)}
-                renderInput={(params) => (
-                  <TextField {...params} placeholder="Search by course name" />
-                )}
-                sx={{
-                  ".MuiAutocomplete-clearIndicator": {
-                    color: "#5B718F",
-                  }
-                }}
-                PaperComponent={({ children }) => (
-                  <Paper style={{ borderRadius:"4px" }}>{children}</Paper>
-                )}
+            {/* <Autocomplete
+
+              className="w-1/2"
+              fullWidth
+              size="small"
+              options={["Course 1", "Course 2"].map((option) => option)}
+              renderInput={(params) => (
+                <TextField {...params} placeholder="Search by course name" />
+              )}
+              sx={{
+                ".MuiAutocomplete-clearIndicator": {
+                  color: "#5B718F",
+                }
+              }}
+              PaperComponent={({ children }) => (
+                <Paper style={{ borderRadius: "4px" }}>{children}</Paper>
+              )}
+            /> */}
+          </div>
+
+          <SecondaryButton
+            name="Create Resource"
+            startIcon={
+              <img
+                src="assets/images/svgimage/createcourseicon.svg"
+                alt="Create File"
+                className="w-6 h-6 mr-2 sm:w-8 sm:h-8 lg:w-10 lg:h-10"
+              />
+            }
+            onClick={handleOpen}
+          />
+        </div>
+        : null}
+
+      {dataFetchLoading ? <FuseLoading /> :
+        data.length ?
+          <ResouresManagementTable
+            columns={resourceManagementTableColumn}
+            rows={data}
+          />
+          :
+
+          <div className="flex flex-col justify-center items-center gap-10 " style={{ height: "94%" }}>
+            <DataNotFound width="25%" />
+            <Typography variant="h5">No data found</Typography>
+            <Typography variant="body2" className="text-center">It is a long established fact that a reader will be <br />distracted by the readable content.</Typography>
+            <div className="flex items-center space-x-4">
+              <SecondaryButton
+                name="Create Resource"
+                startIcon={
+                  <img
+                    src="assets/images/svgimage/createcourseicon.svg"
+                    alt="Create File"
+                    className="w-6 h-6 mr-2 sm:w-8 sm:h-8 lg:w-10 lg:h-10"
+                  />
+                }
+                onClick={handleOpen}
               />
             </div>
-
-            <SecondaryButton
-              name="Create Resource"
-              startIcon={
-                <img
-                  src="assets/images/svgimage/createcourseicon.svg"
-                  alt="Create File"
-                  className="w-6 h-6 mr-2 sm:w-8 sm:h-8 lg:w-10 lg:h-10"
-                />
-              }
-            />
           </div>
-
-          {/* <UserManagementTable
-            columns={courseManagementTableColumn}
-            rows={courses}
-            meta_data={meta_data}
-            dataUpdatingLoadding={dataUpdatingLoadding}
-          /> */}
-        </>
-        :
-
-        <div className="flex flex-col justify-center items-center gap-10 " style={{ height: "94%" }}>
-          <DataNotFound width="25%" />
-          <Typography variant="h5">No data found</Typography>
-          <Typography variant="body2" className="text-center">It is a long established fact that a reader will be <br />distracted by the readable content.</Typography>
-          <div className="flex items-center space-x-4">
-            <SecondaryButton
-              name="Create Resource"
-              startIcon={
-                <img
-                  src="assets/images/svgimage/createcourseicon.svg"
-                  alt="Create File"
-                  className="w-6 h-6 mr-2 sm:w-8 sm:h-8 lg:w-10 lg:h-10"
-                />
-              }
-              onClick={handleOpen}
-            />
-          </div>
-        </div>
       }
       <Dialog
         open={open}

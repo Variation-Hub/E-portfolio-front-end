@@ -5,6 +5,8 @@ import { useDispatch } from "react-redux";
 import { jsonConverter, selectCourseManagement } from "app/store/courseManagement";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import samplePDF from './sample.pdf';
+
 
 const CourseUploadDialog = (props) => {
 
@@ -29,6 +31,11 @@ const CourseUploadDialog = (props) => {
       navigate("/courseBuilder/course")
     }
   }
+
+  function handleDivClick() {
+    window.open(samplePDF, '_blank'); // Open the PDF file in a new tab
+  }
+
   return (
     <>
       <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded border border-gray-300 max-w-md w-full shadow-md">
@@ -37,7 +44,7 @@ const CourseUploadDialog = (props) => {
 
         <FileUploader
           children={
-            <div style={{ border: '1px dotted lightgray', padding: '5rem' }}>
+            <div style={{ border: '1px dotted lightgray', padding: '5rem', cursor: "pointer" }}>
 
               <div className="flex justify-center mt-8">
                 <img
@@ -46,11 +53,17 @@ const CourseUploadDialog = (props) => {
                   className="w-36"
                 />
               </div>
-              <p className="text-center mb-4">
-                Drag and drop your files here or{" "}
-                <a className="text-blue-500">Browse</a>
-              </p>
-              <p className="text-center mb-4">Max 10MB files are allowed</p>
+              {file ?
+                <p className="text-center mb-4">{file.name}</p>
+                :
+                <>
+                  <p className="text-center mb-4">
+                    Drag and drop your files here or{" "}
+                    <a className="text-blue-500">Browse</a>
+                  </p>
+                  <p className="text-center mb-4">Max 10MB files are allowed</p>
+                </>
+              }
             </div>
           }
           handleChange={handleChange}
@@ -59,11 +72,13 @@ const CourseUploadDialog = (props) => {
         />
         <div className="mt-4 pt-4">
           <p className="font-bold">Sample File:</p>
-          <div className="flex items-center justify-between mt-2">
-            <div className="flex items-center">
-              <img src="path/to/pdf/icon" alt="PDF" className="w-6 h-6 mr-2" />
-              <p>SampleFile.pdf</p>
-              <span className="text-sm">Size: 2MB</span>
+          <div className="flex items-center justify-between mt-2 mb-10 cursor-pointer">
+            <div className="flex items-center border-1 w-full p-4" onClick={handleDivClick}>
+              <img src="assets/images/svgImage/samplepdf.svg" alt="PDF" className="w-36 mr-2" />
+              <div>
+                <p>Sample File</p>
+                <p className="text-sm">This file contains important information about which format will support.  </p>
+              </div>
             </div>
           </div>
         </div>

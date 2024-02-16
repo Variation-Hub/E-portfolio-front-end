@@ -165,4 +165,18 @@ export const jsonConverter = (data) => async (dispatch) => {
     }
 }
 
+export const courseAllocationAPI = (data) => async (dispatch) => {
+
+    try {
+        const response = await axios.post(`${URL_BASE_LINK}/course/add-learner`, data)
+        dispatch(showMessage({ message: response.data.message, variant: "success" }))
+        return true;
+
+    } catch (err) {
+
+        dispatch(showMessage({ message: err.response.data.message, variant: "error" }))
+        return false;
+    };
+}
+
 export default courseManagementSlice.reducer;

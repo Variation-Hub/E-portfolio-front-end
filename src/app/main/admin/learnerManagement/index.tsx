@@ -16,6 +16,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { emailReg, mobileReg, nameReg, passwordReg, usernameReg } from "src/app/contanst/regValidation";
 import { createLearnerAPI, fetchLearnerAPI, selectLearnerManagement, updateLearnerAPI } from "app/store/learnerManagement";
 import LearnerManagementTable from "src/app/component/Table/LearnerManagementTable";
+import { fetchCourseAPI } from "app/store/courseManagement";
 
 const Index = () => {
 
@@ -29,6 +30,7 @@ const Index = () => {
 
   useEffect(() => {
     dispatch(fetchLearnerAPI())
+    dispatch(fetchCourseAPI())
   }, [dispatch])
 
   const [userData, setUserData] = useState({

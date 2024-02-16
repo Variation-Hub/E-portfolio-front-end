@@ -241,3 +241,12 @@ export const courseManagementUnitColumn = [
   { id: "credit_value", label: "Credit Value", minWidth: 80, align: "left" },
   { id: "actions", label: "Action", minWidth: 80, align: "center" }
 ]
+
+export const resourceManagementTableColumn = [
+  { id: "name", label: "Name", minWidth: 180, align: "left" },
+  { id: "description", label: "Description", minWidth: 240, align: "left" },
+  { id: "glh", label: "GLH", minWidth: 80, align: "left" },
+  { id: "job_type", label: "On/Off Job", minWidth: 80, align: "left" },
+  { id: "resource_type", label: "Resource Type", minWidth: 80, align: "left" },
+  { id: "actions", label: "Action", minWidth: 80, align: "center" }
+]

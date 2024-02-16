@@ -130,8 +130,8 @@ export default function UserManagementTable(props) {
                 </TableContainer>
                 <div className="flex justify-center p-8">
                     <Pagination
-                        page={meta_data.page}
-                        count={Math.ceil(meta_data?.items / userTableMetaData.page_size)}
+                        page={meta_data?.page}
+                        count={Math.ceil(meta_data?.items / userTableMetaData?.page_size)}
                         showFirstButton
                         showLastButton
                         onChange={handleChangePage}

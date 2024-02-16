@@ -1,6 +1,6 @@
 import { Box, TextField, Typography } from '@mui/material'
 import React, { useState } from 'react'
-import { SecondaryButton, SecondaryButtonOutlined } from '../Buttons'
+import { LoadingButton, SecondaryButton, SecondaryButtonOutlined } from '../Buttons'
 import UnitManagementTable from '../Table/UnitManagementTable'
 import { courseManagementUnitColumn } from 'src/app/contanst'
 import { useNavigate } from 'react-router-dom'
@@ -29,11 +29,14 @@ function formatText(text = "") {
     return formattedText;
 }
 
-const CourseBuilder = () => {
+const CourseBuilder = (props) => {
+
+    const { edit = false, handleClose = () => { } } = props;
 
     const navigate = useNavigate();
     const dispatch: any = useDispatch();
     const { preFillData } = useSelector(selectCourseManagement)
+    const [loading, setLoading] = useState(false);
 
     const [courseData, setCourseData] = useState(() => {
         return {
@@ -61,6 +64,9 @@ const CourseBuilder = () => {
     const [optionalUnit, setOptionalUnit] = useState(generateUnitObject(preFillData?.optional_units, 'O'))
 
     const courseHandler = (event) => {
+        if (edit) {
+            return;
+        }
         const { name, value } = event.target;
         setCourseData((prev) => ({
             ...prev,
@@ -108,6 +114,11 @@ const CourseBuilder = () => {
     }
 
     const setUnitData = (unitId, data) => {
+
+        if (edit) {
+            return
+        }
+
         if (mandatoryUnit[unitId]) {
             setMandatoryUnit({
                 ...mandatoryUnit,
@@ -131,7 +142,7 @@ const CourseBuilder = () => {
         navigate("/courseBuilder")
     }
 
-    const createCouserHandler = () => {
+    const createCouserHandler = async () => {
 
         const mandatory_units = Object.values(mandatoryUnit).map((item: any) => {
             return {
@@ -152,8 +163,12 @@ const CourseBuilder = () => {
                 credit_value: item.credit_value
             }
         });
-
-        dispatch(createCourseAPI({ data: { ...courseData, mandatory_units, optional_units } }));
+        setLoading(true);
+        const response = await dispatch(createCourseAPI({ data: { ...courseData, mandatory_units, optional_units } }));
+        if (response) {
+            navigate("/courseBuilder")
+        }
+        setLoading(false)
     }
     return (
         <div className='p-12'>
@@ -359,11 +374,13 @@ const CourseBuilder = () => {
             <Box className="m-12">
                 <Box className="flex items-center justify-between">
                     <Typography>Mandatory Units</Typography>
-                    <SecondaryButton name="Add New" onClick={() => addUnitHandler("M")} />
+                    {!edit &&
+                        <SecondaryButton name="Add New" onClick={() => addUnitHandler("M")} />
+                    }
                 </Box>
                 {
                     Object.values(mandatoryUnit).length ?
-                        <UnitManagementTable columns={courseManagementUnitColumn} setUnitData={setUnitData} removeUnitHandler={removeUnitHandler} rows={Object.values(mandatoryUnit)} />
+                        <UnitManagementTable columns={courseManagementUnitColumn} edit={edit} setUnitData={setUnitData} removeUnitHandler={removeUnitHandler} rows={Object.values(mandatoryUnit)} />
                         :
                         <div className=' text-center opacity-50 mt-10 mb-10'>
                             Mandatory units have not been included.
@@ -374,20 +391,27 @@ const CourseBuilder = () => {
             <Box className="m-12">
                 <Box className="flex items-center justify-between">
                     <Typography>Optional Units</Typography>
-                    <SecondaryButton name="Add New" onClick={() => addUnitHandler("O")} />
+                    {!edit &&
+                        <SecondaryButton name="Add New" onClick={() => addUnitHandler("O")} />
+                    }
                 </Box>
                 {Object.values(optionalUnit).length ?
-                    <UnitManagementTable columns={courseManagementUnitColumn} setUnitData={setUnitData} removeUnitHandler={removeUnitHandler} rows={Object.values(optionalUnit)} />
+                    <UnitManagementTable columns={courseManagementUnitColumn} edit={edit} setUnitData={setUnitData} removeUnitHandler={removeUnitHandler} rows={Object.values(optionalUnit)} />
                     :
                     <div className=' text-center opacity-50 mt-10 mb-10'>
                         Optional units have not been included.
                     </div>
                 }
             </Box>
-
             <Box className="flex items-center justify-end m-12 mt-24">
-                <SecondaryButtonOutlined name="Cancle" className=" w-1/12" onClick={cancleCourseHandler} />
-                <SecondaryButton name="Create" className=" w-1/12 ml-10" onClick={createCouserHandler} />
+                {loading ? <LoadingButton className="w-1/12" /> :
+                    <>
+                        <SecondaryButtonOutlined name="Close" className=" w-1/12" onClick={edit ? handleClose : cancleCourseHandler} />
+                        {!edit &&
+                            <SecondaryButton name={edit ? "Update" : "Create"} className=" w-1/12 ml-10" onClick={createCouserHandler} />
+                        }
+                    </>
+                }
             </Box>
         </div>
     )

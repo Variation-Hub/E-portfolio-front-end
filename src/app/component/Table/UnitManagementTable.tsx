@@ -11,11 +11,24 @@ import Style from "./style.module.css";
 export default function UnitManagementTable(props) {
 
     const {
-        columns,
         rows,
         setUnitData,
-        removeUnitHandler
+        removeUnitHandler,
+        edit
     } = props
+
+    const columns = props.columns.map(column => {
+        if (!edit) {
+            return column;
+        } else {
+            if (column.id === 'actions') {
+                return null;
+            } else {
+                return column;
+            }
+        }
+    }).filter(column => column !== null); // Remove any null values (i.e., removed 'actions' column)
+
 
     return (
         <>

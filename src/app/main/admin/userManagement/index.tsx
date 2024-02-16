@@ -112,7 +112,6 @@ const Index = () => {
   };
 
   const createUserHandler = async () => {
-    console.log(validation())
     if (validation()) {
       const response = await dispatch(createUserAPI(userData));
       if (response) {
@@ -159,15 +158,6 @@ const Index = () => {
       mobile: !mobileReg.test(userData.mobile),
       role: userData?.role === "",
     })
-
-    console.log(nameReg.test(userData?.first_name),
-      nameReg.test(userData?.last_name),
-      usernameReg.test(userData?.user_name),
-      emailReg.test(userData?.email),
-      passwordReg.test(userData?.password),
-      userData?.password === userData?.confrimpassword,
-      mobileReg.test(userData.mobile),
-      userData?.role !== "");
 
     if (nameReg.test(userData?.first_name) &&
       nameReg.test(userData?.last_name) &&

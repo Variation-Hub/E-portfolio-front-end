@@ -6,6 +6,7 @@ import user from './userSlice';
 import userManagement from './userManagement';
 import learnerManagement from './learnerManagement';
 import courseManagement from './courseManagement';
+import resourceManagement from './resourcesManagement';
 
 const createReducer = (asyncReducers) => (state, action) => {
   const combinedReducer = combineReducers({
@@ -15,6 +16,7 @@ const createReducer = (asyncReducers) => (state, action) => {
     userManagement,
     learnerManagement,
     courseManagement,
+    resourceManagement,
     ...asyncReducers,
   });
 

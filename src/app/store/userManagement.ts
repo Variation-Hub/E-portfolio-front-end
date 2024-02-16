@@ -222,4 +222,20 @@ export const deleteUserHandler = (id, meta_data, search_keyword = "", search_rol
         return false;
     };
 }
+
+export const uploadAvatar = (file) => async (dispatch) => {
+    try{
+        const formData = new FormData();
+        formData.append('avatar', file);
+        dispatch(slice.setUpdatingLoader());
+        const response = await axios.post(`${URL_BASE_LINK}/user/avatar`, formData);
+        dispatch(showMessage({ message: response.data.message, variant: "success" }))
+        await JwtService.emit('onLogin', response.data.data);
+        dispatch(slice.setUpdatingLoader());
+        return true;
+    }catch(err){
+        dispatch(slice.setUpdatingLoader());
+        return false;
+    }
+}
 export default userManagementSlice.reducer;

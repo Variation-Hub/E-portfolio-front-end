@@ -148,4 +148,5 @@ export const deleteLearnerHandler = (id, meta_data, search_keyword = "", search_
         return false;
     };
 }
+
 export default learnerManagementSlice.reducer;
