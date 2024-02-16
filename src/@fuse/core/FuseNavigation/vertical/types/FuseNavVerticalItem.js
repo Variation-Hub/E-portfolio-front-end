@@ -18,18 +18,16 @@ const Root = styled(ListItem)(({ theme, ...props }) => ({
   paddingLeft: props.itempadding > 80 ? 80 : props.itempadding,
   paddingTop: 10,
   paddingBottom: 10,
-  color: alpha(theme.palette.text.primary, 0.7),
+  color: "#5B718F",
   cursor: 'pointer',
   textDecoration: 'none!important',
   '&:hover': {
-    color: theme.palette.text.primary,
+    color: "#FFFFFF",
+    backgroundColor:"#5B718F !important"
   },
   '&.active': {
-    color: theme.palette.text.primary,
-    backgroundColor:
-      theme.palette.mode === 'light'
-        ? 'rgba(0, 0, 0, .05)!important'
-        : 'rgba(255, 255, 255, .1)!important',
+    color: "#FFFFFF",
+    backgroundColor:"#5B718F",
     pointerEvents: 'none',
     transition: 'border-radius .15s cubic-bezier(0.4,0.0,0.2,1)',
     '& > .fuse-list-item-text-primary': {

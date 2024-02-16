@@ -149,11 +149,11 @@ export const createUserAPI = (data) => async (dispatch) => {
 }
 
 // get user
-export const fetchUserAPI = (data = { page: 1, page_size: 10 }, search_keyword = "", search_role = "") => async (dispatch) => {
+export const fetchUserAPI = (data = { page: 1, page_size: 25 }, search_keyword = "", search_role = "") => async (dispatch) => {
 
     try {
         dispatch(slice.setLoader());
-        const { page = 1, page_size = 10 } = data;
+        const { page = 1, page_size = 25 } = data;
 
         let url = `${URL_BASE_LINK}/user/list?page=${page}&limit=${page_size}&meta=true`;
 
@@ -221,5 +221,21 @@ export const deleteUserHandler = (id, meta_data, search_keyword = "", search_rol
         dispatch(slice.setUpdatingLoader());
         return false;
     };
+}
+
+export const uploadAvatar = (file) => async (dispatch) => {
+    try{
+        const formData = new FormData();
+        formData.append('avatar', file);
+        dispatch(slice.setUpdatingLoader());
+        const response = await axios.post(`${URL_BASE_LINK}/user/avatar`, formData);
+        dispatch(showMessage({ message: response.data.message, variant: "success" }))
+        await JwtService.emit('onLogin', response.data.data);
+        dispatch(slice.setUpdatingLoader());
+        return true;
+    }catch(err){
+        dispatch(slice.setUpdatingLoader());
+        return false;
+    }
 }
 export default userManagementSlice.reducer;

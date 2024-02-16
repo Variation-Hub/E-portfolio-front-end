@@ -1,5 +1,5 @@
 export const style = {
-    color: "white",
+    color: "black",
     '&:hover': {
       backgroundColor: 'rgba(255,255,255,0.1)'
     }

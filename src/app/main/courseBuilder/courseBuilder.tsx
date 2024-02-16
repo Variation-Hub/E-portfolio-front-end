@@ -1,25 +1,29 @@
-import { Dialog } from "@mui/material";
-import React, { useState } from "react";
+import { Dialog, IconButton, InputAdornment, TextField, Typography } from "@mui/material";
+import React, { useEffect, useState } from "react";
 import { SecondaryButton } from "src/app/component/Buttons";
 import CourseUploadDialog from "src/app/component/Dialogs/courseUploadDialog";
+import { courseManagementTableColumn } from "src/app/contanst";
+import { useSelector } from "react-redux";
+import CourseManagementTable from "src/app/component/Table/CourseManagementTable";
+import SearchIcon from "@mui/icons-material/Search";
+import DataNotFound from "src/app/component/Pages/dataNotFound";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { fetchCourseAPI, selectCourseManagement } from "app/store/courseManagement";
+import FuseLoading from "@fuse/core/FuseLoading";
+import Close from "@mui/icons-material/Close";
 
 const CourseBuilder = () => {
-  const courses = [
-    {
-      name: "Course A",
-      code: "C001",
-      level: "Intermediate",
-      sector: "Learn",
-      hours: 20,
-    },
-  ];
-  const handleEdit = (course) => {
-    console.log(`Editing course: ${course.name}`);
-  };
 
-  const handleDelete = (course) => {
-    console.log(`Deleting course: ${course.name}`);
-  };
+  const { dataUpdatingLoadding, meta_data, data, dataFetchLoading } = useSelector(selectCourseManagement)
+  const dispatch: any = useDispatch();
+  const [searchKeyword, setSearchKeyword] = useState("");
+
+  useEffect(() => {
+    dispatch(fetchCourseAPI());
+  }, [])
+
+  const navigate = useNavigate();
 
   const [open, setOpen] = useState(false);
   const handleOpen = () => {
@@ -28,125 +32,147 @@ const CourseBuilder = () => {
   const handleClose = () => {
     setOpen(false);
   };
+
+  const handleCreateCourse = () => {
+    navigate("/courseBuilder/course");
+  }
+
+  const searchAPIHandler = () => {
+    dispatch(fetchCourseAPI({ page: 1, page_size: 25 }, searchKeyword));
+  }
+
+  const searchByKeywordUser = (e) => {
+    if (e.key === "Enter") {
+      searchAPIHandler();
+    }
+  };
+
+  const searchHandler = (e) => {
+    setSearchKeyword(e.target.value);
+    if (e.target.value === "") {
+      searchAPIHandler();
+    }
+  };
+
   return (
     <>
-      <div className="m-4 flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <div className="relative flex items-center">
-            <input
-              className="p-4 pr-16 border border-gray-300 rounded h-24 sm:h-32 lg:h-40 w-full sm:w-auto"
-              type="text"
-              placeholder="Search by keyword"
-            />
-            <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
-              <svg
-                className="w-16 h-16 text-gray-400"
-                fill="none"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path d="M21 21l-5.2-5.2"></path>
-                <circle cx="10" cy="10" r="8"></circle>
-              </svg>
-            </div>
-          </div>
+      {data.length || searchKeyword ?
+        <div className="m-4 flex items-center justify-between mt-10">
+          <TextField
+            label="Search by keyword"
+            fullWidth
+            size="small"
+            onKeyDown={searchByKeywordUser}
+            onChange={searchHandler}
+            value={searchKeyword}
+            className="w-1/4"
+            InputProps={{
+              endAdornment:
+                <InputAdornment position="end" >
+                  {
+                    searchKeyword ? (
+                      <Close
+                        onClick={() => {
+                          setSearchKeyword("");
+                          dispatch(fetchCourseAPI({ page: 1, page_size: 25 }, ""));
+                        }}
+                        sx={{
+                          color: "#5B718F",
+                          fontSize: 18,
+                          cursor: "pointer",
+                        }}
+                      />
+                    ) : (
+                      <IconButton
+                        id="dashboard-search-events-btn"
+                        disableRipple
+                        sx={{ color: "#5B718F" }}
+                        onClick={() => searchAPIHandler()}
+                        size="small"
+                      >
+                        <SearchIcon fontSize="small" />
+                      </IconButton>
+                    )}
+                </InputAdornment>
+            }}
+          />
 
-          <div className="relative flex items-center">
-            <input
-              className="p-4 pr-16 border border-gray-300 rounded h-24 sm:h-32 lg:h-40 w-full sm:w-auto"
-              type="text"
-              placeholder="Search by role"
-            />
-            <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
-              <svg
-                className="w-16 h-16 text-gray-400"
-                fill="none"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path d="M21 21l-5.2-5.2"></path>
-                <circle cx="10" cy="10" r="8"></circle>
-              </svg>
-            </div>
-          </div>
-        </div>
-
-        <div className="flex items-center space-x-4">
-          <SecondaryButton
-            name="Upload Files"
-            startIcon={
-              <img
-                src="assets/images/svgimage/uploadfileicon.svg"
-                alt="Create File"
-                className="w-6 h-6 mr-2 sm:w-8 sm:h-8 lg:w-10 lg:h-10"
-              />
-            }
-            onClick={handleOpen}
-          ></SecondaryButton>
-          <SecondaryButton
-            name="Create Course"
-            startIcon={
-              <img
-                src="assets/images/svgimage/createcourseicon.svg"
-                alt="Create File"
-                className="w-6 h-6 mr-2 sm:w-8 sm:h-8 lg:w-10 lg:h-10"
-              />
-            }
-          ></SecondaryButton>
-        </div>
-      </div>
-
-      <div className="m-4">
-        <div className="grid grid-cols-6 gap-4 bg-[#F8F8F8] p-2">
-          <h3 className="col-span-1 pl-4">Course Name</h3>
-          <h3 className="col-span-1">Code</h3>
-          <h3 className="col-span-1">Level</h3>
-          <h3 className="col-span-1">Sector</h3>
-          <h3 className="col-span-1">Learning Hours</h3>
-          <h3 className="col-span-1 text-center">Actions</h3>
-        </div>
-
-        {courses.map((course, index) => (
-          <div key={index} className="grid grid-cols-6 gap-4 items-center mt-2">
-            <p className="col-span-1 pl-4">{course.name}</p>
-            <p className="col-span-1">{course.code}</p>
-            <p className="col-span-1">{course.level}</p>
-            <p className="col-span-1">{course.sector}</p>
-            <p className="col-span-1">{course.hours}</p>
-
-            <div className="col-span-1 space-x-2 flex justify-center items-center">
-              <button
-                className="text-white px-3 py-1 rounded"
-                onClick={() => handleEdit(course)}
-              >
+          <div className="flex items-center space-x-4">
+            <SecondaryButton
+              name="Upload Files"
+              startIcon={
                 <img
-                  src="assets/images/svgimage/editicon.svg"
-                  alt="Edit"
-                  className="w-22 h-22"
+                  src="assets/images/svgimage/uploadfileicon.svg"
+                  alt="Create File"
+                  className="w-6 h-6 mr-2 sm:w-8 sm:h-8 lg:w-10 lg:h-10"
                 />
-              </button>
-              <button
-                className="text-white px-3 py-1 rounded"
-                onClick={() => handleDelete(course)}
-              >
+              }
+              onClick={handleOpen}
+            />
+            <SecondaryButton
+              name="Create Course"
+              startIcon={
                 <img
-                  src="assets/images/svgimage/deleticon.svg"
-                  alt="Delete"
-                  className="w-22 h-22"
+                  src="assets/images/svgimage/createcourseicon.svg"
+                  alt="Create File"
+                  className="w-6 h-6 mr-2 sm:w-8 sm:h-8 lg:w-10 lg:h-10"
                 />
-              </button>
-            </div>
+              }
+              onClick={handleCreateCourse}
+
+            />
           </div>
-        ))}
-      </div>
+
+        </div>
+        : null}
+
+      {dataFetchLoading ? <FuseLoading /> :
+        data.length ?
+          <CourseManagementTable
+            columns={courseManagementTableColumn}
+            rows={data}
+            meta_data={meta_data}
+            dataUpdatingLoadding={dataUpdatingLoadding}
+          />
+          :
+
+          <div className="flex flex-col justify-center items-center gap-10 " style={{ height: "94%" }}>
+            <DataNotFound width="25%" />
+            <Typography variant="h5">No data found</Typography>
+            <Typography variant="body2" className="text-center">It is a long established fact that a reader will be <br />distracted by the readable content.</Typography>
+
+            {!searchKeyword &&
+              <div className="flex items-center space-x-4">
+                <SecondaryButton
+                  name="Upload Files"
+                  startIcon={
+                    <img
+                      src="assets/images/svgimage/uploadfileicon.svg"
+                      alt="Create File"
+                      className="w-6 h-6 mr-2 sm:w-8 sm:h-8 lg:w-10 lg:h-10"
+                    />
+                  }
+                  onClick={handleOpen}
+                />
+                <div className="w-48 text-center">OR</div>
+                <SecondaryButton
+                  name="Create Course"
+                  startIcon={
+                    <img
+                      src="assets/images/svgimage/createcourseicon.svg"
+                      alt="Create File"
+                      className="w-6 h-6 mr-2 sm:w-8 sm:h-8 lg:w-10 lg:h-10"
+                    />
+                  }
+                  onClick={handleCreateCourse}
+                />
+              </div>
+            }
+          </div>
+      }
+
       <Dialog
-        open={!open}
+        open={open}
         onClose={handleClose}
         sx={{
           ".MuiDialog-paper": {
@@ -155,7 +181,7 @@ const CourseBuilder = () => {
           },
         }}
       >
-        <CourseUploadDialog />
+        <CourseUploadDialog dialogFn={{ handleClose }} />
       </Dialog>
     </>
   );

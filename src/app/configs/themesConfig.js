@@ -3,7 +3,7 @@ export const lightPaletteText = {
   primary: 'rgb(17, 24, 39)',
   secondary: 'rgb(107, 114, 128)',
   disabled: 'rgb(149, 156, 169)',
-  white: '#FFFFFF',
+  white: '#000000',
   default: '#000000',
   error: '#FF0000'
 };
@@ -39,7 +39,7 @@ const themesConfig = {
       background: {
         paper: '#FFFFFF',
         default: '#FFFFFF',
-        navbar: '#5B718F'
+        navbar: '#FFFFFF'
       },
       error: {
         light: '#ffcdd2',
@@ -77,7 +77,7 @@ const themesConfig = {
       },
       background: {
         paper: '#1e293b',
-        default: '#5B718F',
+        default: '#FFFFFF',
       },
       error: {
         light: '#ffcdd2',

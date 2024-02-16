@@ -1,4 +1,4 @@
-import { Autocomplete, Box, IconButton, MenuItem, TextField, Tooltip, Typography } from '@mui/material';
+import { Autocomplete, Box, IconButton, MenuItem, Paper, TextField, Tooltip, Typography } from '@mui/material';
 import CloseIcon from "@mui/icons-material/Close";
 import { roles } from 'src/app/contanst';
 import { LoadingButton, SecondaryButton, SecondaryButtonOutlined } from 'src/app/component/Buttons';
@@ -66,15 +66,15 @@ const UserDetails = (props) => {
                     <div>
                         <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>User Name<sup>*</sup></Typography>
                         <TextField
-                            name="username"
+                            name="user_name"
                             // label="Username"
-                            value={userData?.username}
+                            value={userData?.user_name}
                             size="small"
                             placeholder='Enter username'
                             required
                             fullWidth
                             onChange={handleUpdate}
-                            error={userDataError?.username}
+                            error={userDataError?.user_name}
                             InputProps={{
                                 endAdornment:
                                     <Tooltip title={usernameValidationMsg} placement="bottom" arrow>
@@ -173,7 +173,7 @@ const UserDetails = (props) => {
                     <div className='w-1/2'>
                         <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>Time Zone<sup>*</sup></Typography>
                         <Autocomplete
-                            freeSolo
+                            
                             fullWidth
                             size="small"
                             value={userData?.time_zone}
@@ -185,6 +185,9 @@ const UserDetails = (props) => {
                                     color: "#5B718F"
                                 }
                             }}
+                            PaperComponent={({ children }) => (
+                                <Paper style={{ borderRadius:"4px" }}>{children}</Paper>
+                              )}
                         />
                     </div>
                 </Box>
@@ -192,22 +195,24 @@ const UserDetails = (props) => {
                 <Box className="m-12 flex flex-col justify-between gap-12 sm:flex-row">
                     <div className='w-full'>
                         <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>Role<sup>*</sup></Typography>
-                        <TextField
-                            name="role"
-                            select
-                            defaultValue="Learner"
-                            value={userData?.role}
-                            size="small"
-                            required
+
+                        <Autocomplete
+                            
                             fullWidth
-                            onChange={handleUpdate}
-                            error={userDataError?.role}>
-                            {roles.map((option) => (
-                                <MenuItem key={option.value} value={option.value}>
-                                    {option.label}
-                                </MenuItem>
-                            ))}
-                        </TextField>
+                            size="small"
+                            value={userData?.role}
+                            options={roles.map((option) => option.label)}
+                            renderInput={(params) => <TextField {...params} placeholder="Select Role" name="role" />}
+                            onChange={(e, value) => handleUpdate({ target: { name: "role", value: value } })}
+                            sx={{
+                                '.MuiAutocomplete-clearIndicator': {
+                                    color: "#5B718F"
+                                }
+                            }}
+                            PaperComponent={({ children }) => (
+                                <Paper style={{ borderRadius:"4px" }}>{children}</Paper>
+                              )}
+                        />
                     </div>
 
                 </Box>

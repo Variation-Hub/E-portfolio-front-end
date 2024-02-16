@@ -10,8 +10,8 @@ import { styled } from "@mui/material/styles";
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   ".MuiDialog-paper": {
     borderRadius: "4px",
-    width: "400px",
-    height: "200px",
+    width: "420px",
+    height: "220px",
   },
   ".MuiDialogTitle-root": {
     padding: "1rem",
@@ -24,12 +24,6 @@ const AlertDialog = (props) => {
     <BootstrapDialog
       open={open}
       onClose={close}
-      PaperProps={{
-        sx: {
-          width: "400px",
-          height: "228px",
-        },
-      }}
     >
       <DialogContent>
         <div className="flex justify-center mt-8">

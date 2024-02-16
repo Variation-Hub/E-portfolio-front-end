@@ -20,9 +20,9 @@ export default function UserManagementTable(props) {
 
     const { columns,
         rows,
-        handleOpen,
-        setUserData,
-        setUpdateData,
+        handleOpen = () =>{},
+        setUserData = () =>{},
+        setUpdateData = () =>{},
         meta_data,
         dataUpdatingLoadding,
         search_keyword = "",
@@ -72,9 +72,9 @@ export default function UserManagementTable(props) {
     }
     return (
         <>
-            <Paper sx={{ width: '100%', overflow: 'hidden', marginTop: "1rem", borderRadius: "4px" }}>
+            <div style={{ width: '100%', overflow: 'hidden', marginTop: "0.5rem" }}>
                 <TableContainer sx={{ maxHeight: 480, minHeight: 480 }}>
-                    <Table stickyHeader aria-label="sticky table">
+                    <Table stickyHeader aria-label="sticky table" size='small'>
                         <TableHead>
                             <TableRow>
                                 {columns?.map((column) => (
@@ -82,7 +82,7 @@ export default function UserManagementTable(props) {
                                         key={column.id}
                                         align={column.align}
                                         style={{ minWidth: column.minWidth }}
-                                        sx={{ backgroundColor: "#5B718F" }}
+                                        sx={{ backgroundColor: "#F8F8F8" }}
                                     >
                                         {column.label}
                                     </TableCell>
@@ -110,8 +110,14 @@ export default function UserManagementTable(props) {
                                             return (
                                                 <TableCell key={column.id} align={column.align} >
                                                     <div className={Style.avatar}>
-                                                        {column.id === "first_name" && <Avatar alt={value} src={row?.avatar?.url} sx={{ marginRight: "8px" }} />}
-                                                        {value}
+                                                        {column.id === "first_name" ?
+                                                            <>
+                                                                <Avatar alt={value} src={row?.avatar?.url} sx={{ marginRight: "8px", width: "24px", height: "24px" }} />
+                                                                {value} {row["last_name"]}
+                                                            </>
+                                                            :
+                                                            value || "Active"
+                                                        }
                                                     </div>
                                                 </TableCell>
                                             );
@@ -124,14 +130,14 @@ export default function UserManagementTable(props) {
                 </TableContainer>
                 <div className="flex justify-center p-8">
                     <Pagination
-                        page={meta_data.page}
-                        count={Math.ceil(meta_data?.items / userTableMetaData.page_size)}
+                        page={meta_data?.page}
+                        count={Math.ceil(meta_data?.items / userTableMetaData?.page_size)}
                         showFirstButton
                         showLastButton
                         onChange={handleChangePage}
                     />
                 </div>
-            </Paper>
+            </div>
             <AlertDialog
                 open={Boolean(deleteId)}
                 close={() => deleteIcon("")}
