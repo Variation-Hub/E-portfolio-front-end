@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { LoadingButton, SecondaryButton } from "src/app/component/Buttons";
 import { passwordReg } from "src/app/contanst/regValidation";
+import SideView from "../../../component/Sideview"
 
 const Reset = () => {
 
@@ -37,18 +38,19 @@ const Reset = () => {
     }))
   }
   return (
-    <div className="flex flex-col sm:flex-row items-center md:items-start sm:justify-center md:justify-center flex-1 min-w-0">
+    <div className="flex h-full">
+      <SideView />
       <Paper className="h-full flex items-center sm:h-auto md:flex md:items-center md:justify-center w-full sm:w-auto md:h-full md:w-1/2 py-8 px-16 sm:p-48 md:p-64 sm:rounded-2xl md:rounded-none sm:shadow md:shadow-none">
-        <div className="w-full max-w-320 sm:w-320 mx-auto sm:mx-0">
+        <div className="w-full min-w-300 sm:w-320 mx-auto sm:mx-0 shadow-md rounded-md">
           <Logo />
-          <Typography className="mt-3 text-2xl font-extrabold tracking-tight leading-tight">
+          <Typography className="my-20 mx-20 text-2xl font-extrabold tracking-tight leading-tight">
             Reset password
           </Typography>
-          <Typography className="mt-3">
+          <Typography className="my-20 mx-20">
             Please enter a secure password.
             It must be at least 6 characters long, containing at least one lowercase letter, one uppercase letter, and one digit.
           </Typography>
-          <div className="flex flex-col justify-center w-full mt-24">
+          <div className="flex flex-col justify-center w-auto my-20 mx-20">
             <TextField
               className="mb-8"
               name="password"
