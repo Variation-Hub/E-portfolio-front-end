@@ -6,9 +6,9 @@ const MainPageContent = () => {
     <>
       <div>
         {/* <div className={Style.screenshort}></div> */}
-        <div className="flex justify-evenly py-24 items-center bg-[#F9F9FD]">
+        <div className="flex flex-col justify-evenly py-24 items-center bg-[#F9F9FD] sm:flex-row">
 
-          <div className="w-1/3 p-4 ml-60">
+          <div className="w-full p-4 px-20 sm:w-1/3">
             <p className="font-bold">
               Welcome to{" "}
               <span className="inline-block bg-[#6D81A3] p-4 rounded text-white">
@@ -17,19 +17,15 @@ const MainPageContent = () => {
             </p>
 
             <h2 className="text-3xl font-extrabold mt-12 sm:text-4xl lg:text-5xl">
-              LOREM IPSUM IS DUMMY CONTEXT
+              NEXT GENERATION <br/>E-PORTFOLIO SOFTWARE
             </h2>
 
-            <p className="mt-12">
-              We have the technology and industry expertise to develop solutions
-              that can connect people and businesses.
+            <p className="mt-12 text-justify break-words">
+            Locker is an electronic collection of a learner’s skills and knowledge, which is assessed by their tutor against a training standard or qualification and replaces paper portfolios.
             </p>
-            <button className="mt-12 p-8 sm:p-8 bg-[#6D81A3] text-white rounded text-sm sm:text-base">
-              Read More
-            </button>
           </div>
 
-          <div className="w-1/3">
+          <div className="w-full p-4 px-20 sm:w-1/3">
             <img
               src="assets/images/svgImage/landing1.svg"
               alt="img1"
@@ -38,29 +34,24 @@ const MainPageContent = () => {
           </div>
         </div>
 
-        <div className="flex justify-evenly items-center py-48">
-          <div className="w-1/4">
+        <div className="flex flex-col-reverse justify-evenly py-24 items-center sm:flex-row">
+          <div className="w-full p-4 px-20 sm:w-1/4">
             <img
               src="assets/images/svgImage/landing2.svg"
               alt="img1"
               className="w-full h-auto"
             />
           </div>
-          <div className="w-2/4">
-            <p>Enter Small Title here</p>
+          <div className="w-full p-4 px-20 sm:w-2/4">
             <h2 className="text-3xl font-extrabold mt-2 sm:text-4xl lg:text-5xl">
-              LOREM IPSUM IS SIMPLY DUMMY TEXT OF THE PRINTING.
+            Trainer and tutor can track learner progress dynamically
             </h2>
 
-            <p className="mt-2">
-              Browse through our free content and learn how to grow your own
-              e-commerce business or take your current online store to the next
-              level with battle- tested digital marketing strategies. View our
-              successful case studies and learn the secrets your own e-commerce
-              business.
+            <p className="mt-12 text-justify">
+            Empower educators with comprehensive tools for dynamic learner progress monitoring, ensuring timely completion of educational milestones. Our platform provides real-time insights, enabling proactive guidance and support to optimize learning outcomes effectively. With intuitive features and robust analytics, educators can efficiently track progress and intervene when needed, fostering a conducive environment for student success.
             </p>
 
-            <div className="flex items-center justify-between mt-32">
+            {/* <div className="flex items-center justify-between mt-32">
               <div className="flex w-2/5">
                 <img
                   src="assets/images/svgImage/landing2-1.svg"
@@ -77,7 +68,7 @@ const MainPageContent = () => {
               <div className="flex w-2/5">
                 <img
                   src="assets/images/svgImage/landing2-2.svg"
-                  alt="img1"
+                  alt="img2"
                   className="w-32 h-auto mr-10"
                 />
                 <div>
@@ -87,17 +78,12 @@ const MainPageContent = () => {
                   </p>
                 </div>
               </div>
-            </div>
-
-            <button className="mt-12 p-8 w-2/12 sm:p-8 bg-[#6D81A3] text-white rounded text-sm sm:text-base">
-              Read More
-            </button>
+            </div> */}
           </div>
         </div>
 
         <div className={Style.features_container} id="features">
           <div className={Style.features_list}>
-            <p>Enter Small Title here</p>
             <div className={Style.features}>
               <h2>Features</h2>
             </div>
@@ -131,7 +117,6 @@ const MainPageContent = () => {
             />
           </div>
           <div className={Style.whylocker_list} id="why-locker">
-            <p>Enter Small Title here</p>
             <div className={Style.whylocker}>
               <h2>Why Locker?</h2>
             </div>
