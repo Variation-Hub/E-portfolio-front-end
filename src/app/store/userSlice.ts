@@ -27,7 +27,9 @@ const userSlice = createSlice({
 export const { userLoggedOut } = userSlice.actions;
 
 export const setUser = (user) => async (dispatch) => {
+
   const userData = {
+    id: user?.user_id,
     displayName: user?.first_name+' '+user?.last_name,
     photoURL: user?.avatar?.url,
     email: user?.email,
