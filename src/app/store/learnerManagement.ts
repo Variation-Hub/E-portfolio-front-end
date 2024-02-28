@@ -14,6 +14,12 @@ const initialState = {
         items: 0,
         page_size: userTableMetaData.page_size,
         pages: 1
+    },
+    learner:{
+        first_name: '',
+        last_name: '',
+        email: '',
+        courses:["Course 1"]
     }
 };
 
@@ -49,6 +55,9 @@ const learnerManagementSlice = createSlice({
                 }
                 return value;
             })
+        },
+        learnerDetails(state, action) {
+            state.learner = action.payload
         }
     }
 });
@@ -103,6 +112,21 @@ export const fetchLearnerAPI = (data = { page: 1, page_size: 25 }, search_keywor
         return false
     };
 
+}
+
+export const getLearnerDetails = ()=> async(dispatch) => {
+    try {
+        dispatch(slice.setUpdatingLoader());
+        const response = await axios.get(`${URL_BASE_LINK}/learner/get`,)
+        dispatch(showMessage({ message: response.data.message, variant: "success" }))
+        dispatch(slice.learnerDetails(response.data.data));
+        dispatch(slice.setUpdatingLoader());
+        return true;
+    } catch (err) {
+        dispatch(showMessage({ message: err.response.data.message, variant: "error" }))
+        dispatch(slice.setUpdatingLoader());
+        return false;
+    }
 }
 
 // update learner
