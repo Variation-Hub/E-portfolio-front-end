@@ -2,6 +2,7 @@ import FuseUtils from '@fuse/utils/FuseUtils';
 import axios from 'axios';
 import jwtDecode from 'jwt-decode';
 import jsonData from 'src/url.json';
+import { connectToSocket } from 'src/utils/socket';
 
 /* eslint-disable camelcase */
 
@@ -61,16 +62,26 @@ class JwtService extends FuseUtils.EventEmitter {
     //   });
     // };
 
-    signInWithEmailAndPassword = (credentials) => {
+    signInWithEmailAndPassword = (credentials, dispatch) => {
 
         const payload = { ...credentials };
 
         return new Promise((resolve, reject) => {
             axios
                 .post(`${URL_BASE_LINK}/user/login`, payload)
-                .then((response) => {
+                .then(async (response) => {
                     if (response.data.status) {
                         const decoded = jwtDecode(response.data.data.accessToken);
+                        const res = await axios.post(`${URL_BASE_LINK}/notification/connect`, {}, {
+                            headers: {
+                                Authorization: `Bearer ${response.data.data.accessToken}`
+                            }
+                        })
+
+                        console.log(res.data)
+                        if (res.data.status) {
+                            connectToSocket(dispatch)
+                        }
 
                         if (response.data.data.password_changed) {
                             this.setSession(response.data.data.accessToken);
@@ -86,9 +97,18 @@ class JwtService extends FuseUtils.EventEmitter {
         });
     };
 
-    signInWithToken = () => {
-        return new Promise((resolve, reject) => {
+    signInWithToken = (dispatch) => {
+        return new Promise(async (resolve, reject) => {
             const decoded = jwtDecode(this.getAccessToken());
+            const response = await axios.post(`${URL_BASE_LINK}/notification/connect`, {}, {
+                headers: {
+                    Authorization: `Bearer ${this.getAccessToken()}`
+                }
+            })
+
+            if (response.data.status) {
+                connectToSocket(dispatch)
+            }
             resolve(decoded);
         });
     };
