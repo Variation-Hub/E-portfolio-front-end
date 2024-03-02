@@ -17,7 +17,7 @@ const messageSlice = createSlice({
     initialState,
     reducers: {
         showMessage: (state, action) => {
-            // state.state = true;
+            state.state = true;
             state.options = {
                 ...initialState.options,
                 ...action.payload,
