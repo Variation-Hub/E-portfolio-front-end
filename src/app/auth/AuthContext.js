@@ -21,7 +21,7 @@ function AuthProvider({ children }) {
        * Sign in and retrieve user data with stored token
        */
       jwtService
-        .signInWithToken()
+        .signInWithToken(dispatch)
         .then((user) => {
           success(user, 'Signed in with JWT');
         })

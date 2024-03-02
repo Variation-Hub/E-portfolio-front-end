@@ -31,13 +31,14 @@ const SignInPage = () => {
     e.preventDefault();
     setLoading(true);
     jwtService
-      .signInWithEmailAndPassword(credentials)
+      .signInWithEmailAndPassword(credentials, dispatch)
       .then((user) => {
         setLoading(false);
         navigate("/reset");
         sessionStorage.setItem("reset", JSON.stringify(user));
       })
       .catch((err) => {
+        console.log(err)
         dispatch(
           showMessage({ message: err.response.data.message, variant: "error" })
         );
