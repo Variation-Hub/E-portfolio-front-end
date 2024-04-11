@@ -40,13 +40,10 @@ const CourseBuilder = (props) => {
 
     const [courseData, setCourseData] = useState(() => {
         return {
-            assessment_language: preFillData?.assessment_language || "",
-            assessment_methods: preFillData?.assessment_methods || "",
             brand_guidelines: formatText(preFillData?.brand_guidelines) || "",
             course_code: preFillData?.course_code || "",
             course_name: preFillData?.course_name || "",
             guided_learning_hours: preFillData?.guided_learning_hours || "",
-            internal_external: preFillData?.internal_external || "",
             level: preFillData?.level || "",
             operational_start_date: preFillData?.operational_start_date || "",
             overall_grading_type: preFillData?.overall_grading_type || "",
@@ -224,17 +221,6 @@ const CourseBuilder = (props) => {
                     />
                 </div>
                 <div className='w-1/3'>
-                    <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>Internal/External</Typography>
-                    <TextField
-                        name="internal_external"
-                        size="small"
-                        placeholder='Enter Internal/External'
-                        fullWidth
-                        value={courseData.internal_external}
-                        onChange={courseHandler}
-                    />
-                </div>
-                <div className='w-1/3'>
                     <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>Qualification Type</Typography>
                     <TextField
                         name="qualification_type"
@@ -242,20 +228,6 @@ const CourseBuilder = (props) => {
                         placeholder='Enter Qualification Type'
                         fullWidth
                         value={courseData.qualification_type}
-                        onChange={courseHandler}
-                    />
-                </div>
-            </Box>
-
-            <Box className="m-12 flex flex-col justify-between gap-12 sm:flex-row">
-                <div className='w-1/3'>
-                    <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>Assessment Language</Typography>
-                    <TextField
-                        name="assessment_language"
-                        size="small"
-                        placeholder='Enter Assessment Language'
-                        fullWidth
-                        value={courseData.assessment_language}
                         onChange={courseHandler}
                     />
                 </div>
@@ -270,6 +242,8 @@ const CourseBuilder = (props) => {
                         onChange={courseHandler}
                     />
                 </div>
+            </Box>
+            <Box className="m-12 flex flex-col justify-between gap-12 sm:flex-row">
                 <div className='w-1/3'>
                     <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>Total Credits</Typography>
                     <TextField
@@ -281,9 +255,6 @@ const CourseBuilder = (props) => {
                         onChange={courseHandler}
                     />
                 </div>
-            </Box>
-
-            <Box className="m-12 flex flex-col justify-between gap-12 sm:flex-row">
                 <div className='w-1/3'>
                     <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>Operational start date</Typography>
                     <TextField
@@ -292,17 +263,6 @@ const CourseBuilder = (props) => {
                         placeholder='Enter Operational start date'
                         fullWidth
                         value={courseData.operational_start_date}
-                        onChange={courseHandler}
-                    />
-                </div>
-                <div className='w-1/3'>
-                    <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>Assessment methods</Typography>
-                    <TextField
-                        name="assessment_methods"
-                        size="small"
-                        placeholder='Enter Assessment methods'
-                        fullWidth
-                        value={courseData.assessment_methods}
                         onChange={courseHandler}
                     />
                 </div>

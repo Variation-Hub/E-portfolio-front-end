@@ -17,7 +17,7 @@ const UserDetails = (props) => {
         dataUpdatingLoadding,
         userDataError
     } = props;
-
+    console.log("sddfadaf", userDataError)
     return (
         <div className='h-full flex flex-col'>
             <Box>
@@ -175,7 +175,7 @@ const UserDetails = (props) => {
                     </div>
 
                     <div className='w-1/2'>
-                        <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>Mobile<sup>*</sup></Typography>
+                        <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>Mobile</Typography>
                         <TextField
                             name="mobile"
                             value={userData?.mobile}
@@ -199,7 +199,7 @@ const UserDetails = (props) => {
 
                 <Box className="m-12 flex flex-col justify-between gap-12 sm:flex-row">
                     <div className='w-1/2'>
-                        <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>National Insurance Number<sup>*</sup></Typography>
+                        <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>National Insurance Number</Typography>
 
                         <TextField
                             name="national_ins_no"
@@ -209,7 +209,6 @@ const UserDetails = (props) => {
                             type="text"
                             fullWidth
                             onChange={handleUpdate}
-                            error={userDataError?.national_ins_no}
                         // InputProps={{
                         //     endAdornment:
                         //         <Tooltip title={passwordValidation} placement="bottom" arrow>
@@ -235,8 +234,31 @@ const UserDetails = (props) => {
                             fullWidth
                             size="small"
                             value={userData?.funding_body}
-                            options={["Advance Learning Loan", "Employer", "ITA", "Self", "Student Loan", "Other"].map((option) => option)}
-                            renderInput={(params) => <TextField {...params} placeholder="Select funding body" name="funding_body" />}
+                            options={["Bursary",
+                                "Commercial ",
+                                "Community Learning",
+                                "EFA",
+                                "Employer",
+                                "ESF",
+                                "ESF",
+                                "ESFA",
+                                "Fee Waiver",
+                                "FWDF",
+                                "ITA",
+                                "Levy",
+                                "MA Fully Funded",
+                                "MA-Employer",
+                                "Non-Levy",
+                                "Other",
+                                "SAAS",
+                                "SAAS-Employer",
+                                "SAAS-Self",
+                                "SDS",
+                                "Self",
+                                "SFA",
+                                "Student Loan"
+                            ].map((option) => option)}
+                            renderInput={(params) => <TextField {...params} placeholder="Select funding body" name="funding_body" error={true || userDataError?.funding_body} />}
                             onChange={(e, value) => handleUpdate({ target: { name: "funding_body", value: value } })}
                             sx={{
                                 '.MuiAutocomplete-clearIndicator': {
