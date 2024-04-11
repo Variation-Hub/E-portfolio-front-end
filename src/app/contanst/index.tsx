@@ -188,7 +188,7 @@ export const userManagementTableColumn = [
   { id: 'user_name', label: 'Username', minWidth: 170, align: "left" },
   { id: 'email', label: 'Email', minWidth: 170, align: "left" },
   { id: 'mobile', label: 'Mobile', minWidth: 170, align: "left" },
-  { id: 'role', label: 'Role', minWidth: 100, align: "left" },
+  { id: 'roles', label: 'Roles', minWidth: 100, align: "left" },
   { id: 'status', label: 'Status', minWidth: 100, align: "left" },
   { id: 'actions', label: 'Actions', minWidth: 170, align: "center" }
 ];
@@ -221,6 +221,10 @@ export const roles = [{
 {
   value: UserRole.EQA,
   label: "EQA"
+},
+{
+  value: UserRole.LIQA,
+  label: "Lead IQA"
 }
 ]
 
@@ -262,4 +266,30 @@ export const portfolioCard = [
   { id: 8, name: "Resources", color: "#A847F4" },
   { id: 9, name: "Time Log", color: "#B7B000" },
   { id: 10, name: "Supplementary Training", color: "#4564D0" },
+]
+
+export const fundingBodyData = [
+  "Advance Learning Loan",
+  "Bursary",
+  "Commercial",
+  "Community Learning",
+  "EFA",
+  "Employer",
+  "ESF",
+  "ESFA",
+  "Fee Waiver",
+  "FWDF",
+  "ITA",
+  "Levy",
+  "MA Fully Funded",
+  "MA-Employer",
+  "Non-Levy",
+  "Other",
+  "SAAS",
+  "SAAS-Employer",
+  "SAAS-Self",
+  "SDS",
+  "Self",
+  "SFA",
+  "Student Loan"
 ]
