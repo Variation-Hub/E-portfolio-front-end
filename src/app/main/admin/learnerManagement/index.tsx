@@ -56,7 +56,6 @@ const Index = () => {
     mobile: false,
     employer_id: false,
     funding_body: false,
-    national_ins_no: false
   })
 
   const handleOpen = () => {
@@ -97,8 +96,7 @@ const Index = () => {
       confrimpassword: false,
       mobile: false,
       employer_id: false,
-      funding_body: false,
-      national_ins_no: false
+      funding_body: false
     })
   }
 
@@ -150,7 +148,6 @@ const Index = () => {
       mobile: !mobileReg.test(userData.mobile),
       employer_id: userData?.employer_id === "",
       funding_body: userData?.funding_body === "",
-      national_ins_no: userData?.national_ins_no === ""
     })
     if (nameReg.test(userData?.first_name) &&
       nameReg.test(userData?.last_name) &&
@@ -160,8 +157,7 @@ const Index = () => {
       userData?.password === userData?.confrimpassword &&
       mobileReg.test(userData.mobile) &&
       userData?.employer_id !== "",
-      userData?.funding_body !== "",
-      userData?.national_ins_no !== "") {
+      userData?.funding_body !== "") {
       return true;
     }
     return false
@@ -176,7 +172,7 @@ const Index = () => {
           <div className={Style.search_filed}>
             <TextField
               label="Search by keyword"
-              fullWidth 
+              fullWidth
               size="small"
               className="w-1/2"
               onKeyDown={searchByKeywordUser}
