@@ -51,13 +51,10 @@ export default function CourseManagementTable(props) {
             status: item.status
         }))
         const preFillData = {
-            assessment_language: data?.assessment_language || "",
-            assessment_methods: data?.assessment_methods || "",
             brand_guidelines: data?.brand_guidelines || "",
             course_code: data?.course_code || "",
             course_name: data?.course_name || "",
             guided_learning_hours: data?.guided_learning_hours || "",
-            internal_external: data?.internal_external || "",
             level: data?.level || "",
             operational_start_date: data?.operational_start_date || "",
             overall_grading_type: data?.overall_grading_type || "",
