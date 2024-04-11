@@ -54,7 +54,7 @@ const Index = () => {
     password: "",
     confrimpassword: "",
     mobile: "",
-    role: "Trainer",
+    role: [],
     time_zone: "",
   });
 
@@ -94,7 +94,7 @@ const Index = () => {
       password: "",
       confrimpassword: "",
       mobile: "",
-      role: "Trainer",
+      role: [],
       time_zone: "",
     });
     setUserDataError({
@@ -103,17 +103,20 @@ const Index = () => {
       user_name: false,
       email: false,
       password: false,
-      // sso_id: false,
       confrimpassword: false,
       mobile: false,
-      // phone: false,
       role: false,
     });
   };
 
   const createUserHandler = async () => {
     if (validation()) {
-      const response = await dispatch(createUserAPI(userData));
+      const data = {
+        ...userData,
+        roles: userData.role.map(item => item === "Lead IQA" ? "LIQA" : item)
+      }
+      delete data.role;
+      const response = await dispatch(createUserAPI(data));
       if (response) {
         resetValue();
       }
@@ -121,7 +124,12 @@ const Index = () => {
   };
 
   const updateUserHandler = async () => {
-    const response = await dispatch(updateUserAPI(updateData, userData));
+    const data = {
+      ...userData,
+      roles: userData.role.map(item => item === "Lead IQA" ? "LIQA" : item)
+    }
+    delete data.role;
+    const response = await dispatch(updateUserAPI(updateData, data));
     if (response) {
       handleClose();
       setUpdateData("");
@@ -156,7 +164,7 @@ const Index = () => {
       password: !passwordReg.test(userData?.password),
       confrimpassword: userData?.password !== userData?.confrimpassword || !passwordReg.test(userData?.password),
       mobile: !mobileReg.test(userData.mobile),
-      role: userData?.role === "",
+      role: userData?.role.length !== 0,
     })
 
     if (nameReg.test(userData?.first_name) &&
@@ -166,7 +174,7 @@ const Index = () => {
       passwordReg.test(userData?.password) &&
       userData?.password === userData?.confrimpassword &&
       mobileReg.test(userData.mobile) &&
-      userData?.role !== "") {
+      userData?.role.length !== 0) {
       return true;
     }
     return false;
@@ -216,7 +224,7 @@ const Index = () => {
               }}
             />
             <Autocomplete
-              
+
               fullWidth
               size="small"
               value={filterValue}
@@ -231,7 +239,7 @@ const Index = () => {
                 },
               }}
               PaperComponent={({ children }) => (
-                <Paper style={{ borderRadius:"4px" }}>{children}</Paper>
+                <Paper style={{ borderRadius: "4px" }}>{children}</Paper>
               )}
             />
           </div>
@@ -273,7 +281,6 @@ const Index = () => {
       }
       <Dialog
         open={open}
-        onClose={handleClose}
         sx={{
           ".MuiDialog-paper": {
             borderRadius: "4px",

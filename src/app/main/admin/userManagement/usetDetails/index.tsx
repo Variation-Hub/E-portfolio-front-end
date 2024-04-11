@@ -1,10 +1,12 @@
-import { Autocomplete, Box, IconButton, MenuItem, Paper, TextField, Tooltip, Typography } from '@mui/material';
+import { Autocomplete, Box, Checkbox, IconButton, ListItemText, MenuItem, OutlinedInput, Paper, Select, TextField, Tooltip, Typography } from '@mui/material';
 import CloseIcon from "@mui/icons-material/Close";
 import { roles } from 'src/app/contanst';
 import { LoadingButton, SecondaryButton, SecondaryButtonOutlined } from 'src/app/component/Buttons';
 import { timezones } from 'src/app/contanst/timezoneData';
 import { emailValidationMsg, mobileValidationMsg, nameValidationMsg, passwordValidation, usernameValidationMsg } from 'src/app/contanst/regValidation';
 import HelpOutlinedIcon from "@mui/icons-material/HelpOutlined";
+import { useState } from 'react';
+
 
 const UserDetails = (props) => {
 
@@ -18,6 +20,13 @@ const UserDetails = (props) => {
         userDataError
     } = props;
 
+
+    const handleChange = (event) => {
+        const {
+            target: { value },
+        } = event;
+        handleUpdate({ target: { name: "role", value: typeof value === 'string' ? value.split(',') : value } })
+    };
     return (
         <div className='h-full flex flex-col'>
             <Box>
@@ -173,7 +182,7 @@ const UserDetails = (props) => {
                     <div className='w-1/2'>
                         <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>Time Zone<sup>*</sup></Typography>
                         <Autocomplete
-                            
+
                             fullWidth
                             size="small"
                             value={userData?.time_zone}
@@ -186,8 +195,8 @@ const UserDetails = (props) => {
                                 }
                             }}
                             PaperComponent={({ children }) => (
-                                <Paper style={{ borderRadius:"4px" }}>{children}</Paper>
-                              )}
+                                <Paper style={{ borderRadius: "4px" }}>{children}</Paper>
+                            )}
                         />
                     </div>
                 </Box>
@@ -195,24 +204,22 @@ const UserDetails = (props) => {
                 <Box className="m-12 flex flex-col justify-between gap-12 sm:flex-row">
                     <div className='w-full'>
                         <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>Role<sup>*</sup></Typography>
-
-                        <Autocomplete
-                            
+                        <Select
+                            multiple
+                            value={userData?.role}
                             fullWidth
                             size="small"
-                            value={userData?.role}
-                            options={roles.map((option) => option.label)}
-                            renderInput={(params) => <TextField {...params} placeholder="Select Role" name="role" />}
-                            onChange={(e, value) => handleUpdate({ target: { name: "role", value: value } })}
-                            sx={{
-                                '.MuiAutocomplete-clearIndicator': {
-                                    color: "#5B718F"
-                                }
-                            }}
-                            PaperComponent={({ children }) => (
-                                <Paper style={{ borderRadius:"4px" }}>{children}</Paper>
-                              )}
-                        />
+                            onChange={handleChange}
+                            input={<OutlinedInput placeholder='Select Role' />}
+                            renderValue={(selected) => selected.join(', ')}
+                        >
+                            {roles.map((item) => (
+                                <MenuItem key={item.value} value={item.label} sx={{ height: "32px" }}>
+                                    <Checkbox checked={userData.role.indexOf(item.label) > -1} />
+                                    <ListItemText primary={item.label} />
+                                </MenuItem>
+                            ))}
+                        </Select>
                     </div>
 
                 </Box>

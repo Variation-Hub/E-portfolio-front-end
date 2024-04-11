@@ -20,9 +20,9 @@ export default function UserManagementTable(props) {
 
     const { columns,
         rows,
-        handleOpen = () =>{},
-        setUserData = () =>{},
-        setUpdateData = () =>{},
+        handleOpen = () => { },
+        setUserData = () => { },
+        setUpdateData = () => { },
         meta_data,
         dataUpdatingLoadding,
         search_keyword = "",
@@ -104,6 +104,13 @@ export default function UserManagementTable(props) {
                                                         <IconButton size="small" sx={{ color: "maroon", marginLeft: "4px" }} onClick={() => deleteIcon(row.user_id)}>
                                                             <DeleteOutlineOutlinedIcon fontSize='small' />
                                                         </IconButton>
+                                                    </TableCell>
+                                                )
+                                            }
+                                            if (column.id === 'roles') {
+                                                return (
+                                                    <TableCell key={column.id} align={column.align}>
+                                                        {row[column.id].join(", ")}
                                                     </TableCell>
                                                 )
                                             }
