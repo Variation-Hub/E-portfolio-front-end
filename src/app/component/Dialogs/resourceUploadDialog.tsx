@@ -17,7 +17,7 @@ const ResourceUploadDialog = (props) => {
   const [units, setUnits] = useState({ units: [] });
 
   const [resourceData, setResourceData] = useState({
-    unit_id: "",
+    course_id: "",
     name: "",
     description: "",
     size: "",
@@ -70,7 +70,8 @@ const ResourceUploadDialog = (props) => {
               options={data}
               getOptionLabel={(option: any) => option.course_name}
               renderInput={(params) => <TextField {...params} placeholder="Select Course" name="role" />}
-              onChange={(e, value: any) => setUnits(data.find(item => item.course_id === value.course_id))}
+              // onChange={(e, value: any) => setUnits(data.find(item => item.course_id === value.course_id))}
+              onChange={(e, value) => setResourceData((prev) => ({ ...prev, course_id: value.course_id }))}
               sx={{
                 '.MuiAutocomplete-clearIndicator': {
                   color: "#5B718F"
@@ -81,7 +82,7 @@ const ResourceUploadDialog = (props) => {
               )}
             />
 
-            <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", marginTop: "1rem" }}>Unit</Typography>
+            {/* <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", marginTop: "1rem" }}>Unit</Typography>
             <Autocomplete
               fullWidth
               size="small"
@@ -97,7 +98,7 @@ const ResourceUploadDialog = (props) => {
               PaperComponent={({ children }) => (
                 <Paper style={{ borderRadius: "4px" }}>{children}</Paper>
               )}
-            />
+            /> */}
           </div>
 
         </Box>

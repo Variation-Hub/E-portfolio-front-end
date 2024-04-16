@@ -73,7 +73,7 @@ const routes = [
     ),
     {
         path: "*",
-        element: < Navigate to = "/" / > ,
+        element: < Navigate to="/" />,
     }
 ];
 

@@ -1,27 +1,26 @@
-import history from '@history';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
-import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import MenuItem from '@mui/material/MenuItem';
 import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
 import { selectUser } from 'app/store/userSlice';
 import { useAuth } from 'src/app/auth/AuthContext'
 import jwtService from 'src/app/auth/services/jwtService';
+import { changeUserRoleHandler } from 'app/store/userManagement';
 import { style } from './Style';
 
 function UserMenu(props) {
   const user = useSelector(selectUser);
   const { isAuthenticated } = useAuth();
-  const { logout } = jwtService
+  const { logout } = jwtService;
   const [userMenu, setUserMenu] = useState(null);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const userMenuClick = (event) => {
     setUserMenu(event.currentTarget);
@@ -30,6 +29,25 @@ function UserMenu(props) {
   const userMenuClose = () => {
     setUserMenu(null);
   };
+
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    userMenuClose();
+    setAnchorEl(null);
+  };
+
+  const changeRole = (role) => {
+    dispatch(changeUserRoleHandler(role));
+    handleClose()
+  }
+
+  const open = Boolean(anchorEl);
+  const id = open ? 'simple-popover' : undefined;
 
   return (
     <>
@@ -44,13 +62,13 @@ function UserMenu(props) {
             {user.data.displayName}
           </Typography>
           <Typography className="text-11 font-medium capitalize" color="text.white">
-            {user.role.toString()}
-            {(!user.role || (Array.isArray(user.role) && user.role.length === 0)) && 'Guest'}
+            {user.data.role.toString()}
+            {(!user.data.role || (Array.isArray(user.data.role) && user.data.role.length === 0)) && 'Guest'}
           </Typography>
         </div>
 
-        {user.data.photoURL ? (
-          <Avatar className="md:mx-4" alt="user photo" src={user.data.photoURL} />
+        {user.data.avatar?.url ? (
+          <Avatar className="md:mx-4" alt="user photo" src={user.data.avatar?.url} />
         ) : (
           <Avatar className="md:mx-4">{user.data.displayName?.charAt(0)}</Avatar>
         )}
@@ -74,18 +92,43 @@ function UserMenu(props) {
       >
         {isAuthenticated ? (
           <>
-          <MenuItem onClick={() => navigate('/profile')} >
-          {/* <ListItemIcon className="min-w-40">
-            <FuseSvgIcon>heroicons-outline:logout</FuseSvgIcon>
-          </ListItemIcon> */}
-          <ListItemText primary="My Profile" />
-        </MenuItem>
-          <MenuItem onClick={() => logout()} >
-            {/* <ListItemIcon className="min-w-40">
-              <FuseSvgIcon>heroicons-outline:logout</FuseSvgIcon>
-            </ListItemIcon> */}
-            <ListItemText primary="Sign Out" />
-          </MenuItem>
+            <MenuItem onClick={() => navigate('/profile')} >
+              <ListItemText primary="My Profile" />
+            </MenuItem>
+
+            <MenuItem onClick={handleClick}>
+              <ListItemText primary="Change Role" />
+            </MenuItem>
+
+            <MenuItem onClick={() => logout()} >
+              <ListItemText primary="Sign Out" />
+            </MenuItem>
+
+            <Popover
+              id={id}
+              open={open}
+              anchorEl={anchorEl}
+              onClose={handleClose}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'left',
+              }}
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              classes={{
+                paper: 'py-8',
+              }}
+            >
+              {[...user.data.roles].reverse()?.map(value => {
+                return (
+                  <MenuItem key={value} onClick={() => changeRole(value)}>
+                    <ListItemText primary={value} />
+                  </MenuItem>
+                );
+              })}
+            </Popover>
           </>
         ) : (
           <Link to="/sign-in">

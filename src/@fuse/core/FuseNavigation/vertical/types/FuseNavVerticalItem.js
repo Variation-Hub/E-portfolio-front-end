@@ -46,15 +46,13 @@ const Root = styled(ListItem)(({ theme, ...props }) => ({
 
 function FuseNavVerticalItem(props) {
   const { item, nestedLevel, onItemClick } = props;
-  const { role } = useSelector(state => state.user)
+  const { role } = useSelector(state => state.user.data)
 
   const itempadding = nestedLevel > 0 ? 38 + nestedLevel * 16 : 16;
 
-  console.log();
-
   return useMemo(
     () => (
-      item?.visible.includes(...role) &&
+      item?.visible.includes(role) &&
       <Root
         button
         component={NavLinkAdapter}

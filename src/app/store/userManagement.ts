@@ -4,6 +4,7 @@ import jsonData from 'src/url.json';
 import { showMessage } from './fuse/messageSlice';
 import { userTableMetaData } from '../contanst/metaData';
 import JwtService from '../auth/services/jwtService';
+import instance from '../auth/services/jwtService/jwtService';
 
 const initialState = {
     data: [],
@@ -162,7 +163,7 @@ export const fetchUserAPI = (data = { page: 1, page_size: 25 }, search_keyword =
         }
 
         if (search_role) {
-            url = `${url}&role=${search_role}`
+            url = `${url}&role=${search_role === "Lead IQA" ? "LIQA" : search_role}`
         }
 
         const response = await axios.get(url);
@@ -223,8 +224,9 @@ export const deleteUserHandler = (id, meta_data, search_keyword = "", search_rol
     };
 }
 
+// Upload user avatar 
 export const uploadAvatar = (file) => async (dispatch) => {
-    try{
+    try {
         const formData = new FormData();
         formData.append('avatar', file);
         dispatch(slice.setUpdatingLoader());
@@ -233,9 +235,27 @@ export const uploadAvatar = (file) => async (dispatch) => {
         await JwtService.emit('onLogin', response.data.data);
         dispatch(slice.setUpdatingLoader());
         return true;
-    }catch(err){
+    } catch (err) {
         dispatch(slice.setUpdatingLoader());
         return false;
     }
+}
+
+// chnage user role
+export const changeUserRoleHandler = (role) => async (dispatch) => {
+    try {
+        dispatch(slice.setUpdatingLoader());
+        const response = await axios.post(`${URL_BASE_LINK}/user/changerole/`, { role })
+        if (response.data.status) {
+            instance.chnageRole(response.data.data.accessToken);
+        }
+        dispatch(showMessage({ message: response.data.message, variant: "success" }))
+        dispatch(slice.setUpdatingLoader());
+        return true;
+    } catch (err) {
+        dispatch(showMessage({ message: err.response.data.message, variant: "error" }))
+        dispatch(slice.setUpdatingLoader());
+        return false;
+    };
 }
 export default userManagementSlice.reducer;
