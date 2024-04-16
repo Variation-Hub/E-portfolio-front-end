@@ -45,7 +45,7 @@ export default function UserManagementTable(props) {
             sso_id,
             mobile,
             phone,
-            role,
+            roles,
             time_zone,
         } = rows.filter(item => item.user_id === id)[0];
         setUserData({
@@ -56,7 +56,7 @@ export default function UserManagementTable(props) {
             sso_id,
             mobile,
             phone,
-            role,
+            role: roles,
             time_zone
         })
         handleOpen();

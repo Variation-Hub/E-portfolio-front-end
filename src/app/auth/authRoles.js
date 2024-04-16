@@ -1,6 +1,6 @@
 const authRoles = {
   Admin: ['Admin'],
-  Learner: ['Learner '],
+  Learner: ['Learner'],
   Trainer: ['Trainer'],
   Employer: ['Employer'],
   IQA: ['IQA'],

@@ -72,7 +72,7 @@ const MyProfile: React.FC = () => {
               <CircularProgress />
               :
               <>
-                <Avatar sx={{ width: "120px", height: "120px" }} src={data?.photoURL} />
+                <Avatar sx={{ width: "120px", height: "120px" }} src={data?.avatar?.url} />
                 <IconButton
                   onClick={handleButtonClick}
                   sx={{
