@@ -67,7 +67,7 @@
     font-weight: 600;
     color: white;
     margin: 8px 0px;
-    font-size: 18px;
+    font-size: 13px;
 }
 
 @media screen and (max-width:426px) {
@@ -80,5 +80,26 @@
     .home_card {
         width: 80vw;
         margin: 1rem 0.5rem;
+    }
+}
+
+.cardContain {
+    border-radius: 8px;
+    position: relative;
+    padding: 12px;
+    width: 18%;
+    height: 80px;
+    overflow: hidden;
+}
+
+@media (max-width: 768px) {
+    .cardContain {
+        width: 45%;
+    }
+}
+
+@media (max-width: 480px) {
+    .cardContain {
+        width: 100%;
     }
 }
