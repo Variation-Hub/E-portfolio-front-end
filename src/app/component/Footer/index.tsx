@@ -93,7 +93,7 @@ const Footer = () => {
         </div>
       </div>
       <div className={`${Style.footer} w-full flex h-48 justify-center items-center bg-[#526380]`}>
-        <p>Copyright &#169; 2023 Locker. All right reserved.</p>
+        <p>Copyright &#169; 2024 Locker. All right reserved.</p>
       </div>
     </div>
   );
