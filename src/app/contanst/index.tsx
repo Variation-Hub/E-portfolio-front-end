@@ -168,13 +168,19 @@ export const AdminPageData = [
     path: "/admin/user",
     name: "User Management",
     info: "Efficiently manage users with streamlined operations including add, delete, and update functionalities within the User Management tab.",
-    svg: "assets/images/svgImage/usermanagement.svg"
+    svg: "assets/images/svgImage/usermanagement.svg",
   },
   {
     path: "/admin/learner",
     name: "Learner Management",
     info: "Optimize learner administration by seamlessly adding, updating, and deleting learners, while also facilitating the assignment of courses, trainers, employers, IQAs, and EQAs within the dedicated Learner Management tab.",
-    svg: "assets/images/svgImage/learnermanagement.svg"
+    svg: "assets/images/svgImage/learnermanagement.svg",
+  },
+  {
+    path: "/admin/employer",
+    name: "Employer Management",
+    info: "Optimize learner administration by seamlessly adding, updating, and deleting learners, while also facilitating the assignment of courses, trainers, employers, IQAs, and EQAs within the dedicated Learner Management tab.",
+    svg: "assets/images/svgImage/employermanagement.svg",
   },
 ];
 
@@ -184,57 +190,63 @@ export const AdminRedirect = {
 };
 
 export const userManagementTableColumn = [
-  { id: 'first_name', label: 'Name', minWidth: 170, align: "left" },
-  { id: 'user_name', label: 'Username', minWidth: 170, align: "left" },
-  { id: 'email', label: 'Email', minWidth: 170, align: "left" },
-  { id: 'mobile', label: 'Mobile', minWidth: 170, align: "left" },
-  { id: 'roles', label: 'Roles', minWidth: 100, align: "left" },
-  { id: 'status', label: 'Status', minWidth: 100, align: "left" },
-  { id: 'actions', label: 'Actions', minWidth: 170, align: "center" }
+  { id: "first_name", label: "Name", minWidth: 170, align: "left" },
+  { id: "user_name", label: "Username", minWidth: 170, align: "left" },
+  { id: "email", label: "Email", minWidth: 170, align: "left" },
+  { id: "mobile", label: "Mobile", minWidth: 170, align: "left" },
+  { id: "roles", label: "Roles", minWidth: 100, align: "left" },
+  { id: "status", label: "Status", minWidth: 100, align: "left" },
+  { id: "actions", label: "Actions", minWidth: 170, align: "center" },
 ];
 
 export const learnerManagementTableColumn = [
-  { id: 'first_name', label: 'Name', minWidth: 170, align: "left" },
-  { id: 'user_name', label: 'Username', minWidth: 170, align: "left" },
-  { id: 'email', label: 'Email', minWidth: 170, align: "left" },
-  { id: 'mobile', label: 'Mobile', minWidth: 170, align: "left" },
-  { id: 'status', label: 'Status', minWidth: 100, align: "left" },
-  { id: 'actions', label: 'Actions', minWidth: 170, align: "center" }
+  { id: "first_name", label: "Name", minWidth: 170, align: "left" },
+  { id: "user_name", label: "Username", minWidth: 170, align: "left" },
+  { id: "email", label: "Email", minWidth: 170, align: "left" },
+  { id: "mobile", label: "Mobile", minWidth: 170, align: "left" },
+  { id: "status", label: "Status", minWidth: 100, align: "left" },
+  { id: "actions", label: "Actions", minWidth: 170, align: "center" },
 ];
 
-export const roles = [{
-  value: UserRole.Admin,
-  label: "Admin"
-},
-{
-  value: UserRole.Trainer,
-  label: "Trainer"
-},
-{
-  value: UserRole.Employer,
-  label: "Employer"
-},
-{
-  value: UserRole.IQA,
-  label: "IQA"
-},
-{
-  value: UserRole.EQA,
-  label: "EQA"
-},
-{
-  value: UserRole.LIQA,
-  label: "Lead IQA"
-}
-]
+export const roles = [
+  {
+    value: UserRole.Admin,
+    label: "Admin",
+  },
+  {
+    value: UserRole.Trainer,
+    label: "Trainer",
+  },
+  {
+    value: UserRole.Employer,
+    label: "Employer",
+  },
+  {
+    value: UserRole.IQA,
+    label: "IQA",
+  },
+  {
+    value: UserRole.EQA,
+    label: "EQA",
+  },
+  {
+    value: UserRole.LIQA,
+    label: "Lead IQA",
+  },
+];
 
 export const courseManagementTableColumn = [
-  { id: 'course_name', label: 'Course Name', minWidth: 200, align: "left" },
-  { id: 'course_code', label: 'Code', minWidth: 70, align: "left" },
-  { id: 'level', label: 'Level', minWidth: 170, align: "left" },
-  { id: 'sector', label: 'Sector', minWidth: 170, align: "left" },
-  { id: 'guided_learning_hours', label: 'Learning Hours', minWidth: 100, align: "left" },
-  { id: 'actions', label: 'Actions', minWidth: 170, align: "center" }
+  { id: "course_name", label: "Course Name", minWidth: 200, align: "left" },
+  { id: "course_code", label: "Code", minWidth: 70, align: "left" },
+  { id: "level", label: "Level", minWidth: 170, align: "left" },
+  { id: "sector", label: "Sector", minWidth: 170, align: "left" },
+  {
+    id: "guided_learning_hours",
+    label: "Learning Hours",
+    minWidth: 100,
+    align: "left",
+  },
+  { id: "actions", label: "Actions", minWidth: 170, align: "center" },
 ];
 
 export const courseManagementUnitColumn = [
@@ -243,8 +255,8 @@ export const courseManagementUnitColumn = [
   { id: "level", label: "Level", minWidth: 80, align: "left" },
   { id: "glh", label: "GLH", minWidth: 80, align: "left" },
   { id: "credit_value", label: "Credit Value", minWidth: 80, align: "left" },
-  { id: "actions", label: "Action", minWidth: 80, align: "center" }
-]
+  { id: "actions", label: "Action", minWidth: 80, align: "center" },
+];
 
 export const resourceManagementTableColumn = [
   { id: "name", label: "Name", minWidth: 180, align: "left" },
@@ -252,8 +264,8 @@ export const resourceManagementTableColumn = [
   { id: "glh", label: "GLH", minWidth: 80, align: "left" },
   { id: "job_type", label: "On/Off Job", minWidth: 80, align: "left" },
   { id: "resource_type", label: "Resource Type", minWidth: 80, align: "left" },
-  { id: "actions", label: "Action", minWidth: 80, align: "center" }
-]
+  { id: "actions", label: "Action", minWidth: 80, align: "center" },
+];
 
 export const portfolioCard = [
   { id: 1, name: "Upload Work", color: "#FCA14E" },
@@ -266,7 +278,7 @@ export const portfolioCard = [
   { id: 8, name: "Resources", color: "#A847F4" },
   { id: 9, name: "Time Log", color: "#B7B000" },
   { id: 10, name: "Supplementary Training", color: "#4564D0" },
-]
+];
 
 export const fundingBodyData = [
   "Advance Learning Loan",
@@ -291,5 +303,5 @@ export const fundingBodyData = [
   "SDS",
   "Self",
   "SFA",
-  "Student Loan"
-]
+  "Student Loan",
+];

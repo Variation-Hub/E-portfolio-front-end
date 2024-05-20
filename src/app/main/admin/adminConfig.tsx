@@ -2,6 +2,7 @@ import { lazy } from "react";
 const AdminView = lazy(() => import("./admin"));
 const UserManagement = lazy(() => import("./userManagement"));
 const LearnerManagement = lazy(() => import("./learnerManagement"));
+const EmployerManagement = lazy(() => import("./employerManagement"));
 import authRoles from 'src/app/auth/authRoles';
 
 const AdminConfig = {
@@ -39,6 +40,10 @@ const AdminConfig = {
     {
       path: "/admin/learner",
       element: <LearnerManagement />,
+    },
+    {
+      path: "/admin/employer",
+      element: <EmployerManagement />,
     },
   ],
 };
