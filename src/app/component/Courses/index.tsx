@@ -29,6 +29,12 @@ function formatText(text = "") {
     return formattedText;
 }
 
+const inputStyle = {
+    borderRadius: 0,
+    borderBottom: '1px solid lightgray',
+    padding: "1rem",
+}
+
 const CourseBuilder = (props) => {
 
     const { edit = false, handleClose = () => { } } = props;
@@ -116,23 +122,23 @@ const CourseBuilder = (props) => {
             return
         }
 
-        if (mandatoryUnit[unitId]) {
-            setMandatoryUnit({
-                ...mandatoryUnit,
-                [unitId]: {
-                    ...mandatoryUnit[unitId],
-                    [data.name]: data.value
-                }
-            })
-        } else if (optionalUnit[unitId]) {
-            setOptionalUnit({
-                ...optionalUnit,
-                [unitId]: {
-                    ...optionalUnit[unitId],
-                    [data.name]: data.value
-                }
-            })
-        }
+        // if (mandatoryUnit[unitId]) {
+        setMandatoryUnit({
+            ...mandatoryUnit,
+            [unitId]: {
+                ...mandatoryUnit[unitId],
+                [data.name]: data.value
+            }
+        })
+        // } else if (optionalUnit[unitId]) {
+        //     setOptionalUnit({
+        //         ...optionalUnit,
+        //         [unitId]: {
+        //             ...optionalUnit[unitId],
+        //             [data.name]: data.value
+        //         }
+        //     })
+        // }
     };
 
     const cancleCourseHandler = () => {
@@ -280,18 +286,7 @@ const CourseBuilder = (props) => {
             </Box>
 
             <Box className="m-12 flex flex-col justify-between gap-12 sm:flex-row">
-                <div className='w-1/3'>
-                    <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>Permitted Delivery Types</Typography>
-                    <TextField
-                        name="permitted_delivery_types"
-                        size="small"
-                        placeholder='Enter Permitted Delivery Types'
-                        fullWidth
-                        value={courseData.permitted_delivery_types}
-                        onChange={courseHandler}
-                    />
-                </div>
-                <div className='w-1/3'>
+                <div className='w-1/2'>
                     <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>Guided Learning Hours</Typography>
                     <TextField
                         name="guided_learning_hours"
@@ -302,7 +297,7 @@ const CourseBuilder = (props) => {
                         onChange={courseHandler}
                     />
                 </div>
-                <div className='w-1/3'>
+                <div className='w-1/2'>
                     <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>Overall Grading Type</Typography>
                     <TextField
                         name="overall_grading_type"
@@ -333,14 +328,77 @@ const CourseBuilder = (props) => {
 
             <Box className="m-12">
                 <Box className="flex items-center justify-between">
-                    <Typography>Mandatory Units</Typography>
+                    <Typography>Units</Typography>
                     {!edit &&
-                        <SecondaryButton name="Add New" onClick={() => addUnitHandler("M")} />
+                        <SecondaryButton name="Add New Unit" onClick={() => addUnitHandler("M")} />
                     }
                 </Box>
                 {
                     Object.values(mandatoryUnit).length ?
-                        <UnitManagementTable columns={courseManagementUnitColumn} edit={edit} setUnitData={setUnitData} removeUnitHandler={removeUnitHandler} rows={Object.values(mandatoryUnit)} />
+                        Object.values(mandatoryUnit)?.map((item: any) => {
+                            return (
+                                <div>
+                                    <div className='w-full flex gap-24'>
+                                        <input
+                                            type="text"
+                                            value={item.unit_ref}
+                                            name="unit_ref"
+                                            placeholder={`Enter a Unint Ref`}
+                                            onChange={(e) => setUnitData(item.id, e.target)}
+                                            className=' w-1/3'
+                                            style={inputStyle}
+                                        />
+                                        <input
+                                            type="text"
+                                            value={item.title}
+                                            name="title"
+                                            placeholder={`Enter a title`}
+                                            onChange={(e) => setUnitData(item.id, e.target)}
+                                            className='w-2/3'
+                                            style={inputStyle}
+                                        />
+                                        <input
+                                            type="text"
+                                            value={item.title}
+                                            name="title"
+                                            placeholder={`Enter a title`}
+                                            onChange={(e) => setUnitData(item.id, e.target)}
+                                            className='w-1/3'
+                                            style={inputStyle}
+                                        />
+                                    </div>
+                                    <div className='w-full flex gap-24'>
+                                        <input
+                                            type="number"
+                                            className='w-1/3'
+                                            value={item.level}
+                                            name="level"
+                                            placeholder={`Enter a Level`}
+                                            onChange={(e) => setUnitData(item.id, e.target)}
+                                            style={inputStyle} />
+
+                                        <input
+                                            type="number"
+                                            className='w-1/3'
+                                            value={item.credit_value}
+                                            name="credit_value"
+                                            placeholder={`Enter a credit value`}
+                                            onChange={(e) => setUnitData(item.id, e.target)}
+                                            style={inputStyle} />
+
+                                        <input
+                                            type="number"
+                                            className='w-1/3'
+                                            value={item.glh}
+                                            name="glh"
+                                            placeholder={`Enter a GLH`}
+                                            onChange={(e) => setUnitData(item.id, e.target)}
+                                            style={inputStyle} />
+                                    </div>
+                                </div>
+                            )
+                        })
+                        // <UnitManagementTable columns={courseManagementUnitColumn} edit={edit} setUnitData={setUnitData} removeUnitHandler={removeUnitHandler} rows={Object.values(mandatoryUnit)} />
                         :
                         <div className=' text-center opacity-50 mt-10 mb-10'>
                             Mandatory units have not been included.
@@ -348,7 +406,7 @@ const CourseBuilder = (props) => {
                 }
             </Box>
 
-            <Box className="m-12">
+            {/* <Box className="m-12">
                 <Box className="flex items-center justify-between">
                     <Typography>Optional Units</Typography>
                     {!edit &&
@@ -362,7 +420,7 @@ const CourseBuilder = (props) => {
                         Optional units have not been included.
                     </div>
                 }
-            </Box>
+            </Box> */}
             <Box className="flex items-center justify-end m-12 mt-24">
                 {loading ? <LoadingButton className="w-1/12" /> :
                     <>

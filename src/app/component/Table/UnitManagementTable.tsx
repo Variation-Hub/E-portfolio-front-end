@@ -4,8 +4,9 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import { IconButton } from '@mui/material';
+import { IconButton, Tooltip } from '@mui/material';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import AddIcon from '@mui/icons-material/Add';
 import Style from "./style.module.css";
 
 export default function UnitManagementTable(props) {
@@ -30,6 +31,13 @@ export default function UnitManagementTable(props) {
     }).filter(column => column !== null); // Remove any null values (i.e., removed 'actions' column)
 
 
+    const addLearningOutcomes = (id) => {
+        const data = {
+            id: Date.now(),
+            title:""
+        }
+        setUnitData(id, data, "ALC")
+    }
     return (
         <>
             <div style={{ width: '100%', overflow: 'hidden', marginTop: "0.5rem" }}>
@@ -64,6 +72,11 @@ export default function UnitManagementTable(props) {
                                                             >
                                                                 <DeleteOutlineOutlinedIcon fontSize='small' />
                                                             </IconButton>
+                                                            <Tooltip title="Add Learning Outcomes">
+                                                                <IconButton size="small" sx={{ color: "#5B718F", marginLeft: "4px" }} onClick={() => addLearningOutcomes(row.id)}>
+                                                                    <AddIcon fontSize='small' />
+                                                                </IconButton>
+                                                            </Tooltip>
                                                         </div>
                                                     </TableCell>
                                                 )
