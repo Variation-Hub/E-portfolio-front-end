@@ -251,7 +251,7 @@ export const courseManagementTableColumn = [
 
 export const courseManagementUnitColumn = [
   { id: "unit_ref", label: "Unint Ref", minWidth: 80, align: "left" },
-  { id: "title", label: "Title", minWidth: 800, align: "left" },
+  { id: "title", label: "Title", minWidth: 600, align: "left" },
   { id: "level", label: "Level", minWidth: 80, align: "left" },
   { id: "glh", label: "GLH", minWidth: 80, align: "left" },
   { id: "credit_value", label: "Credit Value", minWidth: 80, align: "left" },
