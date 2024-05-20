@@ -66,10 +66,10 @@ export default function CourseManagementTable(props) {
     setAnchorEl(event.currentTarget);
   };
 
-  const editIcon = (id) => {
-    setUpdateData(id);
+  const editIcon = () => {
+    setUpdateData(openMenuDialog);
     setOpen(true);
-    const data = rows.find((item) => item.course_id === id);
+    const data = rows.find((item) => item.course_id === openMenuDialog);
     const units = data?.units.map((item) => ({
       unit_ref: item.unit_ref,
       title: item.title,
@@ -251,7 +251,7 @@ export default function CourseManagementTable(props) {
         <MenuItem
           onClick={() => {
             handleClose();
-            editIcon(openMenuDialog);
+            editIcon();
           }}
         >
           View
@@ -259,7 +259,7 @@ export default function CourseManagementTable(props) {
         <MenuItem
           onClick={() => {
             handleClose();
-            editIcon(openMenuDialog);
+            editIcon();
           }}
         >
           Edit
