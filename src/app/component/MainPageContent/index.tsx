@@ -1,9 +1,11 @@
 import React from "react";
 import Style from "./style.module.css";
+import Home from "./home";
 
 const MainPageContent = () => {
   return (
     <>
+    <Home/>
       <div>
         {/* <div className={Style.screenshort}></div> */}
         <div className="flex flex-col justify-evenly py-24 items-center bg-[#F9F9FD] sm:flex-row">
