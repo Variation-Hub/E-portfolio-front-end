@@ -6,7 +6,7 @@ const Home = () => {
     return (
         <>
 
-            {/* <div className={Style.home_img}>
+            <div className={Style.home_img}>
 
                 <div className={Style.home_text}>
 
@@ -151,7 +151,7 @@ const Home = () => {
                     </div>
                 </div>
 
-            </div> */}
+            </div>
 
 
             <div className="flex flex-col justify-center py-28 items-center bg-[#F9F9FD] sm:flex-col gap-40 ">
