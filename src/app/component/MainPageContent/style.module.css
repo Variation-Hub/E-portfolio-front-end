@@ -111,18 +111,18 @@
 .bg_img {
     height: 522px;
     width: 100%;
-    background-image: url("../../../../public/assets/images/svgImage/bg-design.svg");
+    /* background-image: url("../../../../public/assets/images/svgImage/bg-design.svg");
     background-repeat: no-repeat;
-    background-size: contain;
+    background-size: contain; */
 }
-
+/* 
 .bg_img::before {
     background-position: center;
     position: absolute;
     height: 150%;
     z-index: 0;
-}   
-
+} */
+/* 
 .bg_img2 {
     height: 522px;
     width: 100%;
@@ -136,7 +136,7 @@
     position: absolute;
     height: 150%;
     z-index: 0;
-}
+} */
 
 .bg_enterprise {
     /* height: 362px; */
@@ -155,4 +155,10 @@
     display: block;
     /* width: 40% !important; */
     z-index: 0;
+}
+
+.card{
+    /* @media screen {
+        
+    } */
 }

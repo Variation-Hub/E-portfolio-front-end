@@ -1,4 +1,9 @@
 import React from "react";
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import Typography from '@mui/material/Typography';
+import { CardActionArea } from '@mui/material';
 import Style from "./style.module.css";
 import { Button } from "@mui/material";
 
@@ -34,9 +39,17 @@ const Home = () => {
             </div>
 
 
-            <div className="flex flex-col justify-evenly py-24 items-center bg-[#F9F9FD] sm:flex-row">
+            <div className="flex flex-col relative justify-evenly py-24 items-center overflow-hidden bg-[#ffffff] sm:flex-row">
 
-                <div className="w-full p-4 px-20 sm:w-1/4">
+                <div className="top-0 left-0 absolute z-10">
+                    <img
+                        src="assets/images/svgImage/bg-design.svg"
+                        alt="img1"
+                        className="w-3/4 "
+                    />
+                </div>
+
+                <div className="w-full p-4 px-20 sm:w-1/4 relative z-20">
                     <img
                         src="assets/images/homePage/meeting.svg"
                         alt="img1"
@@ -108,7 +121,22 @@ const Home = () => {
             </div>
 
 
-            <div className={`${Style.bg_img} text-white flex flex-col justify-evenly py-24 items-center bg-[#6D81A3] sm:flex-row`}>
+            <div className={`${Style.bg_img} text-white relative flex flex-col justify-evenly py-24 items-center bg-[#6D81A3] sm:flex-row`}>
+
+                <div className="bottom-0 left-0 absolute">
+                    <img
+                        src="assets/images/svgImage/bg-design1.svg"
+                        alt="img1"
+                        className="h-full"
+                    />
+                </div>
+
+                <div className="absolute top-0 right-0 " >
+                    <img
+                        src="assets/images/svgImage/bg-design2.svg"
+                        alt="img1"
+                    />
+                </div>
 
                 <div className="w-full p-4 px-20 sm:w-2/5">
                     <p className="font-medium">
@@ -118,7 +146,7 @@ const Home = () => {
                     <h2 className=" uppercase text-3xl font-bold mt-12 sm:text-3xl lg:text-3xl">
                         Features
                     </h2>
-                    
+
                     <ul className="list-disc list-outside">
                         <li className="p-5">Bespoke Management Reporting</li>
                         <li className="p-5">Online Enrolments- Free template provided</li>
@@ -154,7 +182,7 @@ const Home = () => {
             </div>
 
 
-            <div className="flex flex-col justify-center py-28 items-center bg-[#F9F9FD] sm:flex-col gap-40 ">
+            <div className="flex flex-col justify-center py-52 items-center bg-[#F9F9FD] sm:flex-col gap-40 ">
 
                 <div className="text-center w-full py-24 px-20 sm:w-3/5">
                     <p className="font-medium">
@@ -286,9 +314,10 @@ const Home = () => {
 
                 </div>
             </div>
-            <div>
-                <div className="flex items-center ">
-                    <div className="w-2/6 p-4 py-28 px-28 sm:w-2/5 flex flex-col gap-10">
+
+            <div className="flex items-center flex-col py-52 gap-10 ">
+                <div className="flex items-center justify-center w-11/12 gap-10 ">
+                    <div className="rounded w-2/6 p-4 py-28 px-28 sm:w-1/4 flex flex-col">
                         <p className="font-medium">
                             Enter Small Title here
                         </p>
@@ -302,56 +331,64 @@ const Home = () => {
                         </p>
                     </div>
 
-                    <div className="w-2/6 p-4 text-center py-28 px-28 sm:w-2/5 flex flex-col gap-10">
-                        <div className="flex justify-center">
-                            <div className="flex flex-row">
-                                <div className="w-full sm:w-full">
-                                    <img
-                                        src="assets/images/svgImage/freelancer.svg"
-                                        alt="img1"
-                                        className="w-full h-auto"
-                                    />
-                                </div>
-                            </div>
-                        </div>
+                    <Card sx={{ maxWidth: 345 }} className={`${Style.card} w-2/6 p-4 items-center text-center sm:w-2/6 flex flex-col rounded `}>
+                        <CardMedia
+                            className="w-1/4 sm:w-1/4 px-12 pt-12 "
+                            component="img"
+                            height="140"
+                            image="assets/images/svgImage/freelancer.svg"
+                            alt="green iguana"
+                        />
+                        <CardContent>
+                            <Typography
+                                gutterBottom
+                                variant="h5"
+                                component="div"
+                                className="text-3xl font-bold sm:text-3xl lg:text-3xl"
+                            >
+                                Freelancer
+                            </Typography>
+                            <Typography
+                                variant="body2"
+                                color="text.secondary"
+                                className="mt-12 text-justify break-words"
+                            >
+                                It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.
+                            </Typography>
+                        </CardContent>
+                    </Card>
 
-                        <h2 className="text-3xl font-bold mt-12 sm:text-3xl lg:text-3xl">
-                            Freelancer
-                        </h2>
-
-                        <p className="mt-12 text-justify break-words">
-                            It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.
-                        </p>
-
-                    </div>
-
-                    <div className="w-2/6 p-4 text-center py-28 px-28 sm:w-2/5 flex flex-col gap-10">
-                        <div className="flex justify-center">
-                            <div className="flex flex-row">
-                                <div className="w-full sm:w-full">
-                                    <img
-                                        src="assets/images/svgImage/startsup.svg"
-                                        alt="img1"
-                                        className="w-full h-auto"
-                                    />
-                                </div>
-                            </div>
-                        </div>
-
-                        <h2 className="text-3xl font-bold mt-12 sm:text-3xl lg:text-3xl">
-                            Startups
-                        </h2>
-
-                        <p className="mt-12 text-justify break-words">
-                            It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.
-                        </p>
-
-                    </div>
+                    <Card sx={{ maxWidth: 345 }} className={`${Style.card} w-2/6 p-4 items-center text-center sm:w-2/6 flex flex-col rounded `}>
+                        <CardMedia
+                            className="w-1/5 sm:w-1/5 px-12 pt-12 pb-8 "
+                            component="img"
+                            height="140"
+                            image="assets/images/svgImage/startsup.svg"
+                            alt="green iguana"
+                        />
+                        <CardContent>
+                            <Typography
+                                gutterBottom
+                                variant="h5"
+                                component="div"
+                                className="text-3xl font-bold sm:text-3xl lg:text-3xl"
+                            >
+                                Startups
+                            </Typography>
+                            <Typography
+                                variant="body2"
+                                color="text.secondary"
+                                className="mt-12 text-justify break-words"
+                            >
+                                It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.
+                            </Typography>
+                        </CardContent>
+                    </Card>
                 </div>
 
-                <div className="flex items-center">
+                <div className="flex items-center justify-center w-11/12 gap-10">
 
-                    <div className={`${Style.bg_enterprise} w-2/6 p-4 text-center py-28 px-28 sm:w-2/5 flex flex-col gap-10`}>
+                    <div className={`rounded ${Style.bg_enterprise} w-2/6 p-4 text-center py-28 px-28 sm:w-1/4 flex flex-col `}>
                         <div className="flex justify-center">
                             <div className="flex flex-row">
                                 <div className="w-full sm:w-full">
@@ -374,53 +411,102 @@ const Home = () => {
 
                     </div>
 
-                    <div className="w-2/6 p-4 text-center py-28 px-28 sm:w-2/5 flex flex-col gap-10">
-                        <div className="flex justify-center">
-                            <div className="flex flex-row">
-                                <div className="w-full sm:w-full">
-                                    <img
-                                        src="assets/images/svgImage/freelancer.svg"
-                                        alt="img1"
-                                        className="w-full h-auto"
-                                    />
-                                </div>
-                            </div>
-                        </div>
+                    <Card sx={{ maxWidth: 345 }} className={`${Style.card} w-2/6 p-4 items-center text-center sm:w-2/6 flex flex-col rounded `}>
+                        <CardMedia
+                            className="w-1/4 sm:w-1/4 px-12 pt-12 "
+                            component="img"
+                            height="140"
+                            image="assets/images/svgImage/freelancer.svg"
+                            alt="green iguana"
+                        />
+                        <CardContent>
+                            <Typography
+                                gutterBottom
+                                variant="h5"
+                                component="div"
+                                className="text-3xl font-bold sm:text-3xl lg:text-3xl"
+                            >
+                                Freelancer
+                            </Typography>
+                            <Typography
+                                variant="body2"
+                                color="text.secondary"
+                                className="mt-12 text-justify break-words"
+                            >
+                                It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.
+                            </Typography>
+                        </CardContent>
+                    </Card>
 
-                        <h2 className="text-3xl font-bold mt-12 sm:text-3xl lg:text-3xl">
-                            Freelancer
-                        </h2>
-
-                        <p className="mt-12 text-justify break-words">
-                            It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.
-                        </p>
-
-                    </div>
-
-                    <div className="w-2/6 p-4 text-center py-28 px-28 sm:w-2/5 flex flex-col gap-10">
-                        <div className="flex justify-center">
-                            <div className="flex flex-row">
-                                <div className="w-full sm:w-full">
-                                    <img
-                                        src="assets/images/svgImage/freelancer.svg"
-                                        alt="img1"
-                                        className="w-full h-auto"
-                                    />
-                                </div>
-                            </div>
-                        </div>
-
-                        <h2 className="text-3xl font-bold mt-12 sm:text-3xl lg:text-3xl">
-                            Freelancer
-                        </h2>
-
-                        <p className="mt-12 text-justify break-words">
-                            It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.
-                        </p>
-
-                    </div>
+                    <Card sx={{ maxWidth: 345 }} className={`${Style.card} w-2/6 p-4 items-center text-center sm:w-2/6 flex flex-col rounded `}>
+                        <CardMedia
+                            className="w-1/4 sm:w-1/4 px-12 pt-12 "
+                            component="img"
+                            height="140"
+                            image="assets/images/svgImage/freelancer.svg"
+                            alt="green iguana"
+                        />
+                        <CardContent>
+                            <Typography
+                                gutterBottom
+                                variant="h5"
+                                component="div"
+                                className="text-3xl font-bold sm:text-3xl lg:text-3xl"
+                            >
+                                Freelancer
+                            </Typography>
+                            <Typography
+                                variant="body2"
+                                color="text.secondary"
+                                className="mt-12 text-justify break-words"
+                            >
+                                It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.
+                            </Typography>
+                        </CardContent>
+                    </Card>
 
                 </div>
+            </div>
+
+
+            <div className=" text-white relative flex flex-col w-full ml-auto justify-end py-52 items-center bg-[#ffffff] sm:flex-row ">
+
+                <div className="absolute top-0 right-0 " >
+                    <img
+                        src="assets/images/svgImage/bg-design3.svg"
+                        alt="img1"
+                    />
+                </div>
+
+                <div className={`rounded w-2/6 text-center sm:w-2/6 flex flex-col `}>
+                    <img
+                        src="assets/images/homePage/writing.jpeg"
+                        alt="img1"
+                        className="w-full h-auto"
+                    />
+                </div>
+
+                <div className="text-white flex flex-col justify-center py-20 items-left bg-[#6D81A3] sm:flex-col w-full pl-52 sm:w-1/2">
+                    <p className="font-medium">
+                        Enter Small Title here
+                    </p>
+
+                    <h2 className=" uppercase text-3xl font-bold mt-12 sm:text-3xl lg:text-3xl">
+                        WHY LOCKER?
+                    </h2>
+
+                    <ul className="list-disc list-outside">
+                        <li className="p-5">It is a long established fact that a reader will be distracted the readable content.</li>
+                        <li className="p-5">The point of using Lorem Ipsum is that it has a more-or-less normal distribution</li>
+                        <li className="p-5">There are many variations of passages of Lorem Ipsum available.</li>
+                        <li className="p-5">Contrary to popular belief, Lorem Ipsum is not simply random text.</li>
+                        <li className="p-5">All the Lorem Ipsum generators on the Internet tend to repeat</li>
+                        <li className="p-5">It uses a dictionary of over 200 Latin words, combined with of model sentence</li>
+                        <li className="p-5">The standard chunk of Lorem Ipsum used since the 1500s.</li>
+                    </ul>
+                </div>
+
+
             </div>
         </>
     );
