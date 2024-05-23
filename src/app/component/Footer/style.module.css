@@ -10,3 +10,12 @@
 .footerMenu li{
     margin: 1rem 0;
 }
+
+.footerMenu div a{
+    text-decoration: none !important;
+    color: white !important;
+}
+
+.footerMenu div{
+    margin: 1rem 0;
+}
