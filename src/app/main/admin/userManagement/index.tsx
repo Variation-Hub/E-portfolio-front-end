@@ -3,9 +3,14 @@ import Breadcrumb from "src/app/component/Breadcrumbs";
 import { SecondaryButton } from "src/app/component/Buttons";
 import DataNotFound from "src/app/component/Pages/dataNotFound";
 import { AdminRedirect, roles } from "src/app/contanst";
-import Style from '../style.module.css'
+import Style from "../style.module.css";
 import { useSelector } from "react-redux";
-import { createUserAPI, fetchUserAPI, selectUserManagement, updateUserAPI } from "app/store/userManagement";
+import {
+  createUserAPI,
+  fetchUserAPI,
+  selectUserManagement,
+  updateUserAPI,
+} from "app/store/userManagement";
 import UserManagementTable from "src/app/component/Table/UserManagementTable";
 import { userManagementTableColumn } from "src/app/contanst";
 import {
@@ -113,8 +118,10 @@ const Index = () => {
     if (validation()) {
       const data = {
         ...userData,
-        roles: userData.role.map(item => item === "Lead IQA" ? "LIQA" : item)
-      }
+        roles: userData.role.map((item) =>
+          item === "Lead IQA" ? "LIQA" : item
+        ),
+      };
       delete data.role;
       const response = await dispatch(createUserAPI(data));
       if (response) {
@@ -126,8 +133,8 @@ const Index = () => {
   const updateUserHandler = async () => {
     const data = {
       ...userData,
-      roles: userData.role.map(item => item === "Lead IQA" ? "LIQA" : item)
-    }
+      roles: userData.role.map((item) => (item === "Lead IQA" ? "LIQA" : item)),
+    };
     delete data.role;
     const response = await dispatch(updateUserAPI(updateData, data));
     if (response) {
@@ -149,11 +156,13 @@ const Index = () => {
   const filterHandler = (e, value) => {
     setFilterValue(value);
     dispatch(fetchUserAPI({ page: 1, page_size: 25 }, searchKeyword, value));
-  }
+  };
 
   const searchAPIHandler = () => {
-    dispatch(fetchUserAPI({ page: 1, page_size: 25 }, searchKeyword, filterValue));
-  }
+    dispatch(
+      fetchUserAPI({ page: 1, page_size: 25 }, searchKeyword, filterValue)
+    );
+  };
 
   const validation = () => {
     setUserDataError({
@@ -162,19 +171,23 @@ const Index = () => {
       user_name: !usernameReg.test(userData?.user_name),
       email: !emailReg.test(userData?.email),
       password: !passwordReg.test(userData?.password),
-      confrimpassword: userData?.password !== userData?.confrimpassword || !passwordReg.test(userData?.password),
+      confrimpassword:
+        userData?.password !== userData?.confrimpassword ||
+        !passwordReg.test(userData?.password),
       mobile: !mobileReg.test(userData.mobile),
       role: userData?.role.length !== 0,
-    })
+    });
 
-    if (nameReg.test(userData?.first_name) &&
+    if (
+      nameReg.test(userData?.first_name) &&
       nameReg.test(userData?.last_name) &&
       usernameReg.test(userData?.user_name) &&
       emailReg.test(userData?.email) &&
       passwordReg.test(userData?.password) &&
       userData?.password === userData?.confrimpassword &&
       mobileReg.test(userData.mobile) &&
-      userData?.role.length !== 0) {
+      userData?.role.length !== 0
+    ) {
       return true;
     }
     return false;
@@ -183,48 +196,53 @@ const Index = () => {
   return (
     <div className="w-full h-full">
       <Breadcrumb linkData={[AdminRedirect]} currPage="User" />
-
       {data.length ? (
         <div className={Style.create_user}>
           <div className={Style.search_filed}>
             <TextField
               label="Search by keyword"
-              fullWidth size="small"
+              fullWidth
+              size="small"
               onKeyDown={searchByKeywordUser}
               onChange={searchHandler}
               value={searchKeyword}
               InputProps={{
-                endAdornment:
-                  <InputAdornment position="end" >
-                    {
-                      searchKeyword ? (
-                        <Close
-                          onClick={() => {
-                            setSearchKeyword("");
-                            dispatch(fetchUserAPI({ page: 1, page_size: 25 }, "", filterValue));
-                          }}
-                          sx={{
-                            color: "#5B718F",
-                            fontSize: 18,
-                            cursor: "pointer",
-                          }}
-                        />
-                      ) : (
-                        <IconButton
-                          id="dashboard-search-events-btn"
-                          disableRipple
-                          sx={{ color: "#5B718F" }}
-                          onClick={() => searchAPIHandler()}
-                          size="small"
-                        >
-                          <SearchIcon fontSize="small" />
-                        </IconButton>
-                      )}
+                endAdornment: (
+                  <InputAdornment position="end">
+                    {searchKeyword ? (
+                      <Close
+                        onClick={() => {
+                          setSearchKeyword("");
+                          dispatch(
+                            fetchUserAPI(
+                              { page: 1, page_size: 25 },
+                              "",
+                              filterValue
+                            )
+                          );
+                        }}
+                        sx={{
+                          color: "#5B718F",
+                          fontSize: 18,
+                          cursor: "pointer",
+                        }}
+                      />
+                    ) : (
+                      <IconButton
+                        id="dashboard-search-events-btn"
+                        disableRipple
+                        sx={{ color: "#5B718F" }}
+                        onClick={() => searchAPIHandler()}
+                        size="small"
+                      >
+                        <SearchIcon fontSize="small" />
+                      </IconButton>
+                    )}
                   </InputAdornment>
+                ),
               }}
             />
             <Autocomplete
-
               fullWidth
               size="small"
               value={filterValue}
@@ -256,29 +274,34 @@ const Index = () => {
           />
         </div>
       ) : null}
-      {
-        dataFetchLoading ? <FuseLoading /> :
-          data.length ?
-            <UserManagementTable
-              columns={userManagementTableColumn}
-              rows={data}
-              handleOpen={handleOpen}
-              setUserData={setUserData}
-              setUpdateData={setUpdateData}
-              meta_data={meta_data}
-              dataUpdatingLoadding={dataUpdatingLoadding}
-              search_keyword={searchKeyword}
-              search_role={filterValue}
-            />
-            :
-            <div className="flex flex-col justify-center items-center gap-10 " style={{ height: "94%" }}>
-              <DataNotFound width="25%" />
-              <Typography variant="h5">No data found</Typography>
-              <Typography variant="body2" className="text-center">It is a long established fact that a reader will be <br />distracted by the readable content.</Typography>
-              <SecondaryButton name="Create user" onClick={handleOpen} />
-            </div>
-
-      }
+      {dataFetchLoading ? (
+        <FuseLoading />
+      ) : data.length ? (
+        <UserManagementTable
+          columns={userManagementTableColumn}
+          rows={data}
+          handleOpen={handleOpen}
+          setUserData={setUserData}
+          setUpdateData={setUpdateData}
+          meta_data={meta_data}
+          dataUpdatingLoadding={dataUpdatingLoadding}
+          search_keyword={searchKeyword}
+          search_role={filterValue}
+        />
+      ) : (
+        <div
+          className="flex flex-col justify-center items-center gap-10 "
+          style={{ height: "94%" }}
+        >
+          <DataNotFound width="25%" />
+          <Typography variant="h5">No data found</Typography>
+          <Typography variant="body2" className="text-center">
+            It is a long established fact that a reader will be <br />
+            distracted by the readable content.
+          </Typography>
+          <SecondaryButton name="Create user" onClick={handleOpen} />
+        </div>
+      )}
       <Dialog
         open={open}
         sx={{
