@@ -121,7 +121,6 @@ const Home = () => {
                 </div>
             </div>
 
-
             <div className={`${Style.features} text-white relative flex flex-col justify-evenly py-24 items-center bg-[#6D81A3] sm:flex-row`}>
 
                 <div className="bottom-0 left-0 absolute">
