@@ -56,7 +56,7 @@ const Index = () => {
           </div>
           <div className={`${Style.navbar_link} ${Style.menu_open_icon}`}>
             <IconButton onClick={handleOpen}>
-              <MenuIcon />
+              <MenuIcon className="text-[#5B718F] "/>
             </IconButton>
           </div>
         </div>
