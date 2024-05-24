@@ -147,7 +147,6 @@ const Home = () => {
                     <h2 className=" uppercase text-3xl font-bold mt-12 sm:text-3xl lg:text-3xl">
                         Features
                     </h2>
-
                     <ul className="list-disc list-outside">
                         <li className="p-5">Bespoke Management Reporting</li>
                         <li className="p-5">Online Enrolments- Free template provided</li>
