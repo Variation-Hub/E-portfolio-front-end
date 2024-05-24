@@ -5,6 +5,7 @@ import { selectUser } from 'app/store/userSlice'
 import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
+import { SecondaryButton } from 'src/app/component/Buttons'
 import { PortfolioCard } from 'src/app/component/Cards'
 import DoughnutChart from 'src/app/component/Chart/doughnut'
 import { portfolioCard } from 'src/app/contanst'
@@ -21,6 +22,10 @@ const Portfolio = () => {
     if (data.id)
       dispatch(getLearnerDetails())
   }, [data]);
+
+  const handleOpen = () =>{
+    dispatch(getLearnerDetails())
+  }
 
   return (
     <div>
@@ -53,6 +58,7 @@ const Portfolio = () => {
           </div>
         </div>
       }
+      <SecondaryButton name="Calendar" onClick = {handleOpen}  />
     </div>
   )
 }
