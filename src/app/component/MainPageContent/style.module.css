@@ -76,6 +76,7 @@
     .features_img_div {
         display: none;
     }
+
 }
 
 .home_img {
@@ -115,6 +116,7 @@
     background-repeat: no-repeat;
     background-size: contain; */
 }
+
 /* 
 .bg_img::before {
     background-position: center;
