@@ -1,16 +1,20 @@
 import FuseLoading from '@fuse/core/FuseLoading'
-import { Avatar } from '@mui/material'
+import { Avatar, Dialog } from '@mui/material'
 import { getLearnerDetails, selectLearnerManagement } from 'app/store/learnerManagement'
 import { selectUser } from 'app/store/userSlice'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
 import { SecondaryButton } from 'src/app/component/Buttons'
 import { PortfolioCard } from 'src/app/component/Cards'
 import DoughnutChart from 'src/app/component/Chart/doughnut'
 import { portfolioCard } from 'src/app/contanst'
+import UserDetails from '../admin/userManagement/usetDetails'
+import Calendar from './calendar'
 
 const Portfolio = () => {
+
+  const [open, setOpen] = useState(false);
 
   const { learner, dataUpdatingLoadding } = useSelector(selectLearnerManagement);
   const { data } = useSelector(selectUser);
@@ -24,7 +28,7 @@ const Portfolio = () => {
   }, [data]);
 
   const handleOpen = () =>{
-    dispatch(getLearnerDetails())
+    setOpen(true);
   }
 
   return (
@@ -59,6 +63,17 @@ const Portfolio = () => {
         </div>
       }
       <SecondaryButton name="Calendar" onClick = {handleOpen}  />
+      <Dialog
+        open={open}
+        sx={{
+          ".MuiDialog-paper": {
+            borderRadius: "4px",
+            padding: "1rem",
+          },
+        }}
+      >
+        <Calendar/>
+      </Dialog>
     </div>
   )
 }
