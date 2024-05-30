@@ -165,7 +165,7 @@ export const HomePageData = [
 
 export const AdminPageData = [
   {
-    path: "/admin/user",
+    path: "/admin/user", 
     name: "User Management",
     info: "Efficiently manage users with streamlined operations including add, delete, and update functionalities within the User Management tab.",
     svg: "assets/images/svgImage/usermanagement.svg",

@@ -1,29 +1,50 @@
 import React from "react";
-import { createRoot } from "react-dom/client";
-import {
-  ScheduleComponent,
-  Month,
-  Inject,
-  ViewsDirective,
-  ViewDirective,
-} from "@syncfusion/ej2-react-schedule";
-import { appData } from "./datasource";
+import FullCalendar from "@fullcalendar/react";
+import dayGridPlugin from "@fullcalendar/daygrid";
+import timeGridPlugin from "@fullcalendar/timegrid";
+import interactionPlugin from "@fullcalendar/interaction";
+import { start } from "repl";
 
-const Calendar = () => {
-  const eventSettings = { dataSource: appData };
+function Calendar() {
+  const events = [
+    {
+      title: "Event 1",
+      // start: "2024-05-25"
+      start: "2024-05-25T10:00:00", // Start date and time of the event
+    },
+    {
+      title: "Event 2",
+      start: "2024-05-27T14:30:00", // Start date and time of the event
+      end: "2024-05-29T16:45:00", // End date and time of the event
+    },
+  ];
+
   return (
-    <ScheduleComponent
-      width="100%"
-      height="550px"
-      selectedDate={new Date(2018, 1, 15)}
-      eventSettings={eventSettings}
-    >
-      <ViewsDirective>
-        <ViewDirective option="Month" showWeekNumber={true} readonly={true} />
-      </ViewsDirective>
-      <Inject services={[Month]} />
-    </ScheduleComponent>
+    <div className="w-full max-w-screen-lg mx-auto">
+      <FullCalendar
+        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+        initialView={"dayGridMonth"}
+        headerToolbar={{
+          start: "today prev,next",
+          center: "title",
+          end: "dayGridMonth,timeGridWeek,timeGridDay",
+        }}
+        height={"90vh"}
+        events={events}
+        eventContent={(eventInfo) => {
+          // Formatting event time
+          const eventStartTime = new Date(eventInfo.event.start);
+          const timeString = eventStartTime.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+          return (
+            <div>
+              <div>{timeString}</div>
+              <div>{eventInfo.event.title}</div>
+            </div>
+          );
+        }}
+      />
+    </div>
   );
-};
-const root = createRoot(document.getElementById("schedule"));
+}
+
 export default Calendar;
