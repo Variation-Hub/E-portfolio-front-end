@@ -17,6 +17,7 @@ import { emailReg, mobileReg, nameReg, passwordReg, usernameReg } from "src/app/
 import { createLearnerAPI, fetchLearnerAPI, selectLearnerManagement, updateLearnerAPI } from "app/store/learnerManagement";
 import LearnerManagementTable from "src/app/component/Table/LearnerManagementTable";
 import { fetchCourseAPI } from "app/store/courseManagement";
+import { Link } from "react-router-dom";
 
 const Index = () => {
 
@@ -165,7 +166,7 @@ const Index = () => {
 
   return (
     <div className="w-full h-full">
-      <Breadcrumb linkData={[AdminRedirect]} currPage="Learner" />
+      <Breadcrumb linkData={[AdminRedirect]} currPage="Employer" />
 
       {data.length ? (
         <div className={Style.create_user}>
@@ -226,14 +227,15 @@ const Index = () => {
               )}
             /> */}
           </div>
-          <SecondaryButton name="Create learner" onClick={handleOpen} startIcon={
-            <img
-              src="assets/images/svgimage/createcourseicon.svg"
-              alt="Create user"
-              className="w-6 h-6 mr-2 sm:w-8 sm:h-8 lg:w-10 lg:h-10"
-            />
-          } />
-
+          <Link to="/admin/employer/create-employer">
+            <SecondaryButton name="Create employer" onClick={handleOpen} startIcon={
+              <img
+                src="assets/images/svgimage/createcourseicon.svg"
+                alt="Create user"
+                className="w-6 h-6 mr-2 sm:w-8 sm:h-8 lg:w-10 lg:h-10"
+              />
+            } />
+          </Link>
         </div>
       ) : null}
       {
@@ -255,17 +257,19 @@ const Index = () => {
               <DataNotFound width="25%" />
               <Typography variant="h5">No data found</Typography>
               <Typography variant="body2" className="text-center">It is a long established fact that a reader will be <br />distracted by the readable content.</Typography>
-              <SecondaryButton name="Create learner" onClick={handleOpen} startIcon={
-                <img
-                  src="assets/images/svgimage/createcourseicon.svg"
-                  alt="Create user"
-                  className="w-6 h-6 mr-2 sm:w-8 sm:h-8 lg:w-10 lg:h-10"
-                />
-              } />
+              <Link to="/admin/employer/create-employer">
+                <SecondaryButton name="Create employer" onClick={handleOpen} startIcon={
+                  <img
+                    src="assets/images/svgimage/createcourseicon.svg"
+                    alt="Create user"
+                    className="w-6 h-6 mr-2 sm:w-8 sm:h-8 lg:w-10 lg:h-10"
+                  />
+                } />
+              </Link>
             </div>
 
       }
-      <Dialog
+      {/* <Dialog
         open={open}
         onClose={handleClose}
         fullWidth
@@ -286,7 +290,7 @@ const Index = () => {
           dataUpdatingLoadding={dataUpdatingLoadding}
           userDataError={userDataError}
         />
-      </Dialog>
+      </Dialog> */}
     </div >
   );
 };
