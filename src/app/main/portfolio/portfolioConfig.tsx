@@ -1,6 +1,7 @@
 import { lazy } from "react";
 const PortfolioView = lazy(() => import("./portfolio"));
-import authRoles from 'src/app/auth/authRoles';
+import authRoles from "src/app/auth/authRoles";
+import UploadedEvidenceFile from "src/app/component/Cards/uploadedEvidenceFile";
 
 const PortfolioConfig = {
   settings: {
@@ -24,11 +25,15 @@ const PortfolioConfig = {
       },
     },
   },
-  auth: [authRoles.Learner], 
+  auth: [authRoles.Learner],
   routes: [
     {
       path: "/portfolio",
-      element: <PortfolioView />
+      element: <PortfolioView />,
+    },
+    {
+      path: "/portfolio/assingment",
+      element: <UploadedEvidenceFile />,
     },
   ],
 };

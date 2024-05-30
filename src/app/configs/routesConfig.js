@@ -32,7 +32,6 @@ import CommunicationsConfig from "../main/communications/communicationsConfig";
 import ForgotConfig from "../main/forgotPassword/forgotConfig";
 import MyProfileConfig from "../main/myProfile/myProfileConfig";
 
-
 const routeConfigs = [
     LandingConfig,
     SignInConfig,
@@ -73,7 +72,7 @@ const routes = [
     ),
     {
         path: "*",
-        element: < Navigate to="/" />,
+        element: < Navigate to = "/" / > ,
     }
 ];
 
