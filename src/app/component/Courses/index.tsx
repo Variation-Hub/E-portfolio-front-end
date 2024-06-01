@@ -538,12 +538,14 @@ const CourseBuilder = (props) => {
                                                                 })
                                                             }
                                                         </div>
-
-                                                        <Box className="flex items-center justify-between">
-                                                            {!edit &&
-                                                                <SecondaryButton name="+" className="min-w-112" onClick={() => addTopicHandler(item.id, subItem?.id)} />
-                                                            }
-                                                        </Box>
+                                                        
+                                                        <div className='min-w-112'>
+                                                            <Box className="w-full flex items-center justify-between">
+                                                                {!edit &&
+                                                                    <SecondaryButton name="Add Topic" className="w-full" onClick={() => addTopicHandler(item.id, subItem?.id)} />
+                                                                }
+                                                            </Box>
+                                                        </div>
                                                     </div>
 
                                                 </>

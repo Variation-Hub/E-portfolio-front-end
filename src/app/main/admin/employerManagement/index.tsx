@@ -228,7 +228,7 @@ const Index = () => {
             /> */}
           </div>
           <Link to="/admin/employer/create-employer">
-            <SecondaryButton name="Create employer" onClick={handleOpen} startIcon={
+            <SecondaryButton name="Create employer" className="h-full" onClick={handleOpen} startIcon={
               <img
                 src="assets/images/svgimage/createcourseicon.svg"
                 alt="Create user"
