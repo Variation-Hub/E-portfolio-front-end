@@ -17,6 +17,7 @@ import DoughnutChart from "src/app/component/Chart/doughnut";
 import { portfolioCard } from "src/app/contanst";
 import UserDetails from "../admin/userManagement/usetDetails";
 import Calendar from "./calendar";
+import { Link } from "react-router-dom";
 
 const Portfolio = () => {
   const [open, setOpen] = useState(false);
@@ -80,7 +81,10 @@ const Portfolio = () => {
       )}
       <div className="flex justify-end mr-24">
         <SecondaryButtonOutlined name="Awaiting Signature" className="mr-12" />
-        <SecondaryButton name="Calendar" onClick={handleOpen} />
+        <SecondaryButton name="Calendar" className="mr-12" onClick={handleOpen} />
+        <Link to="/portfolio/newsession">
+          <SecondaryButton name="New Session" />
+        </Link>
       </div>
       <Dialog
         open={open}

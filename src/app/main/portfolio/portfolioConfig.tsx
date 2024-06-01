@@ -2,6 +2,7 @@ import { lazy } from "react";
 const PortfolioView = lazy(() => import("./portfolio"));
 import authRoles from "src/app/auth/authRoles";
 import UploadedEvidenceFile from "src/app/component/Cards/uploadedEvidenceFile";
+import NewSession from "./newsession";
 
 const PortfolioConfig = {
   settings: {
@@ -34,6 +35,10 @@ const PortfolioConfig = {
     {
       path: "/portfolio/assingment",
       element: <UploadedEvidenceFile />,
+    },
+    {
+      path: "/portfolio/newsession",
+      element: <NewSession />,
     },
   ],
 };
