@@ -1,5 +1,6 @@
 /*@tailwind base;*/
 
+
 /**
  * Custom base styles
  */
@@ -33,7 +34,9 @@ input::-webkit-inner-spin-button {
     margin: 0;
 }
 
+
 /* Firefox */
+
 input[type=number] {
     -moz-appearance: textfield;
 }
@@ -123,26 +126,25 @@ a[role=button] {
     /*z-index: 9999;*/
 }
 
+
 /* Medium Devices, Desktops Only */
+
 @media only screen and (min-width: 992px) {
-    ::-webkit-scrollbar {
+     ::-webkit-scrollbar {
         width: 8px;
         height: 8px;
         background-color: rgba(0, 0, 0, 0);
     }
-
-    ::-webkit-scrollbar:hover {
+     ::-webkit-scrollbar:hover {
         width: 8px;
         height: 8px;
         background-color: rgba(0, 0, 0, 0.06);
     }
-
-    ::-webkit-scrollbar-thumb {
+     ::-webkit-scrollbar-thumb {
         border: 2px solid transparent;
         border-radius: 20px;
     }
-
-    ::-webkit-scrollbar-thumb:active {
+     ::-webkit-scrollbar-thumb:active {
         border-radius: 20px;
     }
 }
@@ -162,7 +164,9 @@ button:focus {
     outline: none;
 }
 
+
 /* Removes webkit's autofill backgorund color */
+
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
@@ -175,7 +179,9 @@ input:-webkit-autofill:active {
     outline-color: transparent;
 }
 
+
 /*fullcalendar Fix*/
+
 .fc-scrollgrid-section-liquid {
     height: 1px !important;
 }

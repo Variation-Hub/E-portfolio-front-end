@@ -6,6 +6,8 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
+import { Stack } from "@mui/system";
+import { Pagination } from "@mui/material";
 
 interface Column {
   id:
@@ -137,7 +139,7 @@ const Activity = () => {
   };
   return (
     <>
-      <TableContainer sx={{ maxHeight: 440 }}>
+      <TableContainer sx={{ maxHeight: 440 }} className="-m-12">
         <Table stickyHeader aria-label="sticky table" size="small">
           <TableHead>
             <TableRow>
@@ -182,7 +184,7 @@ const Activity = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      <div className="fixed bottom-0 left-0 w-full flex justify-center py-4 mb-14">
+      {/* <div className="fixed bottom-0 left-0 w-full flex justify-center py-4 mb-14">
         <TablePagination
           rowsPerPageOptions={[10, 25, 100]}
           component="div"
@@ -192,6 +194,11 @@ const Activity = () => {
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
+      </div> */}
+      <div className="fixed bottom-0 left-0 w-full flex justify-center py-4 mb-14">
+        <Stack spacing={2}>
+          <Pagination count={3} variant="outlined" shape="rounded" />
+        </Stack>
       </div>
     </>
   );

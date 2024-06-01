@@ -1,7 +1,6 @@
 .home_card {
-    background-color: var(--pc1);
     width: 20rem;
-    height: 9rem;
+    height: 10rem;
     padding: 1rem;
     margin: 1rem;
     display: flex;
