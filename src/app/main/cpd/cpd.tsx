@@ -23,7 +23,7 @@ import {
 } from "src/app/component/Buttons";
 
 // Separate components for dialog content
-const AddPlanDialogContent = ({ formData, handleChange }) => {
+const AddPlanDialogContent = ({ formData, handleChange, minEndDate }) => {
   return (
     <>
       <div>
@@ -56,6 +56,9 @@ const AddPlanDialogContent = ({ formData, handleChange }) => {
               InputLabelProps={{
                 shrink: true,
               }}
+              InputProps={{
+                inputProps: { min: minEndDate },
+              }}
               value={formData.end_date}
               onChange={handleChange}
             />
@@ -81,51 +84,63 @@ const AddPlanDialogContent = ({ formData, handleChange }) => {
             <Typography sx={{ fontSize: "0.9vw", marginRight: "0.5rem" }}>
               Impact
             </Typography>
-            {[
-              { label: "On you:", name: "on_you", value: formData.on_you },
-              {
-                label: "Colleagues:",
-                name: "colleagues",
-                value: formData.colleagues,
-              },
-              {
-                label: "Managers:",
-                name: "managers",
-                value: formData.managers,
-              },
-              {
-                label: "Organization:",
-                name: "organization",
-                value: formData.organization,
-              },
-            ].map((group) => (
-              <div
-                key={group.name}
-                className="flex flex-col sm:flex-row items-center"
-              >
-                <Typography sx={{ fontSize: "0.9vw", marginRight: "0.5rem" }}>
-                  {group.label}
-                </Typography>
-                <div className="flex space-x-2">
-                  {[1, 2, 3, 4, 5].map((value) => (
-                    <label
-                      key={`${group.name}-${value}`}
-                      className="flex items-center"
-                    >
-                      <input
-                        type="radio"
-                        name={group.name}
-                        value={value}
-                        checked={group.value === String(value)}
-                        onChange={handleChange}
-                        className="mr-1"
-                      />
-                      {value}
-                    </label>
-                  ))}
+            <div
+              className="border-2"
+              style={{
+                padding: "1rem",
+                border: "1px solid #E4E3E3",
+                borderRadius: "4px",
+              }}
+            >
+              {[
+                { label: "On you:-", name: "on_you", value: formData.on_you },
+                {
+                  label: "Colleagues:-",
+                  name: "colleagues",
+                  value: formData.colleagues,
+                },
+                {
+                  label: "Managers:-",
+                  name: "managers",
+                  value: formData.managers,
+                },
+                {
+                  label: "Organization:-",
+                  name: "organization",
+                  value: formData.organization,
+                },
+              ].map((group) => (
+                <div key={group.name} className="flex items-center">
+                  <Typography
+                    sx={{
+                      fontSize: "0.9vw",
+                      marginRight: "0.1rem",
+                      minWidth: "10rem",
+                    }}
+                  >
+                    {group.label}
+                  </Typography>
+                  <div className="flex space-x-16 m-2">
+                    {[1, 2, 3, 4, 5].map((value) => (
+                      <label
+                        key={`${group.name}-${value}`}
+                        className="flex items-center"
+                      >
+                        <input
+                          type="radio"
+                          name={group.name}
+                          value={value}
+                          checked={group.value === String(value)}
+                          onChange={handleChange}
+                          className="mr-1"
+                        />
+                        {value}
+                      </label>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </Box>
       </div>
@@ -363,7 +378,7 @@ const AddReflectionDialogContent = () => {
               size="small"
               placeholder="lorent's learning"
               fullWidth
-              // value={formData.uploaded_evidence_file}
+              // value={}
               // onChange={handleChange}
             />
           </div>
@@ -373,7 +388,7 @@ const AddReflectionDialogContent = () => {
             </Typography>
             <Select
               name="what_went_well"
-              // value={formData.assessment_method}
+              // value={}
               // onChange={handleChange}
               fullWidth
               size="small"
@@ -395,7 +410,7 @@ const AddReflectionDialogContent = () => {
               fullWidth
               multiline
               rows={3}
-              // value={formData.cdp_plan}
+              // value={}
               // onChange={handleChange}
             />
           </div>
@@ -408,7 +423,7 @@ const AddReflectionDialogContent = () => {
               size="small"
               placeholder="Lorem ipsum dolor sit..."
               fullWidth
-              // value={formData.uploaded_evidence_file}
+              // value={}
               // onChange={handleChange}
             />
           </div>
@@ -464,12 +479,18 @@ const Cpd = () => {
     organization: "",
   });
 
+  const [minEndDate, setMinEndDate] = useState("");
+
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData((prevFormData) => ({
       ...prevFormData,
       [name]: value,
     }));
+
+    if (name === "start_date") {
+      setMinEndDate(value);
+    }
   };
 
   const handleSubmit = () => {
@@ -514,6 +535,7 @@ const Cpd = () => {
           <AddPlanDialogContent
             formData={formData}
             handleChange={handleChange}
+            minEndDate={minEndDate}
           />
         );
       case "addNew":
@@ -530,7 +552,7 @@ const Cpd = () => {
   };
 
   return (
-    <div className="shadow-lg m-20 rounded-lg h-full">
+    <div>
       <Box sx={{ width: "100%" }}>
         <Box
           sx={{
@@ -545,15 +567,111 @@ const Cpd = () => {
             value={value}
             onChange={handleTabChange}
             aria-label="basic tabs example"
+            className="border-1 m-12 rounded-md"
+            sx={{
+              "& .MuiTabs-indicator": {
+                display: "none",
+              },
+            }}
           >
-            <Tab label="Planning" {...a11yProps(0)} />
-            <Tab label="Activity" {...a11yProps(1)} />
-            <Tab label="Evaluation" {...a11yProps(2)} />
-            <Tab label="Reflection" {...a11yProps(3)} />
+            <Tab
+              label="Planning"
+              {...a11yProps(0)}
+              // className="p-0"
+              sx={{
+                borderRight: "1px solid #e5e7eb",
+                "&:last-child": { borderRight: "none" },
+                // borderRadius: "4px",
+                // textTransform: "none",
+                // color: "#ffffff",
+                // backgroundColor: "secondary.main",
+                // margin: "0 4px",
+                "&:hover": {
+                  backgroundColor: "#6D81A3",
+                  color: "#ffffff",
+                  borderRadius: "0px",
+                },
+                "&.Mui-selected": {
+                  backgroundColor: "#6D81A3",
+                  color: "#ffffff",
+                  borderRadius: "0px",
+                },
+              }}
+            />
+            <Tab
+              label="Activity"
+              {...a11yProps(1)}
+              sx={{
+                borderRight: "1px solid #e5e7eb",
+                "&:last-child": { borderRight: "none" },
+                // borderRadius: "4px",
+                // textTransform: "none",
+                // color: "#ffffff",
+                // backgroundColor: "secondary.main",
+                // margin: "0 4px",
+                // "&:hover": {
+                //   backgroundColor: "#6D81A3",
+                //   color: "#ffffff",
+                //   borderRadius: "0px",
+                // },
+                "&.Mui-selected": {
+                  backgroundColor: "#6D81A3",
+                  color: "#ffffff",
+                  borderRadius: "0px",
+                },
+              }}
+            />
+            <Tab
+              label="Evaluation"
+              {...a11yProps(2)}
+              sx={{
+                borderRight: "1px solid #e5e7eb",
+                "&:last-child": { borderRight: "none" },
+                // borderRadius: "4px",
+                // textTransform: "none",
+                // color: "#ffffff",
+                // backgroundColor: "secondary.main",
+                // margin: "0 4px",
+                // "&:hover": {
+                //   backgroundColor: "#6D81A3",
+                //   color: "#ffffff",
+                //   borderRadius: "0px",
+                // },
+                "&.Mui-selected": {
+                  backgroundColor: "#6D81A3",
+                  color: "#ffffff",
+                  borderRadius: "0px",
+                },
+              }}
+            />
+            <Tab
+              label="Reflection"
+              {...a11yProps(3)}
+              sx={{
+                borderRight: "1px solid #e5e7eb",
+                "&:last-child": { borderRight: "none" },
+                // borderRadius: "4px",
+                // textTransform: "none",
+                // color: "#ffffff",
+                // backgroundColor: "secondary.main",
+                // margin: "0 4px",
+                // "&:hover": {
+                //   backgroundColor: "#6D81A3",
+                //   color: "#ffffff",
+                //   borderRadius: "0px",
+                // },
+                "&.Mui-selected": {
+                  backgroundColor: "#6D81A3",
+                  color: "#ffffff",
+                  borderRadius: "0px",
+                },
+              }}
+            />
           </Tabs>
-          <div className="flex space-x-4 mr-4">
+          <div className="flex space-x-4 mr-12">
             {value === 0 && (
               <SecondaryButton
+                className="p-12"
                 name="Add Plan"
                 startIcon={<AddIcon sx={{ mx: -0.5 }} />}
                 onClick={() => handleClickOpen("addPlan")}
@@ -561,6 +679,7 @@ const Cpd = () => {
             )}
             {value === 1 && (
               <SecondaryButton
+                className="p-12"
                 name="Add New"
                 startIcon={<AddIcon sx={{ mx: -0.5 }} />}
                 onClick={() => handleClickOpen("addNew")}
@@ -569,11 +688,13 @@ const Cpd = () => {
             {value === 2 && (
               <>
                 <SecondaryButton
+                  className="p-12"
                   name="Export PDF"
                   startIcon={<AddIcon sx={{ mx: -0.5 }} />}
                   onClick={() => handleClickOpen("exportPdf")}
                 />
                 <SecondaryButton
+                  className="p-12"
                   name="Add New"
                   startIcon={<AddIcon sx={{ mx: -0.5 }} />}
                   onClick={() => handleClickOpen("addNewEvaluation")}
@@ -582,6 +703,7 @@ const Cpd = () => {
             )}
             {value === 3 && (
               <SecondaryButton
+                className="p-12"
                 name="Add Reflection"
                 startIcon={<AddIcon sx={{ mx: -0.5 }} />}
                 onClick={() => handleClickOpen("addReflection")}

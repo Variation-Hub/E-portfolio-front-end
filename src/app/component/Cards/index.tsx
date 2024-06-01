@@ -8,15 +8,39 @@ import UserDetails from "src/app/main/admin/userManagement/usetDetails";
 import UploadWorkDialog from "./uploadWorkDialog";
 
 export const Card = (props) => {
-  const { isIcon, name, title, color } = props;
+  const {
+    isIcon,
+    name,
+    title,
+    color,
+    background = "var(--pc1)",
+    textColor = "black",
+    radiusColor = "white",
+  } = props;
   const isMobile = useThemeMediaQuery((theme) => theme.breakpoints.down("sm"));
 
   return (
-    <div className={Style.home_card}>
+    <div className={Style.home_card} style={{ backgroundColor: background }}>
       {isIcon ? (
-        name
+        <div
+          className="rounded-full p-12"
+          style={{
+            backgroundColor: radiusColor,
+            color: textColor,
+          }}
+        >
+          {name}
+        </div>
       ) : (
-        <Typography color={`text.${color}`} variant="h6">
+        <Typography
+          color={`text.${color}`}
+          variant="h6"
+          className="rounded-full px-12 py-8 "
+          style={{
+            backgroundColor: radiusColor,
+            color: textColor,
+          }}
+        >
           {name}
         </Typography>
       )}
@@ -68,7 +92,7 @@ export const PortfolioCard = (props) => {
           },
         }}
       >
-        <UploadWorkDialog dialogFn={{handleClose}}/>
+        <UploadWorkDialog dialogFn={{ handleClose }} />
       </Dialog>
     </>
   );

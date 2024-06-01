@@ -6,6 +6,8 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
+import { Stack } from "@mui/system";
+import { Pagination } from "@mui/material";
 
 interface Column {
   id: "learningObjective" | "whatwentwell" | "differentlynexttime" | "action";
@@ -89,52 +91,52 @@ const Reflection = () => {
   };
   return (
     <div>
-        <TableContainer sx={{ maxHeight: 440 }}>
-          <Table stickyHeader aria-label="sticky table" size="small">
-            <TableHead>
-              <TableRow>
-                {columns.map((column) => (
-                  <TableCell
-                    key={column.id}
-                    align={column.align}
-                    style={{
-                      minWidth: column.minWidth,
-                      backgroundColor: "#F8F8F8",
-                    }}
+      <TableContainer sx={{ maxHeight: 440 }} className="-m-12">
+        <Table stickyHeader aria-label="sticky table" size="small">
+          <TableHead>
+            <TableRow>
+              {columns.map((column) => (
+                <TableCell
+                  key={column.id}
+                  align={column.align}
+                  style={{
+                    minWidth: column.minWidth,
+                    backgroundColor: "#F8F8F8",
+                  }}
+                >
+                  {column.label}
+                </TableCell>
+              ))}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {rows
+              ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((row) => {
+                return (
+                  <TableRow
+                    hover
+                    role="checkbox"
+                    tabIndex={-1}
+                    //   key={row.whosupportyou}
                   >
-                    {column.label}
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {rows
-                ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row) => {
-                  return (
-                    <TableRow
-                      hover
-                      role="checkbox"
-                      tabIndex={-1}
-                      //   key={row.whosupportyou}
-                    >
-                      {columns.map((column) => {
-                        const value = row[column.id];
-                        return (
-                          <TableCell key={column.id} align={column.align}>
-                            {column.format && typeof value === "number"
-                              ? column.format(value)
-                              : value}
-                          </TableCell>
-                        );
-                      })}
-                    </TableRow>
-                  );
-                })}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      <div className="fixed bottom-0 left-0 w-full flex justify-center py-4 mb-14">
+                    {columns.map((column) => {
+                      const value = row[column.id];
+                      return (
+                        <TableCell key={column.id} align={column.align}>
+                          {column.format && typeof value === "number"
+                            ? column.format(value)
+                            : value}
+                        </TableCell>
+                      );
+                    })}
+                  </TableRow>
+                );
+              })}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      {/* <div className="fixed bottom-0 left-0 w-full flex justify-center py-4 mb-14">
         <TablePagination
           rowsPerPageOptions={[10, 25, 100]}
           component="div"
@@ -144,6 +146,11 @@ const Reflection = () => {
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
+      </div> */}
+      <div className="fixed bottom-0 left-0 w-full flex justify-center py-4 mb-14">
+        <Stack spacing={2}>
+          <Pagination count={3} variant="outlined" shape="rounded" />
+        </Stack>
       </div>
     </div>
   );
