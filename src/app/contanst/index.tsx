@@ -189,6 +189,11 @@ export const AdminRedirect = {
   name: "Admin",
 };
 
+export const EmployerRedirect = {
+  link: "/admin/employer",
+  name: "Employer",
+};
+
 export const userManagementTableColumn = [
   { id: "first_name", label: "Name", minWidth: 170, align: "left" },
   { id: "user_name", label: "Username", minWidth: 170, align: "left" },

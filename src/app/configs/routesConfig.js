@@ -31,6 +31,7 @@ import SurverysConfig from "../main/surverys/surverysConfig";
 import CommunicationsConfig from "../main/communications/communicationsConfig";
 import ForgotConfig from "../main/forgotPassword/forgotConfig";
 import MyProfileConfig from "../main/myProfile/myProfileConfig";
+import NotificationConfig from "../main/notification/notificationConfig";
 
 const routeConfigs = [
     LandingConfig,
@@ -62,7 +63,8 @@ const routeConfigs = [
     SurverysConfig,
     CommunicationsConfig,
     ForgotConfig,
-    MyProfileConfig
+    MyProfileConfig,
+    NotificationConfig
 ];
 
 const routes = [
