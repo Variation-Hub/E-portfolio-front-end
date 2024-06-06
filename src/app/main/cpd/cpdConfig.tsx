@@ -24,7 +24,7 @@ const CpdConfig = {
       },
     },
   },
-  auth: [authRoles.Trainer, authRoles.Learner, authRoles.IQA],
+  auth: [authRoles.Trainer, authRoles.Learner, authRoles.IQA, authRoles.LIQA],
   routes: [
     {
       path: "/cpd",

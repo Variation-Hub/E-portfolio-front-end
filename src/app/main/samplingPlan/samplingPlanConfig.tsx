@@ -24,7 +24,7 @@ const SamplingPlanConfig = {
       },
     },
   },
-  auth: [authRoles.Admin, authRoles.IQA],
+  auth: [authRoles.Admin, authRoles.IQA, authRoles.LIQA],
   routes: [
     {
       path: "/samplingPlan",
