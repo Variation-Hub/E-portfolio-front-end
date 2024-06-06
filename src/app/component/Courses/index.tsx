@@ -1,28 +1,27 @@
-import { Autocomplete, Box, MenuItem, Select, TextField, Typography } from '@mui/material'
+import { Autocomplete, Box, FormControl, InputLabel, MenuItem, Select, TextField, Tooltip, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import { LoadingButton, SecondaryButton, SecondaryButtonOutlined } from '../Buttons'
 import UnitManagementTable from '../Table/UnitManagementTable'
 import { courseManagementUnitColumn } from 'src/app/contanst'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
-import { createCourseAPI, selectCourseManagement } from 'app/store/courseManagement'
+import { createCourseAPI, selectCourseManagement, updateCourseAPI } from 'app/store/courseManagement'
 import { useSelector } from 'react-redux'
+import CloseIcon from '@mui/icons-material/Close';
 
-const generateUnitObject = (unitDataArray = [], unit = '') => {
+const generateUnitObject = (unitDataArray = []) => {
     const unitObject = {};
     unitDataArray.forEach((unitData, index) => {
-        const id = Date.now() + index + unit; // Generate unique ID for each unit
-        unitObject[id] = {
-            id,
+        unitObject[unitData?.id] = {
+            id: unitData?.id,
             unit_ref: unitData.unit_ref || "",
             title: unitData.title || "",
-            unitType: unitData.unitType || (unit === 'M' ? true : false),
+            mandatory: unitData.mandatory,
             subTitle: unitData.subTitle || "",
             level: unitData.level || 0,
             glh: unitData.glh || 0,
             credit_value: unitData.credit_value || 0,
             subUnit: unitData.subUnit || [],
-            subTopic: unitData.subTopic || []
         };
     });
     return unitObject;
@@ -35,13 +34,13 @@ function formatText(text = "") {
 
 const inputStyle = {
     borderRadius: 0,
-    borderBottom: '1px solid lightgray',
+    // borderBottom: '1px solid lightgray',
     padding: "1rem",
 }
 
 const CourseBuilder = (props) => {
 
-    const { edit = false, handleClose = () => { } } = props;
+    const { edit = "create", handleClose = () => { } } = props;
 
     const navigate = useNavigate();
     const dispatch: any = useDispatch();
@@ -65,13 +64,19 @@ const CourseBuilder = (props) => {
             total_credits: preFillData?.total_credits || "",
         }
     })
+    console.log(preFillData?.operational_start_date);
 
-    const [mandatoryUnit, setMandatoryUnit] = useState(generateUnitObject(preFillData?.mandatory_units, 'M'));
+    const formatDate = (date) => {
+        if (!date) return ''; // Return empty string if date is empty
+        const formattedDate = date.substr(0, 10);
+        return formattedDate;
+    };
 
-    const [optionalUnit, setOptionalUnit] = useState(generateUnitObject(preFillData?.optional_units, 'O'));
+
+    const [mandatoryUnit, setMandatoryUnit] = useState(generateUnitObject(preFillData?.units));
 
     const courseHandler = (event) => {
-        if (edit) {
+        if (edit == "view") {
             return;
         }
         const { name, value } = event.target;
@@ -81,42 +86,25 @@ const CourseBuilder = (props) => {
         }))
     }
 
-    const addUnitHandler = (unitType) => {
+    const addUnitHandler = () => {
         const id = Date.now();
-        if (unitType === "M") {
-            setMandatoryUnit((prev) => ({
-                ...prev,
-                [id]: {
-                    id,
-                    unit_ref: "",
-                    title: "",
-                    mandatory: unitType === "M" ? true : false,
-                    level: null,
-                    glh: null,
-                    credit_value: null,
-                    subUnit: []
-                }
-            }))
-        } else {
-            setOptionalUnit((prev) => ({
-                ...prev,
-                [id]: {
-                    id,
-                    unit_ref: "",
-                    title: "",
-                    level: null,
-                    glh: null,
-                    credit_value: null
-                }
-            }))
-        }
+        setMandatoryUnit((prev) => ({
+            ...prev,
+            [id]: {
+                id,
+                unit_ref: "",
+                title: "",
+                mandatory: true,
+                level: null,
+                glh: null,
+                credit_value: null,
+                subUnit: []
+            }
+        }))
     }
 
     const addSubUnitHandler = (unitId) => {
         if (mandatoryUnit[unitId]) {
-            const subData = mandatoryUnit[unitId].subUnit;
-            // const obj = subData.find(a => a.id === unitId);
-
             const newTopicData = {
                 id: Date.now() + Number((Math.random() * 10).toFixed(0)),
                 description: "",
@@ -127,44 +115,43 @@ const CourseBuilder = (props) => {
                 subTitle: "",
                 subTopic: [newTopicData],
             }
-            // console.log(newSubData);
-            subData.push(newSubData);
+
             setMandatoryUnit((prev) => ({
                 ...prev,
                 [unitId]: {
                     ...prev[unitId],
-                    subUnit: subData,
+                    subUnit: [...prev[unitId].subUnit, newSubData],
                 }
             }))
         }
     }
 
-    const addTopicHandler = (unitId, subUnit) => {
+    const addTopicHandler = (unitId, subUnitId) => {
         if (mandatoryUnit[unitId]) {
-            const topicData = mandatoryUnit[unitId].subUnit.find(a => a.id === subUnit)?.subTopic;
             const newTopicData = {
                 id: Date.now(),
                 description: "",
             }
-            topicData.push(newTopicData);
-            // console.log(mandatoryUnit)
-            setMandatoryUnit(JSON.parse(JSON.stringify(mandatoryUnit)))
-        }
-    }
-
-
-    const removeUnitHandler = (unitId) => {
-        if (mandatoryUnit[unitId]) {
-            delete mandatoryUnit[unitId]
-            setMandatoryUnit({ ...mandatoryUnit })
-        } else if (optionalUnit[unitId]) {
-            delete optionalUnit[unitId]
-            setOptionalUnit({ ...optionalUnit })
+            setMandatoryUnit(prev => ({
+                ...prev,
+                [unitId]: {
+                    ...prev[unitId],
+                    subUnit: prev[unitId].subUnit.map(sub => {
+                        if (sub.id === subUnitId) {
+                            return {
+                                ...sub,
+                                subTopic: [...sub.subTopic, newTopicData]
+                            };
+                        }
+                        return sub;
+                    })
+                }
+            }));
         }
     }
 
     const setUnitData = (unitId, data) => {
-        if (edit) {
+        if (edit === "view") {
             return;
         }
 
@@ -176,11 +163,25 @@ const CourseBuilder = (props) => {
             }
         })
     };
-
     console.log(mandatoryUnit);
 
+    const removeUnitHandler = (unitId) => {
+        if (edit === "view") {
+            return;
+        }
+
+        setMandatoryUnit(prev => {
+            const updatedUnits = { ...prev };
+            delete updatedUnits[unitId];
+            return updatedUnits;
+        });
+    };
+
+
+
+
     const setSubUnitData = (unitId, subUnitId, data) => {
-        if (edit) {
+        if (edit === "view") {
             return;
         }
 
@@ -196,8 +197,22 @@ const CourseBuilder = (props) => {
         console.log(mandatoryUnit);
     };
 
+    const removeSubUnitHandler = (unitId, subUnitId) => {
+        if (edit === "view") {
+            return;
+        }
+
+        setMandatoryUnit(prev => ({
+            ...prev,
+            [unitId]: {
+                ...prev[unitId],
+                subUnit: prev[unitId].subUnit.filter(sub => sub.id !== subUnitId)
+            }
+        }));
+    };
+
     const setSubTopicData = (unitId, subUnitId, subTopicId, data) => {
-        if (edit) {
+        if (edit == "view") {
             return;
         }
 
@@ -224,6 +239,27 @@ const CourseBuilder = (props) => {
         console.log(mandatoryUnit);
     };
 
+    const removeSubTopicHandler = (unitId, subUnitId, subTopicId) => {
+        if (edit === "view") {
+            return;
+        }
+
+        setMandatoryUnit(prev => ({
+            ...prev,
+            [unitId]: {
+                ...prev[unitId],
+                subUnit: prev[unitId].subUnit.map(sub =>
+                    sub.id === subUnitId
+                        ? {
+                            ...sub,
+                            subTopic: sub.subTopic.filter(topic => topic.id !== subTopicId)
+                        }
+                        : sub
+                )
+            }
+        }));
+    };
+
 
     const cancleCourseHandler = () => {
         navigate("/courseBuilder")
@@ -231,8 +267,9 @@ const CourseBuilder = (props) => {
 
     const createCouserHandler = async () => {
 
-        const mandatory_units = Object.values(mandatoryUnit).map((item: any) => {
+        const units = Object.values(mandatoryUnit).map((item: any) => {
             return {
+                id: item.id,
                 unit_ref: item.unit_ref,
                 title: item.title,
                 mandatory: item.mandatory,
@@ -244,13 +281,21 @@ const CourseBuilder = (props) => {
         });
 
         setLoading(true);
-        console.log(mandatory_units);
-        // const response = await dispatch(createCourseAPI({ data: { ...courseData, mandatory_units, optional_units } }));
-        // if (response) {
-        //     navigate("/courseBuilder")
-        // }
+        let response = ""
+        if (edit === "create") {
+            response = await dispatch(createCourseAPI({ ...courseData, units }));
+        } else if (edit == "edit") {
+            response = await dispatch(updateCourseAPI(preFillData?.course_id, { ...courseData, units }));
+
+        }
+
+        if (response) {
+            navigate("/courseBuilder")
+        }
         setLoading(false)
     }
+
+
     return (
         <div className='p-12'>
             <Box className="m-12 flex flex-col justify-between gap-12 sm:flex-row">
@@ -264,6 +309,7 @@ const CourseBuilder = (props) => {
                         fullWidth
                         value={courseData.course_name}
                         onChange={courseHandler}
+                        disabled={edit === "view"}
                     />
                 </div>
                 <div className='w-1/3'>
@@ -276,6 +322,7 @@ const CourseBuilder = (props) => {
                         fullWidth
                         value={courseData.course_code}
                         onChange={courseHandler}
+                        disabled={edit === "view"}
                     />
                 </div>
                 <div className='w-1/3'>
@@ -284,10 +331,12 @@ const CourseBuilder = (props) => {
                         name="level"
                         size="small"
                         placeholder='Enter Level'
+                        type='number'
                         required
                         fullWidth
                         value={courseData.level}
                         onChange={courseHandler}
+                        disabled={edit === "view"}
                     />
                 </div>
             </Box>
@@ -302,6 +351,7 @@ const CourseBuilder = (props) => {
                         fullWidth
                         value={courseData.sector}
                         onChange={courseHandler}
+                        disabled={edit === "view"}
                     />
                 </div>
                 <div className='w-1/3'>
@@ -313,6 +363,7 @@ const CourseBuilder = (props) => {
                         fullWidth
                         value={courseData.qualification_type}
                         onChange={courseHandler}
+                        disabled={edit === "view"}
                     />
                 </div>
                 <div className='w-1/3'>
@@ -322,8 +373,10 @@ const CourseBuilder = (props) => {
                         size="small"
                         placeholder='Enter Recommended Minimum age'
                         fullWidth
+                        type='number'
                         value={courseData.recommended_minimum_age}
                         onChange={courseHandler}
+                        disabled={edit === "view"}
                     />
                 </div>
             </Box>
@@ -333,11 +386,13 @@ const CourseBuilder = (props) => {
                     <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>Total Credits</Typography>
                     <TextField
                         name="total_credits"
+                        type='number'
                         size="small"
                         placeholder='Enter Total Credits'
                         fullWidth
                         value={courseData.total_credits}
                         onChange={courseHandler}
+                        disabled={edit === "view"}
                     />
                 </div>
                 <div className='w-1/3'>
@@ -345,10 +400,12 @@ const CourseBuilder = (props) => {
                     <TextField
                         name="operational_start_date"
                         size="small"
-                        placeholder='Enter Operational start date'
+                        placeholder='YYYY-MM-DD'
                         fullWidth
-                        value={courseData.operational_start_date}
+                        type='date'
+                        value={formatDate(courseData.operational_start_date)}
                         onChange={courseHandler}
+                        disabled={edit === "view"}
                     />
                 </div>
                 <div className='w-1/3'>
@@ -360,6 +417,7 @@ const CourseBuilder = (props) => {
                         fullWidth
                         value={courseData.qualification_status}
                         onChange={courseHandler}
+                        disabled={edit === "view"}
                     />
                 </div>
             </Box>
@@ -374,6 +432,7 @@ const CourseBuilder = (props) => {
                         fullWidth
                         value={courseData.guided_learning_hours}
                         onChange={courseHandler}
+                        disabled={edit === "view"}
                     />
                 </div>
                 <div className='w-1/2'>
@@ -385,6 +444,7 @@ const CourseBuilder = (props) => {
                         fullWidth
                         value={courseData.overall_grading_type}
                         onChange={courseHandler}
+                        disabled={edit === "view"}
                     />
                 </div>
             </Box>
@@ -393,33 +453,34 @@ const CourseBuilder = (props) => {
                 <div className='w-full'>
                     <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>Course Guidelines</Typography>
                     <TextField
-                        name="brand_guidelines"
                         size="small"
+                        name="brand_guidelines"
                         placeholder='Enter Course Guidelines'
                         fullWidth
                         multiline
                         rows={5}
                         value={courseData.brand_guidelines}
                         onChange={courseHandler}
+                        disabled={edit === "view"}
                     />
                 </div>
             </Box>
-
+            <hr />
             <Box className="m-12">
                 <Box className="flex items-center justify-between">
                     <Typography>Units</Typography>
-                    {!edit &&
-                        <SecondaryButton name="Add New Unit" onClick={() => addUnitHandler("M")} />
+                    {edit !== "view" &&
+                        <SecondaryButton name="Add New Unit" onClick={() => addUnitHandler()} />
                     }
                 </Box>
                 {
                     Object.values(mandatoryUnit).length ?
                         Object.values(mandatoryUnit)?.map((item: any) => {
-
                             return (
                                 <div>
-                                    <div className='w-full flex gap-24'>
-                                        <input
+                                    <div className='w-full flex gap-24 items-center '>
+                                        <TextField
+                                            size="small"
                                             type="text"
                                             value={item.unit_ref}
                                             name="unit_ref"
@@ -427,8 +488,10 @@ const CourseBuilder = (props) => {
                                             onChange={(e) => setUnitData(item.id, e.target)}
                                             className=' w-1/3'
                                             style={inputStyle}
+                                            disabled={edit === "view"}
                                         />
-                                        <input
+                                        <TextField
+                                            size="small"
                                             type="text"
                                             value={item.title}
                                             name="title"
@@ -436,115 +499,144 @@ const CourseBuilder = (props) => {
                                             onChange={(e) => setUnitData(item.id, e.target)}
                                             className='w-2/3'
                                             style={inputStyle}
+                                            disabled={edit === "view"}
                                         />
-                                        {/* <Select
-                                            name="mandatory"
-                                            onChange={(e) => setUnitData(item.id, e.target)}
-                                            value={item.mandatory}
-                                            className='w-1/5 p-7 '
-                                            variant="standard"
-                                        >
-                                            <MenuItem value="True">Mandatory Unit</MenuItem>
-                                            <MenuItem value="False">Optional Unit</MenuItem>
-                                        </Select> */}
 
-                                        <Autocomplete
+                                        {/* <Autocomplete
                                             // disableClearable
+                                            renderInput={(params) => <TextField variant="standard" {...params}
+                                                value={item.mandatory}
+                                                name="mandatory" />}
                                             className='w-1/5'
                                             options={[{ value: true, name: "Mandatory Unit" }, { value: false, name: "Optional Unit" }]}
                                             getOptionLabel={(option) => option.name}
-                                            renderInput={(params) => <TextField variant="standard" {...params} placeholder="Mandatory"
-                                                value={item.mandatory}
-                                                name="mandatory" />}
                                             onChange={(e, value) => setUnitData(item.id, { name: "mandatory", value: value.value })}
-                                        // sx={{
-                                        //     '.MuiAutocomplete-clearIndicator': {
-                                        //         color: "#5B718F"
-                                        //     }
-                                        // }}
-                                        // PaperComponent={({ children }) => (
-                                        //     <Paper style={{ borderRadius: "4px" }}>{children}</Paper>
-                                        // )}
-                                        />
+                                        /> */}
+                                        <FormControl variant="standard" className='w-1/5'>
+                                            <Select
+                                                labelId={`select-label-${item.id}`}
+                                                value={item.mandatory}
+                                                onChange={(e) => setUnitData(item.id, { name: "mandatory", value: e.target.value })}
+                                                disabled={edit === "view"}
+                                            >
+                                                <MenuItem value={"true"}>Mandatory Unit</MenuItem>
+                                                <MenuItem value={"false"}>Optional Unit</MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                        <Box className="flex items-center justify-between">
+                                            {edit !== "view" &&
+                                                <Tooltip title="Remove unit">
+                                                    <CloseIcon className="cursor-pointer" onClick={() => removeUnitHandler(item.id)} />
+                                                </Tooltip>
+                                            }
+                                        </Box>
                                     </div>
-                                    <div className='w-full flex gap-24'>
-                                        <input
+                                    <div className='w-full flex gap-24 items-center '>
+                                        <TextField
+                                            size="small"
                                             type="number"
                                             className='w-1/3'
                                             value={item.level}
                                             name="level"
                                             placeholder={`Enter a Level`}
                                             onChange={(e) => setUnitData(item.id, e.target)}
-                                            style={inputStyle} />
+                                            style={inputStyle}
+                                            disabled={edit === "view"}
+                                        />
 
-                                        <input
+                                        <TextField
+                                            size="small"
                                             type="number"
                                             className='w-1/3'
                                             value={item.credit_value}
                                             name="credit_value"
                                             placeholder={`Enter a credit value`}
                                             onChange={(e) => setUnitData(item.id, e.target)}
-                                            style={inputStyle} />
+                                            style={inputStyle}
+                                            disabled={edit === "view"}
+                                        />
 
-                                        <input
+                                        <TextField
+                                            size="small"
                                             type="number"
                                             className='w-1/3'
                                             value={item.glh}
                                             name="glh"
                                             placeholder={`Enter a GLH`}
                                             onChange={(e) => setUnitData(item.id, e.target)}
-                                            style={inputStyle} />
+                                            style={inputStyle}
+                                            disabled={edit === "view"}
+                                        />
 
                                         <Box className="flex items-center justify-between">
-                                            {!edit &&
+                                            {edit !== "view" &&
                                                 <SecondaryButton name="Add Sub Unit" className="min-w-112" onClick={() => addSubUnitHandler(item.id)} />
                                             }
                                         </Box>
                                     </div>
                                     {
-                                        item.subUnit?.length > 0 && item.subUnit.map((subItem: any) => {
+                                        item.subUnit?.length > 0 && item.subUnit.map((subItem) => {
                                             return (
                                                 <>
-                                                    <div className='w-full flex gap-24'>
+                                                    <div className='w-full flex gap-24 '>
                                                         <div className='w-full'>
-                                                            <input
+                                                            <TextField
+                                                                size="small"
                                                                 type="text"
                                                                 className='w-full'
                                                                 name="subTitle"
                                                                 placeholder={`Enter a sub-title`}
                                                                 value={subItem.subTitle}
                                                                 onChange={(e) => setSubUnitData(item.id, subItem?.id, e.target)}
-                                                                style={inputStyle} />
+                                                                style={inputStyle}
+                                                                disabled={edit === "view"}
+                                                            />
                                                         </div>
-
+                                                        <Box className="flex justify-between pt-10 mr-auto">
+                                                            {edit !== "view" &&
+                                                                <>
+                                                                    <Tooltip title="Remove sub unit">
+                                                                        <CloseIcon className="cursor-pointer" onClick={() => removeSubUnitHandler(item.id, subItem?.id)} />
+                                                                    </Tooltip>
+                                                                </>
+                                                            }
+                                                        </Box>
                                                         <div className='w-full flex flex-col'>
                                                             {
-                                                                subItem.subTopic?.length > 0 && subItem.subTopic?.map((topicItem: any) => {
+                                                                subItem.subTopic?.length > 0 && subItem.subTopic?.map((topicItem) => {
                                                                     return (
                                                                         <>
-                                                                            <div className='w-full flex flex-col gap-24'>
+                                                                            <div className='w-full flex flex-row gap-24 items-center '>
 
-                                                                                <input
+                                                                                <TextField
+                                                                                    size="small"
                                                                                     type="text"
                                                                                     className='w-full'
                                                                                     name="description"
                                                                                     placeholder={`Enter a description`}
                                                                                     value={topicItem.description}
                                                                                     onChange={(e) => setSubTopicData(item.id, subItem?.id, topicItem?.id, e.target)}
-                                                                                    style={inputStyle} />
+                                                                                    style={inputStyle}
+                                                                                    disabled={edit === "view"}
+                                                                                />
+                                                                                <div className='min-w-160'>
+                                                                                    <Box className="w-full flex items-center justify-between gap-24">
+                                                                                        {edit !== "view" &&
+                                                                                            <>
+                                                                                                <Tooltip title="Remove sub topic">
+                                                                                                    <CloseIcon className="cursor-pointer " onClick={() => removeSubTopicHandler(item.id, subItem?.id, topicItem?.id)} />
+                                                                                                </Tooltip>
+
+                                                                                                <SecondaryButton name="Add Topic" className="w-full" onClick={() => addTopicHandler(item.id, subItem?.id)} />
+                                                                                            </>
+                                                                                        }
+                                                                                    </Box>
+                                                                                </div>
                                                                             </div>
                                                                         </>
                                                                     )
                                                                 })
                                                             }
-                                                        </div>
-                                                        
-                                                        <div className='min-w-112'>
-                                                            <Box className="w-full flex items-center justify-between">
-                                                                {!edit &&
-                                                                    <SecondaryButton name="Add Topic" className="w-full" onClick={() => addTopicHandler(item.id, subItem?.id)} />
-                                                                }
-                                                            </Box>
                                                         </div>
                                                     </div>
 
@@ -559,7 +651,7 @@ const CourseBuilder = (props) => {
                         // <UnitManagementTable columns={courseManagementUnitColumn} edit={edit} setUnitData={setUnitData} removeUnitHandler={removeUnitHandler} rows={Object.values(mandatoryUnit)} />
                         :
                         <div className=' text-center opacity-50 mt-10 mb-10'>
-                            Mandatory units have not been included.
+                            Units have not been included.
                         </div>
                 }
 
@@ -570,7 +662,7 @@ const CourseBuilder = (props) => {
                 <Box className="flex items-center justify-between">
                     <Typography>Optional Units</Typography>
                     {!edit &&
-                        <SecondaryButton name="Add New" onClick={() => addUnitHandler("O")} />
+                        <SecondaryButton name="Add New" onClick={() => addUnitHandler()} />
                     }
                 </Box>
                 {Object.values(optionalUnit).length ?
@@ -584,9 +676,13 @@ const CourseBuilder = (props) => {
             <Box className="flex items-center justify-end m-12 mt-24">
                 {loading ? <LoadingButton className="w-1/12" /> :
                     <>
-                        <SecondaryButtonOutlined name="Close" className=" w-1/12" onClick={edit ? handleClose : cancleCourseHandler} />
-                        {!edit &&
-                            <SecondaryButton name={edit ? "Update" : "Create"} className=" w-1/12 ml-10" onClick={createCouserHandler} />
+                        {edit === "view" ?
+                            <SecondaryButtonOutlined name="Close" className=" w-1/12" onClick={handleClose} />
+                            :
+                            <SecondaryButtonOutlined name="Close" className=" w-1/12" onClick={edit === "edit" ? handleClose : cancleCourseHandler} />
+                        }
+                        {edit !== "view" &&
+                            <SecondaryButton name={edit === "edit" ? "Update" : "Create"} className=" w-1/12 ml-10" onClick={createCouserHandler} />
                         }
                     </>
                 }

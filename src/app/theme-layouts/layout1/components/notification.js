@@ -8,18 +8,25 @@ import {
   List,
   ListItem,
   ListItemText,
+  ListItemSecondaryAction,
+  Tooltip,
 } from '@mui/material';
 import { Link } from 'react-router-dom';
+import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
+import NewspaperIcon from '@mui/icons-material/Newspaper';
+import AssignmentIcon from '@mui/icons-material/Assignment';
+
 
 function Notification(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [notifications, setNotifications] = React.useState([
-    { id: 1, type: 'info', title: 'Notification 1', description: 'This is the first notification', read: false },
-    { id: 2, type: 'alert', title: 'Notification 2', description: 'This is the second notification', read: true },
-    { id: 3, type: 'message', title: 'Notification 3', description: 'This is the third notification', read: false },
-    { id: 4, type: 'info', title: 'Notification 4', description: 'This is the forth notification', read: false },
-    { id: 5, type: 'info', title: 'Notification 5', description: 'This is the fifth notification', read: true },
-    { id: 6, type: 'info', title: 'Notification 6', description: 'This is the sixth notification', read: false },
+    { id: 1, type: 'notification', title: 'Notification 1', description: 'This is the first notification', read: false },
+    { id: 2, type: 'news', title: 'news', description: 'This is the first news.', read: true },
+    { id: 3, type: 'notification', title: 'Notification 3', description: 'This is the second notification', read: false },
+    { id: 4, type: 'assignment', title: 'assignment', description: 'This is the first assignment', read: false },
+    { id: 5, type: 'news', title: 'news 1', description: 'This is the second news', read: true },
+    { id: 6, type: 'assignment', title: 'assignment 2', description: 'This is the second assignment', read: false },
+    { id: 7, type: 'assignment', title: 'assignment 3', description: 'This is the third assignment', read: false },
   ]);
 
   const handleClick = (event) => {
@@ -92,16 +99,24 @@ function Notification(props) {
             </>
           ) : (
             <>
-              <List className='p-0 pt-2'>
+              <List className='px-10 pt-3 pb-0 w-320'>
                 {notifications.slice(0, 5).map((notification) => (
-                  <ListItem key={notification.id} className='flex px-0 py-2 gap-24' divider>
+                  <ListItem key={notification.id} className='flex px-0 py-2 gap-7' divider>
+                    <Grid className='px-5 '>
+                      {notification.type === 'notification' && <NotificationsActiveIcon />}
+                      {notification.type === 'news' && < NewspaperIcon />}
+                      {notification.type === 'assignment' && < AssignmentIcon />}
+                    </Grid>
+
                     <ListItemText>
                       <Typography style={{ fontWeight: notification.read ? 'normal' : 'bold' }}>
-                        {notification.title}
+                        {notification.title.slice(0, 20) + (notification.title.length > 20 ? '...' : '')}
                       </Typography>
-                      <Typography style={{ fontWeight: notification.read ? 'normal' : 'bold' }}>
-                        {notification.description}
-                      </Typography>
+                      <Tooltip title={notification.description}>
+                        <Typography style={{ fontWeight: notification.read ? 'normal' : 'bold' }}>
+                          {notification.description.slice(0, 25) + (notification.description.length > 25 ? '...' : '')}
+                        </Typography>
+                      </Tooltip>
                     </ListItemText>
 
                     <Grid className='flex content-center '>
@@ -118,6 +133,7 @@ function Notification(props) {
                         />
                       </Button>
                     </Grid>
+
                   </ListItem>
                 ))}
               </List>
