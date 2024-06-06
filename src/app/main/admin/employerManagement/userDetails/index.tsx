@@ -82,16 +82,21 @@ const UserDetails = (props) => {
 
     const { handleClose, userData, updateData, updateUserHandler, dataUpdatingLoadding, userDataError } = props;
 
-    const createUserHandler = (e) => {
-        // const { name, value } = e.target;
-        // setDate(prevState => ({
-        //     ...prevState,
-        //     [name]: value
-        // }));
+        
+    const createUserHandler = () => {
+
+        const createUser = Object.values(companyData).find(data => data === "") === undefined &&
+            Object.values(detailsData).find(data => data === "") === undefined &&
+            Object.values(descriptionData).find(data => data === "") === undefined &&
+            Object.values(date).find(data => data === "") === undefined;
+
         console.log("Company Data: ", companyData)
         console.log("Company Details Data: ", detailsData)
         console.log("Description Data: ", descriptionData)
         console.log("Date Data: ", date)
+
+        return createUser;
+
     };
 
 
@@ -885,7 +890,7 @@ const UserDetails = (props) => {
                                 :
                                 <>
                                     <SecondaryButtonOutlined name="Cancel" onClick={handleClose} style={{ width: "10rem", marginRight: "2rem" }} />
-                                    <SecondaryButton name={updateData ? "Update" : "Save"} style={{ width: "10rem" }} onClick={createUserHandler} />
+                                    <SecondaryButton name={updateData ? "Update" : "Save"} style={{ width: "10rem" }} disable={!createUserHandler()}/>
                                     {/* <SecondaryButton name={updateData ? "Update" : "Save"} style={{ width: "10rem" }} onClick={updateData ? updateUserHandler : createUserHandler} /> */}
                                 </>
                             }

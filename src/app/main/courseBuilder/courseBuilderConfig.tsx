@@ -1,7 +1,7 @@
 import { lazy } from "react";
 const CourseBuilderView = lazy(() => import("./courseBuilder"));
 import authRoles from 'src/app/auth/authRoles';
-import CourseBuilderComponent from "src/app/component/Courses";
+import CourseBuilder from "src/app/component/Courses";
 
 const CourseBuilderConfig = {
   settings: {
@@ -33,7 +33,7 @@ const CourseBuilderConfig = {
     },
     {
       path:"/courseBuilder/course",
-      element: <CourseBuilderComponent />
+      element: <CourseBuilder />
     }
   ],
 };

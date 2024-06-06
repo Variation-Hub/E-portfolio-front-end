@@ -1,4 +1,4 @@
-import { Dialog, IconButton, InputAdornment, TextField, Typography } from "@mui/material";
+import { Dialog, IconButton, InputAdornment, TextField, Tooltip, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { SecondaryButton } from "src/app/component/Buttons";
 import CourseUploadDialog from "src/app/component/Dialogs/courseUploadDialog";
@@ -98,17 +98,22 @@ const CourseBuilder = () => {
           />
 
           <div className="flex items-center space-x-4">
-            <SecondaryButton
-              name="Upload Files"
-              startIcon={
-                <img
-                  src="assets/images/svgimage/uploadfileicon.svg"
-                  alt="Create File"
-                  className="w-6 h-6 mr-2 sm:w-8 sm:h-8 lg:w-10 lg:h-10"
+            <Tooltip title="Coming Soon...!">
+              <span>
+                <SecondaryButton
+                  disable={true}
+                  name="Upload Files"
+                  startIcon={
+                    <img
+                      src="assets/images/svgimage/uploadfileicon.svg"
+                      alt="Create File"
+                      className="w-6 h-6 mr-2 sm:w-8 sm:h-8 lg:w-10 lg:h-10"
+                    />
+                  }
+                // onClick={handleOpen}
                 />
-              }
-              onClick={handleOpen}
-            />
+              </span>
+            </Tooltip>
             <SecondaryButton
               name="Create Course"
               startIcon={
@@ -143,17 +148,23 @@ const CourseBuilder = () => {
 
             {!searchKeyword &&
               <div className="flex items-center space-x-4">
-                <SecondaryButton
-                  name="Upload Files"
-                  startIcon={
-                    <img
-                      src="assets/images/svgimage/uploadfileicon.svg"
-                      alt="Create File"
-                      className="w-6 h-6 mr-2 sm:w-8 sm:h-8 lg:w-10 lg:h-10"
+                <Tooltip title="Coming Soon...!">
+                  <span>
+                    <SecondaryButton
+                      disable={true}
+                      disableRipple
+                      name="Upload Files"
+                      startIcon={
+                        <img
+                          src="assets/images/svgimage/uploadfileicon.svg"
+                          alt="Create File"
+                          className="w-6 h-6 mr-2 sm:w-8 sm:h-8 lg:w-10 lg:h-10"
+                        />
+                      }
+                    // onClick={handleOpen}
                     />
-                  }
-                  onClick={handleOpen}
-                />
+                  </span>
+                </Tooltip>
                 <div className="w-48 text-center">OR</div>
                 <SecondaryButton
                   name="Create Course"

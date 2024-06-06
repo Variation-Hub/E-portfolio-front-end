@@ -39,7 +39,7 @@ export default function CourseManagementTable(props) {
   const {
     columns,
     rows,
-    setUpdateData = () => {},
+    setUpdateData = () => { },
     meta_data,
     dataUpdatingLoadding,
     search_keyword = "",
@@ -48,7 +48,7 @@ export default function CourseManagementTable(props) {
 
   const [deleteId, setDeleteId] = useState("");
   const [openMenuDialog, setOpenMenuDialog] = useState("");
-  //   const [courseDialog, setCourseDialog] = useState(false);
+    const [edit, setEdit] = useState("view");
 
   const [open, setOpen] = useState(false);
 
@@ -66,7 +66,8 @@ export default function CourseManagementTable(props) {
     setAnchorEl(event.currentTarget);
   };
 
-  const editIcon = () => {
+  const editIcon = (edit) => {
+    setEdit(edit)
     setUpdateData(openMenuDialog);
     setOpen(true);
     const data = rows.find((item) => item.course_id === openMenuDialog);
@@ -79,6 +80,7 @@ export default function CourseManagementTable(props) {
       status: item.status,
     }));
     const preFillData = {
+      course_id: data?.course_id,
       assessment_language: data?.assessment_language || "",
       assessment_methods: data?.assessment_methods || "",
       brand_guidelines: data?.brand_guidelines || "",
@@ -95,9 +97,7 @@ export default function CourseManagementTable(props) {
       recommended_minimum_age: data?.recommended_minimum_age || "",
       sector: data?.sector || "",
       total_credits: data?.total_credits || "",
-      mandatory_units:
-        units?.filter((item) => item.status === "Mandatory") || [],
-      optional_units: units?.filter((item) => item.status === "Optional") || [],
+      units: data?.units
     };
     dispatch(slice.updatePreFillData(preFillData));
   };
@@ -121,6 +121,7 @@ export default function CourseManagementTable(props) {
   const handleClose = () => {
     dispatch(slice.updatePreFillData({}));
     setOpen(false);
+    setAnchorEl(null);
   };
   return (
     <>
@@ -251,7 +252,7 @@ export default function CourseManagementTable(props) {
         <MenuItem
           onClick={() => {
             handleClose();
-            editIcon();
+            editIcon("view");
           }}
         >
           View
@@ -259,7 +260,7 @@ export default function CourseManagementTable(props) {
         <MenuItem
           onClick={() => {
             handleClose();
-            editIcon();
+            editIcon("edit");
           }}
         >
           Edit
@@ -285,7 +286,7 @@ export default function CourseManagementTable(props) {
           },
         }}
       >
-        <CourseBuilderComponent edit={true} handleClose={handleClose} />
+        <CourseBuilderComponent edit={edit} handleClose={handleClose} />
       </Dialog>
     </>
   );

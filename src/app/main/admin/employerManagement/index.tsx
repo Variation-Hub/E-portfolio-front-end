@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 import UserManagementTable from "src/app/component/Table/UserManagementTable";
 import { userManagementTableColumn } from "src/app/contanst";
 import { Autocomplete, Dialog, Drawer, IconButton, InputAdornment, OutlinedInput, Paper, TextField, Typography } from "@mui/material";
-import UserDetails from "./usetDetails";
+import UserDetails from "./userDetails";
 import { useDispatch } from "react-redux";
 import FuseLoading from '@fuse/core/FuseLoading';
 import Close from "@mui/icons-material/Close";
