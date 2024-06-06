@@ -24,7 +24,7 @@ const ResourcesConfig = {
       },
     },
   },
-  auth: [authRoles.Trainer, authRoles.Employer, authRoles.IQA],
+  auth: [authRoles.Trainer, authRoles.Employer, authRoles.IQA, authRoles.LIQA],
   routes: [
     {
       path: "/resources",

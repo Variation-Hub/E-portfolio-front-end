@@ -3,6 +3,7 @@ const authRoles = {
   Learner: ['Learner'],
   Trainer: ['Trainer'],
   Employer: ['Employer'],
+  LIQA: ['LIQA'],
   IQA: ['IQA'],
   EQA: ['EQA'],
   onlyGuest: null,
