@@ -1,16 +1,30 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
-import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import { Stack } from "@mui/system";
-import { Pagination } from "@mui/material";
+import { Dialog, IconButton, Menu, MenuItem, Pagination } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import Cpd from "./cpd";
+import AlertDialog from "src/app/component/Dialogs/AlertDialog";
+import { DangerButton, LoadingButton, SecondaryButtonOutlined } from "src/app/component/Buttons";
+import { deleteActivityHandler, getCpdPlanningAPI, selectCpdPlanning, slice } from "app/store/cpdPlanning";
+import { selectUser } from "app/store/userSlice";
 
 interface Column {
-  id: "filterActionDate" | "endFilterActionDate" | "action";
+  id:
+  | "date"
+  | "learning_objective"
+  | "activity"
+  | "comment"
+  | "support_you"
+  | "completed"
+  | "added_by"
+  | "action";
   label: string;
   minWidth?: number;
   align?: "right";
@@ -18,129 +32,228 @@ interface Column {
 }
 
 const columns: readonly Column[] = [
-  { id: "filterActionDate", label: "Filter Action Date", minWidth: 10 },
-  { id: "endFilterActionDate", label: "End Filter Action Date", minWidth: 10 },
-  {
-    id: "action",
-    label: "Action",
-    minWidth: 70,
-    align: "right",
-    format: (value: number) => value.toLocaleString("en-US"),
-  },
+  { id: "date", label: "Date", minWidth: 10 },
+  { id: "learning_objective", label: "Learning Objective", minWidth: 10 },
+  { id: "activity", label: "Activity", minWidth: 10 },
+  { id: "comment", label: "Comment", minWidth: 10 },
+  { id: "support_you", label: "Who could support you", minWidth: 10 },
+  { id: "completed", label: "Completed", minWidth: 10 },
+  { id: "added_by", label: "Added By", minWidth: 10 },
+  { id: "action", label: "Action", minWidth: 10 },
 ];
 
-interface Data {
-  filterActionDate: number;
-  endFilterActionDate: number;
-  action: number;
-}
+const Activity = (props) => {
+  const {
+    setUpdateData = () => { },
+    dataUpdatingLoadding,
+  } = props;
 
-function createData(
-  filterActionDate: number,
-  endFilterActionDate: number,
-  action: number
-): Data {
-  return {
-    filterActionDate,
-    endFilterActionDate,
-    action,
-  };
-}
-const rows = [
-  createData(59, 2, 80),
-  createData(8, 2, 58),
-  createData(8, 2, 52),
-  createData(4, 2, 5),
-  createData(5, 5, 42),
-  // createData(4, 5, "a", 7692024),
-  // createData(8, 5, "d", 357578),
-  // createData(54, 5, "d", 70273),
-  // createData(5, 5, "s", 1972550),
-  // createData(6, 5, "d", 377973),
-  // createData(5, 5, "ds", 640679),
-  // createData(55, 5, "d", 242495),
-  // createData(8, 5, "a", 17098246),
-  // createData(8, 5, "ef", 923768),
-  // createData(1, 5, "df", 8515767),
-];
-const Activity = () => {
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [deleteId, setDeleteId] = useState("");
+  const [openMenuDialog, setOpenMenuDialog] = useState<any>({});
+  const [edit, setEdit] = useState("view");
+  const [open, setOpen] = useState(false);
 
-  const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage);
+  const [page, setPage] = useState(1);
+  const rowsPerPage = 10;
+
+  const dispatch: any = useDispatch();
+  const { data } = useSelector(selectUser);
+  const cpdPlanningData = useSelector(selectCpdPlanning);
+
+  useEffect(() => {
+    dispatch(getCpdPlanningAPI(data.user_id));
+  }, [dispatch, data.user_id]);
+
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const oopen = Boolean(anchorEl);
+
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
   };
 
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
+  const editIcon = (edit, value) => {
+    setEdit(edit);
+    setUpdateData(openMenuDialog);
+    setOpen(true);
+
+    const singleData = {
+      id: openMenuDialog?.id || "",
+      year: cpdPlanningData.data?.year || "",
+      date: openMenuDialog?.date || "",
+      learning_objective: openMenuDialog?.learning_objective || "",
+      activity: openMenuDialog?.activity || "",
+      comment: openMenuDialog?.comment || "",
+      support_you: openMenuDialog?.support_you || "",
+      timeTake: {
+        day: openMenuDialog?.timeTake?.day || 0,
+        hours: openMenuDialog?.timeTake?.hours || 0,
+        minutes: openMenuDialog?.timeTake?.minutes || 0,
+      },
+      completed: openMenuDialog?.completed || "",
+      files: openMenuDialog?.files || [],
+    };
+    dispatch(slice.setCpdSingledata(singleData));
+    dispatch(slice.setDialogType(value));
   };
+
+  const deleteIcon = (id) => {
+    setDeleteId(id.id);
+  };
+
+  const openMenu = (e, id) => {
+    handleClick(e);
+    setOpenMenuDialog(id);
+  };
+
+  const deleteConfromation = async () => {
+    await dispatch(deleteActivityHandler(deleteId));
+    setDeleteId("");
+  };
+
+  const handleClose = () => {
+    dispatch(slice.setCpdSingledata({}));
+    setOpen(false);
+    setAnchorEl(null);
+  };
+
+  const handlePageChange = (event, value) => {
+    setPage(value);
+  };
+
+  const allActivities = cpdPlanningData.data.flatMap(item => item.activities);
+  const paginatedData = allActivities.slice((page - 1) * rowsPerPage, page * rowsPerPage);
+  const pageCount = Math.ceil(allActivities.length / rowsPerPage);
+
   return (
-    <div>
-      <TableContainer sx={{ maxHeight: 440 }} className="-m-12">
-        <Table stickyHeader aria-label="sticky table" size="small">
-          <TableHead>
-            <TableRow>
-              {columns.map((column) => (
-                <TableCell
-                  key={column.id}
-                  align={column.align}
-                  style={{
-                    minWidth: column.minWidth,
-                    backgroundColor: "#F8F8F8",
-                  }}
-                >
-                  {column.label}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows
-              ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row) => {
-                return (
-                  <TableRow
-                    hover
-                    role="checkbox"
-                    tabIndex={-1}
-                    //   key={row.endFilterActionDate}
+    <>
+      <div>
+        <TableContainer sx={{ maxHeight: 440 }} className="-m-12">
+          <Table stickyHeader aria-label="sticky table" size="small">
+            <TableHead>
+              <TableRow>
+                {columns.map((column) => (
+                  <TableCell
+                    key={column.id}
+                    align={column.align}
+                    style={{
+                      minWidth: column.minWidth,
+                      backgroundColor: "#F8F8F8",
+                    }}
                   >
-                    {columns.map((column) => {
-                      const value = row[column.id];
-                      return (
-                        <TableCell key={column.id} align={column.align}>
-                          {column.format && typeof value === "number"
-                            ? column.format(value)
+                    {column.label}
+                  </TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {paginatedData.map((row) => (
+                <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
+                  {columns.map((column) => {
+                    const value = row[column.id];
+                    return (
+                      <TableCell key={column.id} align={column.align}>
+                        {column.format && typeof value === "number"
+                          ? column.format(value)
+                          : column.id === "action" ?
+                            <IconButton
+                              size="small"
+                              sx={{ color: "#5B718F", marginRight: "4px" }}
+                              onClick={(e) => openMenu(e, row)}
+                            >
+                              <MoreHorizIcon fontSize="small" />
+                            </IconButton>
                             : value}
-                        </TableCell>
-                      );
-                    })}
-                  </TableRow>
-                );
-              })}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      {/* <div className="fixed bottom-0 left-0 w-full flex justify-center py-4 mb-14">
-        <TablePagination
-          rowsPerPageOptions={[10, 25, 100]}
-          component="div"
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      </div> */}
-      <div className="fixed bottom-0 left-0 w-full flex justify-center py-4 mb-14">
-        <Stack spacing={2}>
-          <Pagination count={3} variant="outlined" shape="rounded" />
-        </Stack>
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <div className="fixed bottom-0 left-0 w-full flex justify-center py-4 mb-14">
+          <Stack spacing={2}>
+            <Pagination
+              count={pageCount}
+              variant="outlined"
+              shape="rounded"
+              page={page}
+              onChange={handlePageChange}
+              siblingCount={1}
+              boundaryCount={1}
+            />
+          </Stack>
+        </div>
       </div>
-    </div>
+      <AlertDialog
+        open={Boolean(deleteId)}
+        close={() => deleteIcon("")}
+        title="Delete Activity?"
+        content="Deleting this activity will also remove all associated data and relationships. Proceed with deletion?"
+        className="-224 "
+        actionButton={
+          dataUpdatingLoadding ? (
+            <LoadingButton />
+          ) : (
+            <DangerButton onClick={deleteConfromation} name="Delete Activity" />
+          )
+        }
+        cancelButton={
+          <SecondaryButtonOutlined
+            className="px-24"
+            onClick={() => deleteIcon("")}
+            name="Cancel"
+          />
+        }
+      />
+      <Menu
+        id="long-menu"
+        MenuListProps={{
+          "aria-labelledby": "long-button",
+        }}
+        anchorEl={anchorEl}
+        open={oopen}
+        onClose={handleClose}
+      >
+        <MenuItem
+          onClick={() => {
+            handleClose();
+            editIcon("view", "addNew");
+          }}
+        >
+          View
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            handleClose();
+            editIcon("edit", "addNew");
+          }}
+        >
+          Edit
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            handleClose();
+            deleteIcon(openMenuDialog);
+          }}
+        >
+          Delete
+        </MenuItem>
+      </Menu>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        fullScreen
+        sx={{
+          ".MuiDialog-paper": {
+            borderRadius: "4px",
+            padding: "1rem",
+          },
+        }}
+      >
+        <Cpd edit={edit} handleClose={handleClose} />
+      </Dialog>
+    </>
   );
 };
 
