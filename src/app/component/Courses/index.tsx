@@ -366,6 +366,7 @@ const CourseBuilder = (props) => {
                         disabled={edit === "view"}
                     />
                 </div>
+                  
                 <div className='w-1/3'>
                     <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>Recommended Minimum age</Typography>
                     <TextField
@@ -380,7 +381,6 @@ const CourseBuilder = (props) => {
                     />
                 </div>
             </Box>
-
             <Box className="m-12 flex flex-col justify-between gap-12 sm:flex-row">
                 <div className='w-1/3'>
                     <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>Total Credits</Typography>
