@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -7,18 +7,26 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import { Stack } from "@mui/system";
-import { Pagination } from "@mui/material";
+import { Dialog, IconButton, Menu, MenuItem, Pagination } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { getCpdPlanningAPI, selectCpdPlanning, slice } from "app/store/cpdPlanning";
+import { selectUser } from "app/store/userSlice";
+import { data } from "src/app/component/Chart/doughnut";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import Cpd from "./cpd";
 
 interface Column {
   id:
-    | "startDate"
-    | "endDate"
-    | "CPDPlan"
-    | "onYou"
-    | "colleagues"
-    | "managers"
-    | "organization"
-    | "action";
+  | "year"
+  | "start_date"
+  | "end_date"
+  | "cpd_plan"
+  | "impact_on_you"
+  | "impact_on_colleagues"
+  | "impact_on_managers"
+  | "impact_on_organisation"
+  | "action";
   label: string;
   minWidth?: number;
   align?: "right";
@@ -26,38 +34,39 @@ interface Column {
 }
 
 const columns: readonly Column[] = [
-  { id: "startDate", label: "Start Date", minWidth: 10 },
-  { id: "endDate", label: "End Date", minWidth: 10 },
+  { id: "year", label: "Year", minWidth: 10 },
+  { id: "start_date", label: "Start Date", minWidth: 10 },
+  { id: "end_date", label: "End Date", minWidth: 10 },
   {
-    id: "CPDPlan",
+    id: "cpd_plan",
     label: "CPD Plan",
     minWidth: 20,
     align: "right",
     format: (value: number) => value.toLocaleString("en-US"),
   },
   {
-    id: "onYou",
+    id: "impact_on_you",
     label: "On You",
     minWidth: 20,
     align: "right",
     format: (value: number) => value.toLocaleString("en-US"),
   },
   {
-    id: "colleagues",
+    id: "impact_on_colleagues",
     label: "Colleagues",
     minWidth: 20,
     align: "right",
     format: (value: number) => value.toLocaleString("en-US"),
   },
   {
-    id: "managers",
+    id: "impact_on_managers",
     label: "Managers",
     minWidth: 70,
     align: "right",
     format: (value: number) => value.toLocaleString("en-US"),
   },
   {
-    id: "organization",
+    id: "impact_on_organisation",
     label: "Organization",
     minWidth: 70,
     align: "right",
@@ -72,78 +81,87 @@ const columns: readonly Column[] = [
   },
 ];
 
-interface Data {
-  startDate: number;
-  endDate: number;
-  CPDPlan: string;
-  onYou: number;
-  colleagues: number;
-  managers: number;
-  organization: number;
-  action: number;
-}
+const Activity = (props) => {
 
-function createData(
-  startDate: number,
-  endDate: number,
-  CPDPlan: string,
-  onYou: number,
-  colleagues: number,
-  managers: number,
-  organization: number,
-  action: number
-): Data {
-  return {
-    startDate,
-    endDate,
-    CPDPlan,
-    onYou,
-    colleagues,
-    managers,
-    organization,
-    action,
-  };
-}
+  const {
+    setUpdateData = () => { },
+  } = props;
 
-const rows = [
-  createData(59, 2, "Abc", 3287263, 1, 65, 8, 80),
-  createData(8, 2, "A", 9596961, 5, 65, 5, 58),
-  createData(8, 2, "A", 301340, 5, 6, 5, 52),
-  createData(4, 2, "a", 9833520, 4, 6, 5, 5),
-  createData(5, 5, "a", 9984670, 5, 6, 5, 42),
-  // createData(4, 5, "a", 7692024),
-  // createData(8, 5, "d", 357578),
-  // createData(54, 5, "d", 70273),
-  // createData(5, 5, "s", 1972550),
-  // createData(6, 5, "d", 377973),
-  // createData(5, 5, "ds", 640679),
-  // createData(55, 5, "d", 242495),
-  // createData(8, 5, "a", 17098246),
-  // createData(8, 5, "ef", 923768),
-  // createData(1, 5, "df", 8515767),
-];
+  // const [deleteId, setDeleteId] = useState("");
+  const [openMenuDialog, setOpenMenuDialog] = useState("");
+  const [edit, setEdit] = useState("view");
 
-const Activity = () => {
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [open, setOpen] = useState(false);
 
-  const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage);
+  const dispatch: any = useDispatch();
+  const { data } = useSelector(selectUser);
+  const cpdPlanningData = useSelector(selectCpdPlanning);
+
+  useEffect(() => {
+    dispatch(getCpdPlanningAPI(data.user_id));
+  }, [dispatch]);
+
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const oopen = Boolean(anchorEl);
+
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
   };
 
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
+  const editIcon = (edit, value) => {
+    setEdit(edit)
+    setUpdateData(openMenuDialog);
+    setOpen(true);
+    const data = cpdPlanningData?.data?.find((item) => item.id === openMenuDialog);
+    const singleData = {
+      id: data?.id || "",
+      year: data?.year || "",
+      start_date: data?.start_date || "",
+      end_date: data?.end_date || "",
+      cpd_plan: data?.cpd_plan || "",
+      impact_on_you: data?.impact_on_you || "",
+      impact_on_colleagues: data?.impact_on_colleagues || "",
+      impact_on_managers: data?.impact_on_managers || "",
+      impact_on_organisation: data?.impact_on_organisation || "",
+      activities: data?.activities || "",
+      evaluations: data?.evaluations || "",
+      reflections: data?.reflections || "",
+    };
+    dispatch(slice.setCpdSingledata(singleData));
+    dispatch(slice.setDialogType(value));
+    console.log(singleData);
   };
+
+  // const deleteIcon = (id) => {
+  //   setDeleteId(id);
+  // };
+
+  const openMenu = (e, id) => {
+    handleClick(e);
+    setOpenMenuDialog(id);
+  };
+
+  // const deleteConfromation = async () => {
+  //   await dispatch(
+  //     deleteCourseHandler(deleteId, meta_data, search_keyword, search_role)
+  //   );
+  //   setDeleteId("");
+  // };
+
+
+  const handleClose = () => {
+    dispatch(slice.setCpdSingledata({}));
+    setOpen(false);
+    setAnchorEl(null);
+  };
+
   return (
     <>
       <TableContainer sx={{ maxHeight: 440 }} className="-m-12">
         <Table stickyHeader aria-label="sticky table" size="small">
           <TableHead>
             <TableRow>
-              {columns.map((column) => (
+              {columns?.map((column) => (
                 <TableCell
                   key={column.id}
                   align={column.align}
@@ -151,6 +169,7 @@ const Activity = () => {
                     minWidth: column.minWidth,
                     backgroundColor: "#F8F8F8",
                   }}
+                  className="text-left "
                 >
                   {column.label}
                 </TableCell>
@@ -158,29 +177,36 @@ const Activity = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows
-              ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row) => {
-                return (
-                  <TableRow
-                    hover
-                    role="checkbox"
-                    tabIndex={-1}
-                    key={row.endDate}
-                  >
-                    {columns.map((column) => {
-                      const value = row[column.id];
-                      return (
-                        <TableCell key={column.id} align={column.align}>
-                          {column.format && typeof value === "number"
-                            ? column.format(value)
+            {cpdPlanningData?.data?.map((row) => {
+              return (
+                <TableRow
+                  hover
+                  role="checkbox"
+                  tabIndex={-1}
+                  key={row.id}
+
+                >
+                  {columns?.map((column) => {
+                    const value = row[column.id];
+                    return (
+                      <TableCell key={column.id} align={column.align} className="text-left ">
+                        {column.format && typeof value === "number"
+                          ? column.format(value)
+                          : column.id === "action" ?
+                            <IconButton
+                              size="small"
+                              sx={{ color: "#5B718F", marginRight: "4px" }}
+                              onClick={(e) => openMenu(e, row.id)}
+                            >
+                              <MoreHorizIcon fontSize="small" />
+                            </IconButton>
                             : value}
-                        </TableCell>
-                      );
-                    })}
-                  </TableRow>
-                );
-              })}
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
       </TableContainer>
@@ -200,6 +226,54 @@ const Activity = () => {
           <Pagination count={3} variant="outlined" shape="rounded" />
         </Stack>
       </div>
+      <Menu
+        id="long-menu"
+        MenuListProps={{
+          "aria-labelledby": "long-button",
+        }}
+        anchorEl={anchorEl}
+        open={oopen}
+        onClose={handleClose}
+      >
+        <MenuItem
+          onClick={() => {
+            handleClose();
+            editIcon("view", "addPlan");
+          }}
+        >
+          View
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            handleClose();
+            editIcon("edit", "addPlan");
+          }}
+        >
+          Edit
+        </MenuItem>
+        <MenuItem
+        // onClick={() => {
+        // handleClose();
+        // deleteIcon(openMenuDialog);
+        // }}
+        >
+          Delete
+        </MenuItem>
+      </Menu>
+
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        fullScreen
+        sx={{
+          ".MuiDialog-paper": {
+            borderRadius: "4px",
+            padding: "1rem",
+          },
+        }}
+      >
+        <Cpd edit={edit} handleClose={handleClose} />
+      </Dialog>
     </>
   );
 };

@@ -7,6 +7,7 @@ import userManagement from './userManagement';
 import learnerManagement from './learnerManagement';
 import courseManagement from './courseManagement';
 import resourceManagement from './resourcesManagement';
+import cpdPlanning from './cpdPlanning';
 
 const createReducer = (asyncReducers) => (state, action) => {
   const combinedReducer = combineReducers({
@@ -16,6 +17,7 @@ const createReducer = (asyncReducers) => (state, action) => {
     userManagement,
     learnerManagement,
     courseManagement,
+    cpdPlanning,
     resourceManagement,
     ...asyncReducers,
   });

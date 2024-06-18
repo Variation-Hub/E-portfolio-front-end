@@ -111,6 +111,7 @@ export default function CourseManagementTable(props) {
     setOpenMenuDialog(id);
   };
 
+
   const deleteConfromation = async () => {
     await dispatch(
       deleteCourseHandler(deleteId, meta_data, search_keyword, search_role)
