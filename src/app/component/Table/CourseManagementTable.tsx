@@ -34,6 +34,7 @@ import {
 } from "app/store/courseManagement";
 import CourseBuilderComponent from "src/app/component/Courses";
 import RemoveRedEyeRoundedIcon from "@mui/icons-material/RemoveRedEyeRounded";
+import { Stack } from "@mui/system";
 
 export default function CourseManagementTable(props) {
   const {
@@ -156,7 +157,11 @@ export default function CourseManagementTable(props) {
                       const value = row[column.id];
                       if (column.id === "actions") {
                         return (
-                          <TableCell key={column.id} align={column.align}>
+                          <TableCell
+                            key={column.id}
+                            align={column.align}
+                            sx={{ borderBottom: "2px solid #F8F8F8" }}
+                          >
                             {/* <IconButton
                               size="small"
                               sx={{ color: "#5B718F", marginRight: "4px" }}
@@ -182,7 +187,11 @@ export default function CourseManagementTable(props) {
                         );
                       }
                       return (
-                        <TableCell key={column.id} align={column.align}>
+                        <TableCell
+                          key={column.id}
+                          align={column.align}
+                          sx={{ borderBottom: "2px solid #F8F8F8" }}
+                        >
                           <div className={Style.avatar}>
                             {column.id === "first_name" ? (
                               <>
@@ -210,15 +219,12 @@ export default function CourseManagementTable(props) {
             </TableBody>
           </Table>
         </TableContainer>
-        <div className="flex justify-center p-8">
-          <Pagination
-            page={meta_data?.page}
-            count={Math.ceil(meta_data?.items / userTableMetaData?.page_size)}
-            showFirstButton
-            showLastButton
-            onChange={handleChangePage}
-          />
-        </div>
+        <Stack
+          spacing={2}
+          className="flex justify-center items-center w-full mt-48"
+        >
+          <Pagination count={3} variant="outlined" shape="rounded" />
+        </Stack>
       </div>
       <AlertDialog
         open={Boolean(deleteId)}
