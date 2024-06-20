@@ -7,7 +7,7 @@ import Style from '../style.module.css'
 import { useSelector } from "react-redux";
 import UserManagementTable from "src/app/component/Table/UserManagementTable";
 import { userManagementTableColumn } from "src/app/contanst";
-import { Autocomplete, Dialog, Drawer, IconButton, InputAdornment, OutlinedInput, Paper, TextField, Typography } from "@mui/material";
+import { Autocomplete, Card, Dialog, Drawer, IconButton, InputAdornment, OutlinedInput, Paper, TextField, Typography } from "@mui/material";
 import UserDetails from "./usetDetails";
 import { useDispatch } from "react-redux";
 import FuseLoading from '@fuse/core/FuseLoading';
@@ -164,7 +164,8 @@ const Index = () => {
   }
 
   return (
-    <div className="w-full h-full">
+    <Card className="m-12 rounded-6" style={{ height: "87.9vh" }}>
+      <div className="w-full h-full">
       <Breadcrumb linkData={[AdminRedirect]} currPage="Learner" />
 
       {data.length ? (
@@ -209,7 +210,6 @@ const Index = () => {
               }}
             />
             {/* <Autocomplete
-
               fullWidth
               size="small"
               value={filterValue}
@@ -288,6 +288,7 @@ const Index = () => {
         />
       </Dialog>
     </div >
+    </Card>
   );
 };
 
