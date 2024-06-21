@@ -17,145 +17,178 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import { Stack } from "@mui/system";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
+  DangerButton,
+  LoadingButton,
   SecondaryButton,
   SecondaryButtonOutlined,
 } from "src/app/component/Buttons";
-import AddRequest from "./addRequest";
+import { TextField, Typography } from "@mui/material";
+import { Box } from "@mui/system";
+import { tr } from "date-fns/locale";
+import {
+  createSupportDataAPI,
+  deleteSupportHandler,
+  getSupportDataAPI,
+  selectSupportData,
+  slice,
+  updateSupportDataAPI,
+} from "app/store/supportData";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { selectUser } from "app/store/userSlice";
+import AlertDialog from "src/app/component/Dialogs/AlertDialog";
+import { log } from "console";
 
-function createData(title: string, description: string, status: string) {
-  return {
-    title,
-    description,
-    status,
-  };
-}
+// function createData(title: string, description: string, status: string) {
+//   return {
+//     title,
+//     description,
+//     status,
+//   };
+// }
 
-const rows = [
-  createData(
-    "ABC",
-    "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Natus, neque sequi.",
-    "Active"
-  ),
-  createData(
-    "ABC",
-    "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Natus, neque sequi.",
-    "Active"
-  ),
-  createData(
-    "ABC",
-    "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Natus, neque sequi.",
-    "Active"
-  ),
-  createData(
-    "ABC",
-    "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Natus, neque sequi.",
-    "Inactive"
-  ),
-  createData(
-    "ABC",
-    "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Natus, neque sequi.",
-    "Inactive"
-  ),
-  createData(
-    "ABC",
-    "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Natus, neque sequi.",
-    "Inactive"
-  ),
-  createData(
-    "ABC",
-    "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Natus, neque sequi.",
-    "Active"
-  ),
-  createData(
-    "ABC",
-    "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Natus, neque sequi.",
-    "Active"
-  ),
-  createData(
-    "ABC",
-    "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Natus, neque sequi.",
-    "Active"
-  ),
-  createData(
-    "ABC",
-    "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Natus, neque sequi.",
-    "Active"
-  ),
-  createData(
-    "ABC",
-    "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Natus, neque sequi.",
-    "Active"
-  ),
-  // createData(
-  //   "ABC",
-  //   "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Natus, neque sequi.",
-  //   "Active"
-  // ),
-  // createData(
-  //   "ABC",
-  //   "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Natus, neque sequi.",
-  //   "Lorem ips"
-  // ),
-  // createData(
-  //   "ABC",
-  //   "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Natus, neque sequi.",
-  //   "Lorem ips"
-  // ),
-  // createData(
-  //   "ABC",
-  //   "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Natus, neque sequi.",
-  //   "Lorem ips"
-  // ),
-  // createData(
-  //   "ABC",
-  //   "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Natus, neque sequi.",
-  //   "Lorem ips"
-  // ),
-  // createData(
-  //   "ABC",
-  //   "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Natus, neque sequi.",
-  //   "Lorem ips"
-  // ),
-  // createData(
-  //   "ABC",
-  //   "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Natus, neque sequi.",
-  //   "Lorem ips"
-  // ),
-];
+const AddRequest = (props) => {
+  const { supportData = {}, handleChange = () => {} } = props;
 
-const Support = () => {
+  return (
+    <>
+      <Box className="flex flex-col justify-between gap-12 p-0">
+        <div>
+          <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
+            Title
+          </Typography>
+          <TextField
+            name="title"
+            size="small"
+            placeholder="Add your title"
+            fullWidth
+            multiline
+            value={supportData.title}
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
+            Description
+          </Typography>
+          <TextField
+            name="description"
+            size="small"
+            placeholder="Add your description"
+            fullWidth
+            multiline
+            rows={6}
+            value={supportData.description}
+            onChange={handleChange}
+          />
+        </div>
+      </Box>
+    </>
+  );
+};
+
+const Support = (props) => {
+  const { data } = useSelector(selectUser);
+  const { singleData, dataUpdatingLoadding } = useSelector(selectSupportData);
+
   const [anchorEl, setAnchorEl] = useState(null);
-  const [selectedRow, setSelectedRow] = useState(null);
+  const [selectedRow, setSelectedRow] = useState<any>(null);
   const [dialogType, setDialogType] = useState(false);
 
+  const [deleteId, setDeleteId] = useState("");
+
+  const [supportData, setSupportData] = useState({
+    request_id: data.user_id,
+    title: "",
+    description: "",
+  });
+
+  const deleteIcon = (id) => {
+    setDeleteId(selectedRow.support_id);
+  };
+
+  const deleteConfromation = async () => {
+    await dispatch(deleteSupportHandler(deleteId));
+    setDeleteId("");
+  };
+
+  const dispatch: any = useDispatch();
+
+  const clearSingleData = () => {
+    dispatch(slice.setSingleData({}));
+    setSupportData({
+      request_id: data.user_id,
+      title: "",
+      description: "",
+    });
+  };
   const handleClickOpen = () => {
     setDialogType(true);
   };
 
   const handleCloseDialog = () => {
     setDialogType(null);
+    clearSingleData();
   };
 
   const handleClick = (event, row) => {
-    setAnchorEl(event.currentTarget);
+    dispatch(slice.setSingleData(row));
     setSelectedRow(row);
+    console.log(row);
+    setAnchorEl(event.currentTarget);
   };
 
   const handleClose = () => {
     setAnchorEl(null);
     setSelectedRow(null);
+    clearSingleData();
   };
 
   const handleEdit = () => {
-    console.log("Edit row:", selectedRow);
-    handleClose();
+    setSupportData(singleData);
+    handleClickOpen();
   };
 
-  const handleDelete = () => {
-    console.log("Delete row:", selectedRow);
-    handleClose();
+  const support = useSelector(selectSupportData);
+
+  useEffect(() => {
+    dispatch(getSupportDataAPI({ page: 1, page_size: 10 }, data.user_id));
+  }, [dispatch]);
+
+  const handleSubmit = async () => {
+    try {
+      let response;
+      response = await dispatch(createSupportDataAPI(supportData));
+      dispatch(getSupportDataAPI({ page: 1, page_size: 10 }, data.user_id));
+    } catch (err) {
+      console.log(err);
+    } finally {
+      handleCloseDialog();
+      handleClose();
+    }
+  };
+
+  const handleUpdate = async () => {
+    try {
+      let response;
+      response = await dispatch(updateSupportDataAPI(supportData));
+      dispatch(getSupportDataAPI({ page: 1, page_size: 10 }, data.user_id));
+    } catch (err) {
+      console.log(err);
+    } finally {
+      handleCloseDialog();
+      handleClose();
+    }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setSupportData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
   };
   return (
     <>
@@ -176,23 +209,40 @@ const Support = () => {
             <TableHead className="bg-[#F8F8F8]">
               <TableRow>
                 <TableCell>Title</TableCell>
-                <TableCell align="left" >Description</TableCell>
-                <TableCell align="left">Status&nbsp;</TableCell>
-                <TableCell align="left">Action&nbsp;</TableCell>
+                <TableCell align="left">Description</TableCell>
+                <TableCell align="left">Status</TableCell>
+                <TableCell align="left">Action</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map((row) => (
+              {support.data?.map((row) => (
                 <TableRow
                   key={row.title}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
-                  <TableCell component="th" scope="row" sx={{ borderBottom: '2px solid #F8F8F8' }}>
+                  <TableCell
+                    component="th"
+                    scope="row"
+                    sx={{ borderBottom: "2px solid #F8F8F8" }}
+                  >
                     {row.title}
                   </TableCell>
-                  <TableCell align="left" sx={{ borderBottom: '2px solid #F8F8F8' }}>{row.description}</TableCell>
-                  <TableCell align="left" sx={{ borderBottom: '2px solid #F8F8F8' }}>{row.status}</TableCell>
-                  <TableCell align="left" sx={{ borderBottom: '2px solid #F8F8F8' }}>
+                  <TableCell
+                    align="left"
+                    sx={{ borderBottom: "2px solid #F8F8F8" }}
+                  >
+                    {row.description}
+                  </TableCell>
+                  <TableCell
+                    align="left"
+                    sx={{ borderBottom: "2px solid #F8F8F8" }}
+                  >
+                    {row.status}
+                  </TableCell>
+                  <TableCell
+                    align="left"
+                    sx={{ borderBottom: "2px solid #F8F8F8" }}
+                  >
                     <IconButton
                       size="small"
                       sx={{ color: "#5B718F", marginRight: "4px" }}
@@ -212,13 +262,46 @@ const Support = () => {
             <Pagination count={3} variant="outlined" shape="rounded" />
           </Stack>
         </TableContainer>
+
+        <AlertDialog
+          open={Boolean(deleteId)}
+          close={() => deleteIcon("")}
+          title="Delete Activity?"
+          content="Deleting this activity will also remove all associated data and relationships. Proceed with deletion?"
+          className="-224 "
+          actionButton={
+            dataUpdatingLoadding ? (
+              <LoadingButton />
+            ) : (
+              <DangerButton
+                onClick={deleteConfromation}
+                name="Delete Activity"
+              />
+            )
+          }
+          cancelButton={
+            <SecondaryButtonOutlined
+              className="px-24"
+              onClick={() => deleteIcon("")}
+              name="Cancel"
+            />
+          }
+        />
+
         <Menu
           anchorEl={anchorEl}
           open={Boolean(anchorEl)}
           onClose={handleClose}
         >
           <MenuItem onClick={handleEdit}>Edit</MenuItem>
-          <MenuItem onClick={handleDelete}>Delete</MenuItem>
+          <MenuItem
+            onClick={() => {
+              handleClose();
+              deleteIcon(selectedRow);
+            }}
+          >
+            Delete
+          </MenuItem>
         </Menu>
 
         <Dialog
@@ -231,13 +314,22 @@ const Support = () => {
             },
           }}
         >
-          <DialogContent>{<AddRequest />}</DialogContent>
+          <DialogContent>
+            <AddRequest supportData={supportData} handleChange={handleChange} />
+          </DialogContent>
           <DialogActions>
             <SecondaryButtonOutlined
               onClick={handleCloseDialog}
               name="Cancel"
             />
-            <SecondaryButton name="Save" />
+            <SecondaryButton
+              name={Object.keys(singleData).length !== 0 ? "Edit" : "Save"}
+              onClick={
+                Object.keys(singleData).length !== 0
+                  ? handleUpdate
+                  : handleSubmit
+              }
+            />
           </DialogActions>
         </Dialog>
       </div>

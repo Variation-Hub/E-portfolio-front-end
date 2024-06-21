@@ -196,7 +196,11 @@ export default function UserManagementTable(props) {
                         );
                       }
                       return (
-                        <TableCell key={column.id} align={column.align} sx={{ borderBottom: '2px solid #F8F8F8' }}>
+                        <TableCell
+                          key={column.id}
+                          align={column.align}
+                          sx={{ borderBottom: "2px solid #F8F8F8" }}
+                        >
                           <div className={Style.avatar}>
                             {column.id === "first_name" ? (
                               <>
@@ -228,7 +232,12 @@ export default function UserManagementTable(props) {
           spacing={2}
           className="flex justify-center items-center w-full mt-24"
         >
-          <Pagination count={3} variant="outlined" shape="rounded" />
+          <Pagination
+            count={3}
+            variant="outlined"
+            onChange={handleChangePage}
+            shape="rounded"
+          />
         </Stack>
       </div>
       <AlertDialog
