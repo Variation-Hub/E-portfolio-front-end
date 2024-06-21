@@ -6,7 +6,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { Stack } from "@mui/system";
-import { Box, Button, Chip, Dialog, DialogActions, DialogContent, FormControl, IconButton, Menu, MenuItem, Pagination, Select, TextField, Typography } from "@mui/material";
+import { Avatar, AvatarGroup, Box, Button, Chip, Dialog, DialogActions, DialogContent, FormControl, IconButton, Menu, MenuItem, Pagination, Select, TextField, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import Cpd from "./cpd";
@@ -17,6 +17,7 @@ import { selectUser } from "app/store/userSlice";
 import { Link } from "react-router-dom";
 import FileCopyIcon from '@mui/icons-material/FileCopy';
 import { FileUploader } from "react-drag-drop-files";
+import { showMessage } from "app/store/fuse/messageSlice";
 
 interface Column {
   id:
@@ -99,6 +100,10 @@ const AddNewDialogContent = (props) => {
 
   const handleUploadButtonClick = async () => {
     setUploadedFiles(files);
+    if (files.length > 5) {
+      dispatch(showMessage({ message: 'You can only upload up to 5 files.', variant: "error" }))
+      return
+    }
     const data = await dispatch(uploadImages(files));
 
 
@@ -106,7 +111,7 @@ const AddNewDialogContent = (props) => {
       ...prevData,
       files: [...prevData.files, ...data.data]
     }));
-
+    setFiles([]);
   };
 
   const handleDelete = (fileToDelete) => () => {
@@ -131,9 +136,9 @@ const AddNewDialogContent = (props) => {
                   labelId="year-select-label"
                   id="year-select"
                   name="year"
-                  value={formData?.year}
+                  value={activityData?.year}
                   onChange={handleChangeYear}
-                  disabled={edit === "view"}
+                  disabled={edit === "view" || edit === "edit"}
                 >
                   {years?.map((year) => (
                     <MenuItem key={year} value={year}>
@@ -189,6 +194,22 @@ const AddNewDialogContent = (props) => {
               multiline
               rows={3}
               value={activityData?.activity}
+              onChange={handleChange}
+              disabled={edit === "view"}
+            />
+          </div>
+          <div className="w-full">
+            <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
+            Comment
+            </Typography>
+            <TextField
+              name="comment"
+              size="small"
+              placeholder="Lorem ipsum is just dummy context....."
+              fullWidth
+              multiline
+              rows={3}
+              value={activityData?.comment}
               onChange={handleChange}
               disabled={edit === "view"}
             />
@@ -379,7 +400,7 @@ const Activity = (props) => {
   const { singleData } = useSelector(selectCpdPlanning)
 
   const [activityData, setActivityData] = useState({
-    cpd_id: singleData?.cpdId || null,
+    year: singleData?.year || "",
     date: singleData?.date || "",
     learning_objective: singleData?.learning_objective || "",
     activity: singleData?.activity || "",
@@ -415,6 +436,10 @@ const Activity = (props) => {
     }));
   };
 
+  const isFormValid = Object.values(activityData).find(data => data === "") === undefined;
+
+  console.log(isFormValid);
+
   useEffect(() => {
     dispatch(getCpdPlanningAPI(data.user_id, "activities"));
   }, [dispatch]);
@@ -433,8 +458,7 @@ const Activity = (props) => {
 
     const singleData = {
       id: openMenuDialog?.id || "",
-      cpd_id: cpdId || "",
-      year: cpdPlanningData.data?.year || "",
+      year: openMenuDialog?.year || "",
       date: openMenuDialog?.date || "",
       learning_objective: openMenuDialog?.learning_objective || "",
       activity: openMenuDialog?.activity || "",
@@ -458,14 +482,15 @@ const Activity = (props) => {
 
   const handleChangeYear = (event) => {
     const { name, value } = event.target;
-    setFormData((prevFormData) => ({
+    setActivityData((prevFormData) => ({
       ...prevFormData,
       [name]: value,
     }));
 
     if (name == "year") {
-      setcpdId(data.data?.find(item => item.year === value).id);
+      setcpdId(cpdPlanningData.data?.find(item => item.year === value).id);
     }
+    console.log(cpdPlanningData.data?.find(item => item.year === value).id);
   };
 
   const handleSubmit = async () => {
@@ -513,7 +538,7 @@ const Activity = (props) => {
     setEdit("");
 
     setActivityData({
-      cpd_id: cpdId || null,
+      year: "",
       date: "",
       learning_objective: "",
       activity: "",
@@ -576,16 +601,16 @@ const Activity = (props) => {
                               <MoreHorizIcon fontSize="small" />
                             </IconButton>
                             : column.id === "files" ? (
-                              <div style={{ marginTop: '16px', display: 'grid', gridTemplateColumns: 'auto auto auto' }}>
-                                {value.map((file, index) => (
-                                  <Link to={file.url} target="_blank" rel="noopener" style={{ border: '0px', backgroundColor: 'unset' }}>
-                                    <Chip
-                                      key={index}
-                                      icon={<FileCopyIcon />}
-                                      style={{ margin: '4px', backgroundColor: 'unset' }}
-                                    />
-                                  </Link>
-                                ))}
+                              <div style={{ marginTop: '16px', display: 'flex' }}>
+                                <AvatarGroup max={4}>
+                                  {value.map((file, index) => (
+                                    <Link to={file.url} target="_blank" rel="noopener" style={{ border: '0px', backgroundColor: 'unset' }}>
+                                      <Avatar>
+                                        <FileCopyIcon />
+                                      </Avatar>
+                                    </Link>
+                                  ))}
+                                </AvatarGroup>
                               </div>
                             ) : column.id === "date" ?
                               formatDate(value)
@@ -683,7 +708,7 @@ const Activity = (props) => {
             edit={edit}
             setActivityData={setActivityData}
             activityData={activityData}
-            // formData={formData}
+            dataUpdatingLoadding={dataUpdatingLoadding}
             handleChange={handleChange}
             handleChangeYear={handleChangeYear}
           />
@@ -691,16 +716,20 @@ const Activity = (props) => {
 
         <Box className="flex items-center justify-end m-12 mt-24">
           <DialogActions>
-            <>
-              {edit === "view" ?
-                <SecondaryButtonOutlined name="Cancel" className=" w-1/12" onClick={handleClose} />
-                :
-                <SecondaryButtonOutlined name="Cancel" className=" w-1/12" onClick={handleClose} />
-              }
-              {edit !== "view" &&
-                <SecondaryButton name={edit === "edit" ? "Update" : "Save"} className=" w-1/12 ml-10" onClick={handleSubmit} />
-              }
-            </>
+            {dataUpdatingLoadding ?
+              <LoadingButton />
+              :
+              <>
+                {edit === "view" ?
+                  <SecondaryButtonOutlined name="Cancel" className=" w-1/12" onClick={handleClose} />
+                  :
+                  <SecondaryButtonOutlined name="Cancel" className=" w-1/12" onClick={handleClose} />
+                }
+                {edit !== "view" &&
+                  <SecondaryButton name={edit === "edit" ? "Update" : "Save"} className=" w-1/12 ml-10" onClick={handleSubmit} disable={!isFormValid} />
+                }
+              </>
+            }
           </DialogActions>
         </Box>
       </Dialog>

@@ -6,7 +6,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
-import { Box, Button, Chip, Dialog, DialogActions, DialogContent, FormControl, IconButton, Menu, MenuItem, Pagination, Select, TextField, Typography } from "@mui/material";
+import { Avatar, AvatarGroup, Box, Button, Chip, Dialog, DialogActions, DialogContent, FormControl, IconButton, Menu, MenuItem, Pagination, Select, TextField, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
@@ -19,6 +19,7 @@ import { DangerButton, LoadingButton, SecondaryButton, SecondaryButtonOutlined }
 import { Link } from "react-router-dom";
 import FileCopyIcon from '@mui/icons-material/FileCopy';
 import { FileUploader } from "react-drag-drop-files";
+import { showMessage } from "app/store/fuse/messageSlice";
 
 
 interface Column {
@@ -80,6 +81,10 @@ const AddNewEvaluationDialogContent = (props) => {
 
     const handleUploadButtonClick = async () => {
         setUploadedFiles(files);
+        if (files.length > 5) {
+            dispatch(showMessage({ message: 'You can only upload up to 5 files.', variant: "error" }))
+            return
+        }
         const data = await dispatch(uploadImages(files));
 
         console.log(data);
@@ -88,7 +93,7 @@ const AddNewEvaluationDialogContent = (props) => {
             ...prevData,
             files: [...prevData.files, ...data.data]
         }));
-
+        setFiles([]);
     };
 
     const handleDelete = (fileToDelete) => () => {
@@ -113,9 +118,9 @@ const AddNewEvaluationDialogContent = (props) => {
                                     labelId="year-select-label"
                                     id="year-select"
                                     name="year"
-                                    value={formData?.year}
+                                    value={evaluationData?.year}
                                     onChange={handleChangeYear}
-                                    disabled={edit === "view"}
+                                    disabled={edit === "view" || edit === "edit"}
                                 >
                                     {years?.map((year) => (
                                         <MenuItem key={year} value={year}>
@@ -305,7 +310,6 @@ const Evaluation = (props) => {
     const { singleData } = useSelector(selectCpdPlanning)
 
     const [evaluationData, setEvaluationData] = useState({
-        cpd_id: singleData?.cpdId || null,
         learning_objective: singleData?.learning_objective || "",
         completed: singleData?.completed || "",
         example_of_learning: singleData?.example_of_learning || "",
@@ -331,6 +335,10 @@ const Evaluation = (props) => {
         }));
     };
 
+    const isFormValid = Object.values(evaluationData).find(data => data === "") === undefined;
+
+    console.log(isFormValid);
+
     useEffect(() => {
         dispatch(getCpdPlanningAPI(data.user_id, "evaluations"));
     }, [dispatch]);
@@ -348,8 +356,10 @@ const Evaluation = (props) => {
         setEdit(edit)
         setUpdateData(openMenuDialog);
         setOpen(true);
+
         const singleData = {
             id: openMenuDialog?.id || "",
+            year: openMenuDialog.year || "",
             learning_objective: openMenuDialog?.learning_objective || "",
             completed: openMenuDialog?.completed || "",
             example_of_learning: openMenuDialog?.example_of_learning || "",
@@ -357,9 +367,9 @@ const Evaluation = (props) => {
             feedback: openMenuDialog?.feedback || "",
             files: openMenuDialog?.files || [],
         };
+        setEvaluationData(singleData);
         dispatch(slice.setCpdSingledata(singleData));
         dispatch(slice.setDialogType(value));
-        console.log(data);
         console.log(singleData);
     };
 
@@ -367,13 +377,13 @@ const Evaluation = (props) => {
 
     const handleChangeYear = (event) => {
         const { name, value } = event.target;
-        setFormData((prevFormData) => ({
+        setEvaluationData((prevFormData) => ({
             ...prevFormData,
             [name]: value,
         }));
 
         if (name == "year") {
-            setcpdId(data.data?.find(item => item.year === value).id);
+            setcpdId(cpdPlanningData.data?.find(item => item.year === value).id);
         }
     };
 
@@ -419,7 +429,6 @@ const Evaluation = (props) => {
         setEdit("");
 
         setEvaluationData({
-            cpd_id: cpdId || null,
             learning_objective: "",
             completed: "",
             example_of_learning: "",
@@ -478,16 +487,16 @@ const Evaluation = (props) => {
                                                                     <MoreHorizIcon fontSize="small" />
                                                                 </IconButton>
                                                                 : column.id === "files" ? (
-                                                                    <div style={{ marginTop: '16px', display: 'grid', gridTemplateColumns: 'auto auto auto' }}>
-                                                                        {value.map((file, index) => (
-                                                                            <Link to={file.url} target="_blank" rel="noopener" style={{ border: '0px', backgroundColor: 'unset' }}>
-                                                                                <Chip
-                                                                                    key={index}
-                                                                                    icon={<FileCopyIcon />}
-                                                                                    style={{ margin: '4px', backgroundColor: 'unset' }}
-                                                                                />
-                                                                            </Link>
-                                                                        ))}
+                                                                    <div style={{ marginTop: '16px', display: 'flex' }}>
+                                                                        <AvatarGroup max={4}>
+                                                                            {value.map((file, index) => (
+                                                                                <Link to={file.url} target="_blank" rel="noopener" style={{ border: '0px', backgroundColor: 'unset' }}>
+                                                                                    <Avatar>
+                                                                                        <FileCopyIcon />
+                                                                                    </Avatar>
+                                                                                </Link>
+                                                                            ))}
+                                                                        </AvatarGroup>
                                                                     </div>
                                                                 )
                                                                     : value}
@@ -591,7 +600,7 @@ const Evaluation = (props) => {
                         edit={edit}
                         setEvaluationData={setEvaluationData}
                         evaluationData={evaluationData}
-                        // formData={formData}
+                        dataUpdatingLoadding={dataUpdatingLoadding}
                         handleChange={handleChange}
                         handleChangeYear={handleChangeYear}
                     />
@@ -599,16 +608,20 @@ const Evaluation = (props) => {
 
                 <Box className="flex items-center justify-end m-12 mt-24">
                     <DialogActions>
-                        <>
-                            {edit === "view" ?
-                                <SecondaryButtonOutlined name="Cancel" className=" w-1/12" onClick={handleClose} />
-                                :
-                                <SecondaryButtonOutlined name="Cancel" className=" w-1/12" onClick={handleClose} />
-                            }
-                            {edit !== "view" &&
-                                <SecondaryButton name={edit === "edit" ? "Update" : "Save"} className=" w-1/12 ml-10" onClick={handleSubmit} />
-                            }
-                        </>
+                        {dataUpdatingLoadding ?
+                            <LoadingButton />
+                            :
+                            <>
+                                {edit === "view" ?
+                                    <SecondaryButtonOutlined name="Cancel" className=" w-1/12" onClick={handleClose} />
+                                    :
+                                    <SecondaryButtonOutlined name="Cancel" className=" w-1/12" onClick={handleClose} />
+                                }
+                                {edit !== "view" &&
+                                    <SecondaryButton name={edit === "edit" ? "Update" : "Save"} className=" w-1/12 ml-10" onClick={handleSubmit} disable={!isFormValid} />
+                                }
+                            </>
+                        }
                     </DialogActions>
                 </Box>
             </Dialog>
