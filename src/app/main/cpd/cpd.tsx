@@ -76,7 +76,7 @@ function a11yProps(index: number) {
 
 const Cpd = (props) => {
   const { edit = "Save" } = props;
-  const data = useSelector(selectCpdPlanning);
+  const { data, dataFetchLoading, dataUpdatingLoadding, meta_data } = useSelector(selectCpdPlanning)
   const [value, setValue] = useState(0);
   const [dialogType, setDialogType] = useState<string | null>(data.dialogType);
   const [loading, setLoading] = useState(false);
@@ -418,20 +418,20 @@ const Cpd = (props) => {
         </Box>
 
         <CustomTabPanel value={value} index={0}>
-          <Planning dialogType={dialogType} setDialogType={setDialogType} />
+          <Planning dialogType={dialogType} setDialogType={setDialogType} dataUpdatingLoadding={dataUpdatingLoadding} />
         </CustomTabPanel>
 
         <CustomTabPanel value={value} index={1}>
-          <Activity dialogType={dialogType} setDialogType={setDialogType} />
+          <Activity dialogType={dialogType} setDialogType={setDialogType} dataUpdatingLoadding={dataUpdatingLoadding} />
         </CustomTabPanel>
 
 
         <CustomTabPanel value={value} index={2}>
-          <Evaluation dialogType={dialogType} setDialogType={setDialogType} />
+          <Evaluation dialogType={dialogType} setDialogType={setDialogType} dataUpdatingLoadding={dataUpdatingLoadding} />
         </CustomTabPanel>
 
         <CustomTabPanel value={value} index={3}>
-          <Reflection dialogType={dialogType} setDialogType={setDialogType}/>
+          <Reflection dialogType={dialogType} setDialogType={setDialogType} dataUpdatingLoadding={dataUpdatingLoadding} />
         </CustomTabPanel>
       </Box>
 

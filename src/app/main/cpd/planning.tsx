@@ -118,7 +118,7 @@ const AddPlanDialogContent = (props) => {
                 name="year"
                 value={formData?.year}
                 onChange={handleChange}
-                disabled={edit === "view"}
+                disabled={edit === "view" || edit === "edit"}
               >
                 {years?.map((year) => (
                   <MenuItem key={year} value={year}>
@@ -276,8 +276,6 @@ const Planning = (props) => {
     evaluations: [],
     reflections: [],
   });
-  console.log(formData);
-
 
   const [deleteId, setDeleteId] = useState("");
   const [openMenuDialog, setOpenMenuDialog] = useState<any>({});
@@ -296,6 +294,10 @@ const Planning = (props) => {
       [name]: value,
     }));
   };
+
+  const isFormValid = Object.values(formData).find(data => data === "") === undefined;
+
+  console.log(isFormValid);
 
   useEffect(() => {
     dispatch(getCpdPlanningAPI(data.user_id, ""));
@@ -329,6 +331,8 @@ const Planning = (props) => {
     setFormData(singleData)
     dispatch(slice.setCpdSingledata(singleData));
     dispatch(slice.setDialogType(value));
+    console.log(cpdPlanningData.data);
+
   };
 
   const handleSubmit = async () => {
@@ -543,21 +547,26 @@ const Planning = (props) => {
             setFormData={setFormData}
             formData={formData}
             handleChange={handleChange}
+            dataUpdatingLoadding={dataUpdatingLoadding}
           />
         </DialogContent>
 
         <Box className="flex items-center justify-end m-12 mt-24">
           <DialogActions>
-            <>
-              {edit === "view" ?
-                <SecondaryButtonOutlined name="Cancel" className=" w-1/12" onClick={handleClose} />
-                :
-                <SecondaryButtonOutlined name="Cancel" className=" w-1/12" onClick={handleClose} />
-              }
-              {edit !== "view" &&
-                <SecondaryButton name={edit === "edit" ? "Update" : "Save"} className=" w-1/12 ml-10" onClick={handleSubmit} />
-              }
-            </>
+            {dataUpdatingLoadding ?
+              <LoadingButton />
+              :
+              <>
+                {edit === "view" ?
+                  <SecondaryButtonOutlined name="Cancel" className=" w-1/12" onClick={handleClose} />
+                  :
+                  <SecondaryButtonOutlined name="Cancel" className=" w-1/12" onClick={handleClose} />
+                }
+                {edit !== "view" &&
+                  <SecondaryButton name={edit === "edit" ? "Update" : "Save"} className=" w-1/12 ml-10" onClick={handleSubmit} disable={!isFormValid} />
+                }
+              </>
+            }
           </DialogActions>
         </Box>
       </Dialog>

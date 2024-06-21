@@ -7,7 +7,7 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import { Stack } from "@mui/system";
-import { Box, Button, Chip, Dialog, DialogActions, DialogContent, FormControl, IconButton, Menu, MenuItem, Pagination, Select, TextField, Typography } from "@mui/material";
+import { Avatar, AvatarGroup, Box, Button, Chip, Dialog, DialogActions, DialogContent, FormControl, IconButton, Menu, MenuItem, Pagination, Select, TextField, Typography } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { selectUser } from "app/store/userSlice";
@@ -19,6 +19,7 @@ import { DangerButton, LoadingButton, SecondaryButton, SecondaryButtonOutlined }
 import { Link } from "react-router-dom";
 import FileCopyIcon from '@mui/icons-material/FileCopy';
 import { FileUploader } from "react-drag-drop-files";
+import { showMessage } from "app/store/fuse/messageSlice";
 
 
 interface Column {
@@ -78,6 +79,12 @@ const AddReflectionDialogContent = (props) => {
 
     const handleUploadButtonClick = async () => {
         setUploadedFiles(files);
+
+        if (files.length > 5) {
+            dispatch(showMessage({ message: 'You can only upload up to 5 files.', variant: "error" }))
+            setFiles([]);
+            return
+        }
         const data = await dispatch(uploadImages(files));
 
         console.log(data);
@@ -86,6 +93,8 @@ const AddReflectionDialogContent = (props) => {
             ...prevData,
             files: [...prevData.files, ...data.data]
         }));
+
+        setFiles([]);
 
     };
 
@@ -96,7 +105,6 @@ const AddReflectionDialogContent = (props) => {
             files: prevData.files.filter(file => file !== fileToDelete)
         }));
     };
-
 
     return (
         <>
@@ -113,9 +121,9 @@ const AddReflectionDialogContent = (props) => {
                                     labelId="year-select-label"
                                     id="year-select"
                                     name="year"
-                                    value={formData?.year}
+                                    value={reflectionData?.year}
                                     onChange={handleChangeYear}
-                                    disabled={edit === "view"}
+                                    disabled={edit === "view" || edit === "edit"}
                                 >
                                     {years?.map((year) => (
                                         <MenuItem key={year} value={year}>
@@ -282,7 +290,6 @@ const Reflection = (props) => {
     const { singleData } = useSelector(selectCpdPlanning)
 
     const [reflectionData, setReflectionData] = useState({
-        cpd_id: singleData?.cpdId || null,
         learning_objective: singleData?.learning_objective || "",
         what_went_well: singleData?.what_went_well || "",
         differently_next_time: singleData?.differently_next_time || "",
@@ -307,11 +314,13 @@ const Reflection = (props) => {
         }));
     };
 
+    const isFormValid = Object.values(reflectionData).find(data => data === "") === undefined;
+
+    console.log(isFormValid);
+    
     useEffect(() => {
         dispatch(getCpdPlanningAPI(data.user_id, "reflections"));
     }, [dispatch]);
-
-    // console.log(cpdPlanningData.data.map(item => item.activities));
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const oopen = Boolean(anchorEl);
@@ -324,19 +333,18 @@ const Reflection = (props) => {
         setEdit(edit)
         setUpdateData(openMenuDialog);
         setOpen(true);
-        // const data = cpdPlanningData?.data?.find((item) => item.id === openMenuDialog);
         const singleData = {
             id: openMenuDialog?.id || "",
-            completed: openMenuDialog?.completed || "",
+            year: openMenuDialog.year || "",
             learning_objective: openMenuDialog?.learning_objective || "",
             what_went_well: openMenuDialog?.what_went_well || "",
             differently_next_time: openMenuDialog?.differently_next_time || "",
             feedback: openMenuDialog?.feedback || "",
             files: openMenuDialog?.files || [],
         };
+        setReflectionData(singleData);
         dispatch(slice.setCpdSingledata(singleData));
         dispatch(slice.setDialogType(value));
-        console.log(data);
         console.log(singleData);
     };
 
@@ -344,13 +352,13 @@ const Reflection = (props) => {
 
     const handleChangeYear = (event) => {
         const { name, value } = event.target;
-        setFormData((prevFormData) => ({
+        setReflectionData((prevFormData) => ({
             ...prevFormData,
             [name]: value,
         }));
 
         if (name == "year") {
-            setcpdId(data.data?.find(item => item.year === value).id);
+            setcpdId(cpdPlanningData.data?.find(item => item.year === value).id);
         }
     };
 
@@ -396,7 +404,6 @@ const Reflection = (props) => {
         setEdit("");
 
         setReflectionData({
-            cpd_id: cpdId || null,
             learning_objective: "",
             what_went_well: "",
             differently_next_time: "",
@@ -457,16 +464,16 @@ const Reflection = (props) => {
                                                                     <MoreHorizIcon fontSize="small" />
                                                                 </IconButton>
                                                                 : column.id === "files" ? (
-                                                                    <div style={{ marginTop: '16px', display: 'grid', gridTemplateColumns: 'auto auto auto' }}>
-                                                                        {value.map((file, index) => (
-                                                                            <Link to={file.url} target="_blank" rel="noopener" style={{ border: '0px', backgroundColor: 'unset' }}>
-                                                                                <Chip
-                                                                                    key={index}
-                                                                                    icon={<FileCopyIcon />}
-                                                                                    style={{ margin: '4px', backgroundColor: 'unset' }}
-                                                                                />
-                                                                            </Link>
-                                                                        ))}
+                                                                    <div style={{ marginTop: '16px', display: 'flex' }}>
+                                                                        <AvatarGroup max={4}>
+                                                                            {value.map((file, index) => (
+                                                                                <Link to={file.url} target="_blank" rel="noopener" style={{ border: '0px', backgroundColor: 'unset' }}>
+                                                                                    <Avatar>
+                                                                                        <FileCopyIcon />
+                                                                                    </Avatar>
+                                                                                </Link>
+                                                                            ))}
+                                                                        </AvatarGroup>
                                                                     </div>
                                                                 )
                                                                     : value}
@@ -569,7 +576,7 @@ const Reflection = (props) => {
                         edit={edit}
                         setReflectionData={setReflectionData}
                         reflectionData={reflectionData}
-                        // formData={formData}
+                        dataUpdatingLoadding={dataUpdatingLoadding}
                         handleChange={handleChange}
                         handleChangeYear={handleChangeYear}
                     />
@@ -577,16 +584,20 @@ const Reflection = (props) => {
 
                 <Box className="flex items-center justify-end m-12 mt-24">
                     <DialogActions>
-                        <>
-                            {edit === "view" ?
-                                <SecondaryButtonOutlined name="Cancel" className=" w-1/12" onClick={handleClose} />
-                                :
-                                <SecondaryButtonOutlined name="Cancel" className=" w-1/12" onClick={handleClose} />
-                            }
-                            {edit !== "view" &&
-                                <SecondaryButton name={edit === "edit" ? "Update" : "Save"} className=" w-1/12 ml-10" onClick={handleSubmit} />
-                            }
-                        </>
+                        {dataUpdatingLoadding ?
+                            <LoadingButton />
+                            :
+                            <>
+                                {edit === "view" ?
+                                    <SecondaryButtonOutlined name="Cancel" className=" w-1/12" onClick={handleClose} />
+                                    :
+                                    <SecondaryButtonOutlined name="Cancel" className=" w-1/12" onClick={handleClose} />
+                                }
+                                {edit !== "view" &&
+                                    <SecondaryButton name={edit === "edit" ? "Update" : "Save"} className=" w-1/12 ml-10" onClick={handleSubmit} disable={!isFormValid} />
+                                }
+                            </>
+                        }
                     </DialogActions>
                 </Box>
             </Dialog >

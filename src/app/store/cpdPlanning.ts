@@ -54,14 +54,14 @@ export const getCpdPlanningAPI = (id, field) => async (dispatch) => {
         let url = `${URL_BASE_LINK}/cpd/get/${id}?table=${field}`
 
         const response = await axios.get(url);
-        dispatch(showMessage({ message: response.data.message, variant: "success" }))
+        // dispatch(showMessage({ message: response.data.message, variant: "success" }))
         dispatch(slice.setCPDdata(response.data.data))
         dispatch(slice.setLoader());
         return true;
 
     } catch (err) {
-        dispatch(showMessage({ message: err.response.data.message, variant: "error" }))
         dispatch(slice.setLoader());
+        dispatch(slice.setCPDdata([]))
         return false
     };
 
