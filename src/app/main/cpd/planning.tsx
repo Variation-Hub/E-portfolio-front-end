@@ -470,11 +470,11 @@ const Planning = (props) => {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </div> */}
-      <div className="fixed bottom-0 left-0 w-full flex justify-center py-4 mb-14">
+      {/* <div className="fixed bottom-0 left-0 w-full flex justify-center py-4 mb-14">
         <Stack spacing={2}>
           <Pagination count={3} variant="outlined" shape="rounded" />
         </Stack>
-      </div>
+      </div> */}
       <AlertDialog
         open={Boolean(deleteId)}
         close={() => deleteIcon("")}

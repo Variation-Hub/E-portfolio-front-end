@@ -423,7 +423,7 @@ const Activity = (props) => {
   const [open, setOpen] = useState(false);
 
   const [page, setPage] = useState(1);
-  const rowsPerPage = 10;
+  const rowsPerPage = 8;
 
   const dispatch: any = useDispatch();
   const { data } = useSelector(selectUser);
@@ -565,7 +565,7 @@ const Activity = (props) => {
   return (
     <>
       <div>
-        <TableContainer sx={{ maxHeight: 480 }} className="-m-12">
+        <TableContainer sx={{ maxHeight: 500 }} className="-m-12">
           <Table stickyHeader aria-label="sticky table" size="small">
             <TableHead>
               <TableRow>
@@ -601,7 +601,7 @@ const Activity = (props) => {
                               <MoreHorizIcon fontSize="small" />
                             </IconButton>
                             : column.id === "files" ? (
-                              <div style={{ marginTop: '16px', display: 'flex' }}>
+                              <div style={{ display: 'flex' }}>
                                 <AvatarGroup max={4}>
                                   {value.map((file, index) => (
                                     <Link to={file.url} target="_blank" rel="noopener" style={{ border: '0px', backgroundColor: 'unset' }}>
