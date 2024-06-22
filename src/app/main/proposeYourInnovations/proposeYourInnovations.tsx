@@ -27,35 +27,35 @@ import {
 import { TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import {
-  createSupportDataAPI,
-  deleteSupportHandler,
-  getSupportDataAPI,
-  selectSupportData,
+  createYourInnovationAPI,
+  deleteInnovationHandler,
+  getYourInnovationAPI,
+  selectYourInnovation,
   slice,
-  updateSupportDataAPI,
-} from "app/store/supportData";
+  updateYourInnovationAPI,
+} from "app/store/yourInnovation";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { selectUser } from "app/store/userSlice";
 import AlertDialog from "src/app/component/Dialogs/AlertDialog";
 
 const AddInnocations = (props) => {
-  const { supportData = {}, handleChange = () => {} } = props;
+  const { yourInnovation = {}, handleChange = () => { } } = props;
 
   return (
     <>
       <Box className="flex flex-col justify-between gap-12 p-0">
         <div>
           <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
-            Title
+            Topic
           </Typography>
           <TextField
-            name="title"
+            name="topic"
             size="small"
-            placeholder="Add your title"
+            placeholder="Add your topic"
             fullWidth
             multiline
-            value={supportData.title}
+            value={yourInnovation.topic}
             onChange={handleChange}
           />
         </div>
@@ -70,7 +70,7 @@ const AddInnocations = (props) => {
             fullWidth
             multiline
             rows={6}
-            value={supportData.description}
+            value={yourInnovation.description}
             onChange={handleChange}
           />
         </div>
@@ -81,7 +81,7 @@ const AddInnocations = (props) => {
 
 const ProposeYourInnovations = (props) => {
   const { data } = useSelector(selectUser);
-  const { singleData, dataUpdatingLoadding } = useSelector(selectSupportData);
+  const { singleData, dataUpdatingLoadding } = useSelector(selectYourInnovation);
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedRow, setSelectedRow] = useState<any>(null);
@@ -89,18 +89,21 @@ const ProposeYourInnovations = (props) => {
 
   const [deleteId, setDeleteId] = useState("");
 
-  const [supportData, setSupportData] = useState({
-    request_id: data.user_id,
-    title: "",
+  const [yourInnovation, setYourInnovation] = useState({
+    innovation_propose_by_id: data.user_id,
+    topic: "",
     description: "",
   });
 
   const deleteIcon = (id) => {
-    setDeleteId(selectedRow.support_id);
+    setDeleteId(selectedRow.id);
+    console.log(selectedRow);
+
   };
 
   const deleteConfromation = async () => {
-    await dispatch(deleteSupportHandler(deleteId));
+    await dispatch(deleteInnovationHandler(deleteId));
+    dispatch(getYourInnovationAPI({ page: 1, page_size: 10 }, data.user_id));
     setDeleteId("");
   };
 
@@ -108,9 +111,9 @@ const ProposeYourInnovations = (props) => {
 
   const clearSingleData = () => {
     dispatch(slice.setSingleData({}));
-    setSupportData({
-      request_id: data.user_id,
-      title: "",
+    setYourInnovation({
+      innovation_propose_by_id: data.user_id,
+      topic: "",
       description: "",
     });
   };
@@ -137,21 +140,21 @@ const ProposeYourInnovations = (props) => {
   };
 
   const handleEdit = () => {
-    setSupportData(singleData);
+    setYourInnovation(singleData);
     handleClickOpen();
   };
 
-  const support = useSelector(selectSupportData);
+  const innovation = useSelector(selectYourInnovation);
 
   useEffect(() => {
-    dispatch(getSupportDataAPI({ page: 1, page_size: 10 }, data.user_id));
+    dispatch(getYourInnovationAPI({ page: 1, page_size: 10 }, data.user_id));
   }, [dispatch]);
 
   const handleSubmit = async () => {
     try {
       let response;
-      response = await dispatch(createSupportDataAPI(supportData));
-      dispatch(getSupportDataAPI({ page: 1, page_size: 10 }, data.user_id));
+      response = await dispatch(createYourInnovationAPI(yourInnovation));
+      dispatch(getYourInnovationAPI({ page: 1, page_size: 10 }, data.user_id));
     } catch (err) {
       console.log(err);
     } finally {
@@ -163,8 +166,8 @@ const ProposeYourInnovations = (props) => {
   const handleUpdate = async () => {
     try {
       let response;
-      response = await dispatch(updateSupportDataAPI(supportData));
-      dispatch(getSupportDataAPI({ page: 1, page_size: 10 }, data.user_id));
+      response = await dispatch(updateYourInnovationAPI(yourInnovation));
+      dispatch(getYourInnovationAPI({ page: 1, page_size: 10 }, data.user_id));
     } catch (err) {
       console.log(err);
     } finally {
@@ -175,7 +178,7 @@ const ProposeYourInnovations = (props) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setSupportData((prevState) => ({
+    setYourInnovation((prevState) => ({
       ...prevState,
       [name]: value,
     }));
@@ -185,7 +188,7 @@ const ProposeYourInnovations = (props) => {
       <div className="m-10">
         <div className="flex justify-end mb-10">
           <SecondaryButton
-            name="Add Request"
+            name="Add Innovation"
             startIcon={<AddIcon sx={{ mx: -0.5 }} />}
             onClick={() => handleClickOpen()}
           />
@@ -198,16 +201,16 @@ const ProposeYourInnovations = (props) => {
           >
             <TableHead className="bg-[#F8F8F8]">
               <TableRow>
-                <TableCell>Title</TableCell>
+                <TableCell>Topic</TableCell>
                 <TableCell align="left">Description</TableCell>
                 <TableCell align="left">Status</TableCell>
                 <TableCell align="left">Action</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {support.data?.map((row) => (
+              {innovation.data?.map((row) => (
                 <TableRow
-                  key={row.title}
+                  key={row.topic}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
                   <TableCell
@@ -215,7 +218,7 @@ const ProposeYourInnovations = (props) => {
                     scope="row"
                     sx={{ borderBottom: "2px solid #F8F8F8" }}
                   >
-                    {row.title}
+                    {row.topic}
                   </TableCell>
                   <TableCell
                     align="left"
@@ -256,8 +259,8 @@ const ProposeYourInnovations = (props) => {
         <AlertDialog
           open={Boolean(deleteId)}
           close={() => deleteIcon("")}
-          title="Delete Activity?"
-          content="Deleting this activity will also remove all associated data and relationships. Proceed with deletion?"
+          topic="Delete Your Innovation?"
+          content="Deleting this your innovation will also remove all associated data and relationships. Proceed with deletion?"
           className="-224 "
           actionButton={
             dataUpdatingLoadding ? (
@@ -265,16 +268,16 @@ const ProposeYourInnovations = (props) => {
             ) : (
               <DangerButton
                 onClick={deleteConfromation}
-                name="Delete Activity"
+                name="Delete Your Innovation"
               />
             )
           }
           cancelButton={
-            <SecondaryButtonOutlined
-              className="px-24"
-              onClick={() => deleteIcon("")}
-              name="Cancel"
-            />
+              <SecondaryButtonOutlined
+                className="px-24"
+                onClick={() => deleteIcon("")}
+                name="Cancel"
+              />
           }
         />
 
@@ -306,23 +309,29 @@ const ProposeYourInnovations = (props) => {
         >
           <DialogContent>
             <AddInnocations
-              supportData={supportData}
+              yourInnovation={yourInnovation}
               handleChange={handleChange}
             />
           </DialogContent>
           <DialogActions>
-            <SecondaryButtonOutlined
-              onClick={handleCloseDialog}
-              name="Cancel"
-            />
-            <SecondaryButton
-              name={Object.keys(singleData).length !== 0 ? "Edit" : "Save"}
-              onClick={
-                Object.keys(singleData).length !== 0
-                  ? handleUpdate
-                  : handleSubmit
-              }
-            />
+            {dataUpdatingLoadding ?
+              <LoadingButton />
+              :
+              <>
+                <SecondaryButtonOutlined
+                  onClick={handleCloseDialog}
+                  name="Cancel"
+                />
+                <SecondaryButton
+                  name={Object.keys(singleData).length !== 0 ? "Edit" : "Save"}
+                  onClick={
+                    Object.keys(singleData).length !== 0
+                      ? handleUpdate
+                      : handleSubmit
+                  }
+                />
+              </>
+            }
           </DialogActions>
         </Dialog>
       </div>

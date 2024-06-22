@@ -50,7 +50,7 @@ import { log } from "console";
 // }
 
 const AddRequest = (props) => {
-  const { supportData = {}, handleChange = () => {} } = props;
+  const { supportData = {}, handleChange = () => { } } = props;
 
   return (
     <>
@@ -111,6 +111,7 @@ const Support = (props) => {
 
   const deleteConfromation = async () => {
     await dispatch(deleteSupportHandler(deleteId));
+    dispatch(getSupportDataAPI({ page: 1, page_size: 10 }, data.user_id));
     setDeleteId("");
   };
 
@@ -266,8 +267,8 @@ const Support = (props) => {
         <AlertDialog
           open={Boolean(deleteId)}
           close={() => deleteIcon("")}
-          title="Delete Activity?"
-          content="Deleting this activity will also remove all associated data and relationships. Proceed with deletion?"
+          title="Delete Support?"
+          content="Deleting this support will also remove all associated data and relationships. Proceed with deletion?"
           className="-224 "
           actionButton={
             dataUpdatingLoadding ? (
@@ -275,7 +276,7 @@ const Support = (props) => {
             ) : (
               <DangerButton
                 onClick={deleteConfromation}
-                name="Delete Activity"
+                name="Delete Support"
               />
             )
           }
@@ -318,18 +319,24 @@ const Support = (props) => {
             <AddRequest supportData={supportData} handleChange={handleChange} />
           </DialogContent>
           <DialogActions>
-            <SecondaryButtonOutlined
-              onClick={handleCloseDialog}
-              name="Cancel"
-            />
-            <SecondaryButton
-              name={Object.keys(singleData).length !== 0 ? "Edit" : "Save"}
-              onClick={
-                Object.keys(singleData).length !== 0
-                  ? handleUpdate
-                  : handleSubmit
-              }
-            />
+            {dataUpdatingLoadding ?
+              <LoadingButton />
+              :
+              <>
+                <SecondaryButtonOutlined
+                  onClick={handleCloseDialog}
+                  name="Cancel"
+                />
+                <SecondaryButton
+                  name={Object.keys(singleData).length !== 0 ? "Edit" : "Save"}
+                  onClick={
+                    Object.keys(singleData).length !== 0
+                      ? handleUpdate
+                      : handleSubmit
+                  }
+                />
+              </>
+            }
           </DialogActions>
         </Dialog>
       </div>

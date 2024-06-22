@@ -9,6 +9,7 @@ import courseManagement from './courseManagement';
 import resourceManagement from './resourcesManagement';
 import cpdPlanning from './cpdPlanning';
 import supportData from './supportData';
+import yourInnovation from './yourInnovation';
 
 const createReducer = (asyncReducers) => (state, action) => {
     const combinedReducer = combineReducers({
@@ -21,6 +22,7 @@ const createReducer = (asyncReducers) => (state, action) => {
         cpdPlanning,
         resourceManagement,
         supportData,
+        yourInnovation,
         ...asyncReducers,
     });
 

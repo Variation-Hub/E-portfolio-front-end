@@ -265,19 +265,9 @@ const AddReflectionDialogContent = (props) => {
 };
 
 const Reflection = (props) => {
-    const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-    const handleChangePage = (event: unknown, newPage: number) => {
-        setPage(newPage);
-    };
-
-    const handleChangeRowsPerPage = (
-        event: React.ChangeEvent<HTMLInputElement>
-    ) => {
-        setRowsPerPage(+event.target.value);
-        setPage(0);
-    };
+    const [page, setPage] = useState(1);
+    const rowsPerPage = 8;
 
     const {
         setUpdateData = () => { },
@@ -317,7 +307,7 @@ const Reflection = (props) => {
     const isFormValid = Object.values(reflectionData).find(data => data === "") === undefined;
 
     console.log(isFormValid);
-    
+
     useEffect(() => {
         dispatch(getCpdPlanningAPI(data.user_id, "reflections"));
     }, [dispatch]);
@@ -412,12 +402,18 @@ const Reflection = (props) => {
         });
     };
 
-    console.log(cpdPlanningData.data);
+    const handlePageChange = (event, value) => {
+        setPage(value);
+    };
+
+    let allReflections = cpdPlanningData.data?.flatMap(item => item?.reflections ? item.reflections : []);
+    const paginatedData = allReflections.slice((page - 1) * rowsPerPage, page * rowsPerPage);
+    const pageCount = Math.ceil(allReflections.length / rowsPerPage);
 
     return (
         <>
             <div>
-                <TableContainer sx={{ maxHeight: 440 }} className="-m-12">
+                <TableContainer sx={{ maxHeight: 500 }} className="-m-12">
                     <Table stickyHeader aria-label="sticky table" size="small">
                         <TableHead>
                             <TableRow>
@@ -436,72 +432,67 @@ const Reflection = (props) => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {cpdPlanningData?.data?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)?.map((item) => (
-                                item?.reflections?.map(row => {
-                                    return (
-                                        <TableRow
-                                            hover
-                                            role="checkbox"
-                                            tabIndex={-1}
-                                        //   key={row.whosupportyou}
-                                        >
-                                            {columns.map((column) => {
-                                                const value = row[column.id];
-                                                return (
-                                                    <TableCell key={column.id} align={column.align}
-                                                        style={{
-                                                            minWidth: column.minWidth,
-                                                            backgroundColor: "#F8F8F8",
-                                                        }}>
-                                                        {column.format && typeof value === "number"
-                                                            ? column.format(value)
-                                                            : column.id === "action" ?
-                                                                <IconButton
-                                                                    size="small"
-                                                                    sx={{ color: "#5B718F", marginRight: "4px" }}
-                                                                    onClick={(e) => openMenu(e, row)}
-                                                                >
-                                                                    <MoreHorizIcon fontSize="small" />
-                                                                </IconButton>
-                                                                : column.id === "files" ? (
-                                                                    <div style={{ marginTop: '16px', display: 'flex' }}>
-                                                                        <AvatarGroup max={4}>
-                                                                            {value.map((file, index) => (
-                                                                                <Link to={file.url} target="_blank" rel="noopener" style={{ border: '0px', backgroundColor: 'unset' }}>
-                                                                                    <Avatar>
-                                                                                        <FileCopyIcon />
-                                                                                    </Avatar>
-                                                                                </Link>
-                                                                            ))}
-                                                                        </AvatarGroup>
-                                                                    </div>
-                                                                )
-                                                                    : value}
-                                                    </TableCell>
-                                                );
-                                            })}
-                                        </TableRow>
-                                    );
-                                })
-                            ))
+                            {paginatedData.map(row => {
+                                return (
+                                    <TableRow
+                                        hover
+                                        role="checkbox"
+                                        tabIndex={-1}
+                                    //   key={row.whosupportyou}
+                                    >
+                                        {columns.map((column) => {
+                                            const value = row[column.id];
+                                            return (
+                                                <TableCell key={column.id} align={column.align}
+                                                    style={{
+                                                        minWidth: column.minWidth,
+                                                        backgroundColor: "#F8F8F8",
+                                                    }}>
+                                                    {column.format && typeof value === "number"
+                                                        ? column.format(value)
+                                                        : column.id === "action" ?
+                                                            <IconButton
+                                                                size="small"
+                                                                sx={{ color: "#5B718F", marginRight: "4px" }}
+                                                                onClick={(e) => openMenu(e, row)}
+                                                            >
+                                                                <MoreHorizIcon fontSize="small" />
+                                                            </IconButton>
+                                                            : column.id === "files" ? (
+                                                                <div style={{ display: 'flex' }}>
+                                                                    <AvatarGroup max={4}>
+                                                                        {value.map((file, index) => (
+                                                                            <Link to={file.url} target="_blank" rel="noopener" style={{ border: '0px', backgroundColor: 'unset' }}>
+                                                                                <Avatar>
+                                                                                    <FileCopyIcon />
+                                                                                </Avatar>
+                                                                            </Link>
+                                                                        ))}
+                                                                    </AvatarGroup>
+                                                                </div>
+                                                            )
+                                                                : value}
+                                                </TableCell>
+                                            );
+                                        })}
+                                    </TableRow>
+                                );
+                            })
                             }
                         </TableBody>
                     </Table>
                 </TableContainer>
-                {/* <div className="fixed bottom-0 left-0 w-full flex justify-center py-4 mb-14">
-        <TablePagination
-          rowsPerPageOptions={[10, 25, 100]}
-          component="div"
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      </div> */}
                 <div className="fixed bottom-0 left-0 w-full flex justify-center py-4 mb-14">
                     <Stack spacing={2}>
-                        <Pagination count={3} variant="outlined" shape="rounded" />
+                        <Pagination
+                            count={pageCount}
+                            variant="outlined"
+                            shape="rounded"
+                            page={page}
+                            onChange={handlePageChange}
+                            siblingCount={1}
+                            boundaryCount={1}
+                        />
                     </Stack>
                 </div>
             </div>
