@@ -13,6 +13,8 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Drawer,
+  Tooltip,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { Stack } from "@mui/system";
@@ -27,8 +29,10 @@ import {
 import { TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import {
+  createInnovationCommentAPI,
   createYourInnovationAPI,
   deleteInnovationHandler,
+  getInnovationCommentAPI,
   getYourInnovationAPI,
   selectYourInnovation,
   slice,
@@ -38,6 +42,7 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { selectUser } from "app/store/userSlice";
 import AlertDialog from "src/app/component/Dialogs/AlertDialog";
+import { Link } from "react-router-dom";
 
 const AddInnocations = (props) => {
   const { yourInnovation = {}, handleChange = () => { } } = props;
@@ -85,7 +90,10 @@ const ProposeYourInnovations = (props) => {
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedRow, setSelectedRow] = useState<any>(null);
-  const [dialogType, setDialogType] = useState(false);
+  const [dialogType, setDialogType] = useState(null);
+  const [chatDrawerOpen, setChatDrawerOpen] = useState(false); // State for chat drawer
+  const [chatMessages, setChatMessages] = useState([]); // State to store chat messages
+  const [newMessage, setNewMessage] = useState("");
 
   const [deleteId, setDeleteId] = useState("");
 
@@ -96,9 +104,8 @@ const ProposeYourInnovations = (props) => {
   });
 
   const deleteIcon = (id) => {
-    setDeleteId(selectedRow.id);
+    setDeleteId(selectedRow?.id);
     console.log(selectedRow);
-
   };
 
   const deleteConfromation = async () => {
@@ -117,8 +124,8 @@ const ProposeYourInnovations = (props) => {
       description: "",
     });
   };
-  const handleClickOpen = () => {
-    setDialogType(true);
+  const handleClickOpen = (type) => {
+    setDialogType(type);
   };
 
   const handleCloseDialog = () => {
@@ -135,13 +142,31 @@ const ProposeYourInnovations = (props) => {
 
   const handleClose = () => {
     setAnchorEl(null);
-    setSelectedRow(null);
-    clearSingleData();
+    setDialogType(null);
+    setDeleteId("");
+    // clearSingleData();
   };
 
   const handleEdit = () => {
     setYourInnovation(singleData);
-    handleClickOpen();
+    handleClickOpen('edit');
+  };
+
+  const handleView = async () => {
+    try {
+      const response = await dispatch(getInnovationCommentAPI({ page: 1, page_size: 10 }, selectedRow?.id));
+    } catch (error) {
+      console.error(error);
+    }
+
+    setYourInnovation(singleData);
+    setChatDrawerOpen(true);
+  };
+
+
+  const handleDrawerClose = () => {
+    setChatDrawerOpen(false);
+    clearSingleData();
   };
 
   const innovation = useSelector(selectYourInnovation);
@@ -154,7 +179,6 @@ const ProposeYourInnovations = (props) => {
     try {
       let response;
       response = await dispatch(createYourInnovationAPI(yourInnovation));
-      dispatch(getYourInnovationAPI({ page: 1, page_size: 10 }, data.user_id));
     } catch (err) {
       console.log(err);
     } finally {
@@ -183,6 +207,39 @@ const ProposeYourInnovations = (props) => {
       [name]: value,
     }));
   };
+
+  const handleSendChatMessage = async () => {
+    if (newMessage.trim() !== "") {
+      const isAdmin = data.roles.includes('Admin');
+      const messageType = isAdmin ? 'Response' : 'Reply';
+
+      const newChatMessage = {
+        innovation_id: selectedRow.id,
+        type: messageType,
+        description: newMessage,
+      };
+      console.log(chatMessages);
+
+      try {
+        let response;
+        response = await dispatch(createInnovationCommentAPI(newChatMessage));
+        dispatch(getInnovationCommentAPI({ page: 1, page_size: 10 }, selectedRow?.id))
+      } catch (err) {
+        console.log(err);
+      } finally {
+        // handleCloseDialog();
+        handleClose();
+      }
+
+      setChatMessages(singleData);
+      setNewMessage("");
+    }
+  };
+
+  const isAdmin = data.roles.includes('Admin');
+
+  const isInnovations = Object.values(yourInnovation).find(data => data === "") === undefined;
+
   return (
     <>
       <div className="m-10">
@@ -190,21 +247,21 @@ const ProposeYourInnovations = (props) => {
           <SecondaryButton
             name="Add Innovation"
             startIcon={<AddIcon sx={{ mx: -0.5 }} />}
-            onClick={() => handleClickOpen()}
+            onClick={() => handleClickOpen('add')}
           />
         </div>
-        <TableContainer component={Paper} className="rounded-6">
+        <TableContainer component={Paper} sx={{ height: 550 }} className="rounded-6 " >
           <Table
-            sx={{ minWidth: 650, height: "100%" }}
+            sx={{ minWidth: 650, maxHeight: 500 }}
             size="small"
             aria-label="simple table"
           >
             <TableHead className="bg-[#F8F8F8]">
               <TableRow>
-                <TableCell>Topic</TableCell>
-                <TableCell align="left">Description</TableCell>
-                <TableCell align="left">Status</TableCell>
-                <TableCell align="left">Action</TableCell>
+                <TableCell align="left" sx={{ maxWidth: "4rem", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>Topic</TableCell>
+                <TableCell align="left" sx={{ maxWidth: "9rem", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>Description</TableCell>
+                <TableCell align="left" sx={{ width: "15rem" }}>Status</TableCell>
+                <TableCell align="left" sx={{ width: "15rem" }}>Action</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -216,25 +273,25 @@ const ProposeYourInnovations = (props) => {
                   <TableCell
                     component="th"
                     scope="row"
-                    sx={{ borderBottom: "2px solid #F8F8F8" }}
+                    sx={{ borderBottom: "2px solid #F8F8F8", maxWidth: "4rem", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
                   >
                     {row.topic}
                   </TableCell>
                   <TableCell
                     align="left"
-                    sx={{ borderBottom: "2px solid #F8F8F8" }}
+                    sx={{ borderBottom: "2px solid #F8F8F8", maxWidth: "9rem", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
                   >
                     {row.description}
                   </TableCell>
                   <TableCell
                     align="left"
-                    sx={{ borderBottom: "2px solid #F8F8F8" }}
+                    sx={{ borderBottom: "2px solid #F8F8F8", width: "15rem" }}
                   >
                     {row.status}
                   </TableCell>
                   <TableCell
                     align="left"
-                    sx={{ borderBottom: "2px solid #F8F8F8" }}
+                    sx={{ borderBottom: "2px solid #F8F8F8", width: "15rem" }}
                   >
                     <IconButton
                       size="small"
@@ -250,7 +307,7 @@ const ProposeYourInnovations = (props) => {
           </Table>
           <Stack
             spacing={2}
-            className="flex justify-center items-center w-full my-12"
+            className="flex justify-center items-center w-full my-12 fixed left-0 bottom-32 "
           >
             <Pagination count={3} variant="outlined" shape="rounded" />
           </Stack>
@@ -258,7 +315,7 @@ const ProposeYourInnovations = (props) => {
 
         <AlertDialog
           open={Boolean(deleteId)}
-          close={() => deleteIcon("")}
+          close={() => { deleteIcon(""); handleClose(); }}
           topic="Delete Your Innovation?"
           content="Deleting this your innovation will also remove all associated data and relationships. Proceed with deletion?"
           className="-224 "
@@ -273,11 +330,13 @@ const ProposeYourInnovations = (props) => {
             )
           }
           cancelButton={
-              <SecondaryButtonOutlined
-                className="px-24"
-                onClick={() => deleteIcon("")}
-                name="Cancel"
-              />
+            <SecondaryButtonOutlined
+              className="px-24"
+              onClick={() => {
+                handleClose();
+              }}
+              name="Cancel"
+            />
           }
         />
 
@@ -286,7 +345,20 @@ const ProposeYourInnovations = (props) => {
           open={Boolean(anchorEl)}
           onClose={handleClose}
         >
-          <MenuItem onClick={handleEdit}>Edit</MenuItem>
+          <MenuItem
+            onClick={() => {
+              handleClose();
+              handleView();
+            }}>
+            View
+          </MenuItem>
+          <MenuItem
+            onClick={() => {
+              handleClose();
+              handleEdit();
+            }}>
+            Edit
+          </MenuItem>
           <MenuItem
             onClick={() => {
               handleClose();
@@ -298,7 +370,7 @@ const ProposeYourInnovations = (props) => {
         </Menu>
 
         <Dialog
-          open={dialogType}
+          open={dialogType === 'add' || dialogType === 'edit'}
           onClose={handleCloseDialog}
           sx={{
             ".MuiDialog-paper": {
@@ -319,7 +391,7 @@ const ProposeYourInnovations = (props) => {
               :
               <>
                 <SecondaryButtonOutlined
-                  onClick={handleCloseDialog}
+                  onClick={handleClose}
                   name="Cancel"
                 />
                 <SecondaryButton
@@ -329,12 +401,67 @@ const ProposeYourInnovations = (props) => {
                       ? handleUpdate
                       : handleSubmit
                   }
+                  disable={!isInnovations}
                 />
               </>
             }
           </DialogActions>
         </Dialog>
-      </div>
+
+        {/* Chat Drawer */}
+        <Drawer
+          anchor="right"
+          open={chatDrawerOpen}
+          onClose={() => setChatDrawerOpen(false)}
+          sx={{ width: "100%", "& .MuiDrawer-paper": { width: "50%" } }}
+        >
+          <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+            <Box p={2}>
+              <Tooltip title={yourInnovation.topic}>
+                <Typography variant="subtitle1" className="font-semibold overflow-hidden text-ellipsis whitespace-nowrap">{yourInnovation.topic}</Typography>
+              </Tooltip>
+              <Tooltip title={yourInnovation.description}>
+                <Typography variant="subtitle1" className="text-sm overflow-hidden text-ellipsis whitespace-nowrap">{yourInnovation.description}</Typography>
+              </Tooltip>
+            </Box>
+
+            <Box sx={{ flexGrow: 1, overflowY: 'auto', p: 2 }}>
+              {singleData.comment?.map((message) => (
+                <Box key={message.id} mb={2}>
+                  <Typography
+                    className={
+                      (isAdmin && message.type == 'Response') || (!isAdmin && message.type == 'Reply')
+                        ? 'text-end'
+                        : 'text-start'
+                    }
+                  >
+                    {message.description}
+                  </Typography>
+                </Box>
+              ))}
+            </Box>
+
+            <Box p={2} mt="auto">
+              <Box sx={{ display: 'flex' }}>
+                <TextField
+                  fullWidth
+                  size="small"
+                  placeholder="Start your chat..."
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                />
+                <SecondaryButton
+                  sx={{ ml: 2 }}
+                  className="ml-10"
+                  onClick={handleSendChatMessage}
+                  name="Send"
+                />
+              </Box>
+            </Box>
+          </Box>
+        </Drawer>
+
+      </div >
     </>
   );
 };
