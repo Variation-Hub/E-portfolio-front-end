@@ -3,6 +3,7 @@ import axios from 'axios';
 import jsonData from 'src/url.json';
 import { showMessage } from './fuse/messageSlice';
 import { userTableMetaData } from '../contanst/metaData';
+import { log } from 'console';
 
 const initialState = {
     data: [],
@@ -101,6 +102,46 @@ export const getYourInnovationAPI = (data = { page: 1, page_size: 10 }, id) => a
         const response = await axios.get(url);
         dispatch(showMessage({ message: response.data.message, variant: "success" }))
         dispatch(slice.setYourInnovation(response.data.data))
+        dispatch(slice.setLoader());
+        return true;
+
+    } catch (err) {
+        dispatch(showMessage({ message: err.response.data.message, variant: "error" }))
+        dispatch(slice.setLoader());
+        return false
+    };
+
+}
+
+// create innovation comment
+export const createInnovationCommentAPI = (data) => async (dispatch) => {
+    try {
+        dispatch(slice.setUpdatingLoader());
+        const response = await axios.post(`${URL_BASE_LINK}/innovation/comment`, data)
+        dispatch(showMessage({ message: response.data.message, variant: "success" }))
+        dispatch(slice.setUpdatingLoader());
+        return true;
+    } catch (err) {
+        dispatch(showMessage({ message: err.response.data.message, variant: "error" }))
+        dispatch(slice.setUpdatingLoader());
+        return false;
+    }
+}
+
+export const getInnovationCommentAPI = (data = { page: 1, page_size: 10 }, id) => async (dispatch) => {
+
+    try {
+
+        dispatch(slice.setLoader());
+
+        const { page = 1, page_size = 10 } = data;
+
+        let url = `${URL_BASE_LINK}/innovation/get/${id}`
+
+        const response = await axios.get(url);
+        
+        dispatch(showMessage({ message: response.data.message, variant: "success" }))
+        dispatch(slice.setSingleData(response.data.data))
         dispatch(slice.setLoader());
         return true;
 

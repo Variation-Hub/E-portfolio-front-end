@@ -106,7 +106,7 @@ const Support = (props) => {
   });
 
   const deleteIcon = (id) => {
-    setDeleteId(selectedRow.support_id);
+    setDeleteId(selectedRow?.support_id);
   };
 
   const deleteConfromation = async () => {
@@ -144,7 +144,6 @@ const Support = (props) => {
   const handleClose = () => {
     setAnchorEl(null);
     setSelectedRow(null);
-    clearSingleData();
   };
 
   const handleEdit = () => {
@@ -191,6 +190,9 @@ const Support = (props) => {
       [name]: value,
     }));
   };
+
+  const isSupport = Object.values(supportData).find(data => data === "") === undefined;
+
   return (
     <>
       <div className="m-10">
@@ -294,7 +296,13 @@ const Support = (props) => {
           open={Boolean(anchorEl)}
           onClose={handleClose}
         >
-          <MenuItem onClick={handleEdit}>Edit</MenuItem>
+          <MenuItem
+            onClick={() => {
+              handleEdit();
+              handleClose();
+            }}>
+            Edit
+          </MenuItem>
           <MenuItem
             onClick={() => {
               handleClose();
@@ -334,6 +342,7 @@ const Support = (props) => {
                       ? handleUpdate
                       : handleSubmit
                   }
+                  disable={!isSupport}
                 />
               </>
             }

@@ -1,5 +1,5 @@
 {
-    "API_LOCAL_URL": "https://testigndomain.online/api/v1",
+    "API_LOCAL_URL": "http://3.109.32.80:3005/api/v1",
     "SOCKER_LINK": "https://testigndomain.online",
     "API_LOCAL_URL_": "http://192.168.1.5:3005/api/v1",
     "SOCKER_LINK_": "http://192.168.1.5:3005"
