@@ -3,14 +3,15 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
+import "./calendarStyle.css";
 import { start } from "repl";
 
 function Calendar() {
   const events = [
     {
       title: "Event 1",
-      start: "2024-05-20T05:00:00", // Start date and time of the event
-      end: "2024-05-24T20:00:00",
+      // start: "2024-05-25"
+      start: "2024-06-25T10:00:00", // Start date and time of the event
     },
     {
       title: "Event 2",
@@ -34,7 +35,10 @@ function Calendar() {
         eventContent={(eventInfo) => {
           // Formatting event time
           const eventStartTime = new Date(eventInfo.event.start);
-          const timeString = eventStartTime.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+          const timeString = eventStartTime.toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          });
           return (
             <div>
               <div>{timeString}</div>

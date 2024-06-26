@@ -14,7 +14,7 @@ import FuseLoading from '@fuse/core/FuseLoading';
 import Close from "@mui/icons-material/Close";
 import SearchIcon from '@mui/icons-material/Search';
 import { emailReg, mobileReg, nameReg, passwordReg, usernameReg } from "src/app/contanst/regValidation";
-import { createLearnerAPI, fetchLearnerAPI, selectLearnerManagement, updateLearnerAPI } from "app/store/learnerManagement";
+import { createLearnerAPI, fetchLearnerAPI, getRoleAPI, selectLearnerManagement, updateLearnerAPI } from "app/store/learnerManagement";
 import LearnerManagementTable from "src/app/component/Table/LearnerManagementTable";
 import { fetchCourseAPI } from "app/store/courseManagement";
 
@@ -135,6 +135,13 @@ const Index = () => {
   const searchAPIHandler = () => {
     dispatch(fetchLearnerAPI({ page: 1, page_size: 25 }, searchKeyword, filterValue));
   }
+
+  useEffect(() => {
+    dispatch(getRoleAPI("Trainer"));
+    dispatch(getRoleAPI("IQA"));
+    dispatch(getRoleAPI("EQA"));
+    dispatch(getRoleAPI("Employer"));
+  }, []);
 
   const validation = () => {
 
