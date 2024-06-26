@@ -29,9 +29,9 @@ const Portfolio = () => {
 
   const dispatch: any = useDispatch();
 
-  useEffect(() => {
-    if (data.id) dispatch(getLearnerDetails());
-  }, [data]);
+  // useEffect(() => {
+  //   if (data.id) dispatch(getLearnerDetails());
+  // }, [data]);
 
   const handleOpen = () => {
     setOpen(true);
@@ -39,7 +39,7 @@ const Portfolio = () => {
 
   return (
     <div>
-      <div className="m-10 flex flex-wrap justify-evenly gap-10">
+      <div className="m-10 flex flex-wrap justify-evenly gap-10 cursor-pointer">
         {portfolioCard?.map((value) => (
           <PortfolioCard data={value} key={value.id} />
         ))}

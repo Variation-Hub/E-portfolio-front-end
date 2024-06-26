@@ -9,8 +9,8 @@ function Calendar() {
   const events = [
     {
       title: "Event 1",
-      // start: "2024-05-25"
-      start: "2024-05-25T10:00:00", // Start date and time of the event
+      start: "2024-05-20T05:00:00", // Start date and time of the event
+      end: "2024-05-24T20:00:00",
     },
     {
       title: "Event 2",

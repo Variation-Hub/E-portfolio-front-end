@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { selectUser } from "app/store/userSlice";
 import TableEQA1 from "./tableEQA1";
 import TableEQA2 from "./tableEQA2";
+import Portfolio from "../portfolio/portfolio";
 
 const Home = () => {
   const user = useSelector(selectUser);
@@ -15,6 +16,13 @@ const Home = () => {
       <>
         <TableEQA1 />
         <TableEQA2 />
+      </>
+    );
+  }
+  if (role === "Learner") {
+    return (
+      <>
+        <Portfolio/>
       </>
     );
   }
