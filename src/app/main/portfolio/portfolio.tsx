@@ -22,6 +22,10 @@ import { Link } from "react-router-dom";
 const Portfolio = () => {
   const [open, setOpen] = useState(false);
 
+  const handleClose = () => {
+    setOpen(false);
+  }
+
   const { learner, dataUpdatingLoadding } = useSelector(
     selectLearnerManagement
   );
@@ -88,6 +92,7 @@ const Portfolio = () => {
       </div>
       <Dialog
         open={open}
+        onClose={handleClose}
         sx={{
           ".MuiDialog-paper": {
             borderRadius: "4px",

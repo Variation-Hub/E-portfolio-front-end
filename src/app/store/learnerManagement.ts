@@ -7,6 +7,10 @@ import JwtService from '../auth/services/jwtService';
 
 const initialState = {
     data: [],
+    trainer: [],
+    IQA: [],
+    EQA: [],
+    employer: [],
     dataFetchLoading: false,
     dataUpdatingLoadding: false,
     meta_data: {
@@ -15,11 +19,11 @@ const initialState = {
         page_size: userTableMetaData.page_size,
         pages: 1
     },
-    learner:{
+    learner: {
         first_name: '',
         last_name: '',
         email: '',
-        courses:["Course 1"]
+        courses: ["Course 1"]
     }
 };
 
@@ -58,6 +62,18 @@ const learnerManagementSlice = createSlice({
         },
         learnerDetails(state, action) {
             state.learner = action.payload
+        },
+        setTrainer(state, action) {
+            state.trainer = action.payload
+        },
+        setIQA(state, action) {
+            state.IQA = action.payload
+        },
+        setEQA(state, action) {
+            state.EQA = action.payload
+        },
+        setEmployer(state, action) {
+            state.employer = action.payload
         }
     }
 });
@@ -114,7 +130,33 @@ export const fetchLearnerAPI = (data = { page: 1, page_size: 25 }, search_keywor
 
 }
 
-export const getLearnerDetails = ()=> async(dispatch) => {
+export const getRoleAPI = (role) => async (dispatch) => {
+    try {
+        dispatch(slice.setLoader());
+        console.log("getRoleAPI");
+
+        let url = `${URL_BASE_LINK}/user/list?role=${role}`
+
+        const response = await axios.get(url);
+        // dispatch(showMessage({ message: response.data.message, variant: "success" }))
+        if (role === "Trainer")
+            dispatch(slice.setTrainer(response.data.data))
+        else if (role === "IQA")
+            dispatch(slice.setIQA(response.data.data))
+        else if (role === "EQA")
+            dispatch(slice.setEQA(response.data.data))
+        else if (role === "Employer")
+            dispatch(slice.setEmployer(response.data.data))
+        dispatch(slice.setLoader());
+        return true;
+
+    } catch (err) {
+        dispatch(slice.setLoader());
+        dispatch(slice.updateLearner([]))
+        return false
+    };
+}
+export const getLearnerDetails = () => async (dispatch) => {
     try {
         dispatch(slice.setUpdatingLoader());
         const response = await axios.get(`${URL_BASE_LINK}/learner/get`,)
