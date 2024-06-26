@@ -150,7 +150,7 @@ export const createUserAPI = (data) => async (dispatch) => {
 }
 
 // get user
-export const fetchUserAPI = (data = { page: 1, page_size: 2 }, search_keyword = "", search_role = "") => async (dispatch) => {
+export const fetchUserAPI = (data = { page: 1, page_size: 10 }, search_keyword = "", search_role = "") => async (dispatch) => {
 
     try {
         dispatch(slice.setLoader());

@@ -1,4 +1,4 @@
-import { Box, Card, Grid, IconButton, MenuItem, Paper, Select, TextField, Tooltip, Typography } from '@mui/material';
+import { Box, Card, Checkbox, Grid, IconButton, ListItemText, MenuItem, Paper, Select, TextField, Tooltip, Typography } from '@mui/material';
 import CloseIcon from "@mui/icons-material/Close";
 import { AdminRedirect, EmployerRedirect, fundingBodyData, roles } from 'src/app/contanst';
 import { LoadingButton, SecondaryButton, SecondaryButtonOutlined } from 'src/app/component/Buttons';
@@ -7,100 +7,63 @@ import { emailValidationMsg, mobileValidationMsg, nameValidationMsg, passwordVal
 import HelpOutlinedIcon from "@mui/icons-material/HelpOutlined";
 import { DatePicker } from '@mui/x-date-pickers';
 import { FileUploader } from 'react-drag-drop-files';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Breadcrumb from 'src/app/component/Breadcrumbs';
+import { useDispatch } from 'react-redux';
+import { createSessionAPI, getLearnerAPI, getTrainerAPI, selectSession } from 'app/store/session';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 
 const NewSession = (props) => {
 
-    const [companyData, setCompanyData] = useState({
-        company_name: '',
-        mis_employer_id: '',
-        business_department: '',
-        business_location: '',
-        branch_code: '',
-        address1: '',
-        address2: '',
-        city: '',
-        country: '',
-        postal_code: ''
+    const dispatch: any = useDispatch();
+    const navigate = useNavigate();
+    const session = useSelector(selectSession);
+
+    useEffect(() => {
+        dispatch(getTrainerAPI("Trainer"));
+    }, [dispatch]);
+
+    useEffect(() => {
+        dispatch(getLearnerAPI());
+    }, [dispatch]);
+
+    const [sessionData, setSessionData] = useState({
+        trainer_id: '',
+        learners: [],
+        title: '',
+        description: '',
+        method: 'Traditional',
+        location: '',
+        startDate: '',
+        Duration: '0:0',
+        type: '',
     });
 
     const handleDataUpdate = (e) => {
         const { name, value } = e.target;
-        setCompanyData(prevState => ({
+        setSessionData(prevState => ({
             ...prevState,
             [name]: value
         }));
     };
 
-    const [detailsData, setCompanyDetailsData] = useState({
-        employer_id: '',
-        business_category: '',
-        Employee_no: '',
-        external_code: '',
-        telephone: '',
-        website: '',
-        contact: '',
-        email: '',
-    });
-
-    const handleDetailsUpdate = (e) => {
-        const { name, value } = e.target;
-        setCompanyDetailsData(prevState => ({
-            ...prevState,
-            [name]: value
-        }));
-    };
-
-    const [descriptionData, setDescriptionData] = useState({
-        business_description: '',
-        comments: '',
-    });
-
-    const handleDescriptionUpdate = (e) => {
-        const { name, value } = e.target;
-        setDescriptionData(prevState => ({
-            ...prevState,
-            [name]: value
-        }));
-    };
-
-    const [date, setDate] = useState({
-        assessment_date: '',
-        renewal_date: '',
-        insurance_date: '',
-    });
-
-    const handleDateUpdate = (e) => {
-        const { name, value } = e.target;
-        setDate(prevState => ({
-            ...prevState,
-            [name]: value
-        }));
-    };
-
-    const { handleClose, userData, updateData, updateUserHandler, dataUpdatingLoadding, userDataError } = props;
-
-    const createUserHandler = (e) => {
-        // const { name, value } = e.target;
-        // setDate(prevState => ({
-        //     ...prevState,
-        //     [name]: value
-        // }));
-        console.log("Company Data: ", companyData)
-        console.log("Company Details Data: ", detailsData)
-        console.log("Description Data: ", descriptionData)
-        console.log("Date Data: ", date)
-    };
+    const { handleClose, dataUpdatingLoadding } = props;
 
 
+    const handleSubmit = async () => {
+        try {
 
-    const fileTypes = ["PDF"];
-    const [file, setFile] = useState(null);
-    const handleChange = (file) => {
-        setFile(file);
-        console.log("File : ", file)
+            let response;
+            response = await dispatch(createSessionAPI({ ...sessionData }));
+
+            if (response) {
+                navigate("/portfolio");
+            }
+        } catch (error) {
+            console.error("Error during submission:", error);
+        }
     };
 
     return (
@@ -117,58 +80,99 @@ const NewSession = (props) => {
                                 <Grid className='w-full'>
                                     <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Select Trainer</Typography>
                                     <Select
-                                        name="company_name"
+                                        name="trainer_id"
                                         // label="Username"
-                                        value={companyData.company_name}
+                                        value={sessionData.trainer_id}
                                         size="small"
                                         placeholder='Select trainer'
                                         required
                                         fullWidth
                                         onChange={handleDataUpdate}
                                     >
-                                        <MenuItem value={'Soft skills training'}>Soft skills training</MenuItem>
-                                        <MenuItem value={'Leadership'}>Leadership</MenuItem>
-                                        <MenuItem value={'Technical training'}>Technical training</MenuItem>
+                                        {session.trainer.map(data => (
+                                            <MenuItem key={data.id} value={data.user_id}>
+                                                {data.user_name}
+                                            </MenuItem>
+                                        ))}
                                     </Select>
-
                                 </Grid>
 
                                 <Grid className='w-full'>
                                     <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Select Learner</Typography>
                                     <Select
-                                        name="mis_employer_id"
-                                        value={companyData.mis_employer_id}
+                                        name="learners"
+                                        value={sessionData.learners}
                                         size="small"
-                                        placeholder='Select learner'
+                                        placeholder="Select learner"
                                         required
                                         fullWidth
+                                        multiple
                                         onChange={handleDataUpdate}
+                                        renderValue={(selected) =>
+                                            selected.map((id) => {
+                                                const learner = session.learner.find((learner) => learner.learner_id === id);
+                                                return learner ? learner.user_name : '';
+                                            }).join(', ')
+                                        }
                                     >
+                                        {session.learner.map((data) => (
+                                            <MenuItem key={data.learner_id} value={data.learner_id}>
+                                                <Checkbox checked={sessionData.learners.includes(data.learner_id)} />
+                                                <ListItemText primary={data.user_name} />
+                                            </MenuItem>
+                                        ))}
                                     </Select>
-
                                 </Grid>
 
                                 <Grid className='w-full'>
-                                    <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Select Session Method</Typography>
-                                    <Select
-                                        name="company_name"
-                                        // label="Username"
-                                        value={companyData.company_name}
+                                    <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Title</Typography>
+                                    <TextField
+                                        name="title"
+                                        value={sessionData.title}
                                         size="small"
-                                        placeholder='Select session method'
                                         required
                                         fullWidth
                                         onChange={handleDataUpdate}
                                         className='bg-none '
-                                    >
-                                    </Select>
+                                    />
+                                </Grid>
+
+                                <Grid className="w-full">
+                                    <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>
+                                        Description
+                                    </Typography>
+                                    <TextField
+                                        name="description"
+                                        size="small"
+                                        placeholder="Lorem ipsum is just dummy context....."
+                                        fullWidth
+                                        multiline
+                                        rows={7}
+                                        value={sessionData?.description}
+                                        onChange={handleDataUpdate}
+                                    // disabled={edit === "view"}
+                                    />
+                                </Grid>
+
+                                <Grid className='w-full'>
+                                    <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Session Method</Typography>
+                                    <TextField
+                                        name="session_method"
+                                        value={sessionData.method}
+                                        size="small"
+                                        required
+                                        fullWidth
+                                        onChange={handleDataUpdate}
+                                        className='bg-none '
+                                        disabled
+                                    />
                                 </Grid>
 
                                 <Grid className='w-full'>
                                     <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Enter Session Location</Typography>
                                     <TextField
-                                        name="mis_employer_id"
-                                        value={companyData.mis_employer_id}
+                                        name="location"
+                                        value={sessionData.location}
                                         size="small"
                                         placeholder='Enter location'
                                         required
@@ -180,9 +184,10 @@ const NewSession = (props) => {
                                 <Grid className='w-full'>
                                     <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Select Session Date and Time</Typography>
                                     <TextField
-                                        name="company_name"
-                                        value={companyData.company_name}
+                                        name="startDate"
+                                        value={sessionData.startDate}
                                         size="small"
+                                        type='datetime-local'
                                         placeholder='DD / MM / YYYY  HH:MM'
                                         required
                                         fullWidth
@@ -192,16 +197,95 @@ const NewSession = (props) => {
 
                                 <Grid className='w-full'>
                                     <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Select Session Duration</Typography>
-                                    <TextField
-                                        name="mis_employer_id"
-                                        value={companyData.mis_employer_id}
+                                    <Grid className='w-full flex gap-10'>
+                                        {/* <TextField
+                                            name="hours"
+                                            value={sessionData.Duration}
+                                            size="small"
+                                            placeholder='Hours'
+                                            required
+                                            fullWidth
+                                            onChange={handleDataUpdate}
+                                        />
+                                        <TextField
+                                            name="minutes"
+                                            value={sessionData.Duration}
+                                            size="small"
+                                            placeholder='Minutes'
+                                            required
+                                            fullWidth
+                                            onChange={handleDataUpdate}
+                                            /> */}
+                                        <TextField
+                                            placeholder='Hours'
+                                            name="hours"
+                                            size="small"
+                                            required
+                                            type="number"
+                                            fullWidth
+                                            value={(sessionData.Duration.split(":")[0])}
+                                            onChange={(e) => {
+                                                const value = Number(e.target.value);
+
+                                                if (value < 0 || value > 23) {
+                                                    return
+                                                }
+                                                setSessionData((prevState: any) => ({
+                                                    ...prevState,
+                                                    Duration: `${value}:${sessionData.Duration.split(':')[1]}`
+                                                }));
+                                            }}
+                                        />
+                                        <TextField
+                                            placeholder='Minutes'
+                                            name="minutes"
+                                            required
+                                            size="small"
+                                            type="number"
+                                            fullWidth
+                                            value={(sessionData.Duration.split(':')[1])}
+                                            onChange={(e) => {
+                                                const value = Number(e.target.value);
+
+                                                if (value < 0 || value > 59) {
+                                                    return
+                                                }
+                                                setSessionData((prevState: any) => ({
+                                                    ...prevState,
+                                                    Duration: `${sessionData.Duration.split(':')[0]}:${value}`
+                                                }));
+                                            }}
+                                        />
+                                    </Grid>
+                                </Grid>
+
+                                <Grid className='w-full'>
+                                    <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Select Trainer</Typography>
+                                    <Select
+                                        name="type"
+                                        // label="Username"
+                                        value={sessionData.type}
                                         size="small"
-                                        placeholder='HH:MM'
+                                        placeholder='Select Type'
                                         required
                                         fullWidth
                                         onChange={handleDataUpdate}
-                                    />
+                                    >
+                                        <MenuItem value={"General"}>General</MenuItem>
+                                        <MenuItem value={"Induction"}>Induction</MenuItem>
+                                        <MenuItem value={"Formal Review"}>Formal Review</MenuItem>
+                                        <MenuItem value={"Telephone"}>Telephone</MenuItem>
+                                        <MenuItem value={"Exit Session"}>Exit Session</MenuItem>
+                                        <MenuItem value={"Out Of the Workplace"}>Out Of the Workplace</MenuItem>
+                                        <MenuItem value={"Tests/Exams"}>Tests/Exams</MenuItem>
+                                        <MenuItem value={"Learner Support"}>Learner Support</MenuItem>
+                                        <MenuItem value={"Initial Session"}>Initial Session</MenuItem>
+                                        <MenuItem value={"Gateway Ready"}>Gateway Ready</MenuItem>
+                                        <MenuItem value={"EPA"}>EPA</MenuItem>
+                                        <MenuItem value={"Furloughed"}>Furloughed</MenuItem>
+                                    </Select>
                                 </Grid>
+
                             </Box>
 
                         </Box>
@@ -212,7 +296,7 @@ const NewSession = (props) => {
                                 :
                                 <>
                                     <SecondaryButtonOutlined name="Cancel" onClick={handleClose} style={{ width: "10rem", marginRight: "2rem" }} />
-                                    <SecondaryButton name={updateData ? "Update" : "Save"} style={{ width: "10rem" }} onClick={createUserHandler} />
+                                    <SecondaryButton name="Save" style={{ width: "10rem" }} onClick={handleSubmit} />
                                 </>
                             }
                         </Box>
