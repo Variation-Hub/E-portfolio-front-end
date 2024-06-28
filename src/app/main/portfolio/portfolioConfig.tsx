@@ -3,6 +3,7 @@ const PortfolioView = lazy(() => import("./portfolio"));
 import authRoles from "src/app/auth/authRoles";
 import UploadedEvidenceFile from "src/app/component/Cards/uploadedEvidenceFile";
 import NewSession from "./newsession";
+import NewAssignment from "src/app/component/Cards/newAssignment";
 
 const PortfolioConfig = {
   settings: {
@@ -35,6 +36,10 @@ const PortfolioConfig = {
     {
       path: "/portfolio/assingment",
       element: <UploadedEvidenceFile />,
+    },
+    {
+      path: "/portfolio/newassignment",
+      element: <NewAssignment />,
     },
     {
       path: "/portfolio/newsession",

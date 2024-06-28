@@ -418,20 +418,20 @@ const Cpd = (props) => {
         </Box>
 
         <CustomTabPanel value={value} index={0}>
-          <Planning dialogType={dialogType} setDialogType={setDialogType} dataUpdatingLoadding={dataUpdatingLoadding} />
+          <Planning dialogType={dialogType} setDialogType={setDialogType} dataFetchLoading={dataFetchLoading} dataUpdatingLoadding={dataUpdatingLoadding} />
         </CustomTabPanel>
 
         <CustomTabPanel value={value} index={1}>
-          <Activity dialogType={dialogType} setDialogType={setDialogType} dataUpdatingLoadding={dataUpdatingLoadding} />
+          <Activity dialogType={dialogType} setDialogType={setDialogType} dataFetchLoading={dataFetchLoading} dataUpdatingLoadding={dataUpdatingLoadding} />
         </CustomTabPanel>
 
 
         <CustomTabPanel value={value} index={2}>
-          <Evaluation dialogType={dialogType} setDialogType={setDialogType} dataUpdatingLoadding={dataUpdatingLoadding} />
+          <Evaluation dialogType={dialogType} setDialogType={setDialogType} dataFetchLoading={dataFetchLoading} dataUpdatingLoadding={dataUpdatingLoadding} />
         </CustomTabPanel>
 
         <CustomTabPanel value={value} index={3}>
-          <Reflection dialogType={dialogType} setDialogType={setDialogType} dataUpdatingLoadding={dataUpdatingLoadding} />
+          <Reflection dialogType={dialogType} setDialogType={setDialogType} dataFetchLoading={dataFetchLoading} dataUpdatingLoadding={dataUpdatingLoadding} />
         </CustomTabPanel>
       </Box>
 

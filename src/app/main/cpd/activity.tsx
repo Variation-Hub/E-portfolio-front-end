@@ -18,6 +18,8 @@ import { Link } from "react-router-dom";
 import FileCopyIcon from '@mui/icons-material/FileCopy';
 import { FileUploader } from "react-drag-drop-files";
 import { showMessage } from "app/store/fuse/messageSlice";
+import DataNotFound from "src/app/component/Pages/dataNotFound";
+import FuseLoading from "@fuse/core/FuseLoading";
 
 interface Column {
   id:
@@ -29,7 +31,7 @@ interface Column {
   | "files"
   | "completed"
   | "added_by"
-  | "action";
+  | "action"
   label: string;
   minWidth?: number;
   align?: "right";
@@ -200,7 +202,7 @@ const AddNewDialogContent = (props) => {
           </div>
           <div className="w-full">
             <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
-            Comment
+              Comment
             </Typography>
             <TextField
               name="comment"
@@ -363,11 +365,10 @@ const AddNewDialogContent = (props) => {
             {activityData?.files.map((file, index) => (
               <Chip
                 key={index}
-                icon={<FileCopyIcon />}
-                label={file.key}
-                onDelete={handleDelete(file)}
+                icon={<Link to={file.url} target="_blank" rel="noopener" style={{ border: '0px', backgroundColor: 'unset' }}><FileCopyIcon /></Link>}
+                label={<Link to={file.url} target="_blank" rel="noopener" style={{ border: '0px', backgroundColor: 'unset' }}>{file.key}</Link>}
+                onDelete={edit !== "view" ? handleDelete(file) : undefined}
                 style={{ margin: '4px' }}
-                disabled={edit === "view"}
               />
             ))}
           </div>
@@ -391,6 +392,7 @@ const AddNewDialogContent = (props) => {
 const Activity = (props) => {
   const {
     dialogType,
+    dataFetchLoading,
     setDialogType,
     setUpdateData = () => { },
     dataUpdatingLoadding,
@@ -566,62 +568,86 @@ const Activity = (props) => {
     <>
       <div>
         <TableContainer sx={{ maxHeight: 500 }} className="-m-12">
-          <Table stickyHeader aria-label="sticky table" size="small">
-            <TableHead>
-              <TableRow>
-                {columns.map((column) => (
-                  <TableCell
-                    key={column.id}
-                    align={column.align}
-                    style={{
-                      minWidth: column.minWidth,
-                      backgroundColor: "#F8F8F8",
-                    }}
-                  >
-                    {column.label}
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {paginatedData.map((row) => (
-                <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
-                  {columns.map((column) => {
-                    const value = row[column.id];
-                    return (
-                      <TableCell key={column.id} align={column.align}>
-                        {column.format && typeof value === "number"
-                          ? column.format(value)
-                          : column.id === "action" ?
-                            <IconButton
-                              size="small"
-                              sx={{ color: "#5B718F", marginRight: "4px" }}
-                              onClick={(e) => openMenu(e, row)}
-                            >
-                              <MoreHorizIcon fontSize="small" />
-                            </IconButton>
-                            : column.id === "files" ? (
-                              <div style={{ display: 'flex' }}>
-                                <AvatarGroup max={4}>
-                                  {value.map((file, index) => (
-                                    <Link to={file.url} target="_blank" rel="noopener" style={{ border: '0px', backgroundColor: 'unset' }}>
-                                      <Avatar>
-                                        <FileCopyIcon />
-                                      </Avatar>
-                                    </Link>
-                                  ))}
-                                </AvatarGroup>
-                              </div>
-                            ) : column.id === "date" ?
-                              formatDate(value)
-                              : value}
-                      </TableCell>
-                    );
-                  })}
+          {dataFetchLoading ? (
+            <FuseLoading />
+          ) : paginatedData.length ? (
+            <Table
+              sx={{ minWidth: 650, height: "100%" }}
+              size="small"
+              aria-label="simple table"
+            >              <TableHead>
+                <TableRow>
+                  {columns.map((column) => (
+                    <TableCell
+                      key={column.id}
+                      align={column.align}
+                      style={{
+                        minWidth: column.minWidth,
+                        backgroundColor: "#F8F8F8",
+                      }}
+                    >
+                      {column.label}
+                    </TableCell>
+                  ))}
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHead>
+              <TableBody>
+                {paginatedData.map((row) => (
+                  <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
+                    {columns.map((column) => {
+                      const value = row[column.id];
+                      return (
+                        <TableCell key={column.id} align={column.align}>
+                          {column.format && typeof value === "number"
+                            ? column.format(value)
+                            : column.id === "action" ?
+                              <IconButton
+                                size="small"
+                                sx={{ color: "#5B718F", marginRight: "4px" }}
+                                onClick={(e) => openMenu(e, row)}
+                              >
+                                <MoreHorizIcon fontSize="small" />
+                              </IconButton>
+                              : column.id === "files" ? (
+                                <div style={{ display: 'flex' }}>
+                                  <AvatarGroup max={4}
+                                    className="items-center"
+                                    sx={{ ".MuiAvatar-root": { backgroundColor: "#6d81a3", width: "3.4rem", height: "3.4rem", fontSize: "medium", border: "1px solid #FFFFFF" } }}
+                                  >
+                                    {value.map((file, index) => (
+                                      <Link to={file.url} target="_blank" rel="noopener" style={{ border: '0px', backgroundColor: 'unset' }}>
+                                        <Avatar>
+                                          <FileCopyIcon className="text-white text-xl" />
+                                        </Avatar>
+                                      </Link>
+                                    ))}
+                                  </AvatarGroup>
+                                </div>
+                              ) : column.id === "date" ?
+                                formatDate(value)
+                                : value}
+                        </TableCell>
+                      );
+                    })}
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          ) : (
+            <div>
+              <div
+                className="flex flex-col justify-center items-center gap-10 "
+                style={{ height: "94%" }}
+              >
+                <DataNotFound width="25%" />
+                <Typography variant="h5">No data found</Typography>
+                <Typography variant="body2" className="text-center">
+                  It is a long established fact that a reader will be <br />
+                  distracted by the readable content.
+                </Typography>
+              </div>
+            </div>
+          )}
         </TableContainer>
         <div className="fixed bottom-0 left-0 w-full flex justify-center py-4 mb-14">
           <Stack spacing={2}>
@@ -636,7 +662,7 @@ const Activity = (props) => {
             />
           </Stack>
         </div>
-      </div>
+      </div >
       <AlertDialog
         open={Boolean(deleteId)}
         close={() => deleteIcon("")}

@@ -30,7 +30,7 @@ const assignmentSlice = createSlice({
         setAssignmentdata(state, action) {
             state.data = action.payload
         },
-        setSingledata(state, action) {
+        setSingleData(state, action) {
             state.singleData = action.payload
         }
     }
@@ -41,12 +41,12 @@ export const selectAssignment = ({ assignment }) => assignment;
 
 const URL_BASE_LINK = jsonData.API_LOCAL_URL;
 
-export const getAssignmentAPI = (id, field) => async (dispatch) => {
+export const getAssignmentAPI = (id) => async (dispatch) => {
 
     try {
         dispatch(slice.setLoader());
 
-        let url = `${URL_BASE_LINK}/assignment/list`
+        let url = `${URL_BASE_LINK}/assignment/list?user_id=${id}`
 
         const response = await axios.get(url);
         // dispatch(showMessage({ message: response.data.message, variant: "success" }))
@@ -68,8 +68,9 @@ export const createAssignmentAPI = (data) => async (dispatch, getStore) => {
         dispatch(slice.setUpdatingLoader());
         const response = await axios.post(`${URL_BASE_LINK}/assignment/create`, data)
         dispatch(showMessage({ message: response.data.message, variant: "success" }))
+        dispatch(slice.setSingleData(response.data.data));
         if (response.data.status) {
-            dispatch(getAssignmentAPI(getStore().user.data.id, ""))
+            dispatch(getAssignmentAPI(getStore().user.data.id))
         }
         dispatch(slice.setUpdatingLoader());
         return true;
@@ -89,7 +90,7 @@ export const updateAssignmentAPI = (id,data) => async (dispatch, getStore) => {
         const response = await axios.patch(`${URL_BASE_LINK}/assignment/update/${id}`, payload)
         dispatch(showMessage({ message: response.data.message, variant: "success" }))
         if (response.data.status) {
-            dispatch(getAssignmentAPI(getStore().user.data.id, ""))
+            dispatch(getAssignmentAPI(getStore().user.data.id))
         }
         dispatch(slice.setUpdatingLoader());
         return true;
@@ -108,7 +109,7 @@ export const deleteAssignmentHandler = (id) => async (dispatch, getStore) => {
         console.log(response);
         dispatch(showMessage({ message: response.data.message, variant: "success" }))
         if (response.data.status) {
-            dispatch(getAssignmentAPI(getStore().user.data.id, ""))
+            dispatch(getAssignmentAPI(getStore().user.data.id))
         }
         dispatch(slice.setUpdatingLoader());
         return true;

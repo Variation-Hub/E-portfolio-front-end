@@ -6,6 +6,9 @@ import clsx from "clsx";
 import { useState } from "react";
 import UserDetails from "src/app/main/admin/userManagement/usetDetails";
 import UploadWorkDialog from "./uploadWorkDialog";
+import UploadedEvidenceFile from "./uploadedEvidenceFile";
+import Uploading from "src/app/component/Cards/uploading";
+import { useNavigate } from "react-router-dom";
 
 export const Card = (props) => {
   const {
@@ -55,16 +58,20 @@ export const Card = (props) => {
 
 export const PortfolioCard = (props) => {
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+
   const { id = 0, name = "No title", color = "#FCA14E" } = props?.data;
   const handleClick = () => {
     if (name === "Upload Work") {
       setOpen(true);
     } else if (name === "Unit Progress") {
       console.warn("Unit Progress clicked");
+    } else if (name === "Resources") {
+      navigate('/resources-card');
     }
   };
   const handleClose = () => {
-    setOpen(false);
+    setOpen(false);;
   };
 
   return (
@@ -85,6 +92,7 @@ export const PortfolioCard = (props) => {
       </div>
       <Dialog
         open={open}
+        onClose={handleClose}
         sx={{
           ".MuiDialog-paper": {
             borderRadius: "4px",

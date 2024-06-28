@@ -90,7 +90,7 @@ const navigationConfig = [{
 },
 {
     id: 'dashboards.createAssignment',
-    title: 'Create Assignment',
+    title: 'Assignment',
     type: 'item',
     icon: 'heroicons-outline:pencil-alt',
     url: '/createAssignment',

@@ -16,6 +16,8 @@ import { data } from "src/app/component/Chart/doughnut";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { DangerButton, LoadingButton, SecondaryButton, SecondaryButtonOutlined } from "src/app/component/Buttons";
 import AlertDialog from "src/app/component/Dialogs/AlertDialog";
+import FuseLoading from "@fuse/core/FuseLoading";
+import DataNotFound from "src/app/component/Pages/dataNotFound";
 
 interface Column {
   id:
@@ -258,7 +260,7 @@ const Planning = (props) => {
     dialogType,
     setDialogType,
     dataUpdatingLoadding,
-    // setUpdateData
+    dataFetchLoading
   } = props;
 
   const { singleData } = useSelector(selectCpdPlanning)
@@ -399,65 +401,82 @@ const Planning = (props) => {
   return (
     <>
       <TableContainer sx={{ maxHeight: 440 }} className="-m-12">
-        <Table stickyHeader aria-label="sticky table" size="small">
-          <TableHead>
-            <TableRow>
-              {columns?.map((column) => (
-                <TableCell
-                  key={column.id}
-                  align={column.align}
-                  style={{
-                    minWidth: column.minWidth,
-                    backgroundColor: "#F8F8F8",
-                  }}
-                  className="text-left "
-                >
-                  {column.label}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {cpdPlanningData?.data?.map((row) => {
-              return (
-                <TableRow
-                  hover
-                  role="checkbox"
-                  tabIndex={-1}
-                  key={row.id}
+        {dataFetchLoading ? (
+          <FuseLoading />
+        ) : cpdPlanningData.data.length ? (
+          <Table stickyHeader aria-label="sticky table" size="small">
+            <TableHead>
+              <TableRow>
+                {columns?.map((column) => (
+                  <TableCell
+                    key={column.id}
+                    align={column.align}
+                    style={{
+                      minWidth: column.minWidth,
+                      backgroundColor: "#F8F8F8",
+                    }}
+                    className="text-left "
+                  >
+                    {column.label}
+                  </TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {cpdPlanningData?.data?.map((row) => {
+                return (
+                  <TableRow
+                    hover
+                    role="checkbox"
+                    tabIndex={-1}
+                    key={row.id}
 
-                >
-                  {columns?.map((column) => {
-                    const value = row[column.id];
-                    return (
-                      <TableCell key={column.id} align={column.align} className="text-left"
-                        style={{
-                          minWidth: column.minWidth,
-                          backgroundColor: "#F8F8F8",
-                        }}>
-                        {column.format && typeof value === "number"
-                          ? column.format(value)
-                          : column.id === "start_date" ?
-                            formatDate(value)
-                            : column.id === "end_date" ?
+                  >
+                    {columns?.map((column) => {
+                      const value = row[column.id];
+                      return (
+                        <TableCell key={column.id} align={column.align} className="text-left"
+                          style={{
+                            minWidth: column.minWidth
+                          }}>
+                          {column.format && typeof value === "number"
+                            ? column.format(value)
+                            : column.id === "start_date" ?
                               formatDate(value)
-                              : column.id === "action" ?
-                                <IconButton
-                                  size="small"
-                                  sx={{ color: "#5B718F", marginRight: "4px" }}
-                                  onClick={(e) => openMenu(e, row)}
-                                >
-                                  <MoreHorizIcon fontSize="small" />
-                                </IconButton>
-                                : value}
-                      </TableCell>
-                    );
-                  })}
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
+                              : column.id === "end_date" ?
+                                formatDate(value)
+                                : column.id === "action" ?
+                                  <IconButton
+                                    size="small"
+                                    sx={{ color: "#5B718F", marginRight: "4px" }}
+                                    onClick={(e) => openMenu(e, row)}
+                                  >
+                                    <MoreHorizIcon fontSize="small" />
+                                  </IconButton>
+                                  : value}
+                        </TableCell>
+                      );
+                    })}
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        ) : (
+          <div>
+            <div
+              className="flex flex-col justify-center items-center gap-10 "
+              style={{ height: "94%" }}
+            >
+              <DataNotFound width="25%" />
+              <Typography variant="h5">No data found</Typography>
+              <Typography variant="body2" className="text-center">
+                It is a long established fact that a reader will be <br />
+                distracted by the readable content.
+              </Typography>
+            </div>
+          </div>
+        )}
       </TableContainer>
       {/* <div className="fixed bottom-0 left-0 w-full flex justify-center py-4 mb-14">
         <TablePagination
