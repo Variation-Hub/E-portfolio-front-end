@@ -21,26 +21,56 @@ import { selectUser } from "app/store/userSlice";
 import { useNavigate } from "react-router-dom";
 import { createAssignmentAPI, selectAssignment, updateAssignmentAPI } from "app/store/assignment";
 import { useDispatch } from "react-redux";
+import CreateAssignment from "src/app/main/createAssignment/createAssignment";
 
-const UploadedEvidenceFile = (props) => {
-  const { setFormData, formData, handleChange, handleCheckboxChange, edit = "Save" } = props;
-
+const NewAssignment = (props) => {
   const { handleClose } = props.dialogFn || {};
   const dispatch: any = useDispatch();
   const { singleData, dataUpdatingLoadding } = useSelector(selectAssignment)
   const navigate = useNavigate();
 
-  console.log(formData)
+  const [formData, setFormData] = useState({
+    name: "",
+    description: "",
+    trainer_feedback: "",
+    // uploaded_external_feedback: "",
+    learner_comments: "",
+    points_of_improvement: "",
+    assessment_method: "",
+    session: "",
+    grade: "",
+    declaration: false,
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleCheckboxChange = (e) => {
+    const { name, checked } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: checked,
+    }));
+  };
+
   const handleSubmit = async () => {
     try {
       let response;
       let id = singleData.assignment_id;
       response = await dispatch(updateAssignmentAPI(id, formData));
+
+      if (response) {
+        navigate("/createAssignment")
+      }
     } catch (error) {
       console.error("Error uploading file:", error);
-    }finally{
-      handleClose();
     }
+    console.log(formData);
 
   };
 
@@ -59,9 +89,8 @@ const UploadedEvidenceFile = (props) => {
               size="small"
               placeholder={"Trainer file 4.2.3(13).docx"}
               fullWidth
-              value={formData?.name}
+              value={formData.name}
               onChange={handleChange}
-              disabled={edit === "view"}
             />
           </div>
 
@@ -76,9 +105,8 @@ const UploadedEvidenceFile = (props) => {
               fullWidth
               multiline
               rows={5}
-              value={formData?.description}
+              value={formData.description}
               onChange={handleChange}
-              disabled={edit === "view"}
             />
           </div>
 
@@ -93,9 +121,9 @@ const UploadedEvidenceFile = (props) => {
               fullWidth
               multiline
               rows={5}
-              value={formData?.trainer_feedback}
+              value={formData.trainer_feedback}
               onChange={handleChange}
-              disabled={user.data.role !== "Trainer" || edit === "view"}
+              disabled={user.data.role !== "Trainer"}
               style={user.data.role !== "Trainer" ? { backgroundColor: "whitesmoke" } : {}}
             />
           </div>
@@ -125,9 +153,9 @@ const UploadedEvidenceFile = (props) => {
               fullWidth
               multiline
               rows={5}
-              value={formData?.learner_comments}
+              value={formData.learner_comments}
               onChange={handleChange}
-              disabled={user.data.role !== "Learner" || edit === "view"}
+              disabled={user.data.role !== "Learner"}
             />
           </div>
           <div className="w-full">
@@ -141,9 +169,9 @@ const UploadedEvidenceFile = (props) => {
               fullWidth
               multiline
               rows={5}
-              value={formData?.points_of_improvement}
+              value={formData.points_of_improvement}
               onChange={handleChange}
-              disabled={user.data.role !== "Trainer" || edit === "view"}
+              disabled={user.data.role !== "Trainer"}
               style={user.data.role !== "Trainer" ? { backgroundColor: "whitesmoke" } : {}}
             />
           </div>
@@ -153,13 +181,13 @@ const UploadedEvidenceFile = (props) => {
             </Typography>
             <Select
               name="assessment_method"
-              value={formData?.assessment_method}
+              value={formData.assessment_method}
               onChange={handleChange}
               fullWidth
               size="small"
               displayEmpty
               placeholder="Select"
-              disabled={user.data.role !== "Trainer" || edit === "view"}
+              disabled={user.data.role !== "Trainer"}
               style={user.data.role !== "Trainer" ? { backgroundColor: "whitesmoke" } : {}}
             >
               <MenuItem value={"Workplace Observation(WO)"}>
@@ -213,13 +241,13 @@ const UploadedEvidenceFile = (props) => {
                   required
                   fullWidth
                   onChange={handleChange}
-                  disabled={user.data.role !== "Trainer" || edit === "view"}
+                  disabled={user.data.role !== "Trainer"}
                   style={user.data.role !== "Trainer" ? { backgroundColor: "whitesmoke" } : {}}
                 />
               </Grid>
               <Grid className='w-full flex gap-10'>
                 <TextField
-                  disabled={user.data.role !== "Trainer" || edit === "view"}
+                  disabled={user.data.role !== "Trainer"}
                   style={user.data.role !== "Trainer" ? { backgroundColor: "whitesmoke" } : {}}
                   placeholder='Hours'
                   name="hours"
@@ -227,7 +255,7 @@ const UploadedEvidenceFile = (props) => {
                   required
                   type="number"
                   fullWidth
-                  value={(formData?.session?.split(":")[0])}
+                  value={(formData.session.split(":")[0])}
                   onChange={(e) => {
                     const value = Number(e.target.value);
 
@@ -237,12 +265,12 @@ const UploadedEvidenceFile = (props) => {
 
                     setFormData((prevState: any) => ({
                       ...prevState,
-                      session: `${value}:${formData?.session?.split(':')[1]}`
+                      session: `${value}:${formData.session.split(':')[1]}`
                     }));
                   }}
                 />
                 <TextField
-                  disabled={user.data.role !== "Trainer" || edit === "view"}
+                  disabled={user.data.role !== "Trainer"}
                   style={user.data.role !== "Trainer" ? { backgroundColor: "whitesmoke" } : {}}
                   placeholder='Minutes'
                   name="minutes"
@@ -250,7 +278,7 @@ const UploadedEvidenceFile = (props) => {
                   size="small"
                   type="number"
                   fullWidth
-                  value={(formData?.session?.split(':')[1])}
+                  value={(formData.session.split(':')[1])}
                   onChange={(e) => {
                     const value = Number(e.target.value);
 
@@ -260,7 +288,7 @@ const UploadedEvidenceFile = (props) => {
 
                     setFormData((prevState: any) => ({
                       ...prevState,
-                      session: `${formData?.session?.split(':')[0]}:${value}`
+                      session: `${formData.session.split(':')[0]}:${value}`
                     }));
                   }}
                 />
@@ -277,9 +305,9 @@ const UploadedEvidenceFile = (props) => {
               size="small"
               placeholder="Enter Grade"
               fullWidth
-              value={formData?.grade}
+              value={formData.grade}
               onChange={handleChange}
-              disabled={user.data.role !== "Trainer" || edit === "view"}
+              disabled={user.data.role !== "Trainer"}
               style={user.data.role !== "Trainer" ? { backgroundColor: "whitesmoke" } : {}}
             />
           </div>
@@ -289,7 +317,7 @@ const UploadedEvidenceFile = (props) => {
             <FormControlLabel
               control={
                 <Checkbox
-                  checked={formData?.declaration}
+                  checked={formData.declaration}
                   onChange={handleCheckboxChange}
                   name="declaration"
                   color="primary"
@@ -303,7 +331,6 @@ const UploadedEvidenceFile = (props) => {
                   appropriate reference to the work of others.
                 </Typography>
               }
-              disabled={edit === "view"}
             />
           </div>
         </Box>
@@ -313,14 +340,8 @@ const UploadedEvidenceFile = (props) => {
           <LoadingButton />
           :
           <>
-            {edit === "view" ?
-              <SecondaryButtonOutlined name="Cancel" className="mr-12" onClick={handleClose} />
-              :
-              <SecondaryButtonOutlined name="Cancel" className="mr-12" onClick={handleClose} />
-            }
-            {edit !== "view" &&
-              <SecondaryButton name={"Update"} disable={!formData?.declaration || !formData?.name || !formData?.description} onClick={handleSubmit} />
-            }
+            <SecondaryButtonOutlined name="Cancel" className="mr-12" onClick={handleClose} />
+            <SecondaryButton name="Save" disable={!formData.declaration || !formData.name || !formData.description} onClick={handleSubmit} />
           </>
         }
       </div>
@@ -328,4 +349,4 @@ const UploadedEvidenceFile = (props) => {
   );
 };
 
-export default UploadedEvidenceFile;
+export default NewAssignment;

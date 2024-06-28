@@ -41,8 +41,10 @@ function UserMenu(props) {
     setAnchorEl(null);
   };
 
+  
   const changeRole = (role) => {
-    dispatch(changeUserRoleHandler(role));
+    dispatch(changeUserRoleHandler(role))
+    navigate('/Home')
     handleClose()
   }
 

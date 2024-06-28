@@ -139,7 +139,7 @@ const ResourceUploadDialog = (props) => {
                 name="hours"
                 placeholder="Enter hour"
                 size="small"
-                type="number  "
+                type="number"
                 fullWidth
                 className="w-1/2"
                 value={resourceData.hours}

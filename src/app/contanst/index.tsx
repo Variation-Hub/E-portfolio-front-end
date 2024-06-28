@@ -269,6 +269,11 @@ export const EmployerRedirect = {
   name: "Employer",
 };
 
+export const AssignmentRedirect = {
+  link: "/createAssignment",
+  name: "Assignment",
+};
+
 export const userManagementTableColumn = [
   { id: "first_name", label: "Name", minWidth: 170, align: "left" },
   { id: "user_name", label: "Username", minWidth: 170, align: "left" },

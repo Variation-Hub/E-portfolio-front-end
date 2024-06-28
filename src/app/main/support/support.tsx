@@ -40,6 +40,8 @@ import { useSelector } from "react-redux";
 import { selectUser } from "app/store/userSlice";
 import AlertDialog from "src/app/component/Dialogs/AlertDialog";
 import { log } from "console";
+import FuseLoading from "@fuse/core/FuseLoading";
+import DataNotFound from "src/app/component/Pages/dataNotFound";
 
 // function createData(title: string, description: string, status: string) {
 //   return {
@@ -91,7 +93,7 @@ const AddRequest = (props) => {
 
 const Support = (props) => {
   const { data } = useSelector(selectUser);
-  const { singleData, dataUpdatingLoadding } = useSelector(selectSupportData);
+  const { singleData, dataUpdatingLoadding,dataFetchLoading } = useSelector(selectSupportData);
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedRow, setSelectedRow] = useState<any>(null);
@@ -196,75 +198,103 @@ const Support = (props) => {
   return (
     <>
       <div className="m-10">
-        <div className="flex justify-end mb-10">
+        <Box className="flex justify-end mb-10"
+          sx={{
+            borderBottom: 1,
+            borderColor: "divider",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}>
           <SecondaryButton
             name="Add Request"
+            className="p-12 mb-10"
             startIcon={<AddIcon sx={{ mx: -0.5 }} />}
             onClick={() => handleClickOpen()}
           />
-        </div>
-        <TableContainer component={Paper} className="rounded-6">
-          <Table
-            sx={{ minWidth: 650, height: "100%" }}
-            size="small"
-            aria-label="simple table"
-          >
-            <TableHead className="bg-[#F8F8F8]">
-              <TableRow>
-                <TableCell>Title</TableCell>
-                <TableCell align="left">Description</TableCell>
-                <TableCell align="left">Status</TableCell>
-                <TableCell align="left">Action</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {support.data?.map((row) => (
-                <TableRow
-                  key={row.title}
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                >
-                  <TableCell
-                    component="th"
-                    scope="row"
-                    sx={{ borderBottom: "2px solid #F8F8F8" }}
-                  >
-                    {row.title}
-                  </TableCell>
-                  <TableCell
-                    align="left"
-                    sx={{ borderBottom: "2px solid #F8F8F8" }}
-                  >
-                    {row.description}
-                  </TableCell>
-                  <TableCell
-                    align="left"
-                    sx={{ borderBottom: "2px solid #F8F8F8" }}
-                  >
-                    {row.status}
-                  </TableCell>
-                  <TableCell
-                    align="left"
-                    sx={{ borderBottom: "2px solid #F8F8F8" }}
-                  >
-                    <IconButton
-                      size="small"
-                      sx={{ color: "#5B718F", marginRight: "4px" }}
-                      onClick={(e) => handleClick(e, row)}
+        </Box>
+        <div >
+          <TableContainer sx={{ maxHeight: 500 }} >
+            {dataFetchLoading ? (
+              <FuseLoading />
+            ) : support.data.length ? (
+              <Table
+                sx={{ minWidth: 650, height: "100%" }}
+                size="small"
+                aria-label="simple table"
+              >
+                <TableHead className="bg-[#F8F8F8]">
+                  <TableRow>
+                    <TableCell>Title</TableCell>
+                    <TableCell align="left">Description</TableCell>
+                    <TableCell align="left">Status</TableCell>
+                    <TableCell align="left">Action</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {support.data?.map((row) => (
+                    <TableRow
+                      key={row.title}
+                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                     >
-                      <MoreHorizIcon fontSize="small" />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-          <Stack
-            spacing={2}
-            className="flex justify-center items-center w-full my-12"
-          >
-            <Pagination count={3} variant="outlined" shape="rounded" />
-          </Stack>
-        </TableContainer>
+                      <TableCell
+                        component="th"
+                        scope="row"
+                        sx={{ borderBottom: "2px solid #F8F8F8" }}
+                      >
+                        {row.title}
+                      </TableCell>
+                      <TableCell
+                        align="left"
+                        sx={{ borderBottom: "2px solid #F8F8F8" }}
+                      >
+                        {row.description}
+                      </TableCell>
+                      <TableCell
+                        align="left"
+                        sx={{ borderBottom: "2px solid #F8F8F8" }}
+                      >
+                        {row.status}
+                      </TableCell>
+                      <TableCell
+                        align="left"
+                        sx={{ borderBottom: "2px solid #F8F8F8" }}
+                      >
+                        <IconButton
+                          size="small"
+                          sx={{ color: "#5B718F", marginRight: "4px" }}
+                          onClick={(e) => handleClick(e, row)}
+                        >
+                          <MoreHorizIcon fontSize="small" />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            ) : (
+                <div
+                  className="flex flex-col justify-center items-center gap-10 "
+                  style={{ height: "94%" }}
+                >
+                  <DataNotFound width="25%" />
+                  <Typography variant="h5">No data found</Typography>
+                  <Typography variant="body2" className="text-center">
+                    It is a long established fact that a reader will be <br />
+                    distracted by the readable content.
+                  </Typography>
+                </div>
+            )}
+          </TableContainer>
+          <div className="fixed bottom-0 left-0 w-full flex justify-center py-4 mb-14">
+            <Stack
+              spacing={2}
+              className="flex justify-center items-center w-full my-12"
+            >
+              <Pagination count={3} variant="outlined" shape="rounded" />
+            </Stack>
+          </div>
+        </div>
 
         <AlertDialog
           open={Boolean(deleteId)}

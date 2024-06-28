@@ -43,6 +43,8 @@ import { useSelector } from "react-redux";
 import { selectUser } from "app/store/userSlice";
 import AlertDialog from "src/app/component/Dialogs/AlertDialog";
 import { Link } from "react-router-dom";
+import FuseLoading from "@fuse/core/FuseLoading";
+import DataNotFound from "src/app/component/Pages/dataNotFound";
 
 const AddInnocations = (props) => {
   const { yourInnovation = {}, handleChange = () => { } } = props;
@@ -86,7 +88,7 @@ const AddInnocations = (props) => {
 
 const ProposeYourInnovations = (props) => {
   const { data } = useSelector(selectUser);
-  const { singleData, dataUpdatingLoadding } = useSelector(selectYourInnovation);
+  const { singleData, dataUpdatingLoadding, dataFetchLoading } = useSelector(selectYourInnovation);
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedRow, setSelectedRow] = useState<any>(null);
@@ -243,75 +245,103 @@ const ProposeYourInnovations = (props) => {
   return (
     <>
       <div className="m-10">
-        <div className="flex justify-end mb-10">
+        <Box className="flex justify-end mb-10"
+          sx={{
+            borderBottom: 1,
+            borderColor: "divider",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}>
           <SecondaryButton
             name="Add Innovation"
+            className="p-12 mb-10"
+
             startIcon={<AddIcon sx={{ mx: -0.5 }} />}
             onClick={() => handleClickOpen('add')}
           />
-        </div>
-        <TableContainer component={Paper} sx={{ height: 550 }} className="rounded-6 " >
-          <Table
-            sx={{ minWidth: 650, maxHeight: 500 }}
-            size="small"
-            aria-label="simple table"
-          >
-            <TableHead className="bg-[#F8F8F8]">
-              <TableRow>
-                <TableCell align="left" sx={{ maxWidth: "4rem", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>Topic</TableCell>
-                <TableCell align="left" sx={{ maxWidth: "9rem", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>Description</TableCell>
-                <TableCell align="left" sx={{ width: "15rem" }}>Status</TableCell>
-                <TableCell align="left" sx={{ width: "15rem" }}>Action</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {innovation.data?.map((row) => (
-                <TableRow
-                  key={row.topic}
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                >
-                  <TableCell
-                    component="th"
-                    scope="row"
-                    sx={{ borderBottom: "2px solid #F8F8F8", maxWidth: "4rem", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
-                  >
-                    {row.topic}
-                  </TableCell>
-                  <TableCell
-                    align="left"
-                    sx={{ borderBottom: "2px solid #F8F8F8", maxWidth: "9rem", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
-                  >
-                    {row.description}
-                  </TableCell>
-                  <TableCell
-                    align="left"
-                    sx={{ borderBottom: "2px solid #F8F8F8", width: "15rem" }}
-                  >
-                    {row.status}
-                  </TableCell>
-                  <TableCell
-                    align="left"
-                    sx={{ borderBottom: "2px solid #F8F8F8", width: "15rem" }}
-                  >
-                    <IconButton
-                      size="small"
-                      sx={{ color: "#5B718F", marginRight: "4px" }}
-                      onClick={(e) => handleClick(e, row)}
-                    >
-                      <MoreHorizIcon fontSize="small" />
-                    </IconButton>
-                  </TableCell>
+        </Box>
+        <TableContainer sx={{ maxHeight: 500 }} >
+          {dataFetchLoading ? (
+            <FuseLoading />
+          ) : innovation.data.length ? (
+            <Table
+              sx={{ minWidth: 650, height: "100%" }}
+              size="small"
+              aria-label="simple table"
+            >
+              <TableHead className="bg-[#F8F8F8]">
+                <TableRow>
+                  <TableCell align="left" sx={{ maxWidth: "4rem", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>Topic</TableCell>
+                  <TableCell align="left" sx={{ maxWidth: "9rem", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>Description</TableCell>
+                  <TableCell align="left" sx={{ width: "15rem" }}>Status</TableCell>
+                  <TableCell align="left" sx={{ width: "15rem" }}>Action</TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHead>
+              <TableBody>
+                {innovation.data?.map((row) => (
+                  <TableRow
+                    key={row.topic}
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  >
+                    <TableCell
+                      component="th"
+                      scope="row"
+                      sx={{ borderBottom: "2px solid #F8F8F8", maxWidth: "4rem", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
+                    >
+                      {row.topic}
+                    </TableCell>
+                    <TableCell
+                      align="left"
+                      sx={{ borderBottom: "2px solid #F8F8F8", maxWidth: "9rem", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
+                    >
+                      {row.description}
+                    </TableCell>
+                    <TableCell
+                      align="left"
+                      sx={{ borderBottom: "2px solid #F8F8F8", width: "15rem" }}
+                    >
+                      {row.status}
+                    </TableCell>
+                    <TableCell
+                      align="left"
+                      sx={{ borderBottom: "2px solid #F8F8F8", width: "15rem" }}
+                    >
+                      <IconButton
+                        size="small"
+                        sx={{ color: "#5B718F", marginRight: "4px" }}
+                        onClick={(e) => handleClick(e, row)}
+                      >
+                        <MoreHorizIcon fontSize="small" />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          ) : (
+            <div
+              className="flex flex-col justify-center items-center gap-10 "
+              style={{ height: "94%" }}
+            >
+              <DataNotFound width="25%" />
+              <Typography variant="h5">No data found</Typography>
+              <Typography variant="body2" className="text-center">
+                It is a long established fact that a reader will be <br />
+                distracted by the readable content.
+              </Typography>
+            </div>
+          )}
+        </TableContainer>
+        <div className="fixed bottom-0 left-0 w-full flex justify-center py-4 mb-14">
           <Stack
             spacing={2}
-            className="flex justify-center items-center w-full my-12 fixed left-0 bottom-32 "
+            className="flex justify-center items-center w-full my-12"
           >
             <Pagination count={3} variant="outlined" shape="rounded" />
           </Stack>
-        </TableContainer>
+        </div>
+
 
         <AlertDialog
           open={Boolean(deleteId)}
