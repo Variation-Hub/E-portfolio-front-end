@@ -154,7 +154,7 @@ export const fetchUserAPI = (data = { page: 1, page_size: 10 }, search_keyword =
 
     try {
         dispatch(slice.setLoader());
-        const { page = 1, page_size = 25 } = data;
+        const { page = 1, page_size = 10 } = data;
 
         let url = `${URL_BASE_LINK}/user/list?page=${page}&limit=${page_size}&meta=true`;
 

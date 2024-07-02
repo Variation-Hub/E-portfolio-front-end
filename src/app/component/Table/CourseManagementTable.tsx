@@ -49,7 +49,7 @@ export default function CourseManagementTable(props) {
 
   const [deleteId, setDeleteId] = useState("");
   const [openMenuDialog, setOpenMenuDialog] = useState("");
-    const [edit, setEdit] = useState("view");
+  const [edit, setEdit] = useState("view");
 
   const [open, setOpen] = useState(false);
 
@@ -128,7 +128,7 @@ export default function CourseManagementTable(props) {
   return (
     <>
       <div style={{ width: "100%", overflow: "hidden", marginTop: "0.5rem" }}>
-        <TableContainer sx={{ maxHeight: 480, minHeight: 480 }}>
+        <TableContainer sx={{ maxHeight: 530, minHeight: 530 }}>
           <Table stickyHeader aria-label="sticky table" size="small">
             <TableHead>
               <TableRow>
@@ -221,9 +221,17 @@ export default function CourseManagementTable(props) {
         </TableContainer>
         <Stack
           spacing={2}
-          className="flex justify-center items-center w-full mt-48"
+          className="flex justify-center items-center w-full mt-14"
         >
-          <Pagination count={3} variant="outlined" shape="rounded" />
+          <Pagination
+            count={meta_data?.pages}
+            page={meta_data?.page}
+            variant="outlined"
+            onChange={handleChangePage}
+            shape="rounded"
+            siblingCount={1}
+            boundaryCount={1}
+          />
         </Stack>
       </div>
       <AlertDialog
