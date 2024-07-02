@@ -156,12 +156,12 @@ const Index = () => {
 
   const filterHandler = (e, value) => {
     setFilterValue(value);
-    dispatch(fetchUserAPI({ page: 1, page_size: 25 }, searchKeyword, value));
+    dispatch(fetchUserAPI({ page: 1, page_size: 2 }, searchKeyword, value));
   };
 
   const searchAPIHandler = () => {
     dispatch(
-      fetchUserAPI({ page: 1, page_size: 25 }, searchKeyword, filterValue)
+      fetchUserAPI({ page: 1, page_size: 2 }, searchKeyword, filterValue)
     );
   };
 
@@ -217,7 +217,7 @@ const Index = () => {
                             setSearchKeyword("");
                             dispatch(
                               fetchUserAPI(
-                                { page: 1, page_size: 25 },
+                                { page: 1, page_size: 2 },
                                 "",
                                 filterValue
                               )

@@ -109,7 +109,7 @@ const ResourceUploadDialog = (props) => {
 
             <FileUploader
               children={
-                <div style={{ border: '1px dotted lightgray', padding: '5rem', cursor:"pointer" }}>
+                <div style={{ border: '1px dotted lightgray', padding: '5rem', cursor: "pointer" }}>
 
                   {file ?
                     <p className="text-center mb-4">{file.name}</p>
@@ -142,8 +142,19 @@ const ResourceUploadDialog = (props) => {
                 type="number"
                 fullWidth
                 className="w-1/2"
-                value={resourceData.hours}
-                onChange={(e) => setResourceData(prev => ({ ...prev, [e.target.name]: e.target.value }))}
+                value={resourceData?.hours}
+                onChange={(e) => {
+                  const value = Number(e.target.value);
+
+                  if (value < 0 || value > 23) {
+                    return
+                  }
+
+                  setResourceData((prev) => ({
+                    ...prev,
+                    [e.target.name]: value,
+                  }));
+                }}
               />
 
               <TextField
@@ -154,8 +165,18 @@ const ResourceUploadDialog = (props) => {
                 fullWidth
                 className="w-1/2"
                 value={resourceData.minute}
-                onChange={(e) => setResourceData(prev => ({ ...prev, [e.target.name]: e.target.value }))}
-              />
+                onChange={(e) => {
+                  const value = Number(e.target.value);
+
+                  if (value < 0 || value > 59) {
+                    return
+                  }
+
+                  setResourceData((prev) => ({
+                    ...prev,
+                    [e.target.name]: value,
+                  }));
+                }} />
             </div>
           </div>
           <div className="w-1/3">

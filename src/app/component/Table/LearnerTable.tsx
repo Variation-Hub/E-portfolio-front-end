@@ -47,7 +47,7 @@ import { Stack } from "@mui/system";
 import { Link } from "react-router-dom";
 import { color } from "framer-motion";
 
-export default function LearnerManagementTable(props) {
+export default function LearnerTable(props) {
   const {
     columns,
     rows,
@@ -191,37 +191,6 @@ export default function LearnerManagementTable(props) {
                   <TableRow role="checkbox" tabIndex={-1} key={row.learner_id}>
                     {columns?.map((column) => {
                       const value = row[column.id];
-                      if (column.id === "actions") {
-                        return (
-                          <TableCell
-                            key={column.id}
-                            align={column.align}
-                            sx={{ borderBottom: "2px solid #F8F8F8" }}
-                          >
-                            {/* <IconButton
-                              size="small"
-                              sx={{ color: "#5B718F", marginRight: "4px" }}
-                              onClick={() => editIcon(row.learner_id)}
-                            >
-                              <ModeEditOutlineOutlinedIcon fontSize="small" />
-                            </IconButton> */}
-                            <IconButton
-                              size="small"
-                              sx={{ color: "#5B718F", marginRight: "4px" }}
-                              onClick={(e) => openMenu(e, row.learner_id)}
-                            >
-                              <MoreHorizIcon fontSize="small" />
-                            </IconButton>
-                            {/* <IconButton
-                              size="small"
-                              sx={{ color: "maroon", marginLeft: "4px" }}
-                              onClick={() => deleteIcon(row.learner_id)}
-                            >
-                              <DeleteOutlineOutlinedIcon fontSize="small" />
-                            </IconButton> */}
-                          </TableCell>
-                        );
-                      }
                       return (
                         <TableCell
                           key={column.id}
