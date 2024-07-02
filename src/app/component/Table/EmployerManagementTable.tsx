@@ -41,9 +41,9 @@ export default function UserManagementTable(props) {
   const {
     columns,
     rows,
-    handleOpen = () => {},
-    setUserData = () => {},
-    setUpdateData = () => {},
+    handleOpen = () => { },
+    setUserData = () => { },
+    setUpdateData = () => { },
     meta_data,
     dataUpdatingLoadding,
     search_keyword = "",
@@ -137,7 +137,7 @@ export default function UserManagementTable(props) {
   return (
     <>
       <div style={{ width: "100%", overflow: "hidden", marginTop: "0.5rem" }}>
-        <TableContainer sx={{ maxHeight: 480, minHeight: 480 }}>
+        <TableContainer sx={{ maxHeight: 530, minHeight: 530 }}>
           <Table stickyHeader aria-label="sticky table" size="small">
             <TableHead>
               <TableRow>
@@ -230,9 +230,17 @@ export default function UserManagementTable(props) {
         </TableContainer>
         <Stack
           spacing={2}
-          className="flex justify-center items-center w-full mt-24"
+          className="flex justify-center items-center w-full mt-14"
         >
-          <Pagination count={3} variant="outlined" shape="rounded" />
+          <Pagination
+            count={meta_data?.pages}
+            page={meta_data?.page}
+            variant="outlined"
+            onChange={handleChangePage}
+            shape="rounded"
+            siblingCount={1}
+            boundaryCount={1}
+          />
         </Stack>
       </div>
       <AlertDialog
