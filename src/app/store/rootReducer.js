@@ -12,6 +12,7 @@ import supportData from './supportData';
 import yourInnovation from './yourInnovation';
 import assignment from './assignment';
 import session from './session';
+import formData from './formData';
 
 const createReducer = (asyncReducers) => (state, action) => {
     const combinedReducer = combineReducers({
@@ -27,6 +28,7 @@ const createReducer = (asyncReducers) => (state, action) => {
         yourInnovation,
         assignment,
         session,
+        formData,
         ...asyncReducers,
     });
 
