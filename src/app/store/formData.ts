@@ -18,6 +18,7 @@ const initialState = {
         form_data: []
     },
     formDataDetails: {},
+    users: {},
     mode: ''
 };
 
@@ -40,6 +41,9 @@ const formDataSlice = createSlice({
         },
         setFormDataDetails(state, action) {
             state.formDataDetails = action.payload
+        },
+        setUsers(state, action) {
+            state.users = action.payload
         },
         setMode(state, action) {
             state.mode = action.payload
@@ -166,4 +170,42 @@ export const getUserFormDataAPI = (form_id) => async (dispatch) => {
 
 }
 
+// get all user
+export const fetchUserAllAPI = () => async (dispatch) => {
+
+    try {
+        dispatch(slice.setLoader());
+
+        let url = `${URL_BASE_LINK}/user/list`;
+
+        const response = await axios.get(url);
+        // dispatch(showMessage({ message: response.data.message, variant: "success" }))
+        dispatch(slice.setUsers(response.data));
+        dispatch(slice.setLoader());
+        return true;
+
+    } catch (err) {
+        dispatch(showMessage({ message: err.response.data.message, variant: "error" }))
+        dispatch(slice.setLoader());
+        return false
+    };
+
+}
+
+
+// Add users to form
+export const AddUsersToForm = (form_id, data) => async (dispatch) => {
+    try {
+        dispatch(slice.setUpdatingLoader());
+        const { ...payload } = data
+        const response = await axios.patch(`${URL_BASE_LINK}/form/add-user/${form_id}`, payload)
+        dispatch(showMessage({ message: response.data.message, variant: "success" }))
+        dispatch(slice.setUpdatingLoader());
+        return true;
+    } catch (err) {
+        dispatch(showMessage({ message: err.response?.data.message, variant: "error" }))
+        dispatch(slice.setUpdatingLoader());
+        return false;
+    };
+}
 export default formDataSlice.reducer;
