@@ -1,13 +1,21 @@
 import {
+  Checkbox,
   Dialog,
   DialogActions,
   DialogContent,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
   Grid,
   IconButton,
+  ListItemText,
   Menu,
   MenuItem,
   Pagination,
   Paper,
+  Radio,
+  RadioGroup,
+  Select,
   Table,
   TableBody,
   TableCell,
@@ -39,54 +47,20 @@ import { FormBuilder as FormBuilderIo } from "react-formio";
 import "formiojs/dist/formio.full.css";
 import './style.css'
 import { useNavigate } from "react-router-dom";
-import { deleteFormHandler, getFormDataAPI, getUserFormDataAPI, selectFormData, slice } from "app/store/formData";
+import { AddUsersToForm, deleteFormHandler, fetchUserAllAPI, getFormDataAPI, getUserFormDataAPI, selectFormData, slice } from "app/store/formData";
 import { userTableMetaData } from "src/app/contanst/metaData";
 import { UserRole } from "src/enum";
-
-// const AddForms = (props) => {
-//   // const [formIoData, setFormData] = useState({
-//   //   display: "form",
-//   //   components: []
-//   // })
-//   // const printResult = () => {
-
-//   //   Formio.createForm(document.getElementById("formio-result"), {
-//   //   }).then((form) => {
-//   //     console.log(form.component.components);
-//   //     form.on("submit", (data) => console.log("submit", data));
-//   //   });
-//   //   // }
-//   // };
-
-//   return (
-//     <FormBuilderIo
-//       // form={formIoData}
-//       // onChange={schema => setFormData(schema)}
-//       // onSubmit={(data) => {
-//       //   console.log(data);
-//       // }}
-//       // saveForm={(data) => setFormData(data)}
-//       // saveText="Save Form"
-//       // onSubmitDone={(data) => console.log(data)}
-//     />
-//   );
-// }
+import { fetchUserAPI } from "app/store/userManagement";
 
 const Forms = (props) => {
   const { data } = useSelector(selectUser);
-  const { singleData, meta_data, dataUpdatingLoadding, dataFetchLoading } = useSelector(selectFormData);
+  const { singleData, users, meta_data, dataUpdatingLoadding, dataFetchLoading } = useSelector(selectFormData);
+  console.log(users.data);
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedRow, setSelectedRow] = useState<any>(null);
-  const [dialogType, setDialogType] = useState(false);
-
+  const [open, setOpen] = useState(false);
   const [deleteId, setDeleteId] = useState("");
-
-  // const [supportData, setSupportData] = useState({
-  //   request_id: data.user_id,
-  //   title: "",
-  //   description: "",
-  // });
 
   const deleteIcon = (id) => {
     setDeleteId(selectedRow?.id);
@@ -100,26 +74,11 @@ const Forms = (props) => {
 
   const dispatch: any = useDispatch();
 
-  // const clearSingleData = () => {
-  //   dispatch(slice.setSingleData({}));
-  //   setSupportData({
-  //     request_id: data.user_id,
-  //     title: "",
-  //     description: "",
-  //   });
-  // };
-
   const navigate = useNavigate();
 
   const handleClickOpen = () => {
-    // setDialogType(true);
     navigate("/forms/create");
   };
-
-  // const handleCloseDialog = () => {
-  //   // setDialogType(null);
-  //   clearSingleData();
-  // };
 
   const handleClick = (event, row) => {
     dispatch(slice.setSingleData(row));
@@ -127,7 +86,7 @@ const Forms = (props) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const   handleClose = () => {
+  const handleClose = () => {
     setAnchorEl(null);
     setSelectedRow(null);
   };
@@ -152,28 +111,6 @@ const Forms = (props) => {
     dispatch(getFormDataAPI({ page: 1, page_size: 10 }, ""));
   }, [dispatch]);
 
-
-  // const handleUpdate = async () => {
-  //   try {
-  //     let response;
-  //     response = await dispatch(updateSupportDataAPI(supportData));
-  //     dispatch(getSupportDataAPI({ page: 1, page_size: 10 }, data.user_id));
-  //   } catch (err) {
-  //     console.log(err);
-  //   } finally {
-  //     handleCloseDialog();
-  //     handleClose();
-  //   }
-  // };
-
-  // const handleChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setSupportData((prevState) => ({
-  //     ...prevState,
-  //     [name]: value,
-  //   }));
-  // };
-
   const handleChangePage = (event: unknown, newPage: number) => {
     dispatch(
       getFormDataAPI({ page: newPage, page_size: userTableMetaData.page_size })
@@ -186,10 +123,47 @@ const Forms = (props) => {
     return formattedDate;
   };
 
+  const handleOpen = () => {
+    setOpen(true);
+    dispatch(fetchUserAllAPI())
+  };
+
+  const handleCloseDialog = () => {
+    setOpen(false);
+    setSelectedValue("");
+    setuserData({ user_ids: [] });
+  };
+
+  const [selectedValue, setSelectedValue] = useState("");
+  const [userData, setuserData] = useState({ user_ids: [] });
+
+  const handleRadioChange = (event) => {
+    setSelectedValue(event.target.value);
+  };
+
+  const handleDataUpdate = (event) => {
+    setuserData({
+      ...userData,
+      user_ids: event.target.value,
+    });
+  };
+
+  const handleSubmit = async () => {
+    // Capture the form values here
+    if (selectedValue === 'Individual') {
+      await dispatch(AddUsersToForm(singleData.id, { user_ids: userData.user_ids }));
+    } else {
+      await dispatch(AddUsersToForm(singleData.id, { assign: selectedValue }));
+    }
+    navigate("/forms");
+    console.log(selectedValue);
+    console.log({ user_ids: [userData.user_ids] });
+  };
+
   return (
     <>
       <Grid className="m-10" sx={{ minHeight: 600 }}>
-        {data.role ==="Admin" && <Box className="flex justify-end mb-10"
+        {data.role === "Admin" && <Box className="flex justify-end mb-10"
           sx={{
             borderBottom: 1,
             borderColor: "divider",
@@ -259,21 +233,21 @@ const Forms = (props) => {
                         sx={{ borderBottom: "2px solid #F8F8F8" }}
                       >
                         {data.role === UserRole.Admin ?
-                        <IconButton
-                          size="small"
-                          sx={{ color: "#5B718F", marginRight: "4px" }}
-                          onClick={(e) => handleClick(e, row)}
-                        >
-                          <MoreHorizIcon fontSize="small" />
-                        </IconButton>
-                        :
-                        <IconButton
-                          size="small"
-                          sx={{ color: "#5B718F", marginRight: "4px" }}
-                          onClick={(e) => handleApply(e, row, "edit")}
-                        >
-                          <NorthEastIcon fontSize="small" />
-                        </IconButton>
+                          <IconButton
+                            size="small"
+                            sx={{ color: "#5B718F", marginRight: "4px" }}
+                            onClick={(e) => handleClick(e, row)}
+                          >
+                            <MoreHorizIcon fontSize="small" />
+                          </IconButton>
+                          :
+                          <IconButton
+                            size="small"
+                            sx={{ color: "#5B718F", marginRight: "4px" }}
+                            onClick={(e) => handleApply(e, row, "edit")}
+                          >
+                            <NorthEastIcon fontSize="small" />
+                          </IconButton>
                         }
                       </TableCell>
                     </TableRow>
@@ -344,6 +318,14 @@ const Forms = (props) => {
         >
           <MenuItem
             onClick={() => {
+              // handleUser("user");
+              handleOpen();
+              handleClose();
+            }}>
+            Asign Users
+          </MenuItem>
+          <MenuItem
+            onClick={() => {
               handleEdit("view");
               handleClose();
             }}>
@@ -366,6 +348,122 @@ const Forms = (props) => {
           </MenuItem>
         </Menu>
 
+        <Dialog
+          open={open}
+          onClose={handleCloseDialog}
+          sx={{
+            ".MuiDialog-paper": {
+              borderRadius: "4px",
+              width: "100%",
+            },
+          }}
+        >
+          <DialogContent >
+            <Grid /* className="flex flex-col items-start" */>
+              <FormControl component="fieldset">
+                <FormLabel component="legend">Select Asign Users</FormLabel>
+                <RadioGroup
+                  aria-label="options"
+                  defaultValue="outlined"
+                  name="radio-buttons-group"
+                // orientation="vertical"
+                >
+                  <FormControlLabel
+                    value="All"
+                    control={<Radio />}
+                    label="All"
+                    onChange={handleRadioChange}
+                  />
+                  <FormControlLabel
+                    value="All Learner"
+                    control={<Radio />}
+                    label="All Learner"
+                    onChange={handleRadioChange}
+                  />
+                  <FormControlLabel
+                    value="All EQA"
+                    control={<Radio />}
+                    label="All EQA"
+                    onChange={handleRadioChange}
+                  />
+                  <FormControlLabel
+                    value="All Trainer"
+                    control={<Radio />}
+                    label="All Trainer"
+                    onChange={handleRadioChange}
+                  />
+                  <FormControlLabel
+                    value="All Employer"
+                    control={<Radio />}
+                    label="All Employer"
+                    onChange={handleRadioChange}
+                  />
+                  <FormControlLabel
+                    value="All IQA"
+                    control={<Radio />}
+                    label="All IQA"
+                    onChange={handleRadioChange}
+                  />
+                  <FormControlLabel
+                    value="All LIQA"
+                    control={<Radio />}
+                    label="All LIQA"
+                    onChange={handleRadioChange}
+                  />
+                  <FormControlLabel
+                    value="Individual"
+                    control={<Radio checked={selectedValue === 'Individual'} onChange={handleRadioChange} />}
+                    label="Individual"
+                    onChange={handleRadioChange}
+                  />
+                  {selectedValue === 'Individual' && (
+                    <Grid className="w-full">
+                      <Typography sx={{ fontSize: '0.9vw', marginBottom: '0.5rem', fontWeight: '500' }}>
+                        Select Users
+                      </Typography>
+                      <Select
+                        name="users"
+                        value={userData.user_ids}
+                        size="small"
+                        placeholder="Select users"
+                        required
+                        fullWidth
+                        multiple
+                        onChange={handleDataUpdate}
+                        renderValue={(selected) =>
+                          selected.map((id) => {
+                            const allusers = users.data.find((user) => user.user_id === id);
+                            return allusers ? allusers.user_name : '';
+                          }).join(', ')
+                        }
+                      >
+                        {users.data.map((data) => (
+                          <MenuItem key={data.user_id} value={data.user_id}>
+                            <Checkbox checked={userData.user_ids.includes(data.user_id)} />
+                            <ListItemText primary={data.user_name} />
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </Grid>
+                  )}
+                </RadioGroup>
+              </FormControl>
+            </Grid>
+          </DialogContent>
+
+          <Box className="flex items-center justify-end m-12 mt-24">
+            <DialogActions>
+              {dataUpdatingLoadding ?
+                <LoadingButton />
+                :
+                <>
+                  <SecondaryButtonOutlined name="Cancel" className=" w-1/12" onClick={handleCloseDialog} />
+                  <SecondaryButton name="Asign Users" className=" ml-10" onClick={handleSubmit} disable={!userData || !selectedValue} />
+                </>
+              }
+            </DialogActions>
+          </Box>
+        </Dialog>
       </Grid>
     </>
   );

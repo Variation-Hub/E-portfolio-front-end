@@ -96,8 +96,10 @@ const AddForms = (props) => {
     const handleSubmitForm = async (data) => {
         try {
             let response;
-            response = await dispatch(createUserFormDataAPI({ form_id: singleData.id, form_data: data }));
-            navigate("/forms");
+            if (user.role !== UserRole.Admin) {
+                response = await dispatch(createUserFormDataAPI({ form_id: singleData.id, form_data: data }));
+                navigate("/forms");
+            }
         } catch (err) {
             console.log(err);
         }
