@@ -1,0 +1,23 @@
+.collapse {
+    visibility: visible;
+}
+
+.formcomponents .formcomponent {
+    font-size: 1.3rem !important;
+}
+
+.btn {
+    font-size: 1.3rem !important;
+}
+
+.form-control {
+    font-size: 1.3rem !important;
+}
+
+.col-form-label {
+    font-size: 1.3rem !important;
+}
+
+.alert-info {
+    font-size: 1.3rem !important;
+}

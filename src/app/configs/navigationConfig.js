@@ -182,7 +182,7 @@ const navigationConfig = [{
     type: 'item',
     icon: 'material-outline:feed',
     url: '/forms',
-    visible: [UserRole.Admin],
+    visible: [UserRole.Trainer, UserRole.Learner, UserRole.Employer, UserRole.IQA, UserRole.EQA, UserRole.Admin, UserRole.LIQA],
 },
 {
     id: 'dashboards.enrolments',
