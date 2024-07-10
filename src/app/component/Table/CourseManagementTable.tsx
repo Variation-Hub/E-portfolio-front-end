@@ -40,7 +40,7 @@ export default function CourseManagementTable(props) {
   const {
     columns,
     rows,
-    setUpdateData = () => { },
+    setUpdateData = () => {},
     meta_data,
     dataUpdatingLoadding,
     search_keyword = "",
@@ -68,7 +68,7 @@ export default function CourseManagementTable(props) {
   };
 
   const editIcon = (edit) => {
-    setEdit(edit)
+    setEdit(edit);
     setUpdateData(openMenuDialog);
     setOpen(true);
     const data = rows.find((item) => item.course_id === openMenuDialog);
@@ -98,7 +98,7 @@ export default function CourseManagementTable(props) {
       recommended_minimum_age: data?.recommended_minimum_age || "",
       sector: data?.sector || "",
       total_credits: data?.total_credits || "",
-      units: data?.units
+      units: data?.units,
     };
     dispatch(slice.updatePreFillData(preFillData));
   };
@@ -111,7 +111,6 @@ export default function CourseManagementTable(props) {
     handleClick(e);
     setOpenMenuDialog(id);
   };
-
 
   const deleteConfromation = async () => {
     await dispatch(
