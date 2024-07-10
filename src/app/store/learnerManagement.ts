@@ -4,6 +4,7 @@ import jsonData from 'src/url.json';
 import { showMessage } from './fuse/messageSlice';
 import { userTableMetaData } from '../contanst/metaData';
 import JwtService from '../auth/services/jwtService';
+import HelpOutlined from '@mui/icons-material/HelpOutlined';
 
 const initialState = {
     data: [],
@@ -133,10 +134,7 @@ export const fetchLearnerAPI = (data = { page: 1, page_size: 25 }, search_keywor
 export const getRoleAPI = (role) => async (dispatch) => {
     try {
         dispatch(slice.setLoader());
-        console.log("getRoleAPI");
-
         let url = `${URL_BASE_LINK}/user/list?role=${role}`
-
         const response = await axios.get(url);
         // dispatch(showMessage({ message: response.data.message, variant: "success" }))
         if (role === "Trainer")
@@ -175,7 +173,6 @@ export const getLearnerDetails = () => async (dispatch) => {
 export const updateLearnerAPI = (id, data) => async (dispatch) => {
 
     try {
-
         dispatch(slice.setUpdatingLoader());
         const { password, confrimpassword, ...payload } = data
         const response = await axios.patch(`${URL_BASE_LINK}/learner/update/${id}`, payload)
