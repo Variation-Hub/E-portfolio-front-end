@@ -208,4 +208,35 @@ export const AddUsersToForm = (form_id, data) => async (dispatch) => {
         return false;
     };
 }
+
+// User form data 
+
+export const getUserAllFormAPI = (data = { page: 1, page_size: 10 }, search_keyword = "") => async (dispatch) => {
+
+    try {
+
+        dispatch(slice.setLoader());
+
+        const { page = 1, page_size = 10 } = data;
+
+        let url = `${URL_BASE_LINK}/form/list/user?meta=true&page=${page}&limit=${page_size}`;
+
+        if (search_keyword) {
+            url = `${url}&keyword=${search_keyword}`
+        }
+
+        const response = await axios.get(url);
+        // dispatch(showMessage({ message: response.data.message, variant: "success" }))
+        dispatch(slice.setFormData(response.data))
+        dispatch(slice.setLoader());
+        return true;
+
+    } catch (err) {
+        dispatch(showMessage({ message: err.response.data.message, variant: "error" }))
+        dispatch(slice.setLoader());
+        return false
+    };
+
+}
+
 export default formDataSlice.reducer;
