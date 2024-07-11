@@ -21,3 +21,16 @@
 .alert-info {
     font-size: 1.3rem !important;
 }
+
+.search_filed {
+    display: flex;
+    gap: 12px;
+    width: 25%;
+}
+
+@media screen and (max-width:426px) {
+
+    .search_filed {
+        width: 50%;
+    }
+}

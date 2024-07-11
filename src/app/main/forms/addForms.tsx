@@ -37,7 +37,7 @@ const AddForms = (props) => {
                 id: singleData.id,
                 form_name: singleData.form_name,
                 description: singleData.description,
-                form_data: singleData.form_data.map((item: any) => {
+                form_data: singleData?.form_data?.map((item: any) => {
                     const { id, ...rest } = item;
                     return rest;
                 }),

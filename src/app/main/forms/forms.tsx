@@ -1,4 +1,5 @@
 import {
+  Autocomplete,
   Checkbox,
   Dialog,
   DialogActions,
@@ -8,6 +9,7 @@ import {
   FormLabel,
   Grid,
   IconButton,
+  InputAdornment,
   ListItemText,
   Menu,
   MenuItem,
@@ -16,6 +18,8 @@ import {
   Radio,
   RadioGroup,
   Select,
+  Tabs,
+  Tab,
   Table,
   TableBody,
   TableCell,
@@ -23,6 +27,7 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
 import { Stack } from "@mui/system";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
@@ -51,420 +56,121 @@ import { AddUsersToForm, deleteFormHandler, fetchUserAllAPI, getFormDataAPI, get
 import { userTableMetaData } from "src/app/contanst/metaData";
 import { UserRole } from "src/enum";
 import { fetchUserAPI } from "app/store/userManagement";
+import Close from "@mui/icons-material/Close";
+import SubmittedForms from "./submittedForms";
+import FormBuilder from "./formBuilder";
+
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: number;
+  value: number;
+}
+
+function CustomTabPanel(props: TabPanelProps) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box >
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
+
+function a11yProps(index: number) {
+  return {
+    id: `simple-tab-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
+  };
+}
 
 const Forms = (props) => {
+  const [value, setValue] = useState(0);
+
+  const handleTabChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
   const { data } = useSelector(selectUser);
-  const { singleData, users, meta_data, dataUpdatingLoadding, dataFetchLoading } = useSelector(selectFormData);
-  console.log(users.data);
-
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [selectedRow, setSelectedRow] = useState<any>(null);
-  const [open, setOpen] = useState(false);
-  const [deleteId, setDeleteId] = useState("");
-
-  const deleteIcon = (id) => {
-    setDeleteId(selectedRow?.id);
-  };
-
-  const deleteConfromation = async () => {
-    await dispatch(deleteFormHandler(deleteId));
-    dispatch(getFormDataAPI({ page: 1, page_size: 10 }, ""));
-    setDeleteId("");
-  };
-
-  const dispatch: any = useDispatch();
-
-  const navigate = useNavigate();
-
-  const handleClickOpen = () => {
-    navigate("/forms/create");
-  };
-
-  const handleClick = (event, row) => {
-    dispatch(slice.setSingleData(row));
-    setSelectedRow(row);
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-    setSelectedRow(null);
-  };
-
-  const handleEdit = (edit) => {
-    dispatch(slice.setMode(edit));
-    navigate("/forms/create");
-    // setSupportData(singleData);
-    // handleClickOpen();
-  };
-
-  const handleApply = (e, row, edit) => {
-    dispatch(slice.setSingleData(row));
-    setSelectedRow(row);
-    dispatch(slice.setMode(edit));
-    navigate("/forms/create");
-  }
-
-  const formdata = useSelector(selectFormData);
-
-  useEffect(() => {
-    dispatch(getFormDataAPI({ page: 1, page_size: 10 }, ""));
-  }, [dispatch]);
-
-  const handleChangePage = (event: unknown, newPage: number) => {
-    dispatch(
-      getFormDataAPI({ page: newPage, page_size: userTableMetaData.page_size })
-    );
-  };
-
-  const formatDate = (date) => {
-    if (!date) return '';
-    const formattedDate = date.substr(0, 10);
-    return formattedDate;
-  };
-
-  const handleOpen = () => {
-    setOpen(true);
-    dispatch(fetchUserAllAPI())
-  };
-
-  const handleCloseDialog = () => {
-    setOpen(false);
-    setSelectedValue("");
-    setuserData({ user_ids: [] });
-  };
-
-  const [selectedValue, setSelectedValue] = useState("");
-  const [userData, setuserData] = useState({ user_ids: [] });
-
-  const handleRadioChange = (event) => {
-    setSelectedValue(event.target.value);
-  };
-
-  const handleDataUpdate = (event) => {
-    setuserData({
-      ...userData,
-      user_ids: event.target.value,
-    });
-  };
-
-  const handleSubmit = async () => {
-    // Capture the form values here
-    if (selectedValue === 'Individual') {
-      await dispatch(AddUsersToForm(singleData.id, { user_ids: userData.user_ids }));
-    } else {
-      await dispatch(AddUsersToForm(singleData.id, { assign: selectedValue }));
-    }
-    navigate("/forms");
-    console.log(selectedValue);
-    console.log({ user_ids: [userData.user_ids] });
-  };
 
   return (
     <>
       <Grid className="m-10" sx={{ minHeight: 600 }}>
-        {data.role === "Admin" && <Box className="flex justify-end mb-10"
-          sx={{
-            borderBottom: 1,
-            borderColor: "divider",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}>
-          <SecondaryButton
-            name="Add Forms"
-            className="p-12 mb-10"
-            startIcon={<AddIcon sx={{ mx: -0.5 }} />}
-            onClick={() => handleClickOpen()}
-          />
-        </Box>}
-        <div >
-          <TableContainer sx={{ maxHeight: 530 }} >
-            {dataFetchLoading ? (
-              <FuseLoading />
-            ) : formdata.data.length ? (
-              <Table
-                sx={{ minWidth: 650, heighFaddt: "100%" }}
-                size="small"
-                aria-label="simple table"
-              >
-                <TableHead className="bg-[#F8F8F8]">
-                  <TableRow>
-                    <TableCell>Form Name</TableCell>
-                    <TableCell align="left">Description</TableCell>
-                    <TableCell align="left">Type</TableCell>
-                    <TableCell align="left">Created At</TableCell>
-                    <TableCell align="left">Action</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {formdata.data?.map((row) => (
-                    <TableRow
-                      key={row.form_name}
-                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                    >
-                      <TableCell
-                        component="th"
-                        scope="row"
-                        sx={{ borderBottom: "2px solid #F8F8F8" }}
-                      >
-                        {row.form_name}
-                      </TableCell>
-                      <TableCell
-                        align="left"
-                        sx={{ borderBottom: "2px solid #F8F8F8" }}
-                      >
-                        {row.description}
-                      </TableCell>
-                      <TableCell
-                        align="left"
-                        sx={{ borderBottom: "2px solid #F8F8F8" }}
-                      >
-                        {row.type}
-                      </TableCell>
-                      <TableCell
-                        align="left"
-                        sx={{ borderBottom: "2px solid #F8F8F8" }}
-                      >
-                        {formatDate(row.created_at)}
-                      </TableCell>
-                      <TableCell
-                        align="left"
-                        sx={{ borderBottom: "2px solid #F8F8F8" }}
-                      >
-                        {data.role === UserRole.Admin ?
-                          <IconButton
-                            size="small"
-                            sx={{ color: "#5B718F", marginRight: "4px" }}
-                            onClick={(e) => handleClick(e, row)}
-                          >
-                            <MoreHorizIcon fontSize="small" />
-                          </IconButton>
-                          :
-                          <IconButton
-                            size="small"
-                            sx={{ color: "#5B718F", marginRight: "4px" }}
-                            onClick={(e) => handleApply(e, row, "edit")}
-                          >
-                            <NorthEastIcon fontSize="small" />
-                          </IconButton>
-                        }
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            ) : (
-              <div
-                className="flex flex-col justify-center items-center gap-10 "
-                style={{ height: "94%" }}
-              >
-                <DataNotFound width="25%" />
-                <Typography variant="h5">No data found</Typography>
-                <Typography variant="body2" className="text-center">
-                  It is a long established fact that a reader will be <br />
-                  distracted by the readable content.
-                </Typography>
-              </div>
-            )}
-          </TableContainer>
-          <div className="fixed bottom-0 left-0 w-full flex justify-center py-4">
-            <Stack
-              spacing={2}
-              className="flex justify-center items-center w-full my-12"
-            >
-              <Pagination
-                count={meta_data?.pages}
-                page={meta_data?.page}
-                variant="outlined"
-                onChange={handleChangePage}
-                shape="rounded"
-                siblingCount={1}
-                boundaryCount={1}
-              />
-            </Stack>
-          </div>
-        </div>
-
-        <AlertDialog
-          open={Boolean(deleteId)}
-          close={() => deleteIcon("")}
-          title="Delete Form?"
-          content="Deleting this form will also remove all associated data and relationships. Proceed with deletion?"
-          className="-224 "
-          actionButton={
-            dataUpdatingLoadding ? (
-              <LoadingButton />
-            ) : (
-              <DangerButton
-                onClick={deleteConfromation}
-                name="Delete Form"
-              />
-            )
-          }
-          cancelButton={
-            <SecondaryButtonOutlined
-              className="px-24"
-              onClick={() => deleteIcon("")}
-              name="Cancel"
-            />
-          }
-        />
-
-        <Menu
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClose={handleClose}
-        >
-          <MenuItem
-            onClick={() => {
-              // handleUser("user");
-              handleOpen();
-              handleClose();
-            }}>
-            Asign Users
-          </MenuItem>
-          <MenuItem
-            onClick={() => {
-              handleEdit("view");
-              handleClose();
-            }}>
-            View
-          </MenuItem>
-          <MenuItem
-            onClick={() => {
-              handleEdit("edit");
-              handleClose();
-            }}>
-            Edit
-          </MenuItem>
-          <MenuItem
-            onClick={() => {
-              handleClose();
-              deleteIcon(selectedRow);
+        {data.role === "Admin" &&
+          <Box
+            sx={{
+              borderBottom: 1,
+              borderColor: "divider",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
             }}
           >
-            Delete
-          </MenuItem>
-        </Menu>
-
-        <Dialog
-          open={open}
-          onClose={handleCloseDialog}
-          sx={{
-            ".MuiDialog-paper": {
-              borderRadius: "4px",
-              width: "100%",
-            },
-          }}
-        >
-          <DialogContent >
-            <Grid /* className="flex flex-col items-start" */>
-              <FormControl component="fieldset">
-                <FormLabel component="legend">Select Asign Users</FormLabel>
-                <RadioGroup
-                  aria-label="options"
-                  defaultValue="outlined"
-                  name="radio-buttons-group"
-                // orientation="vertical"
-                >
-                  <FormControlLabel
-                    value="All"
-                    control={<Radio />}
-                    label="All"
-                    onChange={handleRadioChange}
-                  />
-                  <FormControlLabel
-                    value="All Learner"
-                    control={<Radio />}
-                    label="All Learner"
-                    onChange={handleRadioChange}
-                  />
-                  <FormControlLabel
-                    value="All EQA"
-                    control={<Radio />}
-                    label="All EQA"
-                    onChange={handleRadioChange}
-                  />
-                  <FormControlLabel
-                    value="All Trainer"
-                    control={<Radio />}
-                    label="All Trainer"
-                    onChange={handleRadioChange}
-                  />
-                  <FormControlLabel
-                    value="All Employer"
-                    control={<Radio />}
-                    label="All Employer"
-                    onChange={handleRadioChange}
-                  />
-                  <FormControlLabel
-                    value="All IQA"
-                    control={<Radio />}
-                    label="All IQA"
-                    onChange={handleRadioChange}
-                  />
-                  <FormControlLabel
-                    value="All LIQA"
-                    control={<Radio />}
-                    label="All LIQA"
-                    onChange={handleRadioChange}
-                  />
-                  <FormControlLabel
-                    value="Individual"
-                    control={<Radio checked={selectedValue === 'Individual'} onChange={handleRadioChange} />}
-                    label="Individual"
-                    onChange={handleRadioChange}
-                  />
-                  {selectedValue === 'Individual' && (
-                    <Grid className="w-full">
-                      <Typography sx={{ fontSize: '0.9vw', marginBottom: '0.5rem', fontWeight: '500' }}>
-                        Select Users
-                      </Typography>
-                      <Select
-                        name="users"
-                        value={userData.user_ids}
-                        size="small"
-                        placeholder="Select users"
-                        required
-                        fullWidth
-                        multiple
-                        onChange={handleDataUpdate}
-                        renderValue={(selected) =>
-                          selected.map((id) => {
-                            const allusers = users.data.find((user) => user.user_id === id);
-                            return allusers ? allusers.user_name : '';
-                          }).join(', ')
-                        }
-                      >
-                        {users.data.map((data) => (
-                          <MenuItem key={data.user_id} value={data.user_id}>
-                            <Checkbox checked={userData.user_ids.includes(data.user_id)} />
-                            <ListItemText primary={data.user_name} />
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </Grid>
-                  )}
-                </RadioGroup>
-              </FormControl>
-            </Grid>
-          </DialogContent>
-
-          <Box className="flex items-center justify-end m-12 mt-24">
-            <DialogActions>
-              {dataUpdatingLoadding ?
-                <LoadingButton />
-                :
-                <>
-                  <SecondaryButtonOutlined name="Cancel" className=" w-1/12" onClick={handleCloseDialog} />
-                  <SecondaryButton name="Asign Users" className=" ml-10" onClick={handleSubmit} disable={!userData || !selectedValue} />
-                </>
-              }
-            </DialogActions>
+            <Tabs
+              value={value}
+              onChange={handleTabChange}
+              aria-label="basic tabs example"
+              className="border-1 m-12 rounded-md"
+              sx={{
+                "& .MuiTabs-indicator": {
+                  display: "none",
+                },
+              }}
+            >
+              <Tab
+                label="Form bulider"
+                {...a11yProps(0)}
+                sx={{
+                  borderRight: "1px solid #e5e7eb",
+                  "&:last-child": { borderRight: "none" },
+                  "&:hover": {
+                    backgroundColor: "#6D81A3",
+                    color: "#ffffff",
+                    borderRadius: "0px",
+                  },
+                  "&.Mui-selected": {
+                    backgroundColor: "#6D81A3",
+                    color: "#ffffff",
+                    borderRadius: "0px",
+                  },
+                }}
+              />
+              <Tab
+                label="Submitted Form"
+                {...a11yProps(1)}
+                sx={{
+                  borderRight: "1px solid #e5e7eb",
+                  "&:last-child": { borderRight: "none" },
+                  "&.Mui-selected": {
+                    backgroundColor: "#6D81A3",
+                    color: "#ffffff",
+                    borderRadius: "0px",
+                  },
+                }}
+              />
+            </Tabs>
           </Box>
-        </Dialog>
-      </Grid>
+        }
+
+        <CustomTabPanel value={value} index={0} >
+          <FormBuilder />
+          {/* <h1>Tab 1</h1> */}
+        </CustomTabPanel>
+
+        <CustomTabPanel value={value} index={1}>
+          {<SubmittedForms />}
+          {/* <h1>Tab 2</h1> */}
+        </CustomTabPanel>
+      </Grid >
     </>
   );
 };
