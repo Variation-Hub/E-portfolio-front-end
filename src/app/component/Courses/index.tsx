@@ -27,6 +27,7 @@ import {
 } from "app/store/courseManagement";
 import { useSelector } from "react-redux";
 import CloseIcon from "@mui/icons-material/Close";
+import Style from "./style.module.css";
 
 const generateUnitObject = (unitDataArray = []) => {
   const unitObject = {};
@@ -323,7 +324,10 @@ const CourseBuilder = (props) => {
       <div className="p-10">
         <Box className="m-12 flex flex-col justify-between gap-12 sm:flex-row">
           <div className="w-1/3">
-            <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
+            <Typography
+              sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}
+              className={Style.name}
+            >
               Course Name<sup>*</sup>
             </Typography>
             <TextField
@@ -335,10 +339,14 @@ const CourseBuilder = (props) => {
               value={courseData.course_name}
               onChange={courseHandler}
               disabled={edit === "view"}
+              className={Style.input_feald}
             />
           </div>
           <div className="w-1/3">
-            <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
+            <Typography
+              sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}
+              className={Style.name}
+            >
               Course Code<sup>*</sup>
             </Typography>
             <TextField
@@ -350,10 +358,14 @@ const CourseBuilder = (props) => {
               value={courseData.course_code}
               onChange={courseHandler}
               disabled={edit === "view"}
+              className={Style.input_feald}
             />
           </div>
           <div className="w-1/3">
-            <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
+            <Typography
+              sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}
+              className={Style.name}
+            >
               Level<sup>*</sup>
             </Typography>
             <TextField
@@ -366,13 +378,17 @@ const CourseBuilder = (props) => {
               value={courseData.level}
               onChange={courseHandler}
               disabled={edit === "view"}
+              className={Style.input_feald}
             />
           </div>
         </Box>
 
         <Box className="m-12 flex flex-col justify-between gap-12 sm:flex-row">
           <div className="w-1/3">
-            <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
+            <Typography
+              sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}
+              className={Style.name}
+            >
               Sector
             </Typography>
             <TextField
@@ -383,10 +399,14 @@ const CourseBuilder = (props) => {
               value={courseData.sector}
               onChange={courseHandler}
               disabled={edit === "view"}
+              className={Style.input_feald}
             />
           </div>
           <div className="w-1/3">
-            <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
+            <Typography
+              sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", width: "200px" }}
+              className={Style.name}
+            >
               Qualification Type
             </Typography>
             <TextField
@@ -397,11 +417,15 @@ const CourseBuilder = (props) => {
               value={courseData.qualification_type}
               onChange={courseHandler}
               disabled={edit === "view"}
+              className={Style.input_feald}
             />
           </div>
 
           <div className="w-1/3">
-            <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
+            <Typography
+              sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", width: "200px" }}
+              className={Style.name}
+            >
               Recommended Minimum age
             </Typography>
             <TextField
@@ -413,12 +437,16 @@ const CourseBuilder = (props) => {
               value={courseData.recommended_minimum_age}
               onChange={courseHandler}
               disabled={edit === "view"}
+              className={Style.input_feald}
             />
           </div>
         </Box>
         <Box className="m-12 flex flex-col justify-between gap-12 sm:flex-row">
           <div className="w-1/3">
-            <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
+            <Typography
+              sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}
+              className={Style.name}
+            >
               Total Credits
             </Typography>
             <TextField
@@ -430,10 +458,14 @@ const CourseBuilder = (props) => {
               value={courseData.total_credits}
               onChange={courseHandler}
               disabled={edit === "view"}
+              className={Style.input_feald}
             />
           </div>
           <div className="w-1/3">
-            <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
+            <Typography
+              sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", width: "200px" }}
+              className={Style.name}
+            >
               Operational start date
             </Typography>
             <TextField
@@ -445,10 +477,14 @@ const CourseBuilder = (props) => {
               value={formatDate(courseData.operational_start_date)}
               onChange={courseHandler}
               disabled={edit === "view"}
+              className={Style.input_feald}
             />
           </div>
           <div className="w-1/3">
-            <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
+            <Typography
+              sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", width: "200px" }}
+              className={Style.name}
+            >
               Qualification status
             </Typography>
             <TextField
@@ -459,13 +495,17 @@ const CourseBuilder = (props) => {
               value={courseData.qualification_status}
               onChange={courseHandler}
               disabled={edit === "view"}
+              className={Style.input_feald}
             />
           </div>
         </Box>
 
         <Box className="m-12 flex flex-col justify-between gap-12 sm:flex-row">
           <div className="w-1/2">
-            <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
+            <Typography
+              sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}
+              className={Style.name}
+            >
               Guided Learning Hours
             </Typography>
             <TextField
@@ -476,10 +516,14 @@ const CourseBuilder = (props) => {
               value={courseData.guided_learning_hours}
               onChange={courseHandler}
               disabled={edit === "view"}
+              className={Style.last2_input_feald}
             />
           </div>
           <div className="w-1/2">
-            <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
+            <Typography
+              sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}
+              className={Style.name}
+            >
               Overall Grading Type
             </Typography>
             <TextField
@@ -490,13 +534,17 @@ const CourseBuilder = (props) => {
               value={courseData.overall_grading_type}
               onChange={courseHandler}
               disabled={edit === "view"}
+              className={Style.last2_input_feald}
             />
           </div>
         </Box>
 
         <Box className="m-12 flex flex-col justify-between gap-12 sm:flex-row">
           <div className="w-full">
-            <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
+            <Typography
+              sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}
+              className={Style.name}
+            >
               Course Guidelines
             </Typography>
             <TextField
@@ -509,6 +557,7 @@ const CourseBuilder = (props) => {
               value={courseData.brand_guidelines}
               onChange={courseHandler}
               disabled={edit === "view"}
+              className={Style.last_input_feald}
             />
           </div>
         </Box>

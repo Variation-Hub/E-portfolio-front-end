@@ -23,6 +23,7 @@ import {
 } from "app/store/courseManagement";
 import FuseLoading from "@fuse/core/FuseLoading";
 import Close from "@mui/icons-material/Close";
+import Style from "./style.module.css";
 
 const CourseBuilder = () => {
   const { dataUpdatingLoadding, meta_data, data, dataFetchLoading } =
@@ -67,9 +68,9 @@ const CourseBuilder = () => {
 
   return (
     <>
-      <Card className="m-12 rounded-6" style={{ height: "87.9vh" }}>
+      <Card className="m-10 rounded-6" style={{ height: "88.5vh" }}>
         {data.length || searchKeyword ? (
-          <div className="m-12 flex items-center justify-between mt-10">
+          <div className={`m-12 flex items-center justify-between mt-10 ${Style.Search_container}`}>
             <TextField
               label="Search by keyword"
               fullWidth
@@ -77,7 +78,7 @@ const CourseBuilder = () => {
               onKeyDown={searchByKeywordUser}
               onChange={searchHandler}
               value={searchKeyword}
-              className="w-1/4"
+              className={`w-1/4 ${Style.Search}`}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
@@ -111,9 +112,9 @@ const CourseBuilder = () => {
               }}
             />
 
-            <div className="flex items-center space-x-4">
+            <div className={`flex items-center space-x-4 ${Style.button}`}>
               <SecondaryButton
-              disable={true}
+                disable={true}
                 className="py-6 mr-4"
                 name="Upload Files"
                 startIcon={
@@ -177,7 +178,7 @@ const CourseBuilder = () => {
                           className="w-6 h-6 mr-2 sm:w-8 sm:h-8 lg:w-10 lg:h-10"
                         />
                       }
-                    // onClick={handleOpen}
+                      // onClick={handleOpen}
                     />
                   </span>
                 </Tooltip>

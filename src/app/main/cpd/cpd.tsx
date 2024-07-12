@@ -27,19 +27,28 @@ import {
   SecondaryButton,
   SecondaryButtonOutlined,
 } from "src/app/component/Buttons";
-import { createActivityAPI, createCpdPlanningAPI, createEvaluationAPI, createReflectionAPI, selectCpdPlanning, updateActivityAPI, updateCpdPlanningAPI, updateEvaluationAPI, updateReflectionsAPI, uploadImages } from "app/store/cpdPlanning";
+import {
+  createActivityAPI,
+  createCpdPlanningAPI,
+  createEvaluationAPI,
+  createReflectionAPI,
+  selectCpdPlanning,
+  updateActivityAPI,
+  updateCpdPlanningAPI,
+  updateEvaluationAPI,
+  updateReflectionsAPI,
+  uploadImages,
+} from "app/store/cpdPlanning";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { FileUploader } from "react-drag-drop-files";
-import FileCopyIcon from '@mui/icons-material/FileCopy';
+import FileCopyIcon from "@mui/icons-material/FileCopy";
+import Style from "./style.module.css"
 
 // Separate components for dialog content
 
-
-
 const ExportPdfDialogContent = () => <div>Hello PDF In Evaluation</div>;
-
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -76,14 +85,14 @@ function a11yProps(index: number) {
 
 const Cpd = (props) => {
   const { edit = "Save" } = props;
-  const { data, dataFetchLoading, dataUpdatingLoadding, meta_data } = useSelector(selectCpdPlanning)
+  const { data, dataFetchLoading, dataUpdatingLoadding, meta_data } =
+    useSelector(selectCpdPlanning);
   const [value, setValue] = useState(0);
   const [dialogType, setDialogType] = useState<string | null>(data.dialogType);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const dispatch: any = useDispatch();
-  const { singleData } = useSelector(selectCpdPlanning)
-
+  const { singleData } = useSelector(selectCpdPlanning);
 
   const [formData, setFormData] = useState({
     year: singleData?.year || "",
@@ -109,17 +118,16 @@ const Cpd = (props) => {
     timeTake: {
       day: singleData?.timeTake?.day || 0,
       hours: singleData?.timeTake?.hours || 0,
-      minutes: singleData?.timeTake?.minutes || 0
+      minutes: singleData?.timeTake?.minutes || 0,
     },
     completed: singleData?.completed || "",
     files: singleData?.files || [],
   });
 
-
   const handleAddActivity = () => {
-    setFormData(prevFormData => ({
+    setFormData((prevFormData) => ({
       ...prevFormData,
-      activities: [...prevFormData.activities, activityData]
+      activities: [...prevFormData.activities, activityData],
     }));
 
     setActivityData({
@@ -132,7 +140,7 @@ const Cpd = (props) => {
       timeTake: {
         day: 0,
         hours: 0,
-        minutes: 0
+        minutes: 0,
       },
       completed: "",
       files: [],
@@ -149,11 +157,10 @@ const Cpd = (props) => {
     files: singleData?.files || [],
   });
 
-
   const handleAddEvaluation = () => {
-    setFormData(prevFormData => ({
+    setFormData((prevFormData) => ({
       ...prevFormData,
-      evaluations: [...prevFormData.evaluations, evaluationData]
+      evaluations: [...prevFormData.evaluations, evaluationData],
     }));
 
     setEvaluationData({
@@ -176,11 +183,10 @@ const Cpd = (props) => {
     files: singleData?.files || [],
   });
 
-
   const handleAddReflection = () => {
-    setFormData(prevFormData => ({
+    setFormData((prevFormData) => ({
       ...prevFormData,
-      reflections: [...prevFormData.reflections, reflectionData]
+      reflections: [...prevFormData.reflections, reflectionData],
     }));
 
     setReflectionData({
@@ -208,7 +214,7 @@ const Cpd = (props) => {
       setMinEndDate(value);
     }
     if (name == "year") {
-      setcpdId(data.data.find(item => item.year === value).id);
+      setcpdId(data.data.find((item) => item.year === value).id);
     }
   };
 
@@ -221,7 +227,6 @@ const Cpd = (props) => {
       console.log(id);
 
       switch (dialogType) {
-
         case "addPlan":
           if (edit === "Save") {
             response = await dispatch(createCpdPlanningAPI({ ...formData }));
@@ -234,17 +239,21 @@ const Cpd = (props) => {
           // handleAddActivity()
 
           if (edit === "Save") {
-            response = await dispatch(createActivityAPI({ ...activityData, cpd_id: cpdId }));
+            response = await dispatch(
+              createActivityAPI({ ...activityData, cpd_id: cpdId })
+            );
           } else if (edit == "edit") {
             response = await dispatch(updateActivityAPI(id, activityData));
           }
           console.log("Submitting Add New data:", id, activityData);
           break;
         case "addNewEvaluation":
-          handleAddEvaluation()
+          handleAddEvaluation();
 
           if (edit === "Save") {
-            response = await dispatch(createEvaluationAPI({ ...evaluationData, cpd_id: cpdId }));
+            response = await dispatch(
+              createEvaluationAPI({ ...evaluationData, cpd_id: cpdId })
+            );
           } else if (edit == "edit") {
             response = await dispatch(updateEvaluationAPI(id, evaluationData));
           }
@@ -254,9 +263,11 @@ const Cpd = (props) => {
           console.log("Exporting PDF with data:", formData);
           break;
         case "addReflection":
-          handleAddReflection()
+          handleAddReflection();
           if (edit === "Save") {
-            response = await dispatch(createReflectionAPI({ ...reflectionData, cpd_id: cpdId }));
+            response = await dispatch(
+              createReflectionAPI({ ...reflectionData, cpd_id: cpdId })
+            );
           } else if (edit == "edit") {
             response = await dispatch(updateReflectionsAPI(id, reflectionData));
           }
@@ -267,16 +278,15 @@ const Cpd = (props) => {
       }
 
       if (response) {
-        navigate("/cpd")
+        navigate("/cpd");
       }
     } catch (error) {
       console.error("Error during submission:", error);
     } finally {
       setLoading(false);
       handleClose();
-      setcpdId("")
+      setcpdId("");
     }
-
   };
 
   const handleTabChange = (event, newValue) => {
@@ -295,6 +305,7 @@ const Cpd = (props) => {
     <div>
       <Box sx={{ width: "100%" }}>
         <Box
+          className={Style.tabs}
           sx={{
             borderBottom: 1,
             borderColor: "divider",
@@ -373,7 +384,7 @@ const Cpd = (props) => {
             />
           </Tabs>
 
-          <div className="flex space-x-4 mr-12">
+          <div className={`flex space-x-4 mr-12 ${Style.addplan_btn}`}>
             {value === 0 && (
               <SecondaryButton
                 className="p-12"
@@ -418,23 +429,41 @@ const Cpd = (props) => {
         </Box>
 
         <CustomTabPanel value={value} index={0}>
-          <Planning dialogType={dialogType} setDialogType={setDialogType} dataFetchLoading={dataFetchLoading} dataUpdatingLoadding={dataUpdatingLoadding} />
+          <Planning
+            dialogType={dialogType}
+            setDialogType={setDialogType}
+            dataFetchLoading={dataFetchLoading}
+            dataUpdatingLoadding={dataUpdatingLoadding}
+          />
         </CustomTabPanel>
 
         <CustomTabPanel value={value} index={1}>
-          <Activity dialogType={dialogType} setDialogType={setDialogType} dataFetchLoading={dataFetchLoading} dataUpdatingLoadding={dataUpdatingLoadding} />
+          <Activity
+            dialogType={dialogType}
+            setDialogType={setDialogType}
+            dataFetchLoading={dataFetchLoading}
+            dataUpdatingLoadding={dataUpdatingLoadding}
+          />
         </CustomTabPanel>
 
-
         <CustomTabPanel value={value} index={2}>
-          <Evaluation dialogType={dialogType} setDialogType={setDialogType} dataFetchLoading={dataFetchLoading} dataUpdatingLoadding={dataUpdatingLoadding} />
+          <Evaluation
+            dialogType={dialogType}
+            setDialogType={setDialogType}
+            dataFetchLoading={dataFetchLoading}
+            dataUpdatingLoadding={dataUpdatingLoadding}
+          />
         </CustomTabPanel>
 
         <CustomTabPanel value={value} index={3}>
-          <Reflection dialogType={dialogType} setDialogType={setDialogType} dataFetchLoading={dataFetchLoading} dataUpdatingLoadding={dataUpdatingLoadding} />
+          <Reflection
+            dialogType={dialogType}
+            setDialogType={setDialogType}
+            dataFetchLoading={dataFetchLoading}
+            dataUpdatingLoadding={dataUpdatingLoadding}
+          />
         </CustomTabPanel>
       </Box>
-
     </div>
   );
 };

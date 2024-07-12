@@ -208,7 +208,7 @@ const Support = (props) => {
           }}>
           <SecondaryButton
             name="Add Request"
-            className="p-12 mb-10"
+            className="py-6 px-12 mb-10"
             startIcon={<AddIcon sx={{ mx: -0.5 }} />}
             onClick={() => handleClickOpen()}
           />
