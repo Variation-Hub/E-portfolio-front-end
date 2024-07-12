@@ -4,7 +4,6 @@ import {
   getLearnerDetails,
   selectLearnerManagement,
 } from "app/store/learnerManagement";
-import { selectUser } from "app/store/userSlice";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
@@ -15,9 +14,10 @@ import {
 import { PortfolioCard } from "src/app/component/Cards";
 import DoughnutChart from "src/app/component/Chart/doughnut";
 import { portfolioCard } from "src/app/contanst";
-import UserDetails from "../admin/userManagement/usetDetails";
 import Calendar from "./calendar";
 import { Link } from "react-router-dom";
+import { selectstoreDataSlice } from "app/store/reloadData";
+import { selectUser } from "app/store/userSlice";
 
 const Portfolio = () => {
   const [open, setOpen] = useState(false);
@@ -29,13 +29,19 @@ const Portfolio = () => {
   const { learner, dataUpdatingLoadding } = useSelector(
     selectLearnerManagement
   );
-  const { data } = useSelector(selectUser);
+  const data = useSelector(selectstoreDataSlice);
+  const { id, role } = useSelector(selectUser)?.data;
 
   const dispatch: any = useDispatch();
 
-  // useEffect(() => {
-  //   if (data.id) dispatch(getLearnerDetails());
-  // }, [data]);
+  useEffect(() => {
+    if (data.learner_id) dispatch(getLearnerDetails(data?.learner_id));
+  }, [data]);
+
+  useEffect(() => {
+    console.log(role, id)
+    if (role === "Learner" && id) dispatch(getLearnerDetails(id));
+  }, [role, id]);
 
   const handleOpen = () => {
     setOpen(true);
@@ -54,21 +60,21 @@ const Portfolio = () => {
         <div className="m-24 flex items-center border-1 rounded-8 py-12">
           <div className="flex flex-col w-1/6 justify-center items-center border-r-1">
             <Avatar sx={{ width: 100, height: 100 }} src="">
-              {learner?.first_name.charAt(0)}
-              {learner?.last_name.charAt(0)}
+              {learner?.first_name?.charAt(0)}
+              {learner?.last_name?.charAt(0)}
             </Avatar>
             <div className="mt-10">
               {learner?.first_name} {learner?.last_name}
             </div>
           </div>
           <div className="p-4 flex flex-col items-center w-full">
-            {learner.courses.length ? (
+            {learner?.course?.length ? (
               <>
                 <div className="text-center text-xl border-b-1 w-4/5 pb-4">
                   Courses
                 </div>
                 <div className="mt-12 ml-12 mr-auto flex items-center gap-12">
-                  {learner.courses.map((value) => (
+                  {learner?.course?.map((value) => (
                     <div className=" w-fit">
                       <DoughnutChart />
                     </div>

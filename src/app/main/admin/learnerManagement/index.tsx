@@ -141,6 +141,7 @@ const Index = () => {
     dispatch(getRoleAPI("IQA"));
     dispatch(getRoleAPI("EQA"));
     dispatch(getRoleAPI("Employer"));
+    dispatch(getRoleAPI("LIQA"));
   }, []);
 
   const validation = () => {
