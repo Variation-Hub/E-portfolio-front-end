@@ -8,26 +8,31 @@ import {
   List,
   ListItem,
   ListItemText,
-  ListItemSecondaryAction,
   Tooltip,
 } from '@mui/material';
 import { Link } from 'react-router-dom';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import NewspaperIcon from '@mui/icons-material/Newspaper';
 import AssignmentIcon from '@mui/icons-material/Assignment';
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteNotifications, fetchNotifications, readNotifications, selectnotificationSlice } from 'app/store/notification';
 
 
 function Notification(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [notifications, setNotifications] = React.useState([
-    { id: 1, type: 'notification', title: 'Notification 1', description: 'This is the first notification', read: false },
-    { id: 2, type: 'news', title: 'news', description: 'This is the first news.', read: true },
-    { id: 3, type: 'notification', title: 'Notification 3', description: 'This is the second notification', read: false },
-    { id: 4, type: 'assignment', title: 'assignment', description: 'This is the first assignment', read: false },
-    { id: 5, type: 'news', title: 'news 1', description: 'This is the second news', read: true },
-    { id: 6, type: 'assignment', title: 'assignment 2', description: 'This is the second assignment', read: false },
-    { id: 7, type: 'assignment', title: 'assignment 3', description: 'This is the third assignment', read: false },
-  ]);
+  const [notifications, setNotifications] = React.useState([]);
+
+  const { notification } = useSelector(selectnotificationSlice);
+
+  const dispatch = useDispatch()
+
+  React.useEffect(() => {
+    dispatch(fetchNotifications())
+  }, []);
+
+  React.useEffect(() => {
+    setNotifications(notification);
+  }, [notification])
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -37,21 +42,27 @@ function Notification(props) {
     setAnchorEl(null);
   };
 
-  const handleRead = (id) => {
+  const handleRead = async (id) => {
+    await dispatch(readNotifications(id))
     setNotifications(notifications.map(notification =>
-      notification.id === id ? { ...notification, read: true } : notification
+      notification.notification_id
+        === id ? { ...notification, read: true } : notification
     ));
   };
 
-  const handleReadAll = () => {
+  const handleReadAll = async () => {
+    await dispatch(readNotifications())
     setNotifications(notifications.map(notification => ({ ...notification, read: true })));
   };
 
-  const handleRemove = (id) => {
-    setNotifications(notifications.filter(notification => notification.id !== id));
+  const handleRemove = async (id) => {
+    await dispatch(deleteNotifications(id))
+    setNotifications(notifications.filter(notification => notification.notification_id
+      !== id));
   };
 
-  const handleRemoveAll = () => {
+  const handleRemoveAll = async () => {
+    await dispatch(deleteNotifications())
     setNotifications([]);
   };
 
@@ -100,33 +111,36 @@ function Notification(props) {
           ) : (
             <>
               <List className='px-10 pt-3 pb-0 w-320'>
-                {notifications.slice(0, 5).map((notification) => (
-                  <ListItem key={notification.id} className='flex px-0 py-2 gap-7' divider>
+                {notifications?.slice(0, 5)?.map((notification) => (
+                  <ListItem key={notification.notification_id
+                  } className='flex px-0 py-2 gap-7' divider>
                     <Grid className='px-5 '>
                       {notification.type === 'notification' && <NotificationsActiveIcon />}
                       {notification.type === 'news' && < NewspaperIcon />}
-                      {notification.type === 'assignment' && < AssignmentIcon />}
+                      {notification.type === 'allocation' && < AssignmentIcon />}
                     </Grid>
 
                     <ListItemText>
                       <Typography style={{ fontWeight: notification.read ? 'normal' : 'bold' }}>
                         {notification.title.slice(0, 20) + (notification.title.length > 20 ? '...' : '')}
                       </Typography>
-                      <Tooltip title={notification.description}>
+                      <Tooltip title={notification.message}>
                         <Typography style={{ fontWeight: notification.read ? 'normal' : 'bold' }}>
-                          {notification.description.slice(0, 25) + (notification.description.length > 25 ? '...' : '')}
+                          {notification.message.slice(0, 25) + (notification.message.length > 25 ? '...' : '')}
                         </Typography>
                       </Tooltip>
                     </ListItemText>
 
                     <Grid className='flex content-center '>
-                      <Button className='p-0 min-w-36' onClick={() => handleRead(notification.id)}>
+                      <Button className='p-0 min-w-36' onClick={() => handleRead(notification.notification_id
+                      )}>
                         <img
                           src="assets/images/svgImage/read.svg"
                           alt="read"
                         />
                       </Button>
-                      <Button className='p-0 min-w-36' onClick={() => handleRemove(notification.id)}>
+                      <Button className='p-0 min-w-36' onClick={() => handleRemove(notification.notification_id
+                      )}>
                         <img
                           src="assets/images/svgImage/remove.svg"
                           alt="remove"

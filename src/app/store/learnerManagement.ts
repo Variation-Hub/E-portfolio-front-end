@@ -12,6 +12,7 @@ const initialState = {
     IQA: [],
     EQA: [],
     employer: [],
+    LIQA: [],
     dataFetchLoading: false,
     dataUpdatingLoadding: false,
     meta_data: {
@@ -20,12 +21,7 @@ const initialState = {
         page_size: userTableMetaData.page_size,
         pages: 1
     },
-    learner: {
-        first_name: '',
-        last_name: '',
-        email: '',
-        courses: ["Course 1"]
-    }
+    learner: {}
 };
 
 const learnerManagementSlice = createSlice({
@@ -75,7 +71,11 @@ const learnerManagementSlice = createSlice({
         },
         setEmployer(state, action) {
             state.employer = action.payload
-        }
+        },
+        setLIQA(state, action) {
+            state.LIQA = action.payload
+        },
+
     }
 });
 
@@ -145,6 +145,8 @@ export const getRoleAPI = (role) => async (dispatch) => {
             dispatch(slice.setEQA(response.data.data))
         else if (role === "Employer")
             dispatch(slice.setEmployer(response.data.data))
+        else if (role === "LIQA")
+            dispatch(slice.setLIQA(response.data.data))
         dispatch(slice.setLoader());
         return true;
 
@@ -154,11 +156,13 @@ export const getRoleAPI = (role) => async (dispatch) => {
         return false
     };
 }
-export const getLearnerDetails = () => async (dispatch) => {
+export const getLearnerDetails = (id) => async (dispatch) => {
     try {
         dispatch(slice.setUpdatingLoader());
-        const response = await axios.get(`${URL_BASE_LINK}/learner/get`,)
+        console.log(id)
+        const response = await axios.get(`${URL_BASE_LINK}/learner/get/${id}`,)
         dispatch(showMessage({ message: response.data.message, variant: "success" }))
+        console.log(response.data.data)
         dispatch(slice.learnerDetails(response.data.data));
         dispatch(slice.setUpdatingLoader());
         return true;

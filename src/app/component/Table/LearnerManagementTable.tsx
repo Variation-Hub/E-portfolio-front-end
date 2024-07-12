@@ -44,8 +44,10 @@ import {
   selectCourseManagement,
 } from "app/store/courseManagement";
 import { Stack } from "@mui/system";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { color } from "framer-motion";
+import { slice } from 'app/store/reloadData'
+
 
 export default function LearnerManagementTable(props) {
   const {
@@ -60,9 +62,9 @@ export default function LearnerManagementTable(props) {
     search_role = "",
   } = props;
 
+  const navigate = useNavigate();
   const [deleteId, setDeleteId] = useState("");
   const [openMenuDialog, setOpenMenuDialog] = useState("");
-  const [couseId, setCourseId] = useState("");
   const [courseDialog, setCourseDialog] = useState(false);
   const [loading, setLoading] = useState(false);
   const dispatch: any = useDispatch();
@@ -72,6 +74,7 @@ export default function LearnerManagementTable(props) {
     IQA_id: "",
     learner_id: "",
     EQA_id: "",
+    LIQA_id: "",
     employer_id: "",
   });
 
@@ -83,11 +86,7 @@ export default function LearnerManagementTable(props) {
   };
 
   const { data } = useSelector(selectCourseManagement);
-  const learner = useSelector(selectLearnerManagement)?.data;
-  const trainer = useSelector(selectLearnerManagement)?.trainer;
-  const IQA = useSelector(selectLearnerManagement)?.IQA;
-  const EQA = useSelector(selectLearnerManagement)?.EQA;
-  const employer = useSelector(selectLearnerManagement)?.employer;
+  const { LIQA, IQA, trainer, employer, EQA } = useSelector(selectLearnerManagement);
 
   const handleChangePage = (event: unknown, newPage: number) => {
     dispatch(
@@ -147,6 +146,10 @@ export default function LearnerManagementTable(props) {
   const openMenu = (e, id) => {
     handleClick(e);
     setOpenMenuDialog(id);
+    setCourseAllocationData((prevState) => ({
+      ...prevState,
+      "learner_id": id,
+    }));
   };
 
   const clsoeCourseDialog = () => {
@@ -154,18 +157,31 @@ export default function LearnerManagementTable(props) {
   };
 
   const courseAllocation = async () => {
-    // setLoading(true);
-    // const response = await dispatch(
-    // courseAllocationAPI({ course_id: couseId, learner_id: openMenuDialog })
-    // );
-    // if (response) {
-    //   clsoeCourseDialog();
-    //   setOpenMenuDialog("");
-    //   setCourseId("");
-    // }
-    // setLoading(false);
+    setLoading(true);
+    const response = await dispatch(
+      courseAllocationAPI(courseAllocationData)
+    );
+    if (response) {
+      clsoeCourseDialog();
+      setOpenMenuDialog("");
+      setCourseAllocationData({
+        course_id: "",
+        trainer_id: "",
+        IQA_id: "",
+        learner_id: "",
+        EQA_id: "",
+        LIQA_id: "",
+        employer_id: "",
+      });
+    }
+    setLoading(false);
     console.log(courseAllocationData);
   };
+
+  const redirection = (id) => {
+    dispatch(slice.setLeanerId(id))
+    navigate('/portfolio')
+  }
   return (
     <>
       <div style={{ width: "100%", overflow: "hidden", marginTop: "0.5rem" }}>
@@ -240,9 +256,11 @@ export default function LearnerManagementTable(props) {
                                     height: "24px",
                                   }}
                                 />
-                                <Link to="/portfolio" style={{ color: "inherit", textDecoration: "none" }}>
+                                <div onClick={() => redirection(row.learner_id)}>
                                   {value} {row["last_name"]}
-                                </Link>
+                                </div>
+                                {/* <Link to="/portfolio" style={{ color: "inherit", textDecoration: "none" }}> */}
+                                {/* </Link> */}
                               </>
                             ) : (
                               value || "Active"
@@ -446,7 +464,7 @@ export default function LearnerManagementTable(props) {
               disableClearable
               fullWidth
               size="small"
-              options={learner}
+              options={LIQA}
               getOptionLabel={(option: any) => option.user_name}
               renderInput={(params) => (
                 <TextField
@@ -457,7 +475,7 @@ export default function LearnerManagementTable(props) {
                 />
               )}
               onChange={(e, value: any) =>
-                handleUpdateData("learner_id", value.learner_id)
+                handleUpdateData("LIQA_id", value.learner_id)
               }
               sx={{
                 ".MuiAutocomplete-clearIndicator": {
