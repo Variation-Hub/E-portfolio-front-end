@@ -220,7 +220,7 @@ export default function CourseManagementTable(props) {
         </TableContainer>
         <Stack
           spacing={2}
-          className="flex justify-center items-center w-full mt-14"
+          className="flex justify-center items-center w-full"
         >
           <Pagination
             count={meta_data?.pages}

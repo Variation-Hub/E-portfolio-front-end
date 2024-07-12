@@ -33,7 +33,7 @@ const Index = () => {
     <>
       <div className={Style.navbar_container}>
         <div className={Style.navbar}>
-          <div className="mx-24">
+          <div className={`mx-24 ${Style.logo}`}>
             <Logo />
           </div>
           <div className="flex items-center">

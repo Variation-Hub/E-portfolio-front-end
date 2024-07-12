@@ -12,6 +12,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { fetchLearnerAPI, getRoleAPI, selectLearnerManagement } from "app/store/learnerManagement";
 import LearnerTable from "src/app/component/Table/LearnerTable";
 import { fetchCourseAPI } from "app/store/courseManagement";
+import Stylee from "./style.module.css"
 
 const AllLearners = () => {
   const { data, dataFetchLoading, dataUpdatingLoadding, meta_data } = useSelector(selectLearnerManagement)
@@ -63,7 +64,7 @@ const AllLearners = () => {
                 label="Search by keyword"
                 fullWidth
                 size="small"
-                className="w-1/2"
+                className={`w-1/2 ${Stylee.search}`}
                 onKeyDown={searchByKeywordUser}
                 onChange={searchHandler}
                 value={searchKeyword}
