@@ -26,7 +26,7 @@ export const { userLoggedOut } = userSlice.actions;
 export const setUser = (user) => async (dispatch) => {
 
   const userData = {
-    id: user?.user_id,
+    id: user?.learner_id,
     ...user
   }
 

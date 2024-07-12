@@ -16,6 +16,8 @@ import FuseAuthorization from '@fuse/core/FuseAuthorization';
 import settingsConfig from 'app/configs/settingsConfig';
 import withAppProviders from './withAppProviders';
 import { AuthProvider } from './auth/AuthContext';
+import { useEffect } from 'react';
+import { disconnectFromSocket } from 'src/utils/socket';
 
 
 const emotionCacheOptions = {
@@ -35,6 +37,12 @@ function App() {
   const user = useSelector(selectUser);
   const langDirection = useSelector(selectCurrentLanguageDirection);
   const mainTheme = useSelector(selectMainTheme);
+
+  useEffect(() => {
+    return () => {
+      disconnectFromSocket()
+    }
+  },[])
 
   return (
     <CacheProvider value={createCache(emotionCacheOptions[langDirection])}>

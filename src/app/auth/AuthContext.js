@@ -5,6 +5,7 @@ import FuseSplashScreen from '@fuse/core/FuseSplashScreen';
 import { showMessage } from 'app/store/fuse/messageSlice';
 import { logoutUser, setUser } from 'app/store/userSlice';
 import jwtService from './services/jwtService';
+import { disconnectFromSocket } from 'src/utils/socket';
 
 const AuthContext = React.createContext();
 
@@ -15,7 +16,7 @@ function AuthProvider({ children }) {
 
   useEffect(() => {
     jwtService.on('onAutoLogin', () => {
-      dispatch(showMessage({ message: 'Signing in with JWT', variant:"success" }));
+      dispatch(showMessage({ message: 'Signing in with JWT', variant: "success" }));
 
       /**
        * Sign in and retrieve user data with stored token
@@ -53,7 +54,7 @@ function AuthProvider({ children }) {
 
     function success(user, message) {
       if (message) {
-        dispatch(showMessage({ message, variant:"success" }));
+        dispatch(showMessage({ message, variant: "success" }));
       }
 
       Promise.all([
@@ -68,12 +69,13 @@ function AuthProvider({ children }) {
     function pass(message) {
 
       if (message) {
-        dispatch(showMessage({ message , variant:"success"}));
+        dispatch(showMessage({ message, variant: "success" }));
       }
 
       setWaitAuthCheck(false);
       setIsAuthenticated(false);
     }
+
   }, [dispatch]);
 
   return waitAuthCheck ? (

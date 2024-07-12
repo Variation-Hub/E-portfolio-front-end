@@ -13,6 +13,8 @@ import yourInnovation from './yourInnovation';
 import assignment from './assignment';
 import session from './session';
 import formData from './formData';
+import storeData from "./reloadData"
+import notification from "./notification"
 
 const createReducer = (asyncReducers) => (state, action) => {
     const combinedReducer = combineReducers({
@@ -29,6 +31,8 @@ const createReducer = (asyncReducers) => (state, action) => {
         assignment,
         session,
         formData,
+        storeData,
+        notification,
         ...asyncReducers,
     });
 
