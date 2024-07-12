@@ -59,7 +59,7 @@ const inputStyle = {
 };
 
 const CourseBuilder = (props) => {
-  const { edit = "create", handleClose = () => {} } = props;
+  const { edit = "create", handleClose = () => { } } = props;
 
   const navigate = useNavigate();
   const dispatch: any = useDispatch();
@@ -246,13 +246,13 @@ const CourseBuilder = (props) => {
           subUnit: unit.subUnit.map((subUnit) =>
             subUnit.id === subUnitId
               ? {
-                  ...subUnit,
-                  subTopic: subUnit.subTopic.map((subTopic) =>
-                    subTopic.id === subTopicId
-                      ? { ...subTopic, [data.name]: data.value }
-                      : subTopic
-                  ),
-                }
+                ...subUnit,
+                subTopic: subUnit.subTopic.map((subTopic) =>
+                  subTopic.id === subTopicId
+                    ? { ...subTopic, [data.name]: data.value }
+                    : subTopic
+                ),
+              }
               : subUnit
           ),
         },
@@ -274,11 +274,11 @@ const CourseBuilder = (props) => {
         subUnit: prev[unitId].subUnit.map((sub) =>
           sub.id === subUnitId
             ? {
-                ...sub,
-                subTopic: sub.subTopic.filter(
-                  (topic) => topic.id !== subTopicId
-                ),
-              }
+              ...sub,
+              subTopic: sub.subTopic.filter(
+                (topic) => topic.id !== subTopicId
+              ),
+            }
             : sub
         ),
       },
@@ -308,9 +308,8 @@ const CourseBuilder = (props) => {
     if (edit === "create") {
       response = await dispatch(createCourseAPI({ ...courseData, units }));
     } else if (edit == "edit") {
-      response = await dispatch(
-        updateCourseAPI(preFillData?.course_id, { ...courseData, units })
-      );
+      response = await dispatch(updateCourseAPI(preFillData?.course_id, { ...courseData, units }));
+      handleClose()
     }
 
     if (response) {
@@ -559,48 +558,37 @@ const CourseBuilder = (props) => {
               disabled={edit === "view"}
               className={Style.last_input_feald}
             />
-          </div>
+          )}
         </Box>
-        <hr />
-        <Box className="m-12">
-          <Box className="flex items-center justify-between">
-            <Typography>Units</Typography>
-            {edit !== "view" && (
-              <SecondaryButton
-                name="Add New Unit"
-                onClick={() => addUnitHandler()}
-              />
-            )}
-          </Box>
-          {Object.values(mandatoryUnit).length ? (
-            Object.values(mandatoryUnit)?.map((item: any) => {
-              return (
-                <div>
-                  <div className="w-full flex gap-24 items-center ">
-                    <TextField
-                      size="small"
-                      type="text"
-                      value={item.unit_ref}
-                      name="unit_ref"
-                      placeholder={`Enter a Unint Ref`}
-                      onChange={(e) => setUnitData(item.id, e.target)}
-                      className=" w-1/3"
-                      style={inputStyle}
-                      disabled={edit === "view"}
-                    />
-                    <TextField
-                      size="small"
-                      type="text"
-                      value={item.title}
-                      name="title"
-                      placeholder={`Enter a title`}
-                      onChange={(e) => setUnitData(item.id, e.target)}
-                      className="w-2/3"
-                      style={inputStyle}
-                      disabled={edit === "view"}
-                    />
+        {Object.values(mandatoryUnit).length ? (
+          Object.values(mandatoryUnit)?.map((item: any) => {
+            return (
+              <div>
+                <div className="w-full flex gap-24 items-center ">
+                  <TextField
+                    size="small"
+                    type="text"
+                    value={item.unit_ref}
+                    name="unit_ref"
+                    placeholder={`Enter a Unint Ref`}
+                    onChange={(e) => setUnitData(item.id, e.target)}
+                    className=" w-1/3"
+                    style={inputStyle}
+                    disabled={edit === "view"}
+                  />
+                  <TextField
+                    size="small"
+                    type="text"
+                    value={item.title}
+                    name="title"
+                    placeholder={`Enter a title`}
+                    onChange={(e) => setUnitData(item.id, e.target)}
+                    className="w-2/3"
+                    style={inputStyle}
+                    disabled={edit === "view"}
+                  />
 
-                    {/* <Autocomplete
+                  {/* <Autocomplete
                                             // disableClearable
                                             renderInput={(params) => <TextField variant="standard" {...params}
                                                 value={item.mandatory}
@@ -610,193 +598,193 @@ const CourseBuilder = (props) => {
                                             getOptionLabel={(option) => option.name}
                                             onChange={(e, value) => setUnitData(item.id, { name: "mandatory", value: value.value })}
                                         /> */}
-                    <FormControl variant="standard" className="w-1/5">
-                      <Select
-                        labelId={`select-label-${item.id}`}
-                        value={item.mandatory}
-                        onChange={(e) =>
-                          setUnitData(item.id, {
-                            name: "mandatory",
-                            value: e.target.value,
-                          })
-                        }
-                        disabled={edit === "view"}
-                      >
-                        <MenuItem value={"true"}>Mandatory Unit</MenuItem>
-                        <MenuItem value={"false"}>Optional Unit</MenuItem>
-                      </Select>
-                    </FormControl>
-                    <Box className="flex items-center justify-between">
-                      {edit !== "view" && (
-                        <Tooltip title="Remove unit">
-                          <CloseIcon
-                            className="cursor-pointer"
-                            onClick={() => removeUnitHandler(item.id)}
-                          />
-                        </Tooltip>
-                      )}
-                    </Box>
-                  </div>
-                  <div className="w-full flex gap-24 items-center ">
-                    <TextField
-                      size="small"
-                      type="number"
-                      className="w-1/3"
-                      value={item.level}
-                      name="level"
-                      placeholder={`Enter a Level`}
-                      onChange={(e) => setUnitData(item.id, e.target)}
-                      style={inputStyle}
+                  <FormControl variant="standard" className="w-1/5">
+                    <Select
+                      labelId={`select-label-${item.id}`}
+                      value={item.mandatory}
+                      onChange={(e) =>
+                        setUnitData(item.id, {
+                          name: "mandatory",
+                          value: e.target.value,
+                        })
+                      }
                       disabled={edit === "view"}
-                    />
-
-                    <TextField
-                      size="small"
-                      type="number"
-                      className="w-1/3"
-                      value={item.credit_value}
-                      name="credit_value"
-                      placeholder={`Enter a credit value`}
-                      onChange={(e) => setUnitData(item.id, e.target)}
-                      style={inputStyle}
-                      disabled={edit === "view"}
-                    />
-
-                    <TextField
-                      size="small"
-                      type="number"
-                      className="w-1/3"
-                      value={item.glh}
-                      name="glh"
-                      placeholder={`Enter a GLH`}
-                      onChange={(e) => setUnitData(item.id, e.target)}
-                      style={inputStyle}
-                      disabled={edit === "view"}
-                    />
-
-                    <Box className="flex items-center justify-between">
-                      {edit !== "view" && (
-                        <SecondaryButton
-                          name="Add Sub Unit"
-                          className="min-w-112"
-                          onClick={() => addSubUnitHandler(item.id)}
+                    >
+                      <MenuItem value={"true"}>Mandatory Unit</MenuItem>
+                      <MenuItem value={"false"}>Optional Unit</MenuItem>
+                    </Select>
+                  </FormControl>
+                  <Box className="flex items-center justify-between">
+                    {edit !== "view" && (
+                      <Tooltip title="Remove unit">
+                        <CloseIcon
+                          className="cursor-pointer"
+                          onClick={() => removeUnitHandler(item.id)}
                         />
-                      )}
-                    </Box>
-                  </div>
-                  {item.subUnit?.length > 0 &&
-                    item.subUnit.map((subItem) => {
-                      return (
-                        <>
-                          <div className="w-full flex gap-24 ">
-                            <div className="w-full">
-                              <TextField
-                                size="small"
-                                type="text"
-                                className="w-full"
-                                name="subTitle"
-                                placeholder={`Enter a sub-title`}
-                                value={subItem.subTitle}
-                                onChange={(e) =>
-                                  setSubUnitData(item.id, subItem?.id, e.target)
-                                }
-                                style={inputStyle}
-                                disabled={edit === "view"}
-                              />
-                            </div>
-                            <Box className="flex justify-between pt-10 mr-auto">
-                              {edit !== "view" && (
-                                <>
-                                  <Tooltip title="Remove sub unit">
-                                    <CloseIcon
-                                      className="cursor-pointer"
-                                      onClick={() =>
-                                        removeSubUnitHandler(
-                                          item.id,
-                                          subItem?.id
-                                        )
-                                      }
-                                    />
-                                  </Tooltip>
-                                </>
-                              )}
-                            </Box>
-                            <div className="w-full flex flex-col">
-                              {subItem.subTopic?.length > 0 &&
-                                subItem.subTopic?.map((topicItem) => {
-                                  return (
-                                    <>
-                                      <div className="w-full flex flex-row gap-24 items-center ">
-                                        <TextField
-                                          size="small"
-                                          type="text"
-                                          className="w-full"
-                                          name="description"
-                                          placeholder={`Enter a description`}
-                                          value={topicItem.description}
-                                          onChange={(e) =>
-                                            setSubTopicData(
-                                              item.id,
-                                              subItem?.id,
-                                              topicItem?.id,
-                                              e.target
-                                            )
-                                          }
-                                          style={inputStyle}
-                                          disabled={edit === "view"}
-                                        />
-                                        <div className="min-w-160">
-                                          <Box className="w-full flex items-center justify-between gap-24">
-                                            {edit !== "view" && (
-                                              <>
-                                                <Tooltip title="Remove sub topic">
-                                                  <CloseIcon
-                                                    className="cursor-pointer "
-                                                    onClick={() =>
-                                                      removeSubTopicHandler(
-                                                        item.id,
-                                                        subItem?.id,
-                                                        topicItem?.id
-                                                      )
-                                                    }
-                                                  />
-                                                </Tooltip>
+                      </Tooltip>
+                    )}
+                  </Box>
+                </div>
+                <div className="w-full flex gap-24 items-center ">
+                  <TextField
+                    size="small"
+                    type="number"
+                    className="w-1/3"
+                    value={item.level}
+                    name="level"
+                    placeholder={`Enter a Level`}
+                    onChange={(e) => setUnitData(item.id, e.target)}
+                    style={inputStyle}
+                    disabled={edit === "view"}
+                  />
 
-                                                <SecondaryButton
-                                                  name="Add Topic"
-                                                  className="w-full"
+                  <TextField
+                    size="small"
+                    type="number"
+                    className="w-1/3"
+                    value={item.credit_value}
+                    name="credit_value"
+                    placeholder={`Enter a credit value`}
+                    onChange={(e) => setUnitData(item.id, e.target)}
+                    style={inputStyle}
+                    disabled={edit === "view"}
+                  />
+
+                  <TextField
+                    size="small"
+                    type="number"
+                    className="w-1/3"
+                    value={item.glh}
+                    name="glh"
+                    placeholder={`Enter a GLH`}
+                    onChange={(e) => setUnitData(item.id, e.target)}
+                    style={inputStyle}
+                    disabled={edit === "view"}
+                  />
+
+                  <Box className="flex items-center justify-between">
+                    {edit !== "view" && (
+                      <SecondaryButton
+                        name="Add Sub Unit"
+                        className="min-w-112"
+                        onClick={() => addSubUnitHandler(item.id)}
+                      />
+                    )}
+                  </Box>
+                </div>
+                {item.subUnit?.length > 0 &&
+                  item.subUnit.map((subItem) => {
+                    return (
+                      <>
+                        <div className="w-full flex gap-24 ">
+                          <div className="w-full">
+                            <TextField
+                              size="small"
+                              type="text"
+                              className="w-full"
+                              name="subTitle"
+                              placeholder={`Enter a sub-title`}
+                              value={subItem.subTitle}
+                              onChange={(e) =>
+                                setSubUnitData(item.id, subItem?.id, e.target)
+                              }
+                              style={inputStyle}
+                              disabled={edit === "view"}
+                            />
+                          </div>
+                          <Box className="flex justify-between pt-10 mr-auto">
+                            {edit !== "view" && (
+                              <>
+                                <Tooltip title="Remove sub unit">
+                                  <CloseIcon
+                                    className="cursor-pointer"
+                                    onClick={() =>
+                                      removeSubUnitHandler(
+                                        item.id,
+                                        subItem?.id
+                                      )
+                                    }
+                                  />
+                                </Tooltip>
+                              </>
+                            )}
+                          </Box>
+                          <div className="w-full flex flex-col">
+                            {subItem.subTopic?.length > 0 &&
+                              subItem.subTopic?.map((topicItem) => {
+                                return (
+                                  <>
+                                    <div className="w-full flex flex-row gap-24 items-center ">
+                                      <TextField
+                                        size="small"
+                                        type="text"
+                                        className="w-full"
+                                        name="description"
+                                        placeholder={`Enter a description`}
+                                        value={topicItem.description}
+                                        onChange={(e) =>
+                                          setSubTopicData(
+                                            item.id,
+                                            subItem?.id,
+                                            topicItem?.id,
+                                            e.target
+                                          )
+                                        }
+                                        style={inputStyle}
+                                        disabled={edit === "view"}
+                                      />
+                                      <div className="min-w-160">
+                                        <Box className="w-full flex items-center justify-between gap-24">
+                                          {edit !== "view" && (
+                                            <>
+                                              <Tooltip title="Remove sub topic">
+                                                <CloseIcon
+                                                  className="cursor-pointer "
                                                   onClick={() =>
-                                                    addTopicHandler(
+                                                    removeSubTopicHandler(
                                                       item.id,
-                                                      subItem?.id
+                                                      subItem?.id,
+                                                      topicItem?.id
                                                     )
                                                   }
                                                 />
-                                              </>
-                                            )}
-                                          </Box>
-                                        </div>
-                                      </div>
-                                    </>
-                                  );
-                                })}
-                            </div>
-                          </div>
-                        </>
-                      );
-                    })}
-                </div>
-              );
-            })
-          ) : (
-            // <UnitManagementTable columns={courseManagementUnitColumn} edit={edit} setUnitData={setUnitData} removeUnitHandler={removeUnitHandler} rows={Object.values(mandatoryUnit)} />
-            <div className=" text-center opacity-50 mt-10 mb-10">
-              Units have not been included.
-            </div>
-          )}
-        </Box>
+                                              </Tooltip>
 
-        {/* <Box className="m-12">
+                                              <SecondaryButton
+                                                name="Add Topic"
+                                                className="w-full"
+                                                onClick={() =>
+                                                  addTopicHandler(
+                                                    item.id,
+                                                    subItem?.id
+                                                  )
+                                                }
+                                              />
+                                            </>
+                                          )}
+                                        </Box>
+                                      </div>
+                                    </div>
+                                  </>
+                                );
+                              })}
+                          </div>
+                        </div>
+                      </>
+                    );
+                  })}
+              </div>
+            );
+          })
+        ) : (
+          // <UnitManagementTable columns={courseManagementUnitColumn} edit={edit} setUnitData={setUnitData} removeUnitHandler={removeUnitHandler} rows={Object.values(mandatoryUnit)} />
+          <div className=" text-center opacity-50 mt-10 mb-10">
+            Units have not been included.
+          </div>
+        )}
+      </Box>
+
+      {/* <Box className="m-12">
                 <Box className="flex items-center justify-between">
                     <Typography>Optional Units</Typography>
                     {!edit &&
@@ -811,36 +799,36 @@ const CourseBuilder = (props) => {
                     </div>
                 }
             </Box> */}
-        <Box className="flex items-center justify-end mt-60">
-          {loading ? (
-            <LoadingButton className="w-1/12" />
-          ) : (
-            <>
-              {edit === "view" ? (
-                <SecondaryButtonOutlined
-                  name="Close"
-                  className=" w-1/12"
-                  onClick={handleClose}
-                />
-              ) : (
-                <SecondaryButtonOutlined
-                  name="Close"
-                  className=" w-1/12"
-                  onClick={edit === "edit" ? handleClose : cancleCourseHandler}
-                />
-              )}
-              {edit !== "view" && (
-                <SecondaryButton
-                  name={edit === "edit" ? "Update" : "Create"}
-                  className=" w-1/12 ml-10"
-                  onClick={createCouserHandler}
-                />
-              )}
-            </>
-          )}
-        </Box>
-      </div>
-    </Card>
+      <Box className="flex items-center justify-end mt-60">
+        {loading ? (
+          <LoadingButton className="w-1/12" />
+        ) : (
+          <>
+            {edit === "view" ? (
+              <SecondaryButtonOutlined
+                name="Close"
+                className=" w-1/12"
+                onClick={handleClose}
+              />
+            ) : (
+              <SecondaryButtonOutlined
+                name="Close"
+                className=" w-1/12"
+                onClick={edit === "edit" ? handleClose : cancleCourseHandler}
+              />
+            )}
+            {edit !== "view" && (
+              <SecondaryButton
+                name={edit === "edit" ? "Update" : "Create"}
+                className=" w-1/12 ml-10"
+                onClick={createCouserHandler}
+              />
+            )}
+          </>
+        )}
+      </Box>
+    </div>
+    // </Card>
   );
 };
 
