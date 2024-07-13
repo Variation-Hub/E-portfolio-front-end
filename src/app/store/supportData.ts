@@ -30,6 +30,9 @@ const supportDataSlice = createSlice({
         setSupportData(state, action) {
             state.data = action.payload
         },
+        setSupportMetadata(state, action) {
+            state.meta_data = action.payload
+        },
         setSingleData(state, action) {
             state.singleData = action.payload
         }
@@ -101,6 +104,7 @@ export const getSupportDataAPI = (data = { page: 1, page_size: 10 }, id) => asyn
         const response = await axios.get(url);
         dispatch(showMessage({ message: response.data.message, variant: "success" }))
         dispatch(slice.setSupportData(response.data.data))
+        dispatch(slice.setSupportMetadata(response.data.meta_data))
         dispatch(slice.setLoader());
         return true;
 

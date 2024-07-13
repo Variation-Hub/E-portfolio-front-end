@@ -9,7 +9,6 @@ import { Stack } from "@mui/system";
 import { Avatar, AvatarGroup, Box, Button, Chip, Dialog, DialogActions, DialogContent, FormControl, IconButton, Menu, MenuItem, Pagination, Select, TextField, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import Cpd from "./cpd";
 import AlertDialog from "src/app/component/Dialogs/AlertDialog";
 import { DangerButton, LoadingButton, SecondaryButton, SecondaryButtonOutlined } from "src/app/component/Buttons";
 import { createActivityAPI, deleteActivityHandler, getCpdPlanningAPI, selectCpdPlanning, slice, updateActivityAPI, uploadImages } from "app/store/cpdPlanning";
@@ -52,9 +51,7 @@ const columns: readonly Column[] = [
 
 const AddNewDialogContent = (props) => {
 
-  const { edit = "Save", formData, setActivityData, activityData = {}, handleChangeYear } = props;
-
-  console.log(activityData);
+  const { edit = "Save", setActivityData, activityData = {}, handleChangeYear } = props;
 
   const currentYear = new Date().getFullYear();
 
@@ -92,7 +89,6 @@ const AddNewDialogContent = (props) => {
 
   const fileTypes = ["PDF"];
   const [files, setFiles] = useState([]);
-  const [uploadedFiles, setUploadedFiles] = useState([]);
 
   const handleFileChange = (newFiles) => {
     setFiles((prevFiles) => [...prevFiles, ...newFiles]);
@@ -101,7 +97,6 @@ const AddNewDialogContent = (props) => {
   const dispatch: any = useDispatch();
 
   const handleUploadButtonClick = async () => {
-    setUploadedFiles(files);
     if (files.length > 5) {
       dispatch(showMessage({ message: 'You can only upload up to 5 files.', variant: "error" }))
       return
@@ -417,7 +412,6 @@ const Activity = (props) => {
     files: singleData?.files || [],
   });
 
-  console.log(singleData);
 
   const [deleteId, setDeleteId] = useState("");
   const [openMenuDialog, setOpenMenuDialog] = useState<any>({});
@@ -440,10 +434,13 @@ const Activity = (props) => {
 
   const isFormValid = Object.values(activityData).find(data => data === "") === undefined;
 
-  console.log(isFormValid);
+
+  const fetchActivityData = () => {
+    dispatch(getCpdPlanningAPI(data.user_id, "activities"));
+  }
 
   useEffect(() => {
-    dispatch(getCpdPlanningAPI(data.user_id, "activities"));
+    fetchActivityData()
   }, [dispatch]);
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);

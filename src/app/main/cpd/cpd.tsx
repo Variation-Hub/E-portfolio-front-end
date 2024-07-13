@@ -1,21 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Tabs,
   Tab,
   Box,
-  Typography,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  TextField,
-  MenuItem,
-  Select,
-  FormControl,
-  Button,
-  Chip,
-  List,
-  ListItem,
+  Typography
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import Planning from "./planning";
@@ -23,9 +11,7 @@ import Activity from "./activity";
 import Evaluation from "./evaluation";
 import Reflection from "./reflection";
 import {
-  LoadingButton,
   SecondaryButton,
-  SecondaryButtonOutlined,
 } from "src/app/component/Buttons";
 import {
   createActivityAPI,
@@ -37,13 +23,10 @@ import {
   updateCpdPlanningAPI,
   updateEvaluationAPI,
   updateReflectionsAPI,
-  uploadImages,
 } from "app/store/cpdPlanning";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { FileUploader } from "react-drag-drop-files";
-import FileCopyIcon from "@mui/icons-material/FileCopy";
 import Style from "./style.module.css"
 
 // Separate components for dialog content
