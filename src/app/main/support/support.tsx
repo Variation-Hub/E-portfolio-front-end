@@ -93,11 +93,12 @@ const AddRequest = (props) => {
 
 const Support = (props) => {
   const { data } = useSelector(selectUser);
-  const { singleData, dataUpdatingLoadding,dataFetchLoading } = useSelector(selectSupportData);
+  const { singleData, dataUpdatingLoadding, dataFetchLoading, meta_data } = useSelector(selectSupportData);
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedRow, setSelectedRow] = useState<any>(null);
   const [dialogType, setDialogType] = useState(false);
+  const [page, setPage] = useState(1);
 
   const [deleteId, setDeleteId] = useState("");
 
@@ -193,6 +194,12 @@ const Support = (props) => {
     }));
   };
 
+  const handleChangePage = (event: unknown, newPage: number) => {
+    dispatch(
+      getSupportDataAPI({ page: newPage, page_size: 10 }, data.user_id)
+    );
+  };
+
   const isSupport = Object.values(supportData).find(data => data === "") === undefined;
 
   return (
@@ -273,17 +280,17 @@ const Support = (props) => {
                 </TableBody>
               </Table>
             ) : (
-                <div
-                  className="flex flex-col justify-center items-center gap-10 "
-                  style={{ height: "94%" }}
-                >
-                  <DataNotFound width="25%" />
-                  <Typography variant="h5">No data found</Typography>
-                  <Typography variant="body2" className="text-center">
-                    It is a long established fact that a reader will be <br />
-                    distracted by the readable content.
-                  </Typography>
-                </div>
+              <div
+                className="flex flex-col justify-center items-center gap-10 "
+                style={{ height: "94%" }}
+              >
+                <DataNotFound width="25%" />
+                <Typography variant="h5">No data found</Typography>
+                <Typography variant="body2" className="text-center">
+                  It is a long established fact that a reader will be <br />
+                  distracted by the readable content.
+                </Typography>
+              </div>
             )}
           </TableContainer>
           <div className="fixed bottom-0 left-0 w-full flex justify-center py-4 mb-14">
@@ -291,7 +298,13 @@ const Support = (props) => {
               spacing={2}
               className="flex justify-center items-center w-full my-12"
             >
-              <Pagination count={3} variant="outlined" shape="rounded" />
+              <Pagination
+                count={meta_data?.pages}
+                page={meta_data?.page} variant="outlined" shape="rounded"
+                siblingCount={1}
+                boundaryCount={1}
+                onChange={handleChangePage}
+              />
             </Stack>
           </div>
         </div>

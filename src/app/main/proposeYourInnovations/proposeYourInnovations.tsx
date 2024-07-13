@@ -88,7 +88,7 @@ const AddInnocations = (props) => {
 
 const ProposeYourInnovations = (props) => {
   const { data } = useSelector(selectUser);
-  const { singleData, dataUpdatingLoadding, dataFetchLoading } = useSelector(selectYourInnovation);
+  const { singleData, dataUpdatingLoadding, dataFetchLoading, meta_data } = useSelector(selectYourInnovation);
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedRow, setSelectedRow] = useState<any>(null);
@@ -105,6 +105,10 @@ const ProposeYourInnovations = (props) => {
     description: "",
   });
 
+  const fetchInnovationsData = (newPage = 1) => {
+    dispatch(getYourInnovationAPI({ page: newPage, page_size: 10 }, data.user_id));
+  }
+
   const deleteIcon = (id) => {
     setDeleteId(selectedRow?.id);
     console.log(selectedRow);
@@ -112,7 +116,7 @@ const ProposeYourInnovations = (props) => {
 
   const deleteConfromation = async () => {
     await dispatch(deleteInnovationHandler(deleteId));
-    dispatch(getYourInnovationAPI({ page: 1, page_size: 10 }, data.user_id));
+    fetchInnovationsData()
     setDeleteId("");
   };
 
@@ -165,7 +169,6 @@ const ProposeYourInnovations = (props) => {
     setChatDrawerOpen(true);
   };
 
-
   const handleDrawerClose = () => {
     setChatDrawerOpen(false);
     clearSingleData();
@@ -174,13 +177,14 @@ const ProposeYourInnovations = (props) => {
   const innovation = useSelector(selectYourInnovation);
 
   useEffect(() => {
-    dispatch(getYourInnovationAPI({ page: 1, page_size: 10 }, data.user_id));
+    fetchInnovationsData();
   }, [dispatch]);
 
   const handleSubmit = async () => {
     try {
       let response;
       response = await dispatch(createYourInnovationAPI(yourInnovation));
+      fetchInnovationsData()
     } catch (err) {
       console.log(err);
     } finally {
@@ -193,7 +197,7 @@ const ProposeYourInnovations = (props) => {
     try {
       let response;
       response = await dispatch(updateYourInnovationAPI(yourInnovation));
-      dispatch(getYourInnovationAPI({ page: 1, page_size: 10 }, data.user_id));
+      fetchInnovationsData()
     } catch (err) {
       console.log(err);
     } finally {
@@ -236,6 +240,10 @@ const ProposeYourInnovations = (props) => {
       setChatMessages(singleData);
       setNewMessage("");
     }
+  };
+
+  const handleChangePage = (event: unknown, newPage: number) => {
+    fetchInnovationsData(newPage)
   };
 
   const isAdmin = data.roles.includes('Admin');
@@ -338,7 +346,13 @@ const ProposeYourInnovations = (props) => {
             spacing={2}
             className="flex justify-center items-center w-full my-12"
           >
-            <Pagination count={3} variant="outlined" shape="rounded" />
+            <Pagination
+              count={meta_data?.pages}
+              page={meta_data?.page} variant="outlined" shape="rounded"
+              siblingCount={1}
+              boundaryCount={1}
+              onChange={handleChangePage}
+            />
           </Stack>
         </div>
 

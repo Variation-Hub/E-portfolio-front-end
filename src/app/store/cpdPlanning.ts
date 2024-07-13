@@ -74,7 +74,7 @@ export const createCpdPlanningAPI = (data) => async (dispatch, getStore) => {
         const response = await axios.post(`${URL_BASE_LINK}/cpd/create`, data)
         dispatch(showMessage({ message: response.data.message, variant: "success" }))
         if (response.data.status) {
-            dispatch(getCpdPlanningAPI(getStore().user.data.id, ""))
+            dispatch(getCpdPlanningAPI(getStore().user.data.user_id, ""))
         }
         dispatch(slice.setUpdatingLoader());
         return true;
@@ -94,7 +94,7 @@ export const updateCpdPlanningAPI = (data) => async (dispatch, getStore) => {
         const response = await axios.patch(`${URL_BASE_LINK}/cpd/update`, payload)
         dispatch(showMessage({ message: response.data.message, variant: "success" }))
         if (response.data.status) {
-            dispatch(getCpdPlanningAPI(getStore().user.data.id, ""))
+            dispatch(getCpdPlanningAPI(getStore().user.data.user_id, ""))
         }
         dispatch(slice.setUpdatingLoader());
         return true;
@@ -113,7 +113,7 @@ export const deletePlanningHandler = (id) => async (dispatch, getStore) => {
         console.log(response);
         dispatch(showMessage({ message: response.data.message, variant: "success" }))
         if (response.data.status) {
-            dispatch(getCpdPlanningAPI(getStore().user.data.id, ""))
+            dispatch(getCpdPlanningAPI(getStore().user.data.user_id, ""))
         }
         dispatch(slice.setUpdatingLoader());
         return true;
@@ -132,7 +132,7 @@ export const createActivityAPI = (data) => async (dispatch, getStore) => {
         console.log(response);
         dispatch(showMessage({ message: response.data.message, variant: "success" }))
         if (response.data.status) {
-            dispatch(getCpdPlanningAPI(getStore().user.data.id, "activities"))
+            dispatch(getCpdPlanningAPI(getStore().user.data.user_id, "activities"))
         }
         dispatch(slice.setUpdatingLoader());
         return true;
@@ -152,7 +152,7 @@ export const updateActivityAPI = (id, data) => async (dispatch, getStore) => {
         const response = await axios.patch(`${URL_BASE_LINK}/cpd/activity/update/${id}`, payload)
         dispatch(showMessage({ message: response.data.message, variant: "success" }))
         if (response.data.status) {
-            dispatch(getCpdPlanningAPI(getStore().user.data.id, "activities"))
+            dispatch(getCpdPlanningAPI(getStore().user.data.user_id, "activities"))
         }
         dispatch(slice.setUpdatingLoader());
         return true;
@@ -171,7 +171,7 @@ export const deleteActivityHandler = (id) => async (dispatch, getStore) => {
         console.log(response);
         dispatch(showMessage({ message: response.data.message, variant: "success" }))
         if (response.data.status) {
-            dispatch(getCpdPlanningAPI(getStore().user.data.id, "activities"))
+            dispatch(getCpdPlanningAPI(getStore().user.data.user_id, "activities"))
         }
         dispatch(slice.setUpdatingLoader());
         return true;
@@ -183,14 +183,14 @@ export const deleteActivityHandler = (id) => async (dispatch, getStore) => {
 }
 
 // create cpd Evaluation
-export const createEvaluationAPI = (data) => async (dispatch,getStore) => {
+export const createEvaluationAPI = (data) => async (dispatch, getStore) => {
     try {
         dispatch(slice.setUpdatingLoader());
         const response = await axios.post(`${URL_BASE_LINK}/cpd/evaluation/create`, data)
         console.log(response);
         dispatch(showMessage({ message: response.data.message, variant: "success" }))
         if (response.data.status) {
-            dispatch(getCpdPlanningAPI(getStore().user.data.id, "evaluations"))
+            dispatch(getCpdPlanningAPI(getStore().user.data.user_id, "evaluations"))
         }
         dispatch(slice.setUpdatingLoader());
         return true;
@@ -202,7 +202,7 @@ export const createEvaluationAPI = (data) => async (dispatch,getStore) => {
 }
 
 // update cpd Evaluation
-export const updateEvaluationAPI = (id, data) => async (dispatch,getStore) => {
+export const updateEvaluationAPI = (id, data) => async (dispatch, getStore) => {
     try {
 
         dispatch(slice.setUpdatingLoader());
@@ -210,7 +210,7 @@ export const updateEvaluationAPI = (id, data) => async (dispatch,getStore) => {
         const response = await axios.patch(`${URL_BASE_LINK}/cpd/evaluation/update/${id}`, payload)
         dispatch(showMessage({ message: response.data.message, variant: "success" }))
         if (response.data.status) {
-            dispatch(getCpdPlanningAPI(getStore().user.data.id, "evaluations"))
+            dispatch(getCpdPlanningAPI(getStore().user.data.user_id, "evaluations"))
         }
         dispatch(slice.setUpdatingLoader());
         return true;
@@ -222,14 +222,14 @@ export const updateEvaluationAPI = (id, data) => async (dispatch,getStore) => {
 }
 
 // delete cpd Evaluation
-export const deleteEvaluationHandler = (id) => async (dispatch,getStore) => {
+export const deleteEvaluationHandler = (id) => async (dispatch, getStore) => {
     try {
         dispatch(slice.setUpdatingLoader());
         const response = await axios.delete(`${URL_BASE_LINK}/cpd/evaluation/delete/${id}`)
         console.log(response);
         dispatch(showMessage({ message: response.data.message, variant: "success" }))
         if (response.data.status) {
-            dispatch(getCpdPlanningAPI(getStore().user.data.id, "evaluations"))
+            dispatch(getCpdPlanningAPI(getStore().user.data.user_id, "evaluations"))
         }
         dispatch(slice.setUpdatingLoader());
         return true;
@@ -241,14 +241,14 @@ export const deleteEvaluationHandler = (id) => async (dispatch,getStore) => {
 }
 
 // create cpd Reflection
-export const createReflectionAPI = (data) => async (dispatch,getStore) => {
+export const createReflectionAPI = (data) => async (dispatch, getStore) => {
     try {
         dispatch(slice.setUpdatingLoader());
         const response = await axios.post(`${URL_BASE_LINK}/cpd/reflection/create`, data)
         console.log(response);
         dispatch(showMessage({ message: response.data.message, variant: "success" }))
         if (response.data.status) {
-            dispatch(getCpdPlanningAPI(getStore().user.data.id, "reflections"))
+            dispatch(getCpdPlanningAPI(getStore().user.data.user_id, "reflections"))
         }
         dispatch(slice.setUpdatingLoader());
         return true;
@@ -260,7 +260,7 @@ export const createReflectionAPI = (data) => async (dispatch,getStore) => {
 }
 
 // update cpd Reflections
-export const updateReflectionsAPI = (id, data) => async (dispatch,getStore) => {
+export const updateReflectionsAPI = (id, data) => async (dispatch, getStore) => {
     try {
 
         dispatch(slice.setUpdatingLoader());
@@ -268,7 +268,7 @@ export const updateReflectionsAPI = (id, data) => async (dispatch,getStore) => {
         const response = await axios.patch(`${URL_BASE_LINK}/cpd/reflection/update/${id}`, payload)
         dispatch(showMessage({ message: response.data.message, variant: "success" }))
         if (response.data.status) {
-            dispatch(getCpdPlanningAPI(getStore().user.data.id, "reflections"))
+            dispatch(getCpdPlanningAPI(getStore().user.data.user_id, "reflections"))
         }
         dispatch(slice.setUpdatingLoader());
         return true;
@@ -280,14 +280,14 @@ export const updateReflectionsAPI = (id, data) => async (dispatch,getStore) => {
 }
 
 // delete cpd Reflection
-export const deleteReflectionHandler = (id) => async (dispatch,getStore) => {
+export const deleteReflectionHandler = (id) => async (dispatch, getStore) => {
     try {
         dispatch(slice.setUpdatingLoader());
         const response = await axios.delete(`${URL_BASE_LINK}/cpd/reflection/delete/${id}`)
         console.log(response);
         dispatch(showMessage({ message: response.data.message, variant: "success" }))
         if (response.data.status) {
-            dispatch(getCpdPlanningAPI(getStore().user.data.id, "reflections"))
+            dispatch(getCpdPlanningAPI(getStore().user.data.user_id, "reflections"))
         }
         dispatch(slice.setUpdatingLoader());
         return true;

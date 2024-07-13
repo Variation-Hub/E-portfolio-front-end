@@ -31,6 +31,9 @@ const yourInnovationSlice = createSlice({
         setYourInnovation(state, action) {
             state.data = action.payload
         },
+        setMetaData(state, action) {
+            state.meta_data = action.payload
+        },
         setSingleData(state, action) {
             state.singleData = action.payload
         }
@@ -102,6 +105,7 @@ export const getYourInnovationAPI = (data = { page: 1, page_size: 10 }, id) => a
         const response = await axios.get(url);
         dispatch(showMessage({ message: response.data.message, variant: "success" }))
         dispatch(slice.setYourInnovation(response.data.data))
+        dispatch(slice.setMetaData(response.data.meta_data))
         dispatch(slice.setLoader());
         return true;
 
@@ -139,7 +143,7 @@ export const getInnovationCommentAPI = (data = { page: 1, page_size: 10 }, id) =
         let url = `${URL_BASE_LINK}/innovation/get/${id}`
 
         const response = await axios.get(url);
-        
+
         dispatch(showMessage({ message: response.data.message, variant: "success" }))
         dispatch(slice.setSingleData(response.data.data))
         dispatch(slice.setLoader());

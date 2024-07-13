@@ -89,8 +89,6 @@ const AddPlanDialogContent = (props) => {
 
   const { edit = "Save", formData = {}, handleChange = () => { }, minEndDate } = props;
 
-  console.log(formData)
-
   const Year = new Date().getFullYear();
 
   const startYear = `${Year - 1}-${String(Year).slice(-2)}`;
@@ -299,10 +297,12 @@ const Planning = (props) => {
 
   const isFormValid = Object.values(formData).find(data => data === "") === undefined;
 
-  console.log(isFormValid);
+  const fetchPlanningData = () => {
+    dispatch(getCpdPlanningAPI(data.user_id, ""));
+  }
 
   useEffect(() => {
-    dispatch(getCpdPlanningAPI(data.user_id, ""));
+    fetchPlanningData()
   }, [dispatch]);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -333,7 +333,6 @@ const Planning = (props) => {
     setFormData(singleData)
     dispatch(slice.setCpdSingledata(singleData));
     dispatch(slice.setDialogType(value));
-    console.log(cpdPlanningData.data);
 
   };
 
