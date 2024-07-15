@@ -558,7 +558,7 @@ const CourseBuilder = (props) => {
               disabled={edit === "view"}
               className={Style.last_input_feald}
             />
-          )}
+          </div>
         </Box>
         {Object.values(mandatoryUnit).length ? (
           Object.values(mandatoryUnit)?.map((item: any) => {
@@ -782,9 +782,8 @@ const CourseBuilder = (props) => {
             Units have not been included.
           </div>
         )}
-      </Box>
 
-      {/* <Box className="m-12">
+        {/* <Box className="m-12">
                 <Box className="flex items-center justify-between">
                     <Typography>Optional Units</Typography>
                     {!edit &&
@@ -799,37 +798,37 @@ const CourseBuilder = (props) => {
                     </div>
                 }
             </Box> */}
-      <Box className="flex items-center justify-end mt-60">
-        {loading ? (
-          <LoadingButton className="w-1/12" />
-        ) : (
-          <>
-            {edit === "view" ? (
-              <SecondaryButtonOutlined
-                name="Close"
-                className=" w-1/12"
-                onClick={handleClose}
-              />
-            ) : (
-              <SecondaryButtonOutlined
-                name="Close"
-                className=" w-1/12"
-                onClick={edit === "edit" ? handleClose : cancleCourseHandler}
-              />
-            )}
-            {edit !== "view" && (
-              <SecondaryButton
-                name={edit === "edit" ? "Update" : "Create"}
-                className=" w-1/12 ml-10"
-                onClick={createCouserHandler}
-              />
-            )}
-          </>
-        )}
-      </Box>
-    </div>
-    // </Card>
+        <Box className="flex items-center justify-end mt-60">
+          {loading ? (
+            <LoadingButton className="w-1/12" />
+          ) : (
+            <>
+              {edit === "view" ? (
+                <SecondaryButtonOutlined
+                  name="Close"
+                  className=" w-1/12"
+                  onClick={handleClose}
+                />
+              ) : (
+                <SecondaryButtonOutlined
+                  name="Close"
+                  className=" w-1/12"
+                  onClick={edit === "edit" ? handleClose : cancleCourseHandler}
+                />
+              )}
+              {edit !== "view" && (
+                <SecondaryButton
+                  name={edit === "edit" ? "Update" : "Create"}
+                  className=" w-1/12 ml-10"
+                  onClick={createCouserHandler}
+                />
+              )}
+            </>
+          )}
+        </Box>
+      </div>
+    </Card>
   );
 };
-
+  
 export default CourseBuilder;

@@ -14,7 +14,7 @@ const initialState = {
         page_size: userTableMetaData.page_size,
         pages: 1
     },
-    singleData: {},
+    courseData: [],
     message: {}
 };
 
@@ -31,8 +31,8 @@ const forumDataSlice = createSlice({
         setForumData(state, action) {
             state.data = action.payload
         },
-        setSingleData(state, action) {
-            state.singleData = action.payload
+        setCourseData(state, action) {
+            state.courseData = action.payload
         },
         setMessage(state, action) {
             state.message = action.payload
@@ -69,7 +69,7 @@ export const getMessageAPI = (data = { page: 1, page_size: 10 }, course_id) => a
 
         const { page = 1, page_size = 10 } = data;
 
-        let url = `${URL_BASE_LINK}/forum/messages/:${course_id}?meta=true&page=${page}&limit=${page_size}`
+        let url = `${URL_BASE_LINK}/forum/messages/${course_id}?meta=true&page=${page}&limit=${page_size}`
 
         const response = await axios.get(url);
         dispatch(showMessage({ message: response.data.message, variant: "success" }))
@@ -95,7 +95,7 @@ export const getChatListAPI = () => async (dispatch) => {
 
         const response = await axios.get(url);
         dispatch(showMessage({ message: response.data.message, variant: "success" }))
-        dispatch(slice.setForumData(response.data.data))
+        dispatch(slice.setCourseData(response.data.data))
         dispatch(slice.setLoader());
         return true;
 

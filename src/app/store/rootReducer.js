@@ -15,6 +15,7 @@ import session from './session';
 import formData from './formData';
 import storeData from "./reloadData"
 import notification from "./notification"
+import forumData from './forum';
 
 const createReducer = (asyncReducers) => (state, action) => {
     const combinedReducer = combineReducers({
@@ -33,6 +34,7 @@ const createReducer = (asyncReducers) => (state, action) => {
         formData,
         storeData,
         notification,
+        forumData,
         ...asyncReducers,
     });
 
