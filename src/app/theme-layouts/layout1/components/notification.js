@@ -21,6 +21,7 @@ import { deleteNotifications, fetchNotifications, readNotifications, selectnotif
 function Notification(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [notifications, setNotifications] = React.useState([]);
+  const [dot, setDot] = React.useState(false);
 
   const { notification } = useSelector(selectnotificationSlice);
 
@@ -33,6 +34,10 @@ function Notification(props) {
   React.useEffect(() => {
     setNotifications(notification);
   }, [notification])
+
+  React.useEffect(() => {
+    setDot(notification.filter(n =>!n.read).length > 0);
+  }, [notifications])
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -68,12 +73,15 @@ function Notification(props) {
 
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
-  console.log(notifications);
+
 
   return (
     <div>
       <Button aria-describedby={id} className='min-w-0 ' onClick={handleClick}>
-        <NotificationsNoneIcon />
+        <div className='relative'>
+          {dot && <div className='w-10 h-10 bg-red rounded-full absolute right-0'></div>}
+          <NotificationsNoneIcon />
+        </div>
       </Button>
       <Popover
         className='top-24 '

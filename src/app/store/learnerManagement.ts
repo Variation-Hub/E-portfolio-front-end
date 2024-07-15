@@ -156,10 +156,10 @@ export const getRoleAPI = (role) => async (dispatch) => {
         return false
     };
 }
-export const getLearnerDetails = (id) => async (dispatch) => {
+export const getLearnerDetails = (data) => async (dispatch, getStore) => {
     try {
         dispatch(slice.setUpdatingLoader());
-        console.log(id)
+        const id = data || getStore()?.user?.data?.id
         const response = await axios.get(`${URL_BASE_LINK}/learner/get/${id}`,)
         dispatch(showMessage({ message: response.data.message, variant: "success" }))
         console.log(response.data.data)

@@ -83,7 +83,7 @@ class JwtService extends FuseUtils.EventEmitter {
                         //   }
                         // );
                         // if (res.data.status) {
-                        connectToSocket(dispatch);
+                        connectToSocket(decoded.user_id, dispatch);
                         // }
 
                         if (response.data.data.password_changed) {
@@ -121,7 +121,7 @@ class JwtService extends FuseUtils.EventEmitter {
             // );
 
             // if (response.data.status) {
-            connectToSocket(dispatch);
+            connectToSocket(decoded.user_id, dispatch);
             // }
             resolve(decoded);
         });
