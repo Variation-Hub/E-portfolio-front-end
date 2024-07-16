@@ -61,7 +61,7 @@ export const sendMessageAPI = (data) => async (dispatch) => {
         dispatch(slice.setUpdatingLoader());
         const response = await axios.post(`${URL_BASE_LINK}/forum/send`, data)
         console.log(response.data.data, "success");
-        dispatch(slice.pushForumData(response.data.data));
+        // dispatch(slice.pushForumData(response.data.data));
         dispatch(showMessage({ message: response.data.message, variant: "success" }))
         dispatch(slice.setUpdatingLoader());
         return true;
