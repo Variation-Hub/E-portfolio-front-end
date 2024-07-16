@@ -7,29 +7,55 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import { Stack } from "@mui/system";
-import { Box, Dialog, DialogActions, DialogContent, FormControl, IconButton, Menu, MenuItem, Pagination, Select, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  FormControl,
+  IconButton,
+  Menu,
+  MenuItem,
+  Pagination,
+  Select,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { createCpdPlanningAPI, deletePlanningHandler, getCpdPlanningAPI, selectCpdPlanning, slice, updateCpdPlanningAPI } from "app/store/cpdPlanning";
+import {
+  createCpdPlanningAPI,
+  deletePlanningHandler,
+  getCpdPlanningAPI,
+  selectCpdPlanning,
+  slice,
+  updateCpdPlanningAPI,
+} from "app/store/cpdPlanning";
 import { selectUser } from "app/store/userSlice";
 import { data } from "src/app/component/Chart/doughnut";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import { DangerButton, LoadingButton, SecondaryButton, SecondaryButtonOutlined } from "src/app/component/Buttons";
+import {
+  DangerButton,
+  LoadingButton,
+  SecondaryButton,
+  SecondaryButtonOutlined,
+} from "src/app/component/Buttons";
 import AlertDialog from "src/app/component/Dialogs/AlertDialog";
 import FuseLoading from "@fuse/core/FuseLoading";
 import DataNotFound from "src/app/component/Pages/dataNotFound";
+import Style from "./style.module.css";
 
 interface Column {
   id:
-  | "year"
-  | "start_date"
-  | "end_date"
-  | "cpd_plan"
-  | "impact_on_you"
-  | "impact_on_colleagues"
-  | "impact_on_managers"
-  | "impact_on_organisation"
-  | "action";
+    | "year"
+    | "start_date"
+    | "end_date"
+    | "cpd_plan"
+    | "impact_on_you"
+    | "impact_on_colleagues"
+    | "impact_on_managers"
+    | "impact_on_organisation"
+    | "action";
   label: string;
   minWidth?: number;
   align?: "right";
@@ -84,10 +110,13 @@ const columns: readonly Column[] = [
   },
 ];
 
-
 const AddPlanDialogContent = (props) => {
-
-  const { edit = "Save", formData = {}, handleChange = () => { }, minEndDate } = props;
+  const {
+    edit = "Save",
+    formData = {},
+    handleChange = () => {},
+    minEndDate,
+  } = props;
 
   const Year = new Date().getFullYear();
 
@@ -98,7 +127,7 @@ const AddPlanDialogContent = (props) => {
   const years = [startYear, currentYear, endYear];
 
   const formatDate = (date) => {
-    if (!date) return '';
+    if (!date) return "";
     const formattedDate = date.substr(0, 10);
     return formattedDate;
   };
@@ -108,7 +137,10 @@ const AddPlanDialogContent = (props) => {
       <div>
         <Box className="flex flex-col gap-12 sm:flex-row">
           <div className="w-full">
-            <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
+            <Typography
+              sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}
+              className={Style.name}
+            >
               Year
             </Typography>
             <FormControl fullWidth size="small">
@@ -129,7 +161,10 @@ const AddPlanDialogContent = (props) => {
             </FormControl>
           </div>
           <div className="w-full">
-            <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
+            <Typography
+              sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}
+              className={Style.name}
+            >
               Start Date
             </Typography>
             <TextField
@@ -146,7 +181,10 @@ const AddPlanDialogContent = (props) => {
             />
           </div>
           <div className="w-full">
-            <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
+            <Typography
+              sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}
+              className={Style.name}
+            >
               End Date
             </Typography>
             <TextField
@@ -168,7 +206,10 @@ const AddPlanDialogContent = (props) => {
         </Box>
         <Box className="mt-12 flex flex-col justify-between gap-12">
           <div className="w-full">
-            <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
+            <Typography
+              sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}
+              className={Style.name}
+            >
               What is your CPD plan?
             </Typography>
             <TextField
@@ -184,7 +225,10 @@ const AddPlanDialogContent = (props) => {
             />
           </div>
           <div className="w-full flex flex-col space-y-4">
-            <Typography sx={{ fontSize: "0.9vw", marginRight: "0.5rem" }}>
+            <Typography
+              sx={{ fontSize: "0.9vw", marginRight: "0.5rem" }}
+              className={Style.name}
+            >
               Impact
             </Typography>
             <div
@@ -196,7 +240,11 @@ const AddPlanDialogContent = (props) => {
               }}
             >
               {[
-                { label: "On you:-", name: "impact_on_you", value: formData.impact_on_you },
+                {
+                  label: "On you:-",
+                  name: "impact_on_you",
+                  value: formData.impact_on_you,
+                },
                 {
                   label: "Colleagues:-",
                   name: "impact_on_colleagues",
@@ -213,7 +261,7 @@ const AddPlanDialogContent = (props) => {
                   value: formData.impact_on_organisation,
                 },
               ]?.map((group) => (
-                <div key={group.name} className="flex items-center">
+                <div key={group.name} className={`flex items-center ${Style.impact_value}`}>
                   <Typography
                     sx={{
                       fontSize: "0.9vw",
@@ -221,9 +269,9 @@ const AddPlanDialogContent = (props) => {
                       minWidth: "10rem",
                     }}
                   >
-                    {group.label}
+                    <div className={Style.name}>{group.label}</div>
                   </Typography>
-                  <div className="flex space-x-16 m-2">
+                  <div className="flex space-x-16 m-2" >
                     {[1, 2, 3, 4, 5]?.map((value) => (
                       <label
                         key={`${group.name}-${value}`}
@@ -253,15 +301,10 @@ const AddPlanDialogContent = (props) => {
 };
 
 const Planning = (props) => {
+  const { dialogType, setDialogType, dataUpdatingLoadding, dataFetchLoading } =
+    props;
 
-  const {
-    dialogType,
-    setDialogType,
-    dataUpdatingLoadding,
-    dataFetchLoading
-  } = props;
-
-  const { singleData } = useSelector(selectCpdPlanning)
+  const { singleData } = useSelector(selectCpdPlanning);
 
   const [formData, setFormData] = useState({
     year: singleData?.year || "",
@@ -295,7 +338,8 @@ const Planning = (props) => {
     }));
   };
 
-  const isFormValid = Object.values(formData).find(data => data === "") === undefined;
+  const isFormValid =
+    Object.values(formData).find((data) => data === "") === undefined;
 
   const fetchPlanningData = () => {
     dispatch(getCpdPlanningAPI(data.user_id, ""));
@@ -313,7 +357,7 @@ const Planning = (props) => {
   };
 
   const editIcon = (edit, value) => {
-    setEdit(edit)
+    setEdit(edit);
     // setUpdateData(openMenuDialog);
     setOpen(true);
     const singleData = {
@@ -330,10 +374,9 @@ const Planning = (props) => {
       evaluations: openMenuDialog?.evaluations || [],
       reflections: openMenuDialog?.reflections || [],
     };
-    setFormData(singleData)
+    setFormData(singleData);
     dispatch(slice.setCpdSingledata(singleData));
     dispatch(slice.setDialogType(value));
-
   };
 
   const handleSubmit = async () => {
@@ -343,13 +386,11 @@ const Planning = (props) => {
         response = await dispatch(createCpdPlanningAPI({ ...formData }));
       else if (edit == "edit")
         response = await dispatch(updateCpdPlanningAPI({ ...formData }));
-
     } catch (error) {
       console.error("Error during submission:", error);
     } finally {
       handleClose();
     }
-
   };
 
   const deleteIcon = (id) => {
@@ -362,23 +403,20 @@ const Planning = (props) => {
   };
 
   const formatDate = (date) => {
-    if (!date) return '';
+    if (!date) return "";
     const formattedDate = date.substr(0, 10);
     return formattedDate;
   };
 
   const deleteConfromation = async () => {
-    await dispatch(
-      deletePlanningHandler(deleteId)
-    );
+    await dispatch(deletePlanningHandler(deleteId));
     setDeleteId("");
   };
-
 
   const handleClose = () => {
     dispatch(slice.setCpdSingledata({}));
     setOpen(false);
-    setDialogType("")
+    setDialogType("");
     setAnchorEl(null);
     setEdit("");
 
@@ -424,35 +462,35 @@ const Planning = (props) => {
             <TableBody>
               {cpdPlanningData?.data?.map((row) => {
                 return (
-                  <TableRow
-                    hover
-                    role="checkbox"
-                    tabIndex={-1}
-                    key={row.id}
-
-                  >
+                  <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
                     {columns?.map((column) => {
                       const value = row[column.id];
                       return (
-                        <TableCell key={column.id} align={column.align} className="text-left"
+                        <TableCell
+                          key={column.id}
+                          align={column.align}
+                          className="text-left"
                           style={{
-                            minWidth: column.minWidth
-                          }}>
-                          {column.format && typeof value === "number"
-                            ? column.format(value)
-                            : column.id === "start_date" ?
-                              formatDate(value)
-                              : column.id === "end_date" ?
-                                formatDate(value)
-                                : column.id === "action" ?
-                                  <IconButton
-                                    size="small"
-                                    sx={{ color: "#5B718F", marginRight: "4px" }}
-                                    onClick={(e) => openMenu(e, row)}
-                                  >
-                                    <MoreHorizIcon fontSize="small" />
-                                  </IconButton>
-                                  : value}
+                            minWidth: column.minWidth,
+                          }}
+                        >
+                          {column.format && typeof value === "number" ? (
+                            column.format(value)
+                          ) : column.id === "start_date" ? (
+                            formatDate(value)
+                          ) : column.id === "end_date" ? (
+                            formatDate(value)
+                          ) : column.id === "action" ? (
+                            <IconButton
+                              size="small"
+                              sx={{ color: "#5B718F", marginRight: "4px" }}
+                              onClick={(e) => openMenu(e, row)}
+                            >
+                              <MoreHorizIcon fontSize="small" />
+                            </IconButton>
+                          ) : (
+                            value
+                          )}
                         </TableCell>
                       );
                     })}
@@ -503,7 +541,10 @@ const Planning = (props) => {
           dataUpdatingLoadding ? (
             <LoadingButton />
           ) : (
-            <DangerButton onClick={deleteConfromation} name="Delete Cpd Planning" />
+            <DangerButton
+              onClick={deleteConfromation}
+              name="Delete Cpd Planning"
+            />
           )
         }
         cancelButton={
@@ -559,7 +600,7 @@ const Planning = (props) => {
           },
         }}
       >
-        <DialogContent >
+        <DialogContent>
           <AddPlanDialogContent
             edit={edit}
             setFormData={setFormData}
@@ -571,20 +612,33 @@ const Planning = (props) => {
 
         <Box className="flex items-center justify-end m-12 mt-24">
           <DialogActions>
-            {dataUpdatingLoadding ?
+            {dataUpdatingLoadding ? (
               <LoadingButton />
-              :
+            ) : (
               <>
-                {edit === "view" ?
-                  <SecondaryButtonOutlined name="Cancel" className=" w-1/12" onClick={handleClose} />
-                  :
-                  <SecondaryButtonOutlined name="Cancel" className=" w-1/12" onClick={handleClose} />
-                }
-                {edit !== "view" &&
-                  <SecondaryButton name={edit === "edit" ? "Update" : "Save"} className=" w-1/12 ml-10" onClick={handleSubmit} disable={!isFormValid} />
-                }
+                {edit === "view" ? (
+                  <SecondaryButtonOutlined
+                    name="Cancel"
+                    className=" w-1/12"
+                    onClick={handleClose}
+                  />
+                ) : (
+                  <SecondaryButtonOutlined
+                    name="Cancel"
+                    className=" w-1/12"
+                    onClick={handleClose}
+                  />
+                )}
+                {edit !== "view" && (
+                  <SecondaryButton
+                    name={edit === "edit" ? "Update" : "Save"}
+                    className=" w-1/12 ml-10"
+                    onClick={handleSubmit}
+                    disable={!isFormValid}
+                  />
+                )}
               </>
-            }
+            )}
           </DialogActions>
         </Box>
       </Dialog>

@@ -63,8 +63,6 @@ const MyProfile: React.FC = () => {
 
   const handleImageUpload = (event) => {
     const selectedImage = event.target.files[0];
-
-    console.log(selectedImage);
     dispatch(uploadAvatar(selectedImage));
   };
 

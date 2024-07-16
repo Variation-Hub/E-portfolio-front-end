@@ -358,7 +358,7 @@ export default function LearnerManagementTable(props) {
       >
         <Box className="m-4 flex flex-col justify-between gap-12 sm:flex-row">
           <div className="w-full">
-            <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
+            <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }} className={Style.name}>
               Select Course
             </Typography>
             <Autocomplete
@@ -391,7 +391,7 @@ export default function LearnerManagementTable(props) {
         </Box>
         <Box className="m-4 flex flex-col justify-between gap-12 sm:flex-row">
           <div className="w-full">
-            <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
+            <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }} className={Style.name}>
               Trainer
             </Typography>
             <Autocomplete
@@ -424,7 +424,7 @@ export default function LearnerManagementTable(props) {
         </Box>
         <Box className="m-4 flex flex-col justify-between gap-12 sm:flex-row">
           <div className="w-full">
-            <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
+            <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }} className={Style.name}>
               IQA
             </Typography>
             <Autocomplete
@@ -457,7 +457,7 @@ export default function LearnerManagementTable(props) {
         </Box>
         <Box className="m-4 flex flex-col justify-between gap-12 sm:flex-row">
           <div className="w-full">
-            <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
+            <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }} className={Style.name}>
               LIQA
             </Typography>
             <Autocomplete
@@ -490,7 +490,7 @@ export default function LearnerManagementTable(props) {
         </Box>
         <Box className="m-4 flex flex-col justify-between gap-12 sm:flex-row">
           <div className="w-full">
-            <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
+            <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }} className={Style.name}>
               EQA
             </Typography>
             <Autocomplete
@@ -523,7 +523,7 @@ export default function LearnerManagementTable(props) {
         </Box>
         <Box className="m-4 flex flex-col justify-between gap-12 sm:flex-row">
           <div className="w-full">
-            <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
+            <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }} className={Style.name}>
               Employer
             </Typography>
             <Autocomplete
