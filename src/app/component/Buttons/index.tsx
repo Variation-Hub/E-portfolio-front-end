@@ -75,7 +75,7 @@ export const DangerButton = (props) => {
 }
 
 export const LoadingButton = (props) => {
-    const { variant = "contained", style, className="" } = props;
+    const { variant = "contained", style, className = "" } = props;
     return (
         <Button
             variant={variant}

@@ -1,7 +1,7 @@
 import { Avatar, Box, Grid, IconButton, InputAdornment, TextField, Tooltip, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import EmojiPicker from 'emoji-picker-react';
-import { SecondaryButton } from "src/app/component/Buttons";
+import { LoadingButton, SecondaryButton } from "src/app/component/Buttons";
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 import SendIcon from '@mui/icons-material/Send';
 import { useDispatch } from "react-redux";
@@ -42,29 +42,25 @@ const timeAgo = (timestamp) => {
 
 const Forum = () => {
 
+  const chatEndRef = useRef(null);
   const forumData = useSelector(selectForumData);
   const user = useSelector(selectUser);
 
   const dispatch: any = useDispatch();
 
-  useEffect(() => {
-    dispatch(getChatListAPI());
-  }, [dispatch]);
-
-  // useEffect(() => {
-  //   dispatch(getMessageAPI({ page: 1, page_size: 10 }, forumData?.message?.course_id));
-  // }, [dispatch]);
+  const scrollToBottom = () => {
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }
 
   const [sendMessage, setSendMessage] = useState({
     course_id: forumData?.message?.course_course_id,
     message: "",
-    // file
+    file: ""
   });
 
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
   const handleSendMessage = (event, row) => {
-    // const selected = data.find((msg) => msg.course_id === messageId);
     dispatch(slice.setMessage(row));
     setSendMessage(pre => ({
       ...pre,
@@ -83,29 +79,36 @@ const Forum = () => {
 
   const handleSendChatMessage = async () => {
     try {
-      let response;
-      response = await dispatch(sendMessageAPI(sendMessage));
-      dispatch(getMessageAPI({ page: 1, page_size: 10 }, forumData?.message?.course_course_id))
+      if (sendMessage.message === "" && sendMessage.file === "") {
+        return
+      }
+      const formData = new FormData();
+      formData.append('course_id', sendMessage.course_id);
+      formData.append('message', sendMessage.message);
+      formData.append('file', sendMessage.file);
+
+      await dispatch(sendMessageAPI(formData));
     } catch (err) {
       console.log(err);
     } finally {
-      // handleCloseDialog();
       handleCloseEmoji();
     }
     setSendMessage({
       course_id: forumData?.message?.course_course_id,
       message: "",
+      file: ""
     });
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      handleSendChatMessage();
+    }
   };
 
   const handleCloseEmoji = () => {
     setShowEmojiPicker(false);
-  };
-
-  const formatTime = (time) => {
-    if (!time) return '';
-    const formattedTime = time.substr(11, 16);
-    return formattedTime;
   };
 
   const handleFileUploadClick = () => {
@@ -115,14 +118,22 @@ const Forum = () => {
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      // Handle file upload logic here
       console.log('File selected:', file);
+      setSendMessage(pre => ({ ...pre, file }))
     }
   };
 
+  useEffect(() => {
+    scrollToBottom();
+  }, [forumData]);
+
+  useEffect(() => {
+    dispatch(getChatListAPI());
+  }, [dispatch]);
+
   return (
-    <div className="flex w-full h-[100%]">
-      <div className="w-1/4 p-4 m-16 rounded-md shadow-2 overflow-hidden">
+    <div className="flex w-full h-[100%] p-16 gap-12">
+      <div className="w-1/4 p-4  rounded-md shadow-2 overflow-hidden">
         <div className="flex flex-col space-y-4">
           <div className="flex items-center justify-between p-2">
             <input
@@ -154,8 +165,8 @@ const Forum = () => {
         </div>
       </div>
 
-      {(Object.keys(forumData.message).length > 0) ?
-        <div className="w-3/4 p-4 max-h-fit">
+      {(forumData.message?.course_course_id !== null) ?
+        <div className="w-full p-4 max-h-fit rounded-md shadow-2">
           {forumData && (
             <div className="flex items-start bg-white rounded-md p-2 border-b border-gray-200 m-10 gap-10">
               <Avatar className="mr-4" alt={forumData?.course_course_name?.toUpperCase().charAt(0)} src="../" />
@@ -168,9 +179,9 @@ const Forum = () => {
               </div>
             </div>
           )}
-          <Box sx={{ display: 'flex', flexDirection: 'column', height: '90%', justifyContent: "space-between" }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', height: "75vh", justifyContent: "space-between" }}>
 
-            <Box className="flex overflow-y-scroll flex-col max-w-full gap-10 h-full">
+            <Box className="flex overflow-y-scroll flex-col max-w-full gap-10 h-[88%]">
               {forumData.data?.map((message) => (
                 <>
                   {console.log(user, message)}
@@ -193,10 +204,11 @@ const Forum = () => {
                         </div>
                       )}
                     </Grid>}
+                  <div ref={chatEndRef} />
                 </>
               ))}
             </Box>
-            <Box p={2} mt="auto">
+            <Box p={2} mt="auto" className="mt-auto">
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <TextField
                   fullWidth
@@ -207,6 +219,7 @@ const Forum = () => {
                     ...sendMessage,
                     message: e.target.value
                   })}
+                  onKeyDown={handleKeyDown}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
@@ -230,13 +243,15 @@ const Forum = () => {
                     )
                   }}
                 />
-                <SecondaryButton
-                  disable={!sendMessage.message}
-                  sx={{ ml: 2 }}
-                  className="ml-10 flex justify-end"
-                  onClick={handleSendChatMessage}
-                  startIcon={<SendIcon style={{ fontSize: "30px", margin: "auto", padding: "5px" }} />}
-                />
+                {!forumData.dataUpdatingLoadding ?
+                  <SecondaryButton
+                    disable={!sendMessage.message}
+                    sx={{ ml: 2 }}
+                    className="ml-10 flex justify-end"
+                    onClick={handleSendChatMessage}
+                    startIcon={<SendIcon style={{ fontSize: "30px", margin: "auto", padding: "5px" }} />}
+                  /> :
+                  <LoadingButton className="py-9 ml-10" />}
               </Box>
               {showEmojiPicker && (
                 <Box sx={{ position: 'absolute', bottom: '10%', left: '30%' }}>

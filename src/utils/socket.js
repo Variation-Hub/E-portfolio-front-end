@@ -2,7 +2,9 @@ import { showMessage } from 'app/store/fuse/messageSlice';
 import { getLearnerDetails } from 'app/store/learnerManagement';
 import { fetchNotifications } from 'app/store/notification';
 import jsonData from 'src/url.json';
-
+import { SocketDomain } from './randomColor';
+import { slice } from 'app/store/forum';
+// import slice from ''
 const SERVER_URL = jsonData.SOCKER_LINK
 
 let socket;
@@ -10,13 +12,15 @@ let socket;
 export const connectToSocket = async (id, dispatch) => {
     socket = await new WebSocket(`${SERVER_URL}?id=${id}`);
 
-    socket.onmessage = (data) => {
-        const { title, domain, message, type } = JSON.parse(data.data);
+    socket.onmessage = (Data) => {
+        const { data, domain, } = JSON.parse(Data.data);
 
-        if (domain === "Course Allocation") {
-            dispatch(showMessage({ message: message, variant: "success" }));
+        if (domain === SocketDomain.CourseAllocation) {
+            dispatch(showMessage({ message: data.message, variant: "success" }));
             dispatch(getLearnerDetails())
             dispatch(fetchNotifications())
+        } else if (domain === SocketDomain.MessageSend) {
+            dispatch(slice.newMassageHandler(data))
         }
     };
 
