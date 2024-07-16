@@ -66,7 +66,7 @@ const SignInPage = () => {
         //   }
         // }}
         > */}
-       <SideView />
+        <SideView />
         {/* </Box> */}
         <Paper className="h-full flex items-center sm:h-auto md:flex md:items-center md:justify-center w-full sm:w-auto md:h-full md:w-1/2 py-8 px-16 sm:p-48 md:p-64 sm:rounded-2xl md:rounded-none sm:shadow md:shadow-none">
           <div className="w-full min-w-300 sm:w-320 mx-auto sm:mx-0 shadow-md rounded-md">

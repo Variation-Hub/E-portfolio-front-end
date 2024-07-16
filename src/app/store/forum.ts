@@ -15,7 +15,9 @@ const initialState = {
         pages: 1
     },
     courseData: [],
-    message: {}
+    message: {
+        course_course_id: null
+    },
 };
 
 const forumDataSlice = createSlice({
@@ -30,6 +32,14 @@ const forumDataSlice = createSlice({
         },
         setForumData(state, action) {
             state.data = action.payload
+        },
+        pushForumData(state, action) {
+            state.data = [...state.data, action.payload]
+        },
+        newMassageHandler(state, action) {
+            if (state.message?.course_course_id === action.payload.course.course_id) {
+                state.data = [...state.data, action.payload]
+            }
         },
         setCourseData(state, action) {
             state.courseData = action.payload
@@ -50,6 +60,8 @@ export const sendMessageAPI = (data) => async (dispatch) => {
     try {
         dispatch(slice.setUpdatingLoader());
         const response = await axios.post(`${URL_BASE_LINK}/forum/send`, data)
+        console.log(response.data.data, "success");
+        dispatch(slice.pushForumData(response.data.data));
         dispatch(showMessage({ message: response.data.message, variant: "success" }))
         dispatch(slice.setUpdatingLoader());
         return true;

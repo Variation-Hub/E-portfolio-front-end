@@ -6,3 +6,12 @@ export const getRandomColor = () => {
     }
     return color;
 };
+
+export const SocketDomain = {
+    Notification: "notification",
+    Message: "message",
+    CourseAllocation: "Course Allocation",
+    MessageSend: "Message Send",
+    MessageUpdate: "Message Update",
+    MessageDelete: "Message Delete",
+}
