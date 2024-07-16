@@ -29,6 +29,7 @@ import {
 } from "src/app/contanst/regValidation";
 import HelpOutlinedIcon from "@mui/icons-material/HelpOutlined";
 import { useState } from "react";
+import Style from "./style.module.css";
 
 const UserDetails = (props) => {
   const {
@@ -58,7 +59,10 @@ const UserDetails = (props) => {
       <Box>
         <Box className="m-12 flex flex-col justify-between gap-12 sm:flex-row">
           <div>
-            <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
+            <Typography
+              sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}
+              className={Style.name}
+            >
               First Name<sup>*</sup>
             </Typography>
             <TextField
@@ -88,7 +92,10 @@ const UserDetails = (props) => {
             />
           </div>
           <div>
-            <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
+            <Typography
+              sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}
+              className={Style.name}
+            >
               Last Name<sup>*</sup>
             </Typography>
             <TextField
@@ -119,7 +126,10 @@ const UserDetails = (props) => {
         </Box>
         <Box className="m-12 flex flex-col justify-between gap-12 sm:flex-row">
           <div>
-            <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
+            <Typography
+              sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}
+              className={Style.name}
+            >
               User Name<sup>*</sup>
             </Typography>
             <TextField
@@ -154,7 +164,10 @@ const UserDetails = (props) => {
           </div>
 
           <div>
-            <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
+            <Typography
+              sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}
+              className={Style.name}
+            >
               Email<sup>*</sup>
             </Typography>
             <TextField
@@ -185,7 +198,10 @@ const UserDetails = (props) => {
         </Box>
         <Box className="m-12 flex flex-col justify-between gap-12 sm:flex-row">
           <div>
-            <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
+            <Typography
+              sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}
+              className={Style.name}
+            >
               Password<sup>*</sup>
             </Typography>
 
@@ -217,7 +233,10 @@ const UserDetails = (props) => {
           </div>
 
           <div>
-            <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
+            <Typography
+              sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}
+              className={Style.name}
+            >
               Confirm Password<sup>*</sup>
             </Typography>
             <TextField
@@ -254,7 +273,10 @@ const UserDetails = (props) => {
 
         <Box className="m-12 flex flex-col justify-between gap-12 sm:flex-row">
           <div>
-            <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
+            <Typography
+              sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}
+              className={Style.name}
+            >
               Mobile<sup>*</sup>
             </Typography>
             <TextField
@@ -283,7 +305,10 @@ const UserDetails = (props) => {
             />
           </div>
           <div className="w-1/2">
-            <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
+            <Typography
+              sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}
+              className={Style.name}
+            >
               Time Zone<sup>*</sup>
             </Typography>
             <Autocomplete
@@ -315,7 +340,10 @@ const UserDetails = (props) => {
 
         <Box className="m-12 flex flex-col justify-between gap-12 sm:flex-row">
           <div className="w-full">
-            <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
+            <Typography
+              sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}
+              className={Style.name}
+            >
               Role<sup>*</sup>
             </Typography>
             <Select

@@ -45,15 +45,19 @@ import AlertDialog from "src/app/component/Dialogs/AlertDialog";
 import { Link } from "react-router-dom";
 import FuseLoading from "@fuse/core/FuseLoading";
 import DataNotFound from "src/app/component/Pages/dataNotFound";
+import Style from "./style.module.css"
 
 const AddInnocations = (props) => {
-  const { yourInnovation = {}, handleChange = () => { } } = props;
+  const { yourInnovation = {}, handleChange = () => {} } = props;
 
   return (
     <>
       <Box className="flex flex-col justify-between gap-12 p-0">
         <div>
-          <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
+          <Typography
+            sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}
+            className={Style.name}
+          >
             Topic
           </Typography>
           <TextField
@@ -67,7 +71,10 @@ const AddInnocations = (props) => {
           />
         </div>
         <div>
-          <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
+          <Typography
+            sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}
+            className={Style.name}
+          >
             Description
           </Typography>
           <TextField
@@ -155,12 +162,14 @@ const ProposeYourInnovations = (props) => {
 
   const handleEdit = () => {
     setYourInnovation(singleData);
-    handleClickOpen('edit');
+    handleClickOpen("edit");
   };
 
   const handleView = async () => {
     try {
-      const response = await dispatch(getInnovationCommentAPI({ page: 1, page_size: 10 }, selectedRow?.id));
+      const response = await dispatch(
+        getInnovationCommentAPI({ page: 1, page_size: 10 }, selectedRow?.id)
+      );
     } catch (error) {
       console.error(error);
     }
@@ -216,8 +225,8 @@ const ProposeYourInnovations = (props) => {
 
   const handleSendChatMessage = async () => {
     if (newMessage.trim() !== "") {
-      const isAdmin = data.roles.includes('Admin');
-      const messageType = isAdmin ? 'Response' : 'Reply';
+      const isAdmin = data.roles.includes("Admin");
+      const messageType = isAdmin ? "Response" : "Reply";
 
       const newChatMessage = {
         innovation_id: selectedRow.id,
@@ -229,7 +238,9 @@ const ProposeYourInnovations = (props) => {
       try {
         let response;
         response = await dispatch(createInnovationCommentAPI(newChatMessage));
-        dispatch(getInnovationCommentAPI({ page: 1, page_size: 10 }, selectedRow?.id))
+        dispatch(
+          getInnovationCommentAPI({ page: 1, page_size: 10 }, selectedRow?.id)
+        );
       } catch (err) {
         console.log(err);
       } finally {
@@ -248,28 +259,30 @@ const ProposeYourInnovations = (props) => {
 
   const isAdmin = data.roles.includes('Admin');
 
-  const isInnovations = Object.values(yourInnovation).find(data => data === "") === undefined;
+  const isInnovations =
+    Object.values(yourInnovation).find((data) => data === "") === undefined;
 
   return (
     <>
       <div className="m-10">
-        <Box className="flex justify-end mb-10"
+        <Box
+          className="flex justify-end mb-10"
           sx={{
             borderBottom: 1,
             borderColor: "divider",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-          }}>
+          }}
+        >
           <SecondaryButton
             name="Add Innovation"
             className="py-6 px-12 mb-10"
-
             startIcon={<AddIcon sx={{ mx: -0.5 }} />}
-            onClick={() => handleClickOpen('add')}
+            onClick={() => handleClickOpen("add")}
           />
         </Box>
-        <TableContainer sx={{ maxHeight: 500 }} >
+        <TableContainer sx={{ maxHeight: 500 }}>
           {dataFetchLoading ? (
             <FuseLoading />
           ) : innovation.data.length ? (
@@ -280,10 +293,34 @@ const ProposeYourInnovations = (props) => {
             >
               <TableHead className="bg-[#F8F8F8]">
                 <TableRow>
-                  <TableCell align="left" sx={{ maxWidth: "4rem", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>Topic</TableCell>
-                  <TableCell align="left" sx={{ maxWidth: "9rem", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>Description</TableCell>
-                  <TableCell align="left" sx={{ width: "15rem" }}>Status</TableCell>
-                  <TableCell align="left" sx={{ width: "15rem" }}>Action</TableCell>
+                  <TableCell
+                    align="left"
+                    sx={{
+                      maxWidth: "4rem",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    Topic
+                  </TableCell>
+                  <TableCell
+                    align="left"
+                    sx={{
+                      maxWidth: "9rem",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    Description
+                  </TableCell>
+                  <TableCell align="left" sx={{ width: "15rem" }}>
+                    Status
+                  </TableCell>
+                  <TableCell align="left" sx={{ width: "15rem" }}>
+                    Action
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -295,13 +332,25 @@ const ProposeYourInnovations = (props) => {
                     <TableCell
                       component="th"
                       scope="row"
-                      sx={{ borderBottom: "2px solid #F8F8F8", maxWidth: "4rem", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
+                      sx={{
+                        borderBottom: "2px solid #F8F8F8",
+                        maxWidth: "4rem",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
                     >
                       {row.topic}
                     </TableCell>
                     <TableCell
                       align="left"
-                      sx={{ borderBottom: "2px solid #F8F8F8", maxWidth: "9rem", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
+                      sx={{
+                        borderBottom: "2px solid #F8F8F8",
+                        maxWidth: "9rem",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
                     >
                       {row.description}
                     </TableCell>
@@ -356,10 +405,12 @@ const ProposeYourInnovations = (props) => {
           </Stack>
         </div>
 
-
         <AlertDialog
           open={Boolean(deleteId)}
-          close={() => { deleteIcon(""); handleClose(); }}
+          close={() => {
+            deleteIcon("");
+            handleClose();
+          }}
           topic="Delete Your Innovation?"
           content="Deleting this your innovation will also remove all associated data and relationships. Proceed with deletion?"
           className="-224 "
@@ -393,14 +444,16 @@ const ProposeYourInnovations = (props) => {
             onClick={() => {
               handleClose();
               handleView();
-            }}>
+            }}
+          >
             View
           </MenuItem>
           <MenuItem
             onClick={() => {
               handleClose();
               handleEdit();
-            }}>
+            }}
+          >
             Edit
           </MenuItem>
           <MenuItem
@@ -414,7 +467,7 @@ const ProposeYourInnovations = (props) => {
         </Menu>
 
         <Dialog
-          open={dialogType === 'add' || dialogType === 'edit'}
+          open={dialogType === "add" || dialogType === "edit"}
           onClose={handleCloseDialog}
           sx={{
             ".MuiDialog-paper": {
@@ -430,14 +483,11 @@ const ProposeYourInnovations = (props) => {
             />
           </DialogContent>
           <DialogActions>
-            {dataUpdatingLoadding ?
+            {dataUpdatingLoadding ? (
               <LoadingButton />
-              :
+            ) : (
               <>
-                <SecondaryButtonOutlined
-                  onClick={handleClose}
-                  name="Cancel"
-                />
+                <SecondaryButtonOutlined onClick={handleClose} name="Cancel" />
                 <SecondaryButton
                   name={Object.keys(singleData).length !== 0 ? "Edit" : "Save"}
                   onClick={
@@ -448,7 +498,7 @@ const ProposeYourInnovations = (props) => {
                   disable={!isInnovations}
                 />
               </>
-            }
+            )}
           </DialogActions>
         </Dialog>
 
@@ -459,24 +509,37 @@ const ProposeYourInnovations = (props) => {
           onClose={() => setChatDrawerOpen(false)}
           sx={{ width: "100%", "& .MuiDrawer-paper": { width: "50%" } }}
         >
-          <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+          <Box
+            sx={{ display: "flex", flexDirection: "column", height: "100%" }}
+          >
             <Box p={2}>
               <Tooltip title={yourInnovation.topic}>
-                <Typography variant="subtitle1" className="font-semibold overflow-hidden text-ellipsis whitespace-nowrap">{yourInnovation.topic}</Typography>
+                <Typography
+                  variant="subtitle1"
+                  className="font-semibold overflow-hidden text-ellipsis whitespace-nowrap"
+                >
+                  {yourInnovation.topic}
+                </Typography>
               </Tooltip>
               <Tooltip title={yourInnovation.description}>
-                <Typography variant="subtitle1" className="text-sm overflow-hidden text-ellipsis whitespace-nowrap">{yourInnovation.description}</Typography>
+                <Typography
+                  variant="subtitle1"
+                  className="text-sm overflow-hidden text-ellipsis whitespace-nowrap"
+                >
+                  {yourInnovation.description}
+                </Typography>
               </Tooltip>
             </Box>
 
-            <Box sx={{ flexGrow: 1, overflowY: 'auto', p: 2 }}>
+            <Box sx={{ flexGrow: 1, overflowY: "auto", p: 2 }}>
               {singleData.comment?.map((message) => (
                 <Box key={message.id} mb={2}>
                   <Typography
                     className={
-                      (isAdmin && message.type == 'Response') || (!isAdmin && message.type == 'Reply')
-                        ? 'text-end'
-                        : 'text-start'
+                      (isAdmin && message.type == "Response") ||
+                      (!isAdmin && message.type == "Reply")
+                        ? "text-end"
+                        : "text-start"
                     }
                   >
                     {message.description}
@@ -486,7 +549,7 @@ const ProposeYourInnovations = (props) => {
             </Box>
 
             <Box p={2} mt="auto">
-              <Box sx={{ display: 'flex' }}>
+              <Box sx={{ display: "flex" }}>
                 <TextField
                   fullWidth
                   size="small"
@@ -504,8 +567,7 @@ const ProposeYourInnovations = (props) => {
             </Box>
           </Box>
         </Drawer>
-
-      </div >
+      </div>
     </>
   );
 };

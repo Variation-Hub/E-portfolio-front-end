@@ -311,7 +311,7 @@ export default function UserManagementTable(props) {
         <Typography variant="h6">Course Allocation</Typography>
         <Box className="m-12 flex flex-col justify-between gap-12 sm:flex-row">
           <div className="w-full">
-            <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
+            <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }} className={Style.name}>
               Select Course
             </Typography>
 

@@ -51,9 +51,9 @@ export default function LearnerTable(props) {
   const {
     columns,
     rows,
-    handleOpen = () => { },
-    setUserData = () => { },
-    setUpdateData = () => { },
+    handleOpen = () => {},
+    setUserData = () => {},
+    setUpdateData = () => {},
     meta_data,
     dataUpdatingLoadding,
     search_keyword = "",
@@ -209,7 +209,13 @@ export default function LearnerTable(props) {
                                     height: "24px",
                                   }}
                                 />
-                                <Link to="/portfolio" style={{ color: "inherit", textDecoration: "none" }}>
+                                <Link
+                                  to="/portfolio"
+                                  style={{
+                                    color: "inherit",
+                                    textDecoration: "none",
+                                  }}
+                                >
                                   {value} {row["last_name"]}
                                 </Link>
                               </>
@@ -309,8 +315,11 @@ export default function LearnerTable(props) {
       >
         <Box className="m-4 flex flex-col justify-between gap-12 sm:flex-row">
           <div className="w-full">
-            <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
-              Select Course
+            <Typography
+              sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}
+              className={Style.name}
+            >
+              Select Courseee
             </Typography>
             <Autocomplete
               disableClearable
@@ -342,7 +351,10 @@ export default function LearnerTable(props) {
         </Box>
         <Box className="m-4 flex flex-col justify-between gap-12 sm:flex-row">
           <div className="w-full">
-            <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
+            <Typography
+              sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}
+              className={Style.name}
+            >
               Trainer
             </Typography>
             <Autocomplete
@@ -375,7 +387,10 @@ export default function LearnerTable(props) {
         </Box>
         <Box className="m-4 flex flex-col justify-between gap-12 sm:flex-row">
           <div className="w-full">
-            <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
+            <Typography
+              sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}
+              className={Style.name}
+            >
               IQA
             </Typography>
             <Autocomplete
@@ -408,7 +423,10 @@ export default function LearnerTable(props) {
         </Box>
         <Box className="m-4 flex flex-col justify-between gap-12 sm:flex-row">
           <div className="w-full">
-            <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
+            <Typography
+              sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}
+              className={Style.name}
+            >
               LIQA
             </Typography>
             <Autocomplete
@@ -441,7 +459,10 @@ export default function LearnerTable(props) {
         </Box>
         <Box className="m-4 flex flex-col justify-between gap-12 sm:flex-row">
           <div className="w-full">
-            <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
+            <Typography
+              sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}
+              className={Style.name}
+            >
               EQA
             </Typography>
             <Autocomplete
@@ -474,7 +495,10 @@ export default function LearnerTable(props) {
         </Box>
         <Box className="m-4 flex flex-col justify-between gap-12 sm:flex-row">
           <div className="w-full">
-            <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
+            <Typography
+              sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}
+              className={Style.name}
+            >
               Employer
             </Typography>
             <Autocomplete
