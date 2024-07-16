@@ -13,7 +13,7 @@ import { useDispatch } from "react-redux";
 import { Box, IconButton, InputAdornment } from "@mui/material";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Visibility from "@mui/icons-material/Visibility";
-import SideView from '../../component/Sideview'
+import SideView from "../../component/Sideview";
 
 const SignInPage = () => {
   const [credentials, setCredentials] = useState({
@@ -38,7 +38,7 @@ const SignInPage = () => {
         sessionStorage.setItem("reset", JSON.stringify(user));
       })
       .catch((err) => {
-        console.log(err)
+        console.log(err);
         dispatch(
           showMessage({ message: err.response.data.message, variant: "error" })
         );
@@ -52,29 +52,23 @@ const SignInPage = () => {
   };
 
   const handleClickShowPassword = (e) => {
-    setShowPassword(prev => !prev);
-  }
+    setShowPassword((prev) => !prev);
+  };
   return (
     <>
       <div className="flex h-full">
-        {/* <Box
-        // sx={{
-        //   display:{
-        //     xs: "none",
-        //     sm:"none",
-        //     md:"flex"
-        //   }
-        // }}
-        > */}
-        <SideView />
-        {/* </Box> */}
-        <Paper className="h-full flex items-center sm:h-auto md:flex md:items-center md:justify-center w-full sm:w-auto md:h-full md:w-1/2 py-8 px-16 sm:p-48 md:p-64 sm:rounded-2xl md:rounded-none sm:shadow md:shadow-none">
-          <div className="w-full min-w-300 sm:w-320 mx-auto sm:mx-0 shadow-md rounded-md">
+        {/* <Paper className="flex flex-wrap w-full h-full py-8 px-16 sm:py-48 sm:px-48 md:py-64 md:px-64"> */}
+        <div className="w-full md:w-1/2 h-full relative">
+          <img
+            src="/assets/images/svgImage/signin.svg"
+            alt="Description"
+            className="object-cover w-full h-full"
+            // style={{ objectFit: "cover", height: "100%", minWidth: "100%" }}
+          />
+        </div>
+        <div className="w-full md:w-1/2 h-full flex items-center justify-center py-8 px-16 sm:py-48 sm:px-48 md:py-64 md:px-64">
+          <div className="w-full min-w-300 sm:w-320 shadow-md rounded-md">
             <Logo />
-            {/* <Typography className="mt-3 text-2xl font-extrabold tracking-tight leading-tight">
-            Sign in
-          </Typography> */}
-
             <form
               name="loginForm"
               noValidate
@@ -107,15 +101,33 @@ const SignInPage = () => {
                 fullWidth
                 onChange={credentialHandler}
                 InputProps={{
-                  endAdornment: <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={handleClickShowPassword}
-                      edge="end"
-                    >
-                      {showPassword ? <VisibilityOff sx={{ color: "#2D2D2D", opacity: 0.7, fontSize: "16px" }} /> : <Visibility sx={{ color: "#2D2D2D", opacity: 0.7, fontSize: "16px" }} />}
-                    </IconButton>
-                  </InputAdornment>,
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        edge="end"
+                      >
+                        {showPassword ? (
+                          <VisibilityOff
+                            sx={{
+                              color: "#2D2D2D",
+                              opacity: 0.7,
+                              fontSize: "16px",
+                            }}
+                          />
+                        ) : (
+                          <Visibility
+                            sx={{
+                              color: "#2D2D2D",
+                              opacity: 0.7,
+                              fontSize: "16px",
+                            }}
+                          />
+                        )}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
                 }}
               />
 
@@ -131,12 +143,21 @@ const SignInPage = () => {
                 />
               )}
 
-              <Link to="/forgot" className="mt-2" style={{ fontSize: "14px", textAlign: "right", textDecoration: "none" }}>
+              <Link
+                to="/forgot"
+                className="mt-2"
+                style={{
+                  fontSize: "14px",
+                  textAlign: "right",
+                  textDecoration: "none",
+                }}
+              >
                 Forgot password?
               </Link>
             </form>
           </div>
-        </Paper>
+        </div>
+        {/* </Paper> */}
       </div>
     </>
   );

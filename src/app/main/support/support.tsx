@@ -42,6 +42,7 @@ import AlertDialog from "src/app/component/Dialogs/AlertDialog";
 import { log } from "console";
 import FuseLoading from "@fuse/core/FuseLoading";
 import DataNotFound from "src/app/component/Pages/dataNotFound";
+import Style from "./style.module.css";
 
 // function createData(title: string, description: string, status: string) {
 //   return {
@@ -52,13 +53,16 @@ import DataNotFound from "src/app/component/Pages/dataNotFound";
 // }
 
 const AddRequest = (props) => {
-  const { supportData = {}, handleChange = () => { } } = props;
+  const { supportData = {}, handleChange = () => {} } = props;
 
   return (
     <>
       <Box className="flex flex-col justify-between gap-12 p-0">
         <div>
-          <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
+          <Typography
+            sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}
+            className={Style.name}
+          >
             Title
           </Typography>
           <TextField
@@ -72,7 +76,10 @@ const AddRequest = (props) => {
           />
         </div>
         <div>
-          <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
+          <Typography
+            sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}
+            className={Style.name}
+          >
             Description
           </Typography>
           <TextField
@@ -205,14 +212,16 @@ const Support = (props) => {
   return (
     <>
       <div className="m-10">
-        <Box className="flex justify-end mb-10"
+        <Box
+          className="flex justify-end mb-10"
           sx={{
             borderBottom: 1,
             borderColor: "divider",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-          }}>
+          }}
+        >
           <SecondaryButton
             name="Add Request"
             className="py-6 px-12 mb-10"
@@ -220,8 +229,8 @@ const Support = (props) => {
             onClick={() => handleClickOpen()}
           />
         </Box>
-        <div >
-          <TableContainer sx={{ maxHeight: 500 }} >
+        <div>
+          <TableContainer sx={{ maxHeight: 500 }}>
             {dataFetchLoading ? (
               <FuseLoading />
             ) : support.data.length ? (
@@ -343,7 +352,8 @@ const Support = (props) => {
             onClick={() => {
               handleEdit();
               handleClose();
-            }}>
+            }}
+          >
             Edit
           </MenuItem>
           <MenuItem
@@ -370,9 +380,9 @@ const Support = (props) => {
             <AddRequest supportData={supportData} handleChange={handleChange} />
           </DialogContent>
           <DialogActions>
-            {dataUpdatingLoadding ?
+            {dataUpdatingLoadding ? (
               <LoadingButton />
-              :
+            ) : (
               <>
                 <SecondaryButtonOutlined
                   onClick={handleCloseDialog}
@@ -388,7 +398,7 @@ const Support = (props) => {
                   disable={!isSupport}
                 />
               </>
-            }
+            )}
           </DialogActions>
         </Dialog>
       </div>
