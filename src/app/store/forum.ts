@@ -31,7 +31,8 @@ const forumDataSlice = createSlice({
             state.dataUpdatingLoadding = !state.dataUpdatingLoadding
         },
         setForumData(state, action) {
-            state.data = action.payload
+            state.data = action.payload.data
+            state.meta_data = action.payload.meta_data
         },
         pushForumData(state, action) {
             state.data = [...state.data, action.payload]
@@ -73,19 +74,19 @@ export const sendMessageAPI = (data) => async (dispatch) => {
 }
 
 //get message
-export const getMessageAPI = (data = { page: 1, page_size: 10 }, course_id) => async (dispatch) => {
+export const getMessageAPI = (data, course_id) => async (dispatch, getStore) => {
 
     try {
 
         dispatch(slice.setLoader());
 
-        const { page = 1, page_size = 10 } = data;
-
-        let url = `${URL_BASE_LINK}/forum/messages/${course_id}?meta=true&page=${page}&limit=${page_size}`
+        const { page = 1, page_size = 25 } = data;
+        let courseId = course_id || getStore().forumData.message?.course_course_id
+        let url = `${URL_BASE_LINK}/forum/messages/${courseId}?meta=true&page=${page}&limit=${page_size}`
 
         const response = await axios.get(url);
         dispatch(showMessage({ message: response.data.message, variant: "success" }))
-        dispatch(slice.setForumData(response.data.data))
+        dispatch(slice.setForumData(response.data))
         dispatch(slice.setLoader());
         return true;
 
