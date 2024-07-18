@@ -148,7 +148,6 @@ const Forum = () => {
   );
 
   const fetchMoreData = useCallback(() => {
-    console.log(forumData.message?.course_course_id, forumData, "}}}}}}}}}}}}}}}}}}}}")
     dispatch(getMessageAPI({ page: forumData.meta_data.page + 1, page_size: 25 }, forumData.message?.course_course_id));
   }, []);
 

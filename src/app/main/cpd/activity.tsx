@@ -121,7 +121,6 @@ const AddNewDialogContent = (props) => {
 
   const formatDate = (date) => {
     if (!date) return "";
-    ``;
     const formattedDate = date.substr(0, 10);
     return formattedDate;
   };
