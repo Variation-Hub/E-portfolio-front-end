@@ -240,10 +240,16 @@ const Support = (props) => {
 
   const isSupport = Object.values(supportData).find(data => data === "") === undefined;
 
+  const formatDate = (date) => {
+    if (!date) return "";
+    const formattedDate = date.substr(0, 10);
+    return formattedDate;
+  };
+
   return (
     <>
       <div className="m-10">
-        <Box
+        {data.role !== "Admin" && <Box
           className="flex justify-end mb-10"
           sx={{
             borderBottom: 1,
@@ -258,9 +264,8 @@ const Support = (props) => {
             className="py-6 px-12 mb-10"
             startIcon={<AddIcon sx={{ mx: -0.5 }} />}
             onClick={() => handleClickOpen()}
-            disable={data.role === "Admin"}
           />
-        </Box>
+        </Box>}
         <div>
           <TableContainer sx={{ maxHeight: 500 }}>
             {dataFetchLoading ? (
@@ -292,9 +297,28 @@ const Support = (props) => {
                       }}>
                       Description
                     </TableCell>
-                    <TableCell align="left">Status</TableCell>
                     {data.role === "Admin" &&
-                      <TableCell align="left">Action</TableCell>}
+                      <>
+                        <TableCell align="left"
+                          sx={{
+                            width: "15rem",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap",
+                          }}>
+                          Email
+                        </TableCell>
+                        <TableCell align="left" sx={{ width: "15rem" }}>
+                          User Name
+                        </TableCell>
+                      </>
+                    }
+                    <TableCell align="left" sx={{ width: "15rem" }}>
+                      Date
+                    </TableCell>
+                    <TableCell align="left" sx={{ width: "15rem" }}>Status</TableCell>
+                    {data.role === "Admin" &&
+                      <TableCell align="left" sx={{ width: "15rem" }}>Action</TableCell>}
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -328,6 +352,32 @@ const Support = (props) => {
                       >
                         {row.description}
                       </TableCell>
+                      {data.role === "Admin" &&
+                        <>
+                          <TableCell
+                            align="left"
+                            sx={{
+                              width: "15rem",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                              whiteSpace: "nowrap",
+                            }}>
+                            {row.request_id.email}
+                          </TableCell>
+                          <TableCell
+                            align="left"
+                            sx={{ borderBottom: "2px solid #F8F8F8", width: "15rem" }}
+                          >
+                            {row?.request_id?.user_name}
+                          </TableCell>
+                        </>
+                      }
+                      <TableCell
+                        align="left"
+                        sx={{ borderBottom: "2px solid #F8F8F8", width: "15rem" }}
+                      >
+                        {formatDate(row.created_at)}
+                      </TableCell>
                       <TableCell
                         align="left"
                         sx={{ borderBottom: "2px solid #F8F8F8", width: "15rem" }}
@@ -337,7 +387,7 @@ const Support = (props) => {
                       {data.role === "Admin" &&
                         <TableCell
                           align="left"
-                          sx={{ borderBottom: "2px solid #F8F8F8", width: "15rem"  }}
+                          sx={{ borderBottom: "2px solid #F8F8F8", width: "15rem" }}
                         >
                           <IconButton
                             size="small"

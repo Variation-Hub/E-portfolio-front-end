@@ -16,6 +16,8 @@ import {
   Drawer,
   Tooltip,
   Select,
+  Grid,
+  Avatar,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { Stack } from "@mui/system";
@@ -48,6 +50,33 @@ import FuseLoading from "@fuse/core/FuseLoading";
 import DataNotFound from "src/app/component/Pages/dataNotFound";
 import Style from "./style.module.css"
 
+
+const timeAgo = (timestamp) => {
+  if (!timestamp) return '';
+
+  const now: any = new Date();
+  const past: any = new Date(timestamp);
+  const diffInSeconds = Math.floor((now - past) / 1000);
+
+  const minutes = Math.floor(diffInSeconds / 60);
+  const hours = Math.floor(diffInSeconds / 3600);
+  const days = Math.floor(diffInSeconds / 86400);
+  const weeks = Math.floor(diffInSeconds / 604800);
+
+  if (diffInSeconds < 60) {
+    return `${diffInSeconds} sec${diffInSeconds !== 1 ? 's' : ''} ago`;
+  } else if (minutes < 60) {
+    return `${minutes} min${minutes !== 1 ? 's' : ''} ago`;
+  } else if (hours < 24) {
+    return `${hours} hour${hours !== 1 ? 's' : ''} ago`;
+  } else if (days < 7) {
+    return `${days} day${days !== 1 ? 's' : ''} ago`;
+  } else {
+    return `${weeks} week${weeks !== 1 ? 's' : ''} ago`;
+  }
+};
+
+
 const AddInnocations = (props) => {
   const { yourInnovation = {}, handleChange = () => { } } = props;
   const { data } = useSelector(selectUser);
@@ -70,6 +99,7 @@ const AddInnocations = (props) => {
             multiline
             value={yourInnovation.topic}
             onChange={handleChange}
+            disabled={data.role === "Admin"}
           />
         </div>
         <div>
@@ -88,6 +118,7 @@ const AddInnocations = (props) => {
             rows={6}
             value={yourInnovation.description}
             onChange={handleChange}
+            disabled={data.role === "Admin"}
           />
         </div>
         {data.role === "Admin" &&
@@ -288,31 +319,45 @@ const ProposeYourInnovations = (props) => {
     fetchInnovationsData(newPage)
   };
 
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      handleSendChatMessage();
+    }
+  };
+
   const isAdmin = data.roles.includes('Admin');
 
   const isInnovations =
     Object.values(yourInnovation).find((data) => data === "") === undefined;
 
+  const formatDate = (date) => {
+    if (!date) return "";
+    const formattedDate = date.substr(0, 10);
+    return formattedDate;
+  };
+
   return (
     <>
       <div className="m-10">
-        <Box
-          className="flex justify-end mb-10"
-          sx={{
-            borderBottom: 1,
-            borderColor: "divider",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <SecondaryButton
-            name="Add Innovation"
-            className="py-6 px-12 mb-10"
-            startIcon={<AddIcon sx={{ mx: -0.5 }} />}
-            onClick={() => handleClickOpen("add")}
-          />
-        </Box>
+        {data.role !== "Admin" &&
+          <Box
+            className="flex justify-end mb-10"
+            sx={{
+              borderBottom: 1,
+              borderColor: "divider",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <SecondaryButton
+              name="Add Innovation"
+              className="py-6 px-12 mb-10"
+              startIcon={<AddIcon sx={{ mx: -0.5 }} />}
+              onClick={() => handleClickOpen("add")}
+            />
+          </Box>}
         <TableContainer sx={{ maxHeight: 500 }}>
           {dataFetchLoading ? (
             <FuseLoading />
@@ -345,6 +390,25 @@ const ProposeYourInnovations = (props) => {
                     }}
                   >
                     Description
+                  </TableCell>
+                  {data.role === "Admin" &&
+                    <>
+                      <TableCell align="left"
+                        sx={{
+                          width: "15rem",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                        }}>
+                        Email
+                      </TableCell>
+                      <TableCell align="left" sx={{ width: "15rem" }}>
+                        User Name
+                      </TableCell>
+                    </>
+                  }
+                  <TableCell align="left" sx={{ width: "15rem" }}>
+                    Date
                   </TableCell>
                   <TableCell align="left" sx={{ width: "15rem" }}>
                     Status
@@ -384,6 +448,32 @@ const ProposeYourInnovations = (props) => {
                       }}
                     >
                       {row.description}
+                    </TableCell>
+                    {data.role === "Admin" &&
+                      <>
+                        <TableCell
+                          align="left"
+                          sx={{
+                            width: "15rem",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap",
+                          }}>
+                          {row.innovation_propose_by_id.email}
+                        </TableCell>
+                        <TableCell
+                          align="left"
+                          sx={{ borderBottom: "2px solid #F8F8F8", width: "15rem" }}
+                        >
+                          {row?.innovation_propose_by_id?.user_name}
+                        </TableCell>
+                      </>
+                    }
+                    <TableCell
+                      align="left"
+                      sx={{ borderBottom: "2px solid #F8F8F8", width: "15rem" }}
+                    >
+                      {formatDate(row.created_at)}
                     </TableCell>
                     <TableCell
                       align="left"
@@ -563,7 +653,7 @@ const ProposeYourInnovations = (props) => {
               </Tooltip>
             </Box>
 
-            <Box sx={{ flexGrow: 1, overflowY: "auto", p: 2 }}>
+            {/* <Box sx={{ flexGrow: 1, overflowY: "auto", p: 2 }}>
               {singleData.comment?.map((message) => (
                 <Box key={message.id} mb={2}>
                   <Typography
@@ -578,6 +668,41 @@ const ProposeYourInnovations = (props) => {
                   </Typography>
                 </Box>
               ))}
+            </Box> */}
+            <Box sx={{ flexGrow: 1, overflowY: "auto", p: 2 }}>
+              {singleData.comment?.map((message) => (
+                <Box key={message.id} mb={2}>
+                  {/* <Typography
+                    className={
+                      (isAdmin && message.type == "Response") ||
+                        (!isAdmin && message.type == "Reply")
+                        ? "text-end"
+                        : "text-start"
+                    }
+                  >
+                    {message.description}
+                  </Typography> */}
+                  {(isAdmin && message.type == "Response") ?
+                    <Grid className="w-[80%] flex ml-auto text-justify justify-end pr-10 ">
+                      <Typography sx={{ overflowWrap: "anywhere" }} className=" bg-[#5B718F] p-10 rounded-md text-base text-white ">
+                        {message?.description}
+                      </Typography>
+                    </Grid>
+                    :
+                    <Grid >
+                      <div className="flex items-start justify-start bg-[#F4F6F8] rounded-md m-10 gap-10 w-[80%] p-10">
+                        {<Avatar className="mr-4" alt={singleData.innovation_propose_by_id?.user_name?.toUpperCase().charAt(0)} src="../" />}
+                        <div style={{ overflowWrap: "anywhere" }} className="flex flex-col w-full">
+                          <div className="flex justify-between flex-row m-5 pr-10 ">
+                            <div className="font-semibold text-base">{singleData.innovation_propose_by_id?.user_name}</div>
+                            <div className="text-xs text-gray-500">{timeAgo(singleData.created_at)}</div>
+                          </div>
+                          <div className="text-justify text-base pr-10 ">{message.description}</div>
+                        </div>
+                      </div>
+                    </Grid>}
+                </Box>
+              ))}
             </Box>
 
             <Box p={2} mt="auto">
@@ -587,11 +712,14 @@ const ProposeYourInnovations = (props) => {
                   size="small"
                   placeholder="Start your chat..."
                   value={newMessage}
+                  onKeyDown={handleKeyDown}
+                  disabled={singleData.status === "Closed"}
                   onChange={(e) => setNewMessage(e.target.value)}
                 />
                 <SecondaryButton
                   sx={{ ml: 2 }}
                   className="ml-10"
+                  disable={!newMessage.trim()}
                   onClick={handleSendChatMessage}
                   name="Send"
                 />
