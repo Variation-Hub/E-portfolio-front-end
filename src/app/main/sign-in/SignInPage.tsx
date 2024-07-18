@@ -14,6 +14,7 @@ import { Box, IconButton, InputAdornment } from "@mui/material";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Visibility from "@mui/icons-material/Visibility";
 import SideView from "../../component/Sideview";
+import Style from "./style.module.css";
 
 const SignInPage = () => {
   const [credentials, setCredentials] = useState({
@@ -58,15 +59,42 @@ const SignInPage = () => {
     <>
       <div className="flex h-full">
         {/* <Paper className="flex flex-wrap w-full h-full py-8 px-16 sm:py-48 sm:px-48 md:py-64 md:px-64"> */}
-        <div className="w-full md:w-1/2 h-full relative">
+        <div
+          className={`w-full md:w-1/2 h-screen relative ${Style.hide_on_small}`}
+        >
           <img
             src="/assets/images/svgImage/signin.svg"
             alt="Description"
-            className="object-cover w-full h-full"
-            // style={{ objectFit: "cover", height: "100%", minWidth: "100%" }}
+            className="w-full h-full object-cover"
           />
+          <div className="absolute top-0 left-0 w-full h-full p-4 flex flex-col justify-start items-start">
+            <h1 className="text-white text-2xl md:text-4xl mb-4 m-56">
+              Lorem ipsum is just dummy text
+            </h1>
+            <p className="text-white md:text-lg mt-2 m-56 text-justify">
+              It is a long established fact that a reader will be distracted by
+              the readable content of a page when looking at its layout. The
+              point of using Lorem Ipsum is that it has a more-or-less normal
+              distribution of letters, as opposed to using 'Content here,'
+            </p>
+          </div>
         </div>
-        <div className="w-full md:w-1/2 h-full flex items-center justify-center py-8 px-16 sm:py-48 sm:px-48 md:py-64 md:px-64">
+
+        <div className="w-full md:w-1/2 h-full flex items-center justify-center py-8 px-16 sm:py-48 sm:px-48 md:py-64 md:px-64 relative">
+          <img
+            src="/assets/images/svgImage/signin1.svg"
+            alt="Top Right Image"
+            className={`absolute top-0 right-0 w-100 h-100 object-cover ${Style.top_right_image}`}
+          />
+          <img
+            src="/assets/images/svgImage/signin2.svg"
+            className={`absolute top-0 mt-24 left-0 ml-48 w-100 h-100 object-cover ${Style.top_left_image}`}
+          />
+          <img
+            src="/assets/images/svgImage/signin3.svg"
+            alt="Bottom Center Image"
+            className={`absolute bottom-0 left-1/2 transform -translate-x-1/2 mb-4 w-100 h-100 object-cover ${Style.bottom_center_image}`}
+          />
           <div className="w-full min-w-300 sm:w-320 shadow-md rounded-md">
             <Logo />
             <form
