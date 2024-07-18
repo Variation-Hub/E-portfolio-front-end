@@ -15,6 +15,7 @@ import {
   TableRow,
   Drawer,
   Tooltip,
+  Select,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { Stack } from "@mui/system";
@@ -48,7 +49,8 @@ import DataNotFound from "src/app/component/Pages/dataNotFound";
 import Style from "./style.module.css"
 
 const AddInnocations = (props) => {
-  const { yourInnovation = {}, handleChange = () => {} } = props;
+  const { yourInnovation = {}, handleChange = () => { } } = props;
+  const { data } = useSelector(selectUser);
 
   return (
     <>
@@ -88,6 +90,33 @@ const AddInnocations = (props) => {
             onChange={handleChange}
           />
         </div>
+        {data.role === "Admin" &&
+          <div>
+            <Typography
+              sx={{
+                fontSize: "0.9vw",
+                marginBottom: "0.5rem",
+                fontWeight: "500",
+              }}
+              className="name"
+            >
+              Select Status
+            </Typography>
+            <Select
+              name="status"
+              value={yourInnovation?.status}
+              size="small"
+              placeholder="Select Type"
+              required
+              fullWidth
+              onChange={handleChange}
+              // disabled={mode === "view"}
+              className="input"
+            >
+              <MenuItem value={"Open"}>Open</MenuItem>
+              <MenuItem value={"Closed"}>Closed</MenuItem>
+            </Select>
+          </div>}
       </Box>
     </>
   );
@@ -110,6 +139,7 @@ const ProposeYourInnovations = (props) => {
     innovation_propose_by_id: data.user_id,
     topic: "",
     description: "",
+    status: "",
   });
 
   const fetchInnovationsData = (newPage = 1) => {
@@ -135,6 +165,7 @@ const ProposeYourInnovations = (props) => {
       innovation_propose_by_id: data.user_id,
       topic: "",
       description: "",
+      status: ""
     });
   };
   const handleClickOpen = (type) => {
@@ -453,6 +484,7 @@ const ProposeYourInnovations = (props) => {
               handleClose();
               handleEdit();
             }}
+            disabled={data.role !== "Admin" && singleData.status === "Closed"}
           >
             Edit
           </MenuItem>
@@ -537,7 +569,7 @@ const ProposeYourInnovations = (props) => {
                   <Typography
                     className={
                       (isAdmin && message.type == "Response") ||
-                      (!isAdmin && message.type == "Reply")
+                        (!isAdmin && message.type == "Reply")
                         ? "text-end"
                         : "text-start"
                     }

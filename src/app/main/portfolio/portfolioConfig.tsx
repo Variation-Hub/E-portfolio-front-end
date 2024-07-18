@@ -4,6 +4,7 @@ import authRoles from "src/app/auth/authRoles";
 import UploadedEvidenceFile from "src/app/component/Cards/uploadedEvidenceFile";
 import NewSession from "./newsession";
 import NewAssignment from "src/app/component/Cards/newAssignment";
+import LearnerToData from "./learnerData/learnertodata";
 
 const PortfolioConfig = {
   settings: {
@@ -27,7 +28,7 @@ const PortfolioConfig = {
       },
     },
   },
-  auth: [authRoles.Admin,authRoles.Learner,authRoles.Trainer,authRoles.Employer,authRoles.LIQA,authRoles.IQA,authRoles.EQA],
+  auth: [authRoles.Admin, authRoles.Learner, authRoles.Trainer, authRoles.Employer, authRoles.LIQA, authRoles.IQA, authRoles.EQA],
   routes: [
     {
       path: "/portfolio",
@@ -44,6 +45,10 @@ const PortfolioConfig = {
     {
       path: "/portfolio/newsession",
       element: <NewSession />,
+    },
+    {
+      path: "/portfolio/learnertodata",
+      element: <LearnerToData />,
     },
   ],
 };

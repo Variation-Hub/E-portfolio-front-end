@@ -36,6 +36,7 @@ import {
   deleteLearnerHandler,
   getRoleAPI,
   selectLearnerManagement,
+  slice,
 } from "app/store/learnerManagement";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { useSelector } from "react-redux";
@@ -51,9 +52,9 @@ export default function LearnerTable(props) {
   const {
     columns,
     rows,
-    handleOpen = () => {},
-    setUserData = () => {},
-    setUpdateData = () => {},
+    handleOpen = () => { },
+    setUserData = () => { },
+    setUpdateData = () => { },
     meta_data,
     dataUpdatingLoadding,
     search_keyword = "",
@@ -166,6 +167,11 @@ export default function LearnerTable(props) {
     // setLoading(false);
     console.log(courseAllocationData);
   };
+
+  const handleClickData = (event, row) => {
+    dispatch(slice.setSingleData(row));
+  };
+
   return (
     <>
       <div style={{ width: "100%", overflow: "hidden", marginTop: "0.5rem" }}>
@@ -215,6 +221,7 @@ export default function LearnerTable(props) {
                                     color: "inherit",
                                     textDecoration: "none",
                                   }}
+                                  onClick={(e) => handleClickData(e, row)}
                                 >
                                   {value} {row["last_name"]}
                                 </Link>

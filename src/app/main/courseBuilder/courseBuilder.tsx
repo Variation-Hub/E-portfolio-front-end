@@ -68,7 +68,7 @@ const CourseBuilder = () => {
 
   return (
     <>
-      <Card className="m-10 rounded-6" style={{ height: "88.5vh" }}>
+      <Card className="mx-10 rounded-6" style={{ height: "100%" }}>
         {data.length || searchKeyword ? (
           <div className={`m-12 flex items-center justify-between mt-10 ${Style.Search_container}`}>
             <TextField

@@ -14,7 +14,8 @@ const initialState = {
         page_size: userTableMetaData.page_size,
         pages: 1
     },
-    preFillData: {}
+    preFillData: {},
+    singleData: {}
 };
 
 const courseManagementSlice = createSlice({
@@ -52,7 +53,10 @@ const courseManagementSlice = createSlice({
         },
         updatePreFillData(state, action) {
             state.preFillData = action.payload
-        }
+        },
+        setSingleData(state, action) {
+            state.singleData = action.payload
+        },
     }
 });
 
