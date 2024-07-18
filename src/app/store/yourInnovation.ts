@@ -103,7 +103,7 @@ export const getYourInnovationAPI = (data = { page: 1, page_size: 10 }, id) => a
         let url = `${URL_BASE_LINK}/innovation/list?meta=true&page=${page}&limit=${page_size}`
 
         const response = await axios.get(url);
-        dispatch(showMessage({ message: response.data.message, variant: "success" }))
+        // dispatch(showMessage({ message: response.data.message, variant: "success" }))
         dispatch(slice.setYourInnovation(response.data.data))
         dispatch(slice.setMetaData(response.data.meta_data))
         dispatch(slice.setLoader());

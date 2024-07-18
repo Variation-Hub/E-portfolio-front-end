@@ -21,7 +21,8 @@ const initialState = {
         page_size: userTableMetaData.page_size,
         pages: 1
     },
-    learner: {}
+    learner: {},
+    singleData: {}
 };
 
 const learnerManagementSlice = createSlice({
@@ -74,6 +75,9 @@ const learnerManagementSlice = createSlice({
         },
         setLIQA(state, action) {
             state.LIQA = action.payload
+        },
+        setSingleData(state, action) {
+            state.singleData = action.payload
         },
 
     }

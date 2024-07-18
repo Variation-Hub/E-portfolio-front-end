@@ -7,6 +7,7 @@ import {
   MenuItem,
   Pagination,
   Paper,
+  Select,
   Table,
   TableBody,
   TableCell,
@@ -53,7 +54,8 @@ import Style from "./style.module.css";
 // }
 
 const AddRequest = (props) => {
-  const { supportData = {}, handleChange = () => {} } = props;
+  const { supportData = {}, handleChange = () => { } } = props;
+  const { data } = useSelector(selectUser);
 
   return (
     <>
@@ -93,6 +95,35 @@ const AddRequest = (props) => {
             onChange={handleChange}
           />
         </div>
+        {data.role === "Admin" &&
+          <div>
+            <Typography
+              sx={{
+                fontSize: "0.9vw",
+                marginBottom: "0.5rem",
+                fontWeight: "500",
+              }}
+              className="name"
+            >
+              Select Status
+            </Typography>
+            <Select
+              name="status"
+              value={supportData?.status}
+              size="small"
+              placeholder="Select Type"
+              required
+              fullWidth
+              onChange={handleChange}
+              // disabled={mode === "view"}
+              className="input"
+            >
+              <MenuItem value={"Pending"}>Pending</MenuItem>
+              <MenuItem value={"InProgress"}>InProgress</MenuItem>
+              <MenuItem value={"Reject"}>Reject</MenuItem>
+              <MenuItem value={"Resolve"}>Resolve</MenuItem>
+            </Select>
+          </div>}
       </Box>
     </>
   );
@@ -227,6 +258,7 @@ const Support = (props) => {
             className="py-6 px-12 mb-10"
             startIcon={<AddIcon sx={{ mx: -0.5 }} />}
             onClick={() => handleClickOpen()}
+            disable={data.role === "Admin"}
           />
         </Box>
         <div>
@@ -241,10 +273,28 @@ const Support = (props) => {
               >
                 <TableHead className="bg-[#F8F8F8]">
                   <TableRow>
-                    <TableCell>Title</TableCell>
-                    <TableCell align="left">Description</TableCell>
+                    <TableCell
+                      align="left"
+                      sx={{
+                        maxWidth: "4rem",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}>
+                      Title
+                    </TableCell>
+                    <TableCell align="left"
+                      sx={{
+                        maxWidth: "9rem",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}>
+                      Description
+                    </TableCell>
                     <TableCell align="left">Status</TableCell>
-                    <TableCell align="left">Action</TableCell>
+                    {data.role === "Admin" &&
+                      <TableCell align="left">Action</TableCell>}
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -256,34 +306,47 @@ const Support = (props) => {
                       <TableCell
                         component="th"
                         scope="row"
-                        sx={{ borderBottom: "2px solid #F8F8F8" }}
+                        sx={{
+                          borderBottom: "2px solid #F8F8F8",
+                          maxWidth: "4rem",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                        }}
                       >
                         {row.title}
                       </TableCell>
                       <TableCell
                         align="left"
-                        sx={{ borderBottom: "2px solid #F8F8F8" }}
+                        sx={{
+                          borderBottom: "2px solid #F8F8F8",
+                          maxWidth: "9rem",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                        }}
                       >
                         {row.description}
                       </TableCell>
                       <TableCell
                         align="left"
-                        sx={{ borderBottom: "2px solid #F8F8F8" }}
+                        sx={{ borderBottom: "2px solid #F8F8F8", width: "15rem" }}
                       >
                         {row.status}
                       </TableCell>
-                      <TableCell
-                        align="left"
-                        sx={{ borderBottom: "2px solid #F8F8F8" }}
-                      >
-                        <IconButton
-                          size="small"
-                          sx={{ color: "#5B718F", marginRight: "4px" }}
-                          onClick={(e) => handleClick(e, row)}
+                      {data.role === "Admin" &&
+                        <TableCell
+                          align="left"
+                          sx={{ borderBottom: "2px solid #F8F8F8", width: "15rem"  }}
                         >
-                          <MoreHorizIcon fontSize="small" />
-                        </IconButton>
-                      </TableCell>
+                          <IconButton
+                            size="small"
+                            sx={{ color: "#5B718F", marginRight: "4px" }}
+                            onClick={(e) => handleClick(e, row)}
+                          >
+                            <MoreHorizIcon fontSize="small" />
+                          </IconButton>
+                        </TableCell>}
                     </TableRow>
                   ))}
                 </TableBody>
@@ -353,6 +416,7 @@ const Support = (props) => {
               handleEdit();
               handleClose();
             }}
+            disabled={data.role !== "Admin" && singleData.status === "Closed"}
           >
             Edit
           </MenuItem>

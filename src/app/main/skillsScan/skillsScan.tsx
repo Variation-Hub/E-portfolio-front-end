@@ -146,7 +146,7 @@ export const dataBase = [
 
 const SkillsScan = () => {
 
-  const [value, setValue] = useState(2);
+  const [value, setValue] = useState(0);
 
   const handleTabChange = (event, newValue) => {
     setValue(newValue);

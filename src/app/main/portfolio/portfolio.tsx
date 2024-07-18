@@ -18,6 +18,7 @@ import Calendar from "./calendar";
 import { Link } from "react-router-dom";
 import { selectstoreDataSlice } from "app/store/reloadData";
 import { selectUser } from "app/store/userSlice";
+import { slice } from "app/store/courseManagement";
 
 const Portfolio = () => {
   const [open, setOpen] = useState(false);
@@ -29,8 +30,10 @@ const Portfolio = () => {
   const { learner, dataUpdatingLoadding } = useSelector(
     selectLearnerManagement
   );
+
   const data = useSelector(selectstoreDataSlice);
-  const { id, role } = useSelector(selectUser)?.data;
+  const { role } = useSelector(selectUser)?.data;
+  const { singleData } = useSelector(selectLearnerManagement);
 
   const dispatch: any = useDispatch();
 
@@ -39,27 +42,33 @@ const Portfolio = () => {
   }, [data]);
 
   useEffect(() => {
-    console.log(role, id)
-    if (role === "Learner" && id) dispatch(getLearnerDetails(id));
-  }, [role, id]);
+    console.log(singleData?.learner_id)
+    dispatch(getLearnerDetails(singleData?.learner_id));
+  }, [singleData?.learner_id]);
 
   const handleOpen = () => {
     setOpen(true);
   };
 
+  const handleClickData = (event, row) => {
+    dispatch(slice.setSingleData(row));
+  };
+
   return (
     <div>
-      <div className="m-10 flex flex-wrap justify-evenly gap-10 cursor-pointer">
-        {portfolioCard?.map((value) => (
-          <PortfolioCard data={value} key={value.id} />
-        ))}
-      </div>
+      {role === "Learner" &&
+        <div className="m-10 flex flex-wrap justify-evenly gap-10 cursor-pointer">
+          {portfolioCard?.map((value) => (
+            <PortfolioCard data={value} key={value.id} />
+          ))}
+        </div>}
       {dataUpdatingLoadding ? (
         <FuseLoading />
       ) : (
         <div className="m-24 flex items-center border-1 rounded-8 py-12">
           <div className="flex flex-col w-1/6 justify-center items-center border-r-1">
             <Avatar sx={{ width: 100, height: 100 }} src="">
+
               {learner?.first_name?.charAt(0)}
               {learner?.last_name?.charAt(0)}
             </Avatar>
@@ -76,7 +85,17 @@ const Portfolio = () => {
                 <div className="mt-12 ml-12 mr-auto flex items-center gap-12">
                   {learner?.course?.map((value) => (
                     <div className=" w-fit">
-                      <DoughnutChart />
+                      <Link
+                        to="/portfolio/learnertodata"
+                        style={{
+                          color: "inherit",
+                          textDecoration: "none",
+                        }}
+                        onClick={(e) => handleClickData(e, value)}
+                      >
+                        <DoughnutChart />
+                      </Link>
+
                     </div>
                   ))}
                 </div>

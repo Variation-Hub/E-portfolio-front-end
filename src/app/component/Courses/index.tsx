@@ -3,6 +3,7 @@ import {
   Box,
   Card,
   FormControl,
+  Grid,
   InputLabel,
   MenuItem,
   Select,
@@ -319,7 +320,7 @@ const CourseBuilder = (props) => {
   };
 
   return (
-    <Card className="m-12 rounded-6" style={{ height: "full" }}>
+    <Grid className="m-12 rounded-6" style={{ height: "full" }}>
       <div className="p-10">
         <Box className="m-12 flex flex-col justify-between gap-12 sm:flex-row">
           <div className="w-1/3">
@@ -559,6 +560,18 @@ const CourseBuilder = (props) => {
               className={Style.last_input_feald}
             />
           </div>
+        </Box>
+        <hr />
+        <Box className="m-12">
+          <Box className="flex items-center justify-between">
+            <Typography>Units</Typography>
+            {edit !== "view" && (
+              <SecondaryButton
+                name="Add New Unit"
+                onClick={() => addUnitHandler()}
+              />
+            )}
+          </Box>
         </Box>
         {Object.values(mandatoryUnit).length ? (
           Object.values(mandatoryUnit)?.map((item: any) => {
@@ -827,8 +840,8 @@ const CourseBuilder = (props) => {
           )}
         </Box>
       </div>
-    </Card>
+    </Grid>
   );
 };
-  
+
 export default CourseBuilder;
