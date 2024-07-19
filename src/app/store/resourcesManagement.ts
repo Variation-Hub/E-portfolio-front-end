@@ -14,6 +14,7 @@ const initialState = {
         page_size: userTableMetaData.page_size,
         pages: 1
     },
+    singleData: []
 };
 
 const resourceManagementSlice = createSlice({
@@ -48,6 +49,9 @@ const resourceManagementSlice = createSlice({
                 }
                 return value;
             })
+        },
+        setSingleData(state, action) {
+            state.singleData = action.payload
         }
     }
 });
@@ -57,7 +61,7 @@ export const selectResourceManagement = ({ resourceManagement }) => resourceMana
 
 const URL_BASE_LINK = jsonData.API_LOCAL_URL;
 
-// create learner
+// create resource
 export const createResourceAPI = (data) => async (dispatch) => {
     try {
         dispatch(slice.setUpdatingLoader());
@@ -73,7 +77,7 @@ export const createResourceAPI = (data) => async (dispatch) => {
     }
 }
 
-// get learner
+// get resource
 export const fetchResourceAPI = (data = { page: 1, page_size: 25 }, search_keyword = "", search_role = "") => async (dispatch) => {
 
     try {
@@ -104,7 +108,7 @@ export const fetchResourceAPI = (data = { page: 1, page_size: 25 }, search_keywo
 
 }
 
-// update learner
+// update resource
 export const updateResourceAPI = (id, data) => async (dispatch) => {
 
     try {
@@ -126,9 +130,9 @@ export const updateResourceAPI = (id, data) => async (dispatch) => {
 }
 
 
-// Delete learner
+// Delete resource
 // export const deleteResourceHandler = (id, meta_data, search_keyword = "", search_role = "") => async (dispatch) => {
-export const deleteResourceHandler = (id,) => async (dispatch) => {
+export const deleteResourceHandler = (id) => async (dispatch) => {
 
     try {
         // let { page, page_size, items } = meta_data;
@@ -148,6 +152,27 @@ export const deleteResourceHandler = (id,) => async (dispatch) => {
         dispatch(slice.setUpdatingLoader());
         return false;
     };
+}
+
+// get resource
+export const fetchResourceByCourseAPI = (course_id, user_id) => async (dispatch) => {
+
+    try {
+        dispatch(slice.setLoader());
+
+        let url = `${URL_BASE_LINK}/resource/list-by-course?course_id=${course_id}&user_id=${user_id}`;
+
+        const response = await axios.get(url);
+        dispatch(slice.setSingleData(response.data.data));
+        dispatch(slice.setLoader());
+        return true;
+
+    } catch (err) {
+        dispatch(showMessage({ message: err.response.data.message, variant: "error" }))
+        dispatch(slice.setLoader());
+        return false
+    };
+
 }
 
 export default resourceManagementSlice.reducer;
