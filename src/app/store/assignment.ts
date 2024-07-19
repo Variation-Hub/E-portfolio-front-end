@@ -15,6 +15,7 @@ const initialState = {
         page_size: userTableMetaData.page_size,
         pages: 1
     },
+    singleAssignmentData: []
 };
 
 const assignmentSlice = createSlice({
@@ -32,6 +33,9 @@ const assignmentSlice = createSlice({
         },
         setSingleData(state, action) {
             state.singleData = action.payload
+        },
+        setSingleAssignmentData(state, action) {
+            state.singleAssignmentData = action.payload
         }
     }
 });
@@ -82,7 +86,7 @@ export const createAssignmentAPI = (data) => async (dispatch, getStore) => {
 }
 
 // update assignment 
-export const updateAssignmentAPI = (id,data) => async (dispatch, getStore) => {
+export const updateAssignmentAPI = (id, data) => async (dispatch, getStore) => {
     try {
 
         dispatch(slice.setUpdatingLoader());
@@ -142,6 +146,25 @@ export const uploadPDF = (file: any) => async (dispatch) => {
     }
 }
 
+// get assignment
+export const getAssignmentByCourseAPI = (course_id, user_id) => async (dispatch) => {
 
+    try {
+        dispatch(slice.setLoader());
+
+        let url = `${URL_BASE_LINK}/assignment/list?course_id=${course_id}&user_id=${user_id}`;
+
+        const response = await axios.get(url);
+        dispatch(slice.setSingleAssignmentData(response.data.data));
+        dispatch(slice.setLoader());
+        return true;
+
+    } catch (err) {
+        dispatch(showMessage({ message: err.response.data.message, variant: "error" }))
+        dispatch(slice.setLoader());
+        return false
+    };
+
+}
 
 export default assignmentSlice.reducer;
