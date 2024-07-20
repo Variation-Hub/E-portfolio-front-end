@@ -47,6 +47,7 @@ import {
 import { Stack } from "@mui/system";
 import { Link } from "react-router-dom";
 import { color } from "framer-motion";
+import { getRandomColor } from "src/utils/randomColor";
 
 export default function LearnerTable(props) {
   const {
@@ -213,6 +214,7 @@ export default function LearnerTable(props) {
                                     marginRight: "8px",
                                     width: "24px",
                                     height: "24px",
+                                    backgroundColor: getRandomColor(row?.user_name?.toLowerCase().charAt(0))
                                   }}
                                 />
                                 <Link

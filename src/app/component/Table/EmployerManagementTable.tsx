@@ -36,6 +36,7 @@ import {
   selectCourseManagement,
 } from "app/store/courseManagement";
 import { Stack } from "@mui/system";
+import { getRandomColor } from "src/utils/randomColor";
 
 export default function UserManagementTable(props) {
   const {
@@ -211,6 +212,7 @@ export default function UserManagementTable(props) {
                                     marginRight: "8px",
                                     width: "24px",
                                     height: "24px",
+                                    backgroundColor: getRandomColor(row?.user_name?.toLowerCase().charAt(0))
                                   }}
                                 />
                                 {value} {row["last_name"]}

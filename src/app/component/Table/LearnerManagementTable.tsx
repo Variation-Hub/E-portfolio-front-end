@@ -47,6 +47,7 @@ import { Stack } from "@mui/system";
 import { Link, useNavigate } from "react-router-dom";
 import { color } from "framer-motion";
 import { slice } from 'app/store/reloadData'
+import { getRandomColor } from "src/utils/randomColor";
 
 
 export default function LearnerManagementTable(props) {
@@ -254,6 +255,7 @@ export default function LearnerManagementTable(props) {
                                     marginRight: "8px",
                                     width: "24px",
                                     height: "24px",
+                                    backgroundColor: getRandomColor(row?.user_name?.toLowerCase().charAt(0))
                                   }}
                                 />
                                 <div onClick={() => redirection(row.learner_id)}>

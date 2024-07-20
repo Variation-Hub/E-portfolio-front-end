@@ -12,6 +12,7 @@ import { useAuth } from 'src/app/auth/AuthContext'
 import jwtService from 'src/app/auth/services/jwtService';
 import { changeUserRoleHandler } from 'app/store/userManagement';
 import { style } from './Style';
+import { getRandomColor } from 'src/utils/randomColor';
 
 function UserMenu(props) {
   const user = useSelector(selectUser);
@@ -72,7 +73,7 @@ function UserMenu(props) {
         {user.data.avatar?.url ? (
           <Avatar className="md:mx-4" alt="user photo" src={user.data.avatar?.url} />
         ) : (
-          <Avatar className="md:mx-4">{user.data.displayName?.charAt(0)}</Avatar>
+          <Avatar className="md:mx-4" sx={{backgroundColor: getRandomColor(user?.data?.displayName?.toLowerCase().charAt(0))}}>{user.data.displayName?.toUpperCase().charAt(0)}</Avatar>
         )}
       </Button>
 

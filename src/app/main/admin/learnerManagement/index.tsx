@@ -105,6 +105,7 @@ const Index = () => {
       const response = await dispatch(createLearnerAPI(userData));
       if (response) {
         resetValue();
+        setOpen(false);
       }
     }
   }
@@ -114,6 +115,7 @@ const Index = () => {
     if (response) {
       handleClose();
       setUpdateData("");
+      setOpen(false);
     }
   }
 
@@ -174,50 +176,50 @@ const Index = () => {
   return (
     <Card className="m-12 rounded-6" style={{ height: "87.9vh" }}>
       <div className="w-full h-full">
-      <Breadcrumb linkData={[AdminRedirect]} currPage="Learner" />
+        <Breadcrumb linkData={[AdminRedirect]} currPage="Learner" />
 
-      {data.length ? (
-        <div className={Style.create_user}>
-          <div className={Style.search_filed}>
-            <TextField
-              label="Search by keyword"
-              fullWidth
-              size="small"
-              className="w-1/2"
-              onKeyDown={searchByKeywordUser}
-              onChange={searchHandler}
-              value={searchKeyword}
-              InputProps={{
-                endAdornment:
-                  <InputAdornment position="end" >
-                    {
-                      searchKeyword ? (
-                        <Close
-                          onClick={() => {
-                            setSearchKeyword("");
-                            dispatch(fetchLearnerAPI({ page: 1, page_size: 25 }, "", filterValue));
-                          }}
-                          sx={{
-                            color: "#5B718F",
-                            fontSize: 18,
-                            cursor: "pointer",
-                          }}
-                        />
-                      ) :
-                        <IconButton
-                          id="dashboard-search-events-btn"
-                          disableRipple
-                          sx={{ color: "#5B718F" }}
-                          onClick={() => searchAPIHandler()}
-                          size="small"
-                        >
-                          <SearchIcon fontSize="small" />
-                        </IconButton>
-                    }
-                  </InputAdornment>
-              }}
-            />
-            {/* <Autocomplete
+        {data.length ? (
+          <div className={Style.create_user}>
+            <div className={Style.search_filed}>
+              <TextField
+                label="Search by keyword"
+                fullWidth
+                size="small"
+                className="w-1/2"
+                onKeyDown={searchByKeywordUser}
+                onChange={searchHandler}
+                value={searchKeyword}
+                InputProps={{
+                  endAdornment:
+                    <InputAdornment position="end" >
+                      {
+                        searchKeyword ? (
+                          <Close
+                            onClick={() => {
+                              setSearchKeyword("");
+                              dispatch(fetchLearnerAPI({ page: 1, page_size: 25 }, "", filterValue));
+                            }}
+                            sx={{
+                              color: "#5B718F",
+                              fontSize: 18,
+                              cursor: "pointer",
+                            }}
+                          />
+                        ) :
+                          <IconButton
+                            id="dashboard-search-events-btn"
+                            disableRipple
+                            sx={{ color: "#5B718F" }}
+                            onClick={() => searchAPIHandler()}
+                            size="small"
+                          >
+                            <SearchIcon fontSize="small" />
+                          </IconButton>
+                      }
+                    </InputAdornment>
+                }}
+              />
+              {/* <Autocomplete
               fullWidth
               size="small"
               value={filterValue}
@@ -233,69 +235,69 @@ const Index = () => {
                 <Paper style={{ borderRadius: "4px" }}>{children}</Paper>
               )}
             /> */}
-          </div>
-          <SecondaryButton name="Create learner" onClick={handleOpen} startIcon={
-            <img
-              src="assets/images/svgimage/createcourseicon.svg"
-              alt="Create user"
-              className="w-6 h-6 mr-2 sm:w-8 sm:h-8 lg:w-10 lg:h-10"
-            />
-          } />
-
-        </div>
-      ) : null}
-      {
-        dataFetchLoading ? <FuseLoading /> :
-          data.length ?
-            <LearnerManagementTable
-              columns={learnerManagementTableColumn}
-              rows={data}
-              handleOpen={handleOpen}
-              setUserData={setUserData}
-              setUpdateData={setUpdateData}
-              meta_data={meta_data}
-              dataUpdatingLoadding={dataUpdatingLoadding}
-              search_keyword={searchKeyword}
-              search_role={filterValue}
-            />
-            :
-            <div className="flex flex-col justify-center items-center gap-10 " style={{ height: "94%" }}>
-              <DataNotFound width="25%" />
-              <Typography variant="h5">No data found</Typography>
-              <Typography variant="body2" className="text-center">It is a long established fact that a reader will be <br />distracted by the readable content.</Typography>
-              <SecondaryButton name="Create learner" onClick={handleOpen} startIcon={
-                <img
-                  src="assets/images/svgimage/createcourseicon.svg"
-                  alt="Create user"
-                  className="w-6 h-6 mr-2 sm:w-8 sm:h-8 lg:w-10 lg:h-10"
-                />
-              } />
             </div>
+            <SecondaryButton name="Create learner" onClick={handleOpen} startIcon={
+              <img
+                src="assets/images/svgimage/createcourseicon.svg"
+                alt="Create user"
+                className="w-6 h-6 mr-2 sm:w-8 sm:h-8 lg:w-10 lg:h-10"
+              />
+            } />
 
-      }
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        fullWidth
-        sx={{
-          '.MuiDialog-paper': {
-            borderRadius: "4px",
-            padding: "1rem"
-          }
-        }}
-      >
-        <UserDetails
-          handleClose={handleClose}
-          updateData={Boolean(updateData)}
-          userData={userData}
-          handleUpdate={handleUpdate}
-          createUserHandler={createUserHandler}
-          updateUserHandler={updateUserHandler}
-          dataUpdatingLoadding={dataUpdatingLoadding}
-          userDataError={userDataError}
-        />
-      </Dialog>
-    </div >
+          </div>
+        ) : null}
+        {
+          dataFetchLoading ? <FuseLoading /> :
+            data.length ?
+              <LearnerManagementTable
+                columns={learnerManagementTableColumn}
+                rows={data}
+                handleOpen={handleOpen}
+                setUserData={setUserData}
+                setUpdateData={setUpdateData}
+                meta_data={meta_data}
+                dataUpdatingLoadding={dataUpdatingLoadding}
+                search_keyword={searchKeyword}
+                search_role={filterValue}
+              />
+              :
+              <div className="flex flex-col justify-center items-center gap-10 " style={{ height: "94%" }}>
+                <DataNotFound width="25%" />
+                <Typography variant="h5">No data found</Typography>
+                <Typography variant="body2" className="text-center">It is a long established fact that a reader will be <br />distracted by the readable content.</Typography>
+                <SecondaryButton name="Create learner" onClick={handleOpen} startIcon={
+                  <img
+                    src="assets/images/svgimage/createcourseicon.svg"
+                    alt="Create user"
+                    className="w-6 h-6 mr-2 sm:w-8 sm:h-8 lg:w-10 lg:h-10"
+                  />
+                } />
+              </div>
+
+        }
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          fullWidth
+          sx={{
+            '.MuiDialog-paper': {
+              borderRadius: "4px",
+              padding: "1rem"
+            }
+          }}
+        >
+          <UserDetails
+            handleClose={handleClose}
+            updateData={Boolean(updateData)}
+            userData={userData}
+            handleUpdate={handleUpdate}
+            createUserHandler={createUserHandler}
+            updateUserHandler={updateUserHandler}
+            dataUpdatingLoadding={dataUpdatingLoadding}
+            userDataError={userDataError}
+          />
+        </Dialog>
+      </div >
     </Card>
   );
 };

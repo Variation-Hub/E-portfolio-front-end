@@ -171,7 +171,7 @@ const Forum = () => {
               className="flex items-center cursor-pointer bg-white rounded-md p-2 hover:bg-gray-100 m-10 gap-10"
               onClick={(e) => handleSendMessage(e, msg)}
             >
-              <Avatar className="mr-4" alt={msg.course_course_name?.toUpperCase().charAt(0)} src="../" /* sx={{ bgcolor: getRandomColor() }} */ />
+              <Avatar className="mr-4" alt={msg.course_course_name?.toUpperCase().charAt(0)} src="../"  sx={{ bgcolor: getRandomColor(msg.course_course_name?.toLowerCase().charAt(0)) }} />
               <div className="flex flex-col w-10/12 ">
                 <div className="flex justify-between flex-row m-5 ">
                   <Tooltip title={msg.course_course_name}>
