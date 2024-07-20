@@ -3,6 +3,7 @@ import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import { useSelector } from 'react-redux';
 import { selectUser } from 'app/store/userSlice';
+import { getRandomColor } from 'src/utils/randomColor';
 
 const Root = styled('div')(({ theme }) => ({
   '& .username, & .email': {
@@ -33,8 +34,9 @@ function UserNavbarHeader(props) {
       <div className="flex items-center justify-center mb-24">
         <Avatar
           sx={{
-            backgroundColor: 'background.paper',
+            backgroundColor: getRandomColor(user?.data?.displayName?.toLowerCase().charAt(0)),
             color: 'text.secondary',
+
           }}
           className="avatar text-32 font-bold w-96 h-96"
           src={user.data.photoURL}

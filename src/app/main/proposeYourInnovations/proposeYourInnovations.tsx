@@ -419,7 +419,7 @@ const ProposeYourInnovations = (props) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {innovation.data?.map((row) => (
+                {innovation?.data?.map((row) => (
                   <TableRow
                     key={row.topic}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -447,9 +447,9 @@ const ProposeYourInnovations = (props) => {
                         whiteSpace: "nowrap",
                       }}
                     >
-                      {row.description}
+                      {row?.description}
                     </TableCell>
-                    {data.role === "Admin" &&
+                    {data?.role === "Admin" &&
                       <>
                         <TableCell
                           align="left"
@@ -459,7 +459,7 @@ const ProposeYourInnovations = (props) => {
                             textOverflow: "ellipsis",
                             whiteSpace: "nowrap",
                           }}>
-                          {row.innovation_propose_by_id.email}
+                          {row?.innovation_propose_by_id?.email}
                         </TableCell>
                         <TableCell
                           align="left"

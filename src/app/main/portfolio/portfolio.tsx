@@ -19,6 +19,7 @@ import { Link } from "react-router-dom";
 import { selectstoreDataSlice } from "app/store/reloadData";
 import { selectUser } from "app/store/userSlice";
 import { slice } from "app/store/courseManagement";
+import { getRandomColor } from "src/utils/randomColor";
 
 const Portfolio = () => {
   const [open, setOpen] = useState(false);
@@ -67,10 +68,9 @@ const Portfolio = () => {
       ) : (
         <div className="m-24 flex items-center border-1 rounded-8 py-12">
           <div className="flex flex-col w-1/6 justify-center items-center border-r-1">
-            <Avatar sx={{ width: 100, height: 100 }} src="">
-
-              {learner?.first_name?.charAt(0)}
-              {learner?.last_name?.charAt(0)}
+            <Avatar sx={{ width: 100, height: 100, backgroundColor: getRandomColor(learner?.first_name?.toLowerCase().charAt(0)) }} src="">
+              {learner?.first_name?.toUpperCase()?.charAt(0)}
+              {learner?.last_name?.toUpperCase()?.charAt(0)}
             </Avatar>
             <div className="mt-10">
               {learner?.first_name} {learner?.last_name}

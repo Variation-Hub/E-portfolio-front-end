@@ -18,6 +18,7 @@ const initialState = {
         page_size: userTableMetaData.page_size,
         pages: 1
     },
+    calenderData: []
 };
 
 const sessionSlice = createSlice({
@@ -44,8 +45,11 @@ const sessionSlice = createSlice({
         },
         setSingledata(state, action) {
             state.singleData = action.payload
+        },
+        setCalenderData(state, action) {
+            state.calenderData = action.payload
         }
-    }
+    },
 });
 
 export const slice = sessionSlice.actions;
@@ -64,8 +68,8 @@ export const getTrainerAPI = (role) => async (dispatch) => {
         // dispatch(showMessage({ message: response.data.message, variant: "success" }))
         // if(role === "Trainer")
         dispatch(slice.setTrainer(response.data.data))
-    // else if(role === "Learner")
-    //     dispatch(slice.setLearner(response.data.data))
+        // else if(role === "Learner")
+        //     dispatch(slice.setLearner(response.data.data))
         dispatch(slice.setLoader());
         return true;
 
@@ -88,7 +92,7 @@ export const getLearnerAPI = () => async (dispatch) => {
         // dispatch(showMessage({ message: response.data.message, variant: "success" }))
         // if(role === "Trainer")
         // dispatch(slice.setTrainer(response.data.data))
-    // else if(role === "Learner")
+        // else if(role === "Learner")
         dispatch(slice.setLearner(response.data.data))
         dispatch(slice.setLoader());
         return true;
@@ -201,6 +205,25 @@ export const uploadImages = (file: any) => async (dispatch) => {
     }
 }
 
+// get month vise session data
+export const getMonthBySessionData = (year, month, learner_id) => async (dispatch) => {
 
+    try {
+        dispatch(slice.setLoader());
+
+        let url = `${URL_BASE_LINK}/session/list/month?year=${year}&month=${month}&learner_id=${learner_id}`;
+
+        const response = await axios.get(url);
+        dispatch(slice.setCalenderData(response.data.data));
+        dispatch(slice.setLoader());
+        return true;
+
+    } catch (err) {
+        dispatch(showMessage({ message: err.response.data.message, variant: "error" }))
+        dispatch(slice.setLoader());
+        return false
+    };
+
+}
 
 export default sessionSlice.reducer;

@@ -35,6 +35,7 @@ import {
 import CourseBuilderComponent from "src/app/component/Courses";
 import RemoveRedEyeRoundedIcon from "@mui/icons-material/RemoveRedEyeRounded";
 import { Stack } from "@mui/system";
+import { getRandomColor } from "src/utils/randomColor";
 
 export default function CourseManagementTable(props) {
   const {
@@ -201,6 +202,7 @@ export default function CourseManagementTable(props) {
                                     marginRight: "8px",
                                     width: "24px",
                                     height: "24px",
+                                    backgroundColor: getRandomColor(row?.user_name?.toLowerCase().charAt(0))
                                   }}
                                 />
                                 {value} {row["last_name"]}

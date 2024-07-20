@@ -324,7 +324,7 @@ export const roles = [
   },
   {
     value: UserRole.LIQA,
-    label: "Lead IQA",
+    label: "LIQA",
   },
 ];
 

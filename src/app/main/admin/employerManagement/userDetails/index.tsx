@@ -36,8 +36,12 @@ import { FileUploader } from "react-drag-drop-files";
 import { useState } from "react";
 import Breadcrumb from "src/app/component/Breadcrumbs";
 import Style from "./style.module.css";
+import { useNavigate } from "react-router-dom";
 
 const UserDetails = (props) => {
+
+  const navigate = useNavigate();
+
   const [companyData, setCompanyData] = useState({
     company_name: "",
     mis_employer_id: "",
@@ -106,7 +110,6 @@ const UserDetails = (props) => {
   };
 
   const {
-    handleClose,
     userData,
     updateData,
     updateUserHandler,
@@ -114,20 +117,21 @@ const UserDetails = (props) => {
     userDataError,
   } = props;
 
+  const createUser =
+    Object.values(companyData).find((data) => data === "") === undefined &&
+    Object.values(detailsData).find((data) => data === "") === undefined &&
+    Object.values(descriptionData).find((data) => data === "") ===
+    undefined &&
+    Object.values(date).find((data) => data === "") === undefined;
+
   const createUserHandler = () => {
-    const createUser =
-      Object.values(companyData).find((data) => data === "") === undefined &&
-      Object.values(detailsData).find((data) => data === "") === undefined &&
-      Object.values(descriptionData).find((data) => data === "") ===
-        undefined &&
-      Object.values(date).find((data) => data === "") === undefined;
 
     console.log("Company Data: ", companyData);
     console.log("Company Details Data: ", detailsData);
     console.log("Description Data: ", descriptionData);
     console.log("Date Data: ", date);
+    console.log(createUser, "+++++++++++------------");
 
-    return createUser;
   };
 
   const fileTypes = ["PDF"];
@@ -135,6 +139,10 @@ const UserDetails = (props) => {
   const handleChange = (file) => {
     setFile(file);
     console.log("File : ", file);
+  };
+
+  const handleClose = () => {
+    navigate("/admin/employer");
   };
 
   return (
@@ -171,13 +179,13 @@ const UserDetails = (props) => {
                     required
                     fullWidth
                     onChange={handleDataUpdate}
-                    // error={userDataError?.user_name}
-                    // InputProps={{
-                    //     endAdornment:
-                    //         <Tooltip title={usernameValidationMsg} placement="bottom" arrow>
-                    //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
-                    //         </Tooltip>
-                    // }}
+                  // error={userDataError?.user_name}
+                  // InputProps={{
+                  //     endAdornment:
+                  //         <Tooltip title={usernameValidationMsg} placement="bottom" arrow>
+                  //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
+                  //         </Tooltip>
+                  // }}
                   />
                 </div>
 
@@ -200,13 +208,13 @@ const UserDetails = (props) => {
                     required
                     fullWidth
                     onChange={handleDataUpdate}
-                    // error={userDataError?.email}
-                    // InputProps={{
-                    //     endAdornment:
-                    //         <Tooltip title={emailValidationMsg} placement="bottom" arrow>
-                    //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
-                    //         </Tooltip>
-                    // }}
+                  // error={userDataError?.email}
+                  // InputProps={{
+                  //     endAdornment:
+                  //         <Tooltip title={emailValidationMsg} placement="bottom" arrow>
+                  //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
+                  //         </Tooltip>
+                  // }}
                   />
                 </div>
               </Box>
@@ -231,13 +239,13 @@ const UserDetails = (props) => {
                     required
                     fullWidth
                     onChange={handleDataUpdate}
-                    // error={userDataError?.password}
-                    // InputProps={{
-                    //     endAdornment:
-                    //         <Tooltip title={passwordValidation} placement="bottom" arrow>
-                    //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
-                    //         </Tooltip>
-                    // }}
+                  // error={userDataError?.password}
+                  // InputProps={{
+                  //     endAdornment:
+                  //         <Tooltip title={passwordValidation} placement="bottom" arrow>
+                  //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
+                  //         </Tooltip>
+                  // }}
                   />
                 </div>
 
@@ -260,7 +268,7 @@ const UserDetails = (props) => {
                     required
                     fullWidth
                     onChange={handleDataUpdate}
-                    // error={userDataError?.confrimpassword}
+                  // error={userDataError?.confrimpassword}
                   />
                 </div>
 
@@ -283,13 +291,13 @@ const UserDetails = (props) => {
                     required
                     fullWidth
                     onChange={handleDataUpdate}
-                    // error={userDataError?.confrimpassword}
-                    // InputProps={{
-                    //     endAdornment:
-                    //         <Tooltip title="Password must be same" placement="bottom" arrow>
-                    //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
-                    //         </Tooltip>
-                    // }}
+                  // error={userDataError?.confrimpassword}
+                  // InputProps={{
+                  //     endAdornment:
+                  //         <Tooltip title="Password must be same" placement="bottom" arrow>
+                  //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
+                  //         </Tooltip>
+                  // }}
                   />
                 </div>
               </Box>
@@ -314,13 +322,13 @@ const UserDetails = (props) => {
                     required
                     fullWidth
                     onChange={handleDataUpdate}
-                    // error={userDataError?.user_name}
-                    // InputProps={{
-                    //     endAdornment:
-                    //         <Tooltip title={usernameValidationMsg} placement="bottom" arrow>
-                    //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
-                    //         </Tooltip>
-                    // }}
+                  // error={userDataError?.user_name}
+                  // InputProps={{
+                  //     endAdornment:
+                  //         <Tooltip title={usernameValidationMsg} placement="bottom" arrow>
+                  //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
+                  //         </Tooltip>
+                  // }}
                   />
                 </div>
 
@@ -343,13 +351,13 @@ const UserDetails = (props) => {
                     required
                     fullWidth
                     onChange={handleDataUpdate}
-                    // error={userDataError?.email}
-                    // InputProps={{
-                    //     endAdornment:
-                    //         <Tooltip title={emailValidationMsg} placement="bottom" arrow>
-                    //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
-                    //         </Tooltip>
-                    // }}
+                  // error={userDataError?.email}
+                  // InputProps={{
+                  //     endAdornment:
+                  //         <Tooltip title={emailValidationMsg} placement="bottom" arrow>
+                  //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
+                  //         </Tooltip>
+                  // }}
                   />
                 </div>
               </Box>
@@ -374,13 +382,13 @@ const UserDetails = (props) => {
                     required
                     fullWidth
                     onChange={handleDataUpdate}
-                    // error={userDataError?.password}
-                    // InputProps={{
-                    //     endAdornment:
-                    //         <Tooltip title={passwordValidation} placement="bottom" arrow>
-                    //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
-                    //         </Tooltip>
-                    // }}
+                  // error={userDataError?.password}
+                  // InputProps={{
+                  //     endAdornment:
+                  //         <Tooltip title={passwordValidation} placement="bottom" arrow>
+                  //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
+                  //         </Tooltip>
+                  // }}
                   />
                 </div>
 
@@ -403,7 +411,7 @@ const UserDetails = (props) => {
                     required
                     fullWidth
                     onChange={handleDataUpdate}
-                    // error={userDataError?.confrimpassword}
+                  // error={userDataError?.confrimpassword}
                   />
                 </div>
 
@@ -426,13 +434,13 @@ const UserDetails = (props) => {
                     required
                     fullWidth
                     onChange={handleDataUpdate}
-                    // error={userDataError?.confrimpassword}
-                    // InputProps={{
-                    //     endAdornment:
-                    //         <Tooltip title="Password must be same" placement="bottom" arrow>
-                    //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
-                    //         </Tooltip>
-                    // }}
+                  // error={userDataError?.confrimpassword}
+                  // InputProps={{
+                  //     endAdornment:
+                  //         <Tooltip title="Password must be same" placement="bottom" arrow>
+                  //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
+                  //         </Tooltip>
+                  // }}
                   />
                 </div>
               </Box>
@@ -587,13 +595,13 @@ const UserDetails = (props) => {
                     required
                     fullWidth
                     onChange={handleDetailsUpdate}
-                    // error={userDataError?.user_name}
-                    // InputProps={{
-                    //     endAdornment:
-                    //         <Tooltip title={usernameValidationMsg} placement="bottom" arrow>
-                    //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
-                    //         </Tooltip>
-                    // }}
+                  // error={userDataError?.user_name}
+                  // InputProps={{
+                  //     endAdornment:
+                  //         <Tooltip title={usernameValidationMsg} placement="bottom" arrow>
+                  //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
+                  //         </Tooltip>
+                  // }}
                   />
                 </div>
 
@@ -618,13 +626,13 @@ const UserDetails = (props) => {
                     id="demo-simple-select"
                     label="Category"
                     onChange={handleDetailsUpdate}
-                    // error={userDataError?.email}
-                    // InputProps={{
-                    //     endAdornment:
-                    //         <Tooltip title={emailValidationMsg} placement="bottom" arrow>
-                    //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
-                    //         </Tooltip>
-                    // }}
+                  // error={userDataError?.email}
+                  // InputProps={{
+                  //     endAdornment:
+                  //         <Tooltip title={emailValidationMsg} placement="bottom" arrow>
+                  //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
+                  //         </Tooltip>
+                  // }}
                   >
                     <MenuItem value={10}>Ten</MenuItem>
                     <MenuItem value={20}>Twenty</MenuItem>
@@ -651,13 +659,13 @@ const UserDetails = (props) => {
                     required
                     fullWidth
                     onChange={handleDetailsUpdate}
-                    // error={userDataError?.email}
-                    // InputProps={{
-                    //     endAdornment:
-                    //         <Tooltip title={emailValidationMsg} placement="bottom" arrow>
-                    //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
-                    //         </Tooltip>
-                    // }}
+                  // error={userDataError?.email}
+                  // InputProps={{
+                  //     endAdornment:
+                  //         <Tooltip title={emailValidationMsg} placement="bottom" arrow>
+                  //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
+                  //         </Tooltip>
+                  // }}
                   />
                 </div>
               </Box>
@@ -683,13 +691,13 @@ const UserDetails = (props) => {
                     required
                     fullWidth
                     onChange={handleDetailsUpdate}
-                    // error={userDataError?.password}
-                    // InputProps={{
-                    //     endAdornment:
-                    //         <Tooltip title={passwordValidation} placement="bottom" arrow>
-                    //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
-                    //         </Tooltip>
-                    // }}
+                  // error={userDataError?.password}
+                  // InputProps={{
+                  //     endAdornment:
+                  //         <Tooltip title={passwordValidation} placement="bottom" arrow>
+                  //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
+                  //         </Tooltip>
+                  // }}
                   />
                 </div>
 
@@ -712,7 +720,7 @@ const UserDetails = (props) => {
                     required
                     fullWidth
                     onChange={handleDetailsUpdate}
-                    // error={userDataError?.confrimpassword}
+                  // error={userDataError?.confrimpassword}
                   />
                 </div>
 
@@ -735,13 +743,13 @@ const UserDetails = (props) => {
                     required
                     fullWidth
                     onChange={handleDetailsUpdate}
-                    // error={userDataError?.confrimpassword}
-                    // InputProps={{
-                    //     endAdornment:
-                    //         <Tooltip title="Password must be same" placement="bottom" arrow>
-                    //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
-                    //         </Tooltip>
-                    // }}
+                  // error={userDataError?.confrimpassword}
+                  // InputProps={{
+                  //     endAdornment:
+                  //         <Tooltip title="Password must be same" placement="bottom" arrow>
+                  //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
+                  //         </Tooltip>
+                  // }}
                   />
                 </div>
               </Box>
@@ -767,13 +775,13 @@ const UserDetails = (props) => {
                     required
                     fullWidth
                     onChange={handleDetailsUpdate}
-                    // error={userDataError?.user_name}
-                    // InputProps={{
-                    //     endAdornment:
-                    //         <Tooltip title={usernameValidationMsg} placement="bottom" arrow>
-                    //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
-                    //         </Tooltip>
-                    // }}
+                  // error={userDataError?.user_name}
+                  // InputProps={{
+                  //     endAdornment:
+                  //         <Tooltip title={usernameValidationMsg} placement="bottom" arrow>
+                  //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
+                  //         </Tooltip>
+                  // }}
                   />
                 </div>
 
@@ -796,13 +804,13 @@ const UserDetails = (props) => {
                     required
                     fullWidth
                     onChange={handleDetailsUpdate}
-                    // error={userDataError?.email}
-                    // InputProps={{
-                    //     endAdornment:
-                    //         <Tooltip title={emailValidationMsg} placement="bottom" arrow>
-                    //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
-                    //         </Tooltip>
-                    // }}
+                  // error={userDataError?.email}
+                  // InputProps={{
+                  //     endAdornment:
+                  //         <Tooltip title={emailValidationMsg} placement="bottom" arrow>
+                  //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
+                  //         </Tooltip>
+                  // }}
                   />
                 </div>
               </Box>
@@ -959,13 +967,13 @@ const UserDetails = (props) => {
                     rows={8}
                     id="outlined-multiline-static"
                     onChange={handleDescriptionUpdate}
-                    // error={userDataError?.user_name}
-                    // InputProps={{
-                    //     endAdornment:
-                    //         <Tooltip title={usernameValidationMsg} placement="bottom" arrow>
-                    //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
-                    //         </Tooltip>
-                    // }}
+                  // error={userDataError?.user_name}
+                  // InputProps={{
+                  //     endAdornment:
+                  //         <Tooltip title={usernameValidationMsg} placement="bottom" arrow>
+                  //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
+                  //         </Tooltip>
+                  // }}
                   />
                 </div>
 
@@ -991,13 +999,13 @@ const UserDetails = (props) => {
                     rows={8}
                     id="outlined-multiline-static"
                     onChange={handleDescriptionUpdate}
-                    // error={userDataError?.email}
-                    // InputProps={{
-                    //     endAdornment:
-                    //         <Tooltip title={emailValidationMsg} placement="bottom" arrow>
-                    //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
-                    //         </Tooltip>
-                    // }}
+                  // error={userDataError?.email}
+                  // InputProps={{
+                  //     endAdornment:
+                  //         <Tooltip title={emailValidationMsg} placement="bottom" arrow>
+                  //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
+                  //         </Tooltip>
+                  // }}
                   />
                 </div>
               </Box>
@@ -1138,7 +1146,7 @@ const UserDetails = (props) => {
                   <SecondaryButton
                     name={updateData ? "Update" : "Save"}
                     style={{ width: "10rem" }}
-                    disable={!createUserHandler()}
+                    disable={!createUser}
                   />
                   {/* <SecondaryButton name={updateData ? "Update" : "Save"} style={{ width: "10rem" }} onClick={updateData ? updateUserHandler : createUserHandler} /> */}
                 </>

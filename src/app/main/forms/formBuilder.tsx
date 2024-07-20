@@ -177,7 +177,7 @@ const FormBuilder = (props) => {
 
     const searchAPIHandler = () => {
         dispatch(
-            getFormDataAPI({ page: 1, page_size: 2 }, searchKeyword)
+            getFormDataAPI({ page: 1, page_size: 10 }, searchKeyword)
         );
     };
 
@@ -210,7 +210,7 @@ const FormBuilder = (props) => {
                                                         setSearchKeyword("");
                                                         dispatch(
                                                             fetchUserAPI(
-                                                                { page: 1, page_size: 2 },
+                                                                { page: 1, page_size: 10 },
                                                                 "")
                                                         );
                                                     }}

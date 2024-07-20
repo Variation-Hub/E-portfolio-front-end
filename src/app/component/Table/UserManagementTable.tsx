@@ -36,6 +36,7 @@ import {
   selectCourseManagement,
 } from "app/store/courseManagement";
 import { Stack } from "@mui/system";
+import { getRandomColor } from "src/utils/randomColor";
 
 export default function UserManagementTable(props) {
   const {
@@ -69,7 +70,7 @@ export default function UserManagementTable(props) {
     setAnchorEl(null);
   };
 
-  
+
   const handleChangePage = (event: unknown, newPage: number) => {
     dispatch(
       fetchUserAPI({ page: newPage, page_size: userTableMetaData.page_size })
@@ -135,6 +136,7 @@ export default function UserManagementTable(props) {
     }
     setLoading(false);
   };
+
   return (
     <>
       <div style={{ width: "100%", overflow: "hidden", marginTop: "0.5rem" }}>
@@ -212,10 +214,13 @@ export default function UserManagementTable(props) {
                                     marginRight: "8px",
                                     width: "24px",
                                     height: "24px",
+                                    backgroundColor: getRandomColor(row?.user_name?.toLowerCase().charAt(0))
                                   }}
                                 />
                                 {value} {row["last_name"]}
                               </>
+                            ) : column.id === "roles" ? (
+                              row.roles.join(", ")
                             ) : (
                               value || "Active"
                             )}
@@ -228,21 +233,23 @@ export default function UserManagementTable(props) {
               })}
             </TableBody>
           </Table>
+          <div className="fixed bottom-0 left-0 w-full flex justify-center py-4 mb-14">
+            <Stack
+              spacing={2}
+              className="flex justify-center items-center w-full mt-14"
+            >
+              <Pagination
+                count={meta_data?.pages}
+                page={meta_data?.page}
+                variant="outlined"
+                onChange={handleChangePage}
+                shape="rounded"
+                siblingCount={1}
+                boundaryCount={1}
+              />
+            </Stack>
+          </div>
         </TableContainer>
-        <Stack
-          spacing={2}
-          className="flex justify-center items-center w-full mt-14"
-        >
-          <Pagination
-            count={meta_data?.pages}
-            page={meta_data?.page}
-            variant="outlined"
-            onChange={handleChangePage}
-            shape="rounded"
-            siblingCount={1}
-            boundaryCount={1}
-          />
-        </Stack>
       </div>
       <AlertDialog
         open={Boolean(deleteId)}

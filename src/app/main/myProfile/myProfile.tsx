@@ -20,6 +20,7 @@ import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutl
 import { selectUserManagement, uploadAvatar } from "app/store/userManagement";
 import { useDispatch } from "react-redux";
 import { margin, padding } from "@mui/system";
+import { getRandomColor } from "src/utils/randomColor";
 
 const CustomInputField = ({ label, name, placeholder, value }) => {
   return (
@@ -105,8 +106,9 @@ const MyProfile: React.FC = () => {
             ) : (
               <>
                 <Avatar
-                  sx={{ width: "120px", height: "120px" }}
+                  sx={{width: "120px", height: "120px", bgcolor: getRandomColor(data?.displayName?.toLowerCase().charAt(0)) }}
                   src={data?.avatar?.url}
+                  alt={data?.displayName}
                 />
                 <IconButton
                   onClick={handleButtonClick}

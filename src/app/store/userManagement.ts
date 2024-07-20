@@ -167,7 +167,7 @@ export const fetchUserAPI = (data = { page: 1, page_size: 10 }, search_keyword =
         }
 
         const response = await axios.get(url);
-        dispatch(showMessage({ message: response.data.message, variant: "success" }))
+        // dispatch(showMessage({ message: response.data.message, variant: "success" }))
         dispatch(slice.updateUser(response.data));
         dispatch(slice.setLoader());
         return true;
