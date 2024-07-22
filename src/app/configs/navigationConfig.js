@@ -184,14 +184,6 @@ const navigationConfig = [{
     url: '/forms',
     visible: [UserRole.Trainer, UserRole.Learner, UserRole.Employer, UserRole.IQA, UserRole.EQA, UserRole.Admin, UserRole.LIQA],
 },
-{
-    id: 'dashboards.enrolments',
-    title: 'Enrolments',
-    type: 'item',
-    icon: 'material-outline:person_add',
-    url: '/enrolments',
-    visible: [UserRole.Admin],
-},
 // {
 //     id: 'dashboards.surverys',
 //     title: 'Surverys',
