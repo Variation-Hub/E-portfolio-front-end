@@ -202,7 +202,7 @@ export default function EmployerManagementTable(props) {
                                 {value} {row["last_name"]}
                               </>
                             ) : (
-                              value || "Active"
+                              value || "-"
                             )}
                           </div>
                         </TableCell>

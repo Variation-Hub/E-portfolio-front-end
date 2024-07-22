@@ -43,9 +43,9 @@ const courseManagementSlice = createSlice({
             state.dataUpdatingLoadding = !state.dataUpdatingLoadding
         },
         updateCourseById(state, action) {
-            const { learner_id, ...rest } = action.payload;
+            const { course_id, ...rest } = action.payload;
             state.data = state.data.map((value) => {
-                if (value.learner_id === learner_id) {
+                if (value.course_id === course_id) {
                     return rest;
                 }
                 return value;

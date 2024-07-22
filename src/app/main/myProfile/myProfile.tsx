@@ -17,7 +17,7 @@ import {
   SecondaryButtonOutlined,
 } from "src/app/component/Buttons";
 import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
-import { selectUserManagement, uploadAvatar } from "app/store/userManagement";
+import { changePassword, selectUserManagement, uploadAvatar } from "app/store/userManagement";
 import { useDispatch } from "react-redux";
 import { margin, padding } from "@mui/system";
 import { getRandomColor } from "src/utils/randomColor";
@@ -72,6 +72,35 @@ const MyProfile: React.FC = () => {
     fileInputRef.current.click();
   };
 
+  const [passwordData, setPasswordData] = useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setPasswordData(prevState => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const handleChangePassword = async () => {
+    try {
+      await dispatch(changePassword(passwordData));
+    } catch (err) {
+      console.log(err);
+    } finally {
+      handleClose();
+      setPasswordData({
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+      });
+    }
+  };
+
   return (
     <div className="p-4 m-4 flex">
       <Box
@@ -106,7 +135,7 @@ const MyProfile: React.FC = () => {
             ) : (
               <>
                 <Avatar
-                  sx={{width: "120px", height: "120px", bgcolor: getRandomColor(data?.displayName?.toLowerCase().charAt(0)) }}
+                  sx={{ width: "120px", height: "120px", bgcolor: getRandomColor(data?.displayName?.toLowerCase().charAt(0)) }}
                   src={data?.avatar?.url}
                   alt={data?.displayName}
                 />
@@ -228,8 +257,8 @@ const MyProfile: React.FC = () => {
                   placeholder={data?.roles}
                   fullWidth
                   multiline
-                  // value={data?.roles}
-                  // onChange={handleChange}
+                // value={data?.roles}
+                // onChange={handleChange}
                 />
                 {/* <CustomInputField
                   value={data?.roles}
@@ -279,8 +308,8 @@ const MyProfile: React.FC = () => {
                         size="small"
                         placeholder="Enter Subject"
                         fullWidth
-                        // value={formData.uploaded_evidence_file}
-                        // onChange={handleChange}
+                      // value={formData.uploaded_evidence_file}
+                      // onChange={handleChange}
                       />
                       <Typography
                         sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}
@@ -294,8 +323,8 @@ const MyProfile: React.FC = () => {
                         fullWidth
                         multiline
                         rows={10}
-                        // value={formData.cdp_plan}
-                        // onChange={handleChange}
+                      // value={formData.cdp_plan}
+                      // onChange={handleChange}
                       />
                     </div>
                   </Box>
@@ -322,22 +351,31 @@ const MyProfile: React.FC = () => {
         {activeTab === "changePassword" && (
           <div>
             <Box className="m-12 flex flex-col justify-between gap-12 sm:flex-row">
-              <CustomInputField
-                value={data?.pass}
+              <TextField
+                size="small"
+                value={passwordData?.currentPassword}
+                onChange={handleChange}
                 label="Current password"
-                name="old_password"
+                className="w-full"
+                name="currentPassword"
                 placeholder="Enter current password"
               />
-              <CustomInputField
-                value={data?.pass}
+              <TextField
+                size="small"
+                value={passwordData?.newPassword}
+                onChange={handleChange}
                 label="New password"
-                name="new_password"
+                className="w-full"
+                name="newPassword"
                 placeholder="Enter new password"
               />
-              <CustomInputField
-                value={data?.pass}
+              <TextField
+                size="small"
+                value={passwordData?.confirmPassword}
+                onChange={handleChange}
                 label="Confirm password"
-                name="confirm_password"
+                className="w-full"
+                name="confirmPassword"
                 placeholder="Enter confirm password"
               />
             </Box>
@@ -353,7 +391,7 @@ const MyProfile: React.FC = () => {
                 name="Cancel"
                 style={{ width: "10rem", marginRight: "2rem" }}
               />
-              <SecondaryButton name="Save" style={{ width: "10rem" }} />
+              <SecondaryButton name="Change Password" onClick={handleChangePassword} style={{ width: "15rem" }} />
             </Box>
           </div>
         )}
