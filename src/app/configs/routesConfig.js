@@ -26,7 +26,6 @@ import AdminConfig from "../main/admin/adminConfig";
 import CourseBuilderConfig from "../main/courseBuilder/courseBuilderConfig";
 import AllLearnersConfig from "../main/allLearners/allLearnersConfig";
 import FormsConfig from "../main/forms/formsConfig";
-import EnrolmentsConfig from "../main/enrolments/enrolmentsConfig";
 import SurverysConfig from "../main/surverys/surverysConfig";
 import CommunicationsConfig from "../main/communications/communicationsConfig";
 import ForgotConfig from "../main/forgotPassword/forgotConfig";
@@ -59,7 +58,6 @@ const routeConfigs = [
     CourseBuilderConfig,
     AllLearnersConfig,
     FormsConfig,
-    EnrolmentsConfig,
     SurverysConfig,
     CommunicationsConfig,
     ForgotConfig,
@@ -74,7 +72,7 @@ const routes = [
     ),
     {
         path: "*",
-        element: < Navigate to = "/" / > ,
+        element: < Navigate to="/" />,
     }
 ];
 
