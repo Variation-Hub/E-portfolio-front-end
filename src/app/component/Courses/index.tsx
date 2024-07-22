@@ -308,7 +308,7 @@ const CourseBuilder = (props) => {
     let response = "";
     if (edit === "create") {
       response = await dispatch(createCourseAPI({ ...courseData, units }));
-    } else if (edit == "edit") {
+    } else if (edit === "edit") {
       response = await dispatch(updateCourseAPI(preFillData?.course_id, { ...courseData, units }));
       handleClose()
     }

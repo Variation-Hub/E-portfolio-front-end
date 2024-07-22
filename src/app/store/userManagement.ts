@@ -258,4 +258,20 @@ export const changeUserRoleHandler = (role) => async (dispatch) => {
         return false;
     };
 }
+
+
+// Change Password
+export const changePassword = (data) => async (dispatch) => {
+    try {
+        dispatch(slice.setUpdatingLoader());
+        const response = await axios.post(`${URL_BASE_LINK}/user/password/change`, data)
+        dispatch(showMessage({ message: response.data.message, variant: "success" }))
+        dispatch(slice.setUpdatingLoader());
+        return true;
+    } catch (err) {
+        dispatch(showMessage({ message: err.response?.data.message, variant: "error" }))
+        dispatch(slice.setUpdatingLoader());
+        return false;
+    };
+}
 export default userManagementSlice.reducer;
