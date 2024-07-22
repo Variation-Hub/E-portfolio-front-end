@@ -68,6 +68,8 @@ export const PortfolioCard = (props) => {
       console.warn("Unit Progress clicked");
     } else if (name === "Resources") {
       navigate('/resources-card');
+    } else if (name === "Time Log") {
+      navigate('/timeLog');
     }
   };
   const handleClose = () => {
