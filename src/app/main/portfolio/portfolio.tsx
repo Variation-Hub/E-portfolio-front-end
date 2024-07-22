@@ -33,13 +33,14 @@ const Portfolio = () => {
   );
 
   const data = useSelector(selectstoreDataSlice);
-  const { role } = useSelector(selectUser)?.data;
+  const { role, photoURL, } = useSelector(selectUser)?.data;
+  const user = useSelector(selectUser);
   const { singleData } = useSelector(selectLearnerManagement);
 
   const dispatch: any = useDispatch();
 
   useEffect(() => {
-    if (data.learner_id) dispatch(getLearnerDetails(data?.learner_id));
+    if (data?.learner_id) dispatch(getLearnerDetails(data?.learner_id));
   }, [data]);
 
   useEffect(() => {
@@ -68,7 +69,11 @@ const Portfolio = () => {
       ) : (
         <div className="m-24 flex items-center border-1 rounded-8 py-12">
           <div className="flex flex-col w-1/6 justify-center items-center border-r-1">
-            <Avatar sx={{ width: 100, height: 100, backgroundColor: getRandomColor(learner?.first_name?.toLowerCase().charAt(0)) }} src="">
+            <Avatar
+              sx={{ width: 100, height: 100, backgroundColor: getRandomColor(learner?.first_name?.toLowerCase().charAt(0)) }}
+              src={user.data.avatar?.url}
+              alt={user.data.displayName}
+            >
               {learner?.first_name?.toUpperCase()?.charAt(0)}
               {learner?.last_name?.toUpperCase()?.charAt(0)}
             </Avatar>

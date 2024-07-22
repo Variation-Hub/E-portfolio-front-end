@@ -91,8 +91,8 @@ const CreateAssignment = (props) => {
   const oopen = Boolean(anchorEl);
 
 
-  const [ formData, setFormData] = useState({
-    name: "",
+  const [formData, setFormData] = useState({
+    title: "",
     description: "",
     trainer_feedback: "",
     // uploaded_external_feedback: "",
@@ -206,84 +206,85 @@ const CreateAssignment = (props) => {
     <Card className="m-12 rounded-6" style={{ height: "87.3vh" }}>
       <div className="w-full h-full py-20">
         {/* <Breadcrumb linkData={[AssignmentRedirect]} currPage="User" /> */}
-        {data.length ? (
-          <div className={Style.create_user}>
-            <div className={Style.search_filed}>
-              <TextField
-                label="Search by keyword"
-                fullWidth
-                size="small"
-                // onKeyDown={searchByKeywordUser}
-                onChange={searchHandler}
-                value={searchKeyword}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      {searchKeyword ? (
-                        <Close
-                          // onClick={() => {
-                          //   setSearchKeyword("");
-                          //   dispatch(
-                          //     fetchUserAPI(
-                          //       { page: 1, page_size: 25 },
-                          //       "",
-                          //       filterValue
-                          //     )
-                          //   );
-                          // }}
-                          sx={{
-                            color: "#5B718F",
-                            fontSize: 18,
-                            cursor: "pointer",
-                          }}
-                        />
-                      ) : (
-                        <IconButton
-                          id="dashboard-search-events-btn"
-                          disableRipple
-                          sx={{ color: "#5B718F" }}
-                          // onClick={() => searchAPIHandler()}
-                          size="small"
-                        >
-                          <SearchIcon fontSize="small" />
-                        </IconButton>
-                      )}
-                    </InputAdornment>
-                  ),
-                }}
-              />
-              <Autocomplete
-                fullWidth
-                size="small"
-                value={filterValue}
-                options={roles.map((option) => option.label)}
-                renderInput={(params) => (
-                  <TextField {...params} label="Search by role" />
-                )}
-                // onChange={filterHandler}
-                sx={{
-                  ".MuiAutocomplete-clearIndicator": {
-                    color: "#5B718F",
-                  },
-                }}
-                PaperComponent={({ children }) => (
-                  <Paper style={{ borderRadius: "4px" }}>{children}</Paper>
-                )}
-              />
-            </div>
-            <SecondaryButton
-              name="Upload Files"
-              startIcon={
-                <img
-                  src="assets/images/svgimage/createcourseicon.svg"
-                  alt="Upload Files"
-                  className="w-6 h-6 mr-2 sm:w-8 sm:h-8 lg:w-10 lg:h-10"
-                />
-              }
-              onClick={handleOpen}
+        {/* {data.length ? ( */}
+        <div className={Style.create_user}>
+          <div className={Style.search_filed}>
+            {/* <TextField
+              label="Search by keyword"
+              fullWidth
+              size="small"
+              // onKeyDown={searchByKeywordUser}
+              onChange={searchHandler}
+              value={searchKeyword}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    {searchKeyword ? (
+                      <Close
+                        // onClick={() => {
+                        //   setSearchKeyword("");
+                        //   dispatch(
+                        //     fetchUserAPI(
+                        //       { page: 1, page_size: 25 },
+                        //       "",
+                        //       filterValue
+                        //     )
+                        //   );
+                        // }}
+                        sx={{
+                          color: "#5B718F",
+                          fontSize: 18,
+                          cursor: "pointer",
+                        }}
+                      />
+                    ) : (
+                      <IconButton
+                        id="dashboard-search-events-btn"
+                        disableRipple
+                        sx={{ color: "#5B718F" }}
+                        // onClick={() => searchAPIHandler()}
+                        size="small"
+                      >
+                        <SearchIcon fontSize="small" />
+                      </IconButton>
+                    )}
+                  </InputAdornment>
+                ),
+              }}
             />
+            <Autocomplete
+              fullWidth
+              size="small"
+              value={filterValue}
+              options={roles.map((option) => option.label)}
+              renderInput={(params) => (
+                <TextField {...params} label="Search by role" />
+              )}
+              // onChange={filterHandler}
+              sx={{
+                ".MuiAutocomplete-clearIndicator": {
+                  color: "#5B718F",
+                },
+              }}
+              PaperComponent={({ children }) => (
+                <Paper style={{ borderRadius: "4px" }}>{children}</Paper>
+              )}
+            /> */}
           </div>
-        ) : null}
+          <SecondaryButton
+            name="Upload Files"
+            className="py-6 px-12 mb-10"
+            startIcon={
+              <img
+                src="assets/images/svgimage/createcourseicon.svg"
+                alt="Upload Files"
+                className="w-6 h-6 mr-2 sm:w-8 sm:h-8 lg:w-10 lg:h-10"
+              />
+            }
+            onClick={handleOpen}
+          />
+        </div>
+        {/* ) : null} */}
         <div>
           <TableContainer sx={{ maxHeight: 500 }}>
             {dataFetchLoading ? (
@@ -365,20 +366,20 @@ const CreateAssignment = (props) => {
                 </div>
               </div>
             )}
-          </TableContainer>
-          <div className="fixed bottom-0 left-0 w-full flex justify-center py-4 mb-14">
+            {/* <div className="fixed bottom-0 left-0 w-full flex justify-center py-4 mb-14">
             <Stack spacing={2}>
               <Pagination
-                count={pageCount}
+                count={meta_data?.pages}
+                page={meta_data?.page}
                 variant="outlined"
                 shape="rounded"
-                page={page}
                 onChange={handlePageChange}
                 siblingCount={1}
                 boundaryCount={1}
               />
             </Stack>
-          </div>
+          </div> */}
+          </TableContainer>
         </div >
         <AlertDialog
           open={Boolean(deleteId)}

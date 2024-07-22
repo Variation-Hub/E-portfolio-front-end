@@ -30,7 +30,7 @@ const NewAssignment = (props) => {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    name: "",
+    title: "",
     description: "",
     trainer_feedback: "",
     // uploaded_external_feedback: "",
@@ -82,14 +82,14 @@ const NewAssignment = (props) => {
         <Box className="m-12 flex flex-col justify-between gap-12">
           <div className="w-full">
             <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
-              Name
+              Title
             </Typography>
             <TextField
-              name="name"
+              name="title"
               size="small"
-              placeholder={"Trainer file 4.2.3(13).docx"}
+              placeholder={"Enter Title"}
               fullWidth
-              value={formData.name}
+              value={formData.title}
               onChange={handleChange}
             />
           </div>
@@ -341,7 +341,7 @@ const NewAssignment = (props) => {
           :
           <>
             <SecondaryButtonOutlined name="Cancel" className="mr-12" onClick={handleClose} />
-            <SecondaryButton name="Save" disable={!formData.declaration || !formData.name || !formData.description} onClick={handleSubmit} />
+            <SecondaryButton name="Save" disable={!formData.declaration || !formData.title || !formData.description} onClick={handleSubmit} />
           </>
         }
       </div>

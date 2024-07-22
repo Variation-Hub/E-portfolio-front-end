@@ -125,6 +125,8 @@ export default function LearnerManagementTable(props) {
   };
 
   const deleteIcon = (id) => {
+    console.log(id);
+    
     setDeleteId(id);
   };
 

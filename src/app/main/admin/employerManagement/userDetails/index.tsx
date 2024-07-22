@@ -37,63 +37,23 @@ import { useState } from "react";
 import Breadcrumb from "src/app/component/Breadcrumbs";
 import Style from "./style.module.css";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { createEmployerAPI, getEmployerAPI, updateEmployerAPI } from "app/store/employer";
 
-const UserDetails = (props) => {
+const EmployerDetails = (props) => {
+
+  const {
+    userData,
+    updateData,
+    dataUpdatingLoadding,
+    userDataError,
+    setEditEmployer = () => { },
+    employerData,
+    handleDataUpdate,
+  } = props;
 
   const navigate = useNavigate();
-
-  const [companyData, setCompanyData] = useState({
-    company_name: "",
-    mis_employer_id: "",
-    business_department: "",
-    business_location: "",
-    branch_code: "",
-    address1: "",
-    address2: "",
-    city: "",
-    country: "",
-    postal_code: "",
-  });
-
-  const handleDataUpdate = (e) => {
-    const { name, value } = e.target;
-    setCompanyData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
-
-  const [detailsData, setCompanyDetailsData] = useState({
-    employer_id: "",
-    business_category: "",
-    Employee_no: "",
-    external_code: "",
-    telephone: "",
-    website: "",
-    contact: "",
-    email: "",
-  });
-
-  const handleDetailsUpdate = (e) => {
-    const { name, value } = e.target;
-    setCompanyDetailsData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
-
-  const [descriptionData, setDescriptionData] = useState({
-    business_description: "",
-    comments: "",
-  });
-
-  const handleDescriptionUpdate = (e) => {
-    const { name, value } = e.target;
-    setDescriptionData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
+  const dispatch: any = useDispatch();
 
   const [date, setDate] = useState({
     assessment_date: "",
@@ -109,29 +69,19 @@ const UserDetails = (props) => {
     }));
   };
 
-  const {
-    userData,
-    updateData,
-    updateUserHandler,
-    dataUpdatingLoadding,
-    userDataError,
-  } = props;
+  console.log(employerData)
+  const createUser = Object.values(employerData).find((data) => data === "") === undefined;
 
-  const createUser =
-    Object.values(companyData).find((data) => data === "") === undefined &&
-    Object.values(detailsData).find((data) => data === "") === undefined &&
-    Object.values(descriptionData).find((data) => data === "") ===
-    undefined &&
-    Object.values(date).find((data) => data === "") === undefined;
-
-  const createUserHandler = () => {
-
-    console.log("Company Data: ", companyData);
-    console.log("Company Details Data: ", detailsData);
-    console.log("Description Data: ", descriptionData);
-    console.log("Date Data: ", date);
-    console.log(createUser, "+++++++++++------------");
-
+  const updateUserHandler = async () => {
+    try {
+      let response;
+      response = await dispatch(updateEmployerAPI(employerData));
+      dispatch(getEmployerAPI({ page: 1, page_size: 10 }));
+    } catch (err) {
+      console.log(err);
+    } finally {
+      handleClose();
+    }
   };
 
   const fileTypes = ["PDF"];
@@ -143,6 +93,7 @@ const UserDetails = (props) => {
 
   const handleClose = () => {
     navigate("/admin/employer");
+    setEditEmployer(false);
   };
 
   return (
@@ -171,21 +122,13 @@ const UserDetails = (props) => {
                     Company Name
                   </Typography>
                   <TextField
-                    name="company_name"
-                    // label="Username"
-                    value={companyData.company_name}
+                    name="employer_name"
+                    value={employerData?.employer_name}
                     size="small"
                     placeholder="Company name"
                     required
                     fullWidth
                     onChange={handleDataUpdate}
-                  // error={userDataError?.user_name}
-                  // InputProps={{
-                  //     endAdornment:
-                  //         <Tooltip title={usernameValidationMsg} placement="bottom" arrow>
-                  //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
-                  //         </Tooltip>
-                  // }}
                   />
                 </div>
 
@@ -201,20 +144,14 @@ const UserDetails = (props) => {
                     MIS Employer ID
                   </Typography>
                   <TextField
-                    name="mis_employer_id"
-                    value={companyData.mis_employer_id}
+                    name="msi_employer_id"
+                    type="number"
+                    value={employerData?.msi_employer_id}
                     size="small"
                     placeholder="Enter ID"
                     required
                     fullWidth
                     onChange={handleDataUpdate}
-                  // error={userDataError?.email}
-                  // InputProps={{
-                  //     endAdornment:
-                  //         <Tooltip title={emailValidationMsg} placement="bottom" arrow>
-                  //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
-                  //         </Tooltip>
-                  // }}
                   />
                 </div>
               </Box>
@@ -234,18 +171,11 @@ const UserDetails = (props) => {
                   <TextField
                     name="business_department"
                     placeholder="Business Department"
-                    value={companyData.business_department}
+                    value={employerData?.business_department}
                     size="small"
                     required
                     fullWidth
                     onChange={handleDataUpdate}
-                  // error={userDataError?.password}
-                  // InputProps={{
-                  //     endAdornment:
-                  //         <Tooltip title={passwordValidation} placement="bottom" arrow>
-                  //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
-                  //         </Tooltip>
-                  // }}
                   />
                 </div>
 
@@ -263,12 +193,11 @@ const UserDetails = (props) => {
                   <TextField
                     name="business_location"
                     placeholder="Business Location"
-                    value={companyData.business_location}
+                    value={employerData?.business_location}
                     size="small"
                     required
                     fullWidth
                     onChange={handleDataUpdate}
-                  // error={userDataError?.confrimpassword}
                   />
                 </div>
 
@@ -285,19 +214,13 @@ const UserDetails = (props) => {
                   </Typography>
                   <TextField
                     name="branch_code"
+                    type="number"
                     placeholder="Branch Code"
-                    value={companyData.branch_code}
+                    value={employerData?.branch_code}
                     size="small"
                     required
                     fullWidth
                     onChange={handleDataUpdate}
-                  // error={userDataError?.confrimpassword}
-                  // InputProps={{
-                  //     endAdornment:
-                  //         <Tooltip title="Password must be same" placement="bottom" arrow>
-                  //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
-                  //         </Tooltip>
-                  // }}
                   />
                 </div>
               </Box>
@@ -314,21 +237,13 @@ const UserDetails = (props) => {
                     Address 1
                   </Typography>
                   <TextField
-                    name="address1"
-                    // label="Username"
-                    value={companyData.address1}
+                    name="address_1"
+                    value={employerData?.address_1}
                     size="small"
                     placeholder="Address"
                     required
                     fullWidth
                     onChange={handleDataUpdate}
-                  // error={userDataError?.user_name}
-                  // InputProps={{
-                  //     endAdornment:
-                  //         <Tooltip title={usernameValidationMsg} placement="bottom" arrow>
-                  //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
-                  //         </Tooltip>
-                  // }}
                   />
                 </div>
 
@@ -344,20 +259,13 @@ const UserDetails = (props) => {
                     Address 2
                   </Typography>
                   <TextField
-                    name="address2"
-                    value={companyData.address2}
+                    name="address_2"
+                    value={employerData?.address_2}
                     size="small"
                     placeholder="Address"
                     required
                     fullWidth
                     onChange={handleDataUpdate}
-                  // error={userDataError?.email}
-                  // InputProps={{
-                  //     endAdornment:
-                  //         <Tooltip title={emailValidationMsg} placement="bottom" arrow>
-                  //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
-                  //         </Tooltip>
-                  // }}
                   />
                 </div>
               </Box>
@@ -377,18 +285,11 @@ const UserDetails = (props) => {
                   <TextField
                     name="city"
                     placeholder="City"
-                    value={companyData.city}
+                    value={employerData?.city}
                     size="small"
                     required
                     fullWidth
                     onChange={handleDataUpdate}
-                  // error={userDataError?.password}
-                  // InputProps={{
-                  //     endAdornment:
-                  //         <Tooltip title={passwordValidation} placement="bottom" arrow>
-                  //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
-                  //         </Tooltip>
-                  // }}
                   />
                 </div>
 
@@ -406,12 +307,11 @@ const UserDetails = (props) => {
                   <TextField
                     name="country"
                     placeholder="Country"
-                    value={companyData.country}
+                    value={employerData?.country}
                     size="small"
                     required
                     fullWidth
                     onChange={handleDataUpdate}
-                  // error={userDataError?.confrimpassword}
                   />
                 </div>
 
@@ -429,144 +329,15 @@ const UserDetails = (props) => {
                   <TextField
                     name="postal_code"
                     placeholder="Postal Code"
-                    value={companyData.postal_code}
+                    type="number"
+                    value={employerData?.postal_code}
                     size="small"
                     required
                     fullWidth
                     onChange={handleDataUpdate}
-                  // error={userDataError?.confrimpassword}
-                  // InputProps={{
-                  //     endAdornment:
-                  //         <Tooltip title="Password must be same" placement="bottom" arrow>
-                  //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
-                  //         </Tooltip>
-                  // }}
                   />
                 </div>
               </Box>
-
-              {/* <Box className="m-12 flex flex-col justify-between gap-12 sm:flex-row">
-                            <div className='w-1/2'>
-                                <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>Employer<sup>*</sup></Typography>
-                                <Autocomplete
-                                    disableClearable
-                                    fullWidth
-                                    size="small"
-                                    options={[{ id: "1", name: "Jenis Savaliya" }, { id: "2", name: "Mohan Sharma" }]}
-                                    getOptionLabel={(option) => option.name}
-                                    renderInput={(params) => <TextField {...params} placeholder="Select employer"
-                                        value={userData?.employer_id}
-                                        name="employer_id" />}
-                                    onChange={(e, value) => handleUpdate({ target: { name: "employer_id", value: value.id } })}
-                                    sx={{
-                                        '.MuiAutocomplete-clearIndicator': {
-                                            color: "#5B718F"
-                                        }
-                                    }}
-                                    PaperComponent={({ children }) => (
-                                        <Paper style={{ borderRadius: "4px" }}>{children}</Paper>
-                                    )}
-                                />
-                            </div>
-
-                            <div className='w-1/2'>
-                                <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>Mobile</Typography>
-                                <TextField
-                                    name="mobile"
-                                    value={userData?.mobile}
-                                    size="small"
-                                    placeholder='Enter mobile number'
-                                    required
-                                    fullWidth
-                                    onChange={handleUpdate}
-                                    error={userDataError?.mobile}
-
-                                // InputProps={{
-                                //     endAdornment:
-                                //         <Tooltip title={mobileValidationMsg} placement="bottom" arrow>
-                                //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
-                                //         </Tooltip>
-                                // }}
-                                />
-                            </div>
-
-                        </Box> */}
-
-              {/* <Box className="m-12 flex flex-col justify-between gap-12 sm:flex-row">
-                            <div className='w-1/2'>
-                                <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>National Insurance Number</Typography>
-
-                                <TextField
-                                    name="national_ins_no"
-                                    placeholder="Enter national insurance number"
-                                    value={userData?.national_ins_no}
-                                    size="small"
-                                    type="text"
-                                    fullWidth
-                                    onChange={handleUpdate}
-                                // InputProps={{
-                                //     endAdornment:
-                                //         <Tooltip title={passwordValidation} placement="bottom" arrow>
-                                //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
-                                //         </Tooltip>
-                                // }}
-                                />
-                            </div>
-
-                            <div className='w-1/2'>
-                                <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>Funding Body<sup>*</sup></Typography>
-                                <TextField
-                                name="funding_body"
-                                value={userData?.funding_body}
-                                size="small"
-                                placeholder='Enter funding details'
-                                fullWidth
-                                onChange={handleUpdate}
-                                error={userDataError?.funding_body}
-                            />
-                                <Autocomplete
-                                    disableClearable
-                                    fullWidth
-                                    size="small"
-                                    value={userData?.funding_body}
-                                    options={["Bursary",
-                                        "Commercial ",
-                                        "Community Learning",
-                                        "EFA",
-                                        "Employer",
-                                        "ESF",
-                                        "ESF",
-                                        "ESFA",
-                                        "Fee Waiver",
-                                        "FWDF",
-                                        "ITA",
-                                        "Levy",
-                                        "MA Fully Funded",
-                                        "MA-Employer",
-                                        "Non-Levy",
-                                        "Other",
-                                        "SAAS",
-                                        "SAAS-Employer",
-                                        "SAAS-Self",
-                                        "SDS",
-                                        "Self",
-                                        "SFA",
-                                        "Student Loan"
-                                    ].map((option) => option)}
-                                    renderInput={(params) => <TextField {...params} placeholder="Select funding body" name="funding_body" error={true || userDataError?.funding_body} />}
-                                    onChange={(e, value) => handleUpdate({ target: { name: "funding_body", value: value } })}
-                                    sx={{
-                                        '.MuiAutocomplete-clearIndicator': {
-                                            color: "#5B718F"
-                                        }
-                                    }}
-                                    PaperComponent={({ children }) => (
-                                        <Paper style={{ borderRadius: "4px" }}>{children}</Paper>
-                                    )}
-                                />
-                            </div>
-
-                        </Box> */}
             </Box>
 
             <Box>
@@ -587,21 +358,14 @@ const UserDetails = (props) => {
                     A44 - Employer Identifier / EDRS Number
                   </Typography>
                   <TextField
-                    name="employer_id"
-                    // label="Username"
-                    value={detailsData.employer_id}
+                    name="edrs_number"
+                    type="number"
+                    value={employerData?.edrs_number}
                     size="small"
                     placeholder="ID"
                     required
                     fullWidth
-                    onChange={handleDetailsUpdate}
-                  // error={userDataError?.user_name}
-                  // InputProps={{
-                  //     endAdornment:
-                  //         <Tooltip title={usernameValidationMsg} placement="bottom" arrow>
-                  //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
-                  //         </Tooltip>
-                  // }}
+                    onChange={handleDataUpdate}
                   />
                 </div>
 
@@ -618,25 +382,31 @@ const UserDetails = (props) => {
                   </Typography>
                   <Select
                     name="business_category"
-                    value={detailsData.business_category}
+                    value={employerData?.business_category}
                     size="small"
                     required
                     fullWidth
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
                     label="Category"
-                    onChange={handleDetailsUpdate}
-                  // error={userDataError?.email}
-                  // InputProps={{
-                  //     endAdornment:
-                  //         <Tooltip title={emailValidationMsg} placement="bottom" arrow>
-                  //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
-                  //         </Tooltip>
-                  // }}
+                    onChange={handleDataUpdate}
                   >
-                    <MenuItem value={10}>Ten</MenuItem>
-                    <MenuItem value={20}>Twenty</MenuItem>
-                    <MenuItem value={30}>Thirty</MenuItem>
+                    <MenuItem value={"Media and creative services"}>Media and creative services</MenuItem>
+                    <MenuItem value={"Mining, energy and utilities"}>Mining, energy and utilities</MenuItem>
+                    <MenuItem value={"Personal services"}>Personal services</MenuItem>
+                    <MenuItem value={"Professional and business services"}>Professional and business services</MenuItem>
+                    <MenuItem value={"Retail, hire and repair"}>Retail, hire and repair</MenuItem>
+                    <MenuItem value={"Transport and distribution"}>Transport and distribution</MenuItem>
+                    <MenuItem value={"Wholesale"}>Wholesale</MenuItem>
+                    <MenuItem value={"Agriculture, forestry and fishing"}>Agriculture, forestry and fishing</MenuItem>
+                    <MenuItem value={"Arts, sports and recreation"}>Arts, sports and recreation</MenuItem>
+                    <MenuItem value={"Catering and accommodation"}>Catering and accommodation</MenuItem>
+                    <MenuItem value={"Construction"}>Construction</MenuItem>
+                    <MenuItem value={"Education"}>Education</MenuItem>
+                    <MenuItem value={"Health and social care services"}>Health and social care services</MenuItem>
+                    <MenuItem value={"IT and telecommunications servicesManufacturing"}>IT and telecommunications servicesManufacturing</MenuItem>
+                    <MenuItem value={"Manufacturing"}>Manufacturing</MenuItem>
+                    <MenuItem value={"Animal Care"}>Animal Care</MenuItem>
                   </Select>
                 </div>
 
@@ -652,20 +422,14 @@ const UserDetails = (props) => {
                     # of Employee
                   </Typography>
                   <TextField
-                    name="Employee_no"
-                    value={detailsData.Employee_no}
+                    name="number"
+                    type="number"
+                    value={employerData?.number}
                     size="small"
                     placeholder="number"
                     required
                     fullWidth
-                    onChange={handleDetailsUpdate}
-                  // error={userDataError?.email}
-                  // InputProps={{
-                  //     endAdornment:
-                  //         <Tooltip title={emailValidationMsg} placement="bottom" arrow>
-                  //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
-                  //         </Tooltip>
-                  // }}
+                    onChange={handleDataUpdate}
                   />
                 </div>
               </Box>
@@ -684,20 +448,14 @@ const UserDetails = (props) => {
                   </Typography>
 
                   <TextField
-                    name="external_code"
+                    name="external_data_code"
                     placeholder="Code"
-                    value={detailsData.external_code}
+                    type="number"
+                    value={employerData?.external_data_code}
                     size="small"
                     required
                     fullWidth
-                    onChange={handleDetailsUpdate}
-                  // error={userDataError?.password}
-                  // InputProps={{
-                  //     endAdornment:
-                  //         <Tooltip title={passwordValidation} placement="bottom" arrow>
-                  //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
-                  //         </Tooltip>
-                  // }}
+                    onChange={handleDataUpdate}
                   />
                 </div>
 
@@ -714,13 +472,13 @@ const UserDetails = (props) => {
                   </Typography>
                   <TextField
                     name="telephone"
+                    type="number"
                     placeholder="Phone Number"
-                    value={detailsData.telephone}
+                    value={employerData?.telephone}
                     size="small"
                     required
                     fullWidth
-                    onChange={handleDetailsUpdate}
-                  // error={userDataError?.confrimpassword}
+                    onChange={handleDataUpdate}
                   />
                 </div>
 
@@ -738,18 +496,11 @@ const UserDetails = (props) => {
                   <TextField
                     name="website"
                     placeholder="Link"
-                    value={detailsData.website}
+                    value={employerData?.website}
                     size="small"
                     required
                     fullWidth
-                    onChange={handleDetailsUpdate}
-                  // error={userDataError?.confrimpassword}
-                  // InputProps={{
-                  //     endAdornment:
-                  //         <Tooltip title="Password must be same" placement="bottom" arrow>
-                  //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
-                  //         </Tooltip>
-                  // }}
+                    onChange={handleDataUpdate}
                   />
                 </div>
               </Box>
@@ -767,21 +518,14 @@ const UserDetails = (props) => {
                     Key Contact
                   </Typography>
                   <TextField
-                    name="contact"
-                    // label="Username"
-                    value={detailsData.contact}
+                    name="key_contact"
+                    value={employerData?.key_contact}
                     size="small"
                     placeholder="Contact"
                     required
+                    type="number"
                     fullWidth
-                    onChange={handleDetailsUpdate}
-                  // error={userDataError?.user_name}
-                  // InputProps={{
-                  //     endAdornment:
-                  //         <Tooltip title={usernameValidationMsg} placement="bottom" arrow>
-                  //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
-                  //         </Tooltip>
-                  // }}
+                    onChange={handleDataUpdate}
                   />
                 </div>
 
@@ -798,145 +542,16 @@ const UserDetails = (props) => {
                   </Typography>
                   <TextField
                     name="email"
-                    value={detailsData.email}
+                    value={employerData?.email}
                     size="small"
+                    type="email"
                     placeholder="Email"
                     required
                     fullWidth
-                    onChange={handleDetailsUpdate}
-                  // error={userDataError?.email}
-                  // InputProps={{
-                  //     endAdornment:
-                  //         <Tooltip title={emailValidationMsg} placement="bottom" arrow>
-                  //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
-                  //         </Tooltip>
-                  // }}
+                    onChange={handleDataUpdate}
                   />
                 </div>
               </Box>
-
-              {/* <Box className="m-12 flex flex-col justify-between gap-12 sm:flex-row">
-                            <div className='w-1/2'>
-                                <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>Employer<sup>*</sup></Typography>
-                                <Autocomplete
-                                    disableClearable
-                                    fullWidth
-                                    size="small"
-                                    options={[{ id: "1", name: "Jenis Savaliya" }, { id: "2", name: "Mohan Sharma" }]}
-                                    getOptionLabel={(option) => option.name}
-                                    renderInput={(params) => <TextField {...params} placeholder="Select employer"
-                                        value={userData?.employer_id}
-                                        name="employer_id" />}
-                                    onChange={(e, value) => handleUpdate({ target: { name: "employer_id", value: value.id } })}
-                                    sx={{
-                                        '.MuiAutocomplete-clearIndicator': {
-                                            color: "#5B718F"
-                                        }
-                                    }}
-                                    PaperComponent={({ children }) => (
-                                        <Paper style={{ borderRadius: "4px" }}>{children}</Paper>
-                                    )}
-                                />
-                            </div>
-
-                            <div className='w-1/2'>
-                                <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>Mobile</Typography>
-                                <TextField
-                                    name="mobile"
-                                    value={userData?.mobile}
-                                    size="small"
-                                    placeholder='Enter mobile number'
-                                    required
-                                    fullWidth
-                                    onChange={handleUpdate}
-                                    error={userDataError?.mobile}
-
-                                // InputProps={{
-                                //     endAdornment:
-                                //         <Tooltip title={mobileValidationMsg} placement="bottom" arrow>
-                                //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
-                                //         </Tooltip>
-                                // }}
-                                />
-                            </div>
-
-                        </Box> */}
-
-              {/* <Box className="m-12 flex flex-col justify-between gap-12 sm:flex-row">
-                            <div className='w-1/2'>
-                                <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>National Insurance Number</Typography>
-
-                                <TextField
-                                    name="national_ins_no"
-                                    placeholder="Enter national insurance number"
-                                    value={userData?.national_ins_no}
-                                    size="small"
-                                    type="text"
-                                    fullWidth
-                                    onChange={handleUpdate}
-                                // InputProps={{
-                                //     endAdornment:
-                                //         <Tooltip title={passwordValidation} placement="bottom" arrow>
-                                //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
-                                //         </Tooltip>
-                                // }}
-                                />
-                            </div>
-
-                            <div className='w-1/2'>
-                                <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>Funding Body<sup>*</sup></Typography>
-                                <TextField
-                                name="funding_body"
-                                value={userData?.funding_body}
-                                size="small"
-                                placeholder='Enter funding details'
-                                fullWidth
-                                onChange={handleUpdate}
-                                error={userDataError?.funding_body}
-                            />
-                                <Autocomplete
-                                    disableClearable
-                                    fullWidth
-                                    size="small"
-                                    value={userData?.funding_body}
-                                    options={["Bursary",
-                                        "Commercial ",
-                                        "Community Learning",
-                                        "EFA",
-                                        "Employer",
-                                        "ESF",
-                                        "ESF",
-                                        "ESFA",
-                                        "Fee Waiver",
-                                        "FWDF",
-                                        "ITA",
-                                        "Levy",
-                                        "MA Fully Funded",
-                                        "MA-Employer",
-                                        "Non-Levy",
-                                        "Other",
-                                        "SAAS",
-                                        "SAAS-Employer",
-                                        "SAAS-Self",
-                                        "SDS",
-                                        "Self",
-                                        "SFA",
-                                        "Student Loan"
-                                    ].map((option) => option)}
-                                    renderInput={(params) => <TextField {...params} placeholder="Select funding body" name="funding_body" error={true || userDataError?.funding_body} />}
-                                    onChange={(e, value) => handleUpdate({ target: { name: "funding_body", value: value } })}
-                                    sx={{
-                                        '.MuiAutocomplete-clearIndicator': {
-                                            color: "#5B718F"
-                                        }
-                                    }}
-                                    PaperComponent={({ children }) => (
-                                        <Paper style={{ borderRadius: "4px" }}>{children}</Paper>
-                                    )}
-                                />
-                            </div>
-
-                        </Box> */}
             </Box>
 
             <Box>
@@ -958,22 +573,14 @@ const UserDetails = (props) => {
                   </Typography>
                   <TextField
                     name="business_description"
-                    // label="Business Description"
-                    value={descriptionData.business_description}
+                    value={employerData?.business_description}
                     size="small"
                     placeholder="Business Description"
                     fullWidth
                     multiline
                     rows={8}
                     id="outlined-multiline-static"
-                    onChange={handleDescriptionUpdate}
-                  // error={userDataError?.user_name}
-                  // InputProps={{
-                  //     endAdornment:
-                  //         <Tooltip title={usernameValidationMsg} placement="bottom" arrow>
-                  //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
-                  //         </Tooltip>
-                  // }}
+                    onChange={handleDataUpdate}
                   />
                 </div>
 
@@ -990,7 +597,7 @@ const UserDetails = (props) => {
                   </Typography>
                   <TextField
                     name="comments"
-                    value={descriptionData.comments}
+                    value={employerData?.comments}
                     size="small"
                     placeholder="Comments"
                     required
@@ -998,14 +605,7 @@ const UserDetails = (props) => {
                     multiline
                     rows={8}
                     id="outlined-multiline-static"
-                    onChange={handleDescriptionUpdate}
-                  // error={userDataError?.email}
-                  // InputProps={{
-                  //     endAdornment:
-                  //         <Tooltip title={emailValidationMsg} placement="bottom" arrow>
-                  //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
-                  //         </Tooltip>
-                  // }}
+                    onChange={handleDataUpdate}
                   />
                 </div>
               </Box>
@@ -1143,12 +743,7 @@ const UserDetails = (props) => {
                     onClick={handleClose}
                     style={{ width: "10rem", marginRight: "2rem" }}
                   />
-                  <SecondaryButton
-                    name={updateData ? "Update" : "Save"}
-                    style={{ width: "10rem" }}
-                    disable={!createUser}
-                  />
-                  {/* <SecondaryButton name={updateData ? "Update" : "Save"} style={{ width: "10rem" }} onClick={updateData ? updateUserHandler : createUserHandler} /> */}
+                  <SecondaryButton name={"Update"} disable={!createUser} style={{ width: "10rem" }} onClick={updateUserHandler} />
                 </>
               )}
             </Box>
@@ -1159,4 +754,4 @@ const UserDetails = (props) => {
   );
 };
 
-export default UserDetails;
+export default EmployerDetails;

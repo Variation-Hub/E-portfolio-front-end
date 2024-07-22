@@ -25,8 +25,12 @@ import {
 } from "src/app/contanst/regValidation";
 import HelpOutlinedIcon from "@mui/icons-material/HelpOutlined";
 import Style from "./style.module.css";
+import { useSelector } from "react-redux";
+import { selectEmployer } from "app/store/employer";
 
 const UserDetails = (props) => {
+  const { data } = useSelector(selectEmployer);
+
   const {
     handleClose,
     handleUpdate,
@@ -37,7 +41,7 @@ const UserDetails = (props) => {
     dataUpdatingLoadding,
     userDataError,
   } = props;
-  console.log("sddfadaf", userDataError);
+
   return (
     <div className="h-full flex flex-col">
       <Box>
@@ -59,12 +63,12 @@ const UserDetails = (props) => {
               fullWidth
               onChange={handleUpdate}
               error={userDataError?.first_name}
-              // InputProps={{
-              //     endAdornment:
-              //         <Tooltip title={nameValidationMsg} placement="bottom" arrow>
-              //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
-              //         </Tooltip>
-              // }}
+            // InputProps={{
+            //     endAdornment:
+            //         <Tooltip title={nameValidationMsg} placement="bottom" arrow>
+            //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
+            //         </Tooltip>
+            // }}
             />
           </div>
           <div className="w-1/2">
@@ -83,12 +87,12 @@ const UserDetails = (props) => {
               fullWidth
               onChange={handleUpdate}
               error={userDataError?.last_name}
-              // InputProps={{
-              //     endAdornment:
-              //         <Tooltip title={nameValidationMsg} placement="bottom" arrow>
-              //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
-              //         </Tooltip>
-              // }}
+            // InputProps={{
+            //     endAdornment:
+            //         <Tooltip title={nameValidationMsg} placement="bottom" arrow>
+            //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
+            //         </Tooltip>
+            // }}
             />
           </div>
         </Box>
@@ -147,12 +151,12 @@ const UserDetails = (props) => {
               fullWidth
               onChange={handleUpdate}
               error={userDataError?.email}
-              // InputProps={{
-              //     endAdornment:
-              //         <Tooltip title={emailValidationMsg} placement="bottom" arrow>
-              //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
-              //         </Tooltip>
-              // }}
+            // InputProps={{
+            //     endAdornment:
+            //         <Tooltip title={emailValidationMsg} placement="bottom" arrow>
+            //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
+            //         </Tooltip>
+            // }}
             />
           </div>
         </Box>
@@ -209,12 +213,12 @@ const UserDetails = (props) => {
               fullWidth
               onChange={handleUpdate}
               error={userDataError?.confrimpassword}
-              // InputProps={{
-              //     endAdornment:
-              //         <Tooltip title="Password must be same" placement="bottom" arrow>
-              //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
-              //         </Tooltip>
-              // }}
+            // InputProps={{
+            //     endAdornment:
+            //         <Tooltip title="Password must be same" placement="bottom" arrow>
+            //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
+            //         </Tooltip>
+            // }}
             />
           </div>
         </Box>
@@ -231,11 +235,8 @@ const UserDetails = (props) => {
               disableClearable
               fullWidth
               size="small"
-              options={[
-                { id: "1", name: "Jenis Savaliya" },
-                { id: "2", name: "Mohan Sharma" },
-              ]}
-              getOptionLabel={(option) => option.name}
+              options={data}
+              getOptionLabel={(option: any) => option.employer_name}
               renderInput={(params) => (
                 <TextField
                   {...params}
@@ -244,9 +245,9 @@ const UserDetails = (props) => {
                   name="employer_id"
                 />
               )}
-              onChange={(e, value) =>
+              onChange={(e, value: any) =>
                 handleUpdate({
-                  target: { name: "employer_id", value: value.id },
+                  target: { name: "employer_id", value: value.employer_id },
                 })
               }
               sx={{
@@ -277,12 +278,12 @@ const UserDetails = (props) => {
               onChange={handleUpdate}
               error={userDataError?.mobile}
 
-              // InputProps={{
-              //     endAdornment:
-              //         <Tooltip title={mobileValidationMsg} placement="bottom" arrow>
-              //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
-              //         </Tooltip>
-              // }}
+            // InputProps={{
+            //     endAdornment:
+            //         <Tooltip title={mobileValidationMsg} placement="bottom" arrow>
+            //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
+            //         </Tooltip>
+            // }}
             />
           </div>
         </Box>
@@ -304,12 +305,12 @@ const UserDetails = (props) => {
               type="text"
               fullWidth
               onChange={handleUpdate}
-              // InputProps={{
-              //     endAdornment:
-              //         <Tooltip title={passwordValidation} placement="bottom" arrow>
-              //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
-              //         </Tooltip>
-              // }}
+            // InputProps={{
+            //     endAdornment:
+            //         <Tooltip title={passwordValidation} placement="bottom" arrow>
+            //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
+            //         </Tooltip>
+            // }}
             />
           </div>
 
