@@ -60,7 +60,7 @@ export const getAssignmentAPI = (id) => async (dispatch) => {
 
     } catch (err) {
         dispatch(slice.setLoader());
-        dispatch(slice.setAssignmentdata([]))
+        // dispatch(slice.setAssignmentdata([]))
         return false
     };
 
@@ -74,7 +74,7 @@ export const createAssignmentAPI = (data) => async (dispatch, getStore) => {
         dispatch(showMessage({ message: response.data.message, variant: "success" }))
         dispatch(slice.setSingleData(response.data.data));
         if (response.data.status) {
-            dispatch(getAssignmentAPI(getStore().user.data.id))
+            dispatch(getAssignmentAPI(getStore().user.data.user_id))
         }
         dispatch(slice.setUpdatingLoader());
         return true;
@@ -94,7 +94,7 @@ export const updateAssignmentAPI = (id, data) => async (dispatch, getStore) => {
         const response = await axios.patch(`${URL_BASE_LINK}/assignment/update/${id}`, payload)
         dispatch(showMessage({ message: response.data.message, variant: "success" }))
         if (response.data.status) {
-            dispatch(getAssignmentAPI(getStore().user.data.id))
+            dispatch(getAssignmentAPI(getStore().user.data.user_id))
         }
         dispatch(slice.setUpdatingLoader());
         return true;
@@ -113,7 +113,7 @@ export const deleteAssignmentHandler = (id) => async (dispatch, getStore) => {
         console.log(response);
         dispatch(showMessage({ message: response.data.message, variant: "success" }))
         if (response.data.status) {
-            dispatch(getAssignmentAPI(getStore().user.data.id))
+            dispatch(getAssignmentAPI(getStore().user.data.user_id))
         }
         dispatch(slice.setUpdatingLoader());
         return true;

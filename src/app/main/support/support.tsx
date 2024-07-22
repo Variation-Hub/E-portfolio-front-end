@@ -422,7 +422,8 @@ const Support = (props) => {
             >
               <Pagination
                 count={meta_data?.pages}
-                page={meta_data?.page} variant="outlined" shape="rounded"
+                page={meta_data?.page}
+                variant="outlined" shape="rounded"
                 siblingCount={1}
                 boundaryCount={1}
                 onChange={handleChangePage}

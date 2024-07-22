@@ -17,6 +17,7 @@ import { emailReg, mobileReg, nameReg, passwordReg, usernameReg } from "src/app/
 import { createLearnerAPI, fetchLearnerAPI, getRoleAPI, selectLearnerManagement, updateLearnerAPI } from "app/store/learnerManagement";
 import LearnerManagementTable from "src/app/component/Table/LearnerManagementTable";
 import { fetchCourseAPI } from "app/store/courseManagement";
+import { getEmployerAPI } from "app/store/employer";
 
 const Index = () => {
 
@@ -144,6 +145,7 @@ const Index = () => {
     dispatch(getRoleAPI("EQA"));
     dispatch(getRoleAPI("Employer"));
     dispatch(getRoleAPI("LIQA"));
+    dispatch(getEmployerAPI());
   }, []);
 
   const validation = () => {

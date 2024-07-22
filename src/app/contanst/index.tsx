@@ -293,6 +293,17 @@ export const learnerManagementTableColumn = [
   { id: "actions", label: "Actions", minWidth: 170, align: "center" },
 ];
 
+export const employerManagementTableColumn = [
+  { id: "employer_name", label: "Employer Name", minWidth: 170, align: "left" },
+  { id: "business_department", label: "Bussiness Department", minWidth: 170, align: "left" },
+  { id: "email", label: "Email", minWidth: 170, align: "left" },
+  { id: "telephone", label: "Mobile", minWidth: 170, align: "left" },
+  { id: "city", label: "City", minWidth: 100, align: "left" },
+  { id: "country", label: "Country", minWidth: 100, align: "left" },
+  { id: "postal_code", label: "Postal Code", minWidth: 100, align: "left" },
+  { id: "actions", label: "Actions", minWidth: 170, align: "center" },
+];
+
 export const learnerTableColumn = [
   { id: "first_name", label: "Name", minWidth: 170, align: "left" },
   { id: "user_name", label: "Username", minWidth: 170, align: "left" },

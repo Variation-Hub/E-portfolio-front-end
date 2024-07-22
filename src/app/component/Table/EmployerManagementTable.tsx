@@ -37,28 +37,57 @@ import {
 } from "app/store/courseManagement";
 import { Stack } from "@mui/system";
 import { getRandomColor } from "src/utils/randomColor";
+import { deleteEmployerHandler, getEmployerAPI } from "app/store/employer";
+import EmployerDetails from "src/app/main/admin/employerManagement/userDetails";
 
-export default function UserManagementTable(props) {
+export default function EmployerManagementTable(props) {
   const {
     columns,
     rows,
     handleOpen = () => { },
-    setUserData = () => { },
-    setUpdateData = () => { },
     meta_data,
     dataUpdatingLoadding,
-    search_keyword = "",
-    search_role = "",
   } = props;
 
   const [deleteId, setDeleteId] = useState("");
-  const [openMenuDialog, setOpenMenuDialog] = useState("");
-  const [courseDialog, setCourseDialog] = useState(false);
-  const [couseId, setCourseId] = useState("");
+  const [openMenuDialog, setOpenMenuDialog] = useState();
+  const [editEmployer, setEditEmployer] = useState(false);
   const [loading, setLoading] = useState(false);
   const dispatch: any = useDispatch();
 
   const { data } = useSelector(selectCourseManagement);
+
+
+  const [employerData, setEmployerData] = useState({
+    employer_name: "",
+    msi_employer_id: "",
+    business_department: "",
+    business_location: "",
+    branch_code: "",
+    address_1: "",
+    address_2: "",
+    city: "",
+    country: "",
+    postal_code: "",
+    edrs_number: "",
+    business_category: "",
+    number: "",
+    external_data_code: "",
+    telephone: "",
+    website: "",
+    key_contact: "",
+    email: "",
+    business_description: "",
+    comments: "",
+  });
+
+  const handleDataUpdate = (e) => {
+    const { name, value } = e.target;
+    setEmployerData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -68,73 +97,42 @@ export default function UserManagementTable(props) {
 
   const handleClose = () => {
     setAnchorEl(null);
+    setEditEmployer(false);
   };
 
   const handleChangePage = (event: unknown, newPage: number) => {
     dispatch(
-      fetchUserAPI({ page: newPage, page_size: userTableMetaData.page_size })
+      getEmployerAPI({ page: newPage, page_size: userTableMetaData.page_size })
     );
   };
 
   const openMenu = (e, id) => {
     handleClick(e);
     setOpenMenuDialog(id);
+
   };
 
   const editIcon = () => {
-    setUpdateData(openMenuDialog);
-    const {
-      first_name,
-      last_name,
-      user_name,
-      email,
-      sso_id,
-      mobile,
-      phone,
-      roles,
-      time_zone,
-    } = rows.filter((item) => item.user_id === openMenuDialog)[0];
-    setUserData({
-      first_name,
-      last_name,
-      user_name,
-      email,
-      sso_id,
-      mobile,
-      phone,
-      role: roles,
-      time_zone,
-    });
+    setEmployerData(openMenuDialog);
     handleOpen();
   };
 
   const deleteIcon = (id) => {
-    setDeleteId(id);
+    setDeleteId(id?.employer_id);
   };
 
-  const clsoeCourseDialog = () => {
-    setCourseDialog(false);
+  const closeEditEmployer = () => {
+    setEditEmployer(false);
   };
 
   const deleteConfromation = async () => {
     await dispatch(
-      deleteUserHandler(deleteId, meta_data, search_keyword, search_role)
+      deleteEmployerHandler(deleteId)
     );
     setDeleteId("");
   };
 
-  const courseAllocation = async () => {
-    setLoading(true);
-    const response = await dispatch(
-      courseAllocationAPI({ course_id: couseId, user_id: openMenuDialog })
-    );
-    if (response) {
-      clsoeCourseDialog();
-      setOpenMenuDialog("");
-      setCourseId("");
-    }
-    setLoading(false);
-  };
+
   return (
     <>
       <div style={{ width: "100%", overflow: "hidden", marginTop: "0.5rem" }}>
@@ -172,24 +170,10 @@ export default function UserManagementTable(props) {
                             align={column.align}
                             sx={{ borderBottom: "2px solid #F8F8F8" }}
                           >
-                            {/* <IconButton
-                              size="small"
-                              sx={{ color: "#5B718F", marginRight: "4px" }}
-                              onClick={() => editIcon(row.user_id)}
-                            >
-                              <ModeEditOutlineOutlinedIcon fontSize="small" />
-                            </IconButton>
-                            <IconButton
-                              size="small"
-                              sx={{ color: "maroon", marginLeft: "4px" }}
-                              onClick={() => deleteIcon(row.user_id)}
-                            >
-                              <DeleteOutlineOutlinedIcon fontSize="small" />
-                            </IconButton> */}
                             <IconButton
                               size="small"
                               sx={{ color: "#5B718F", marginRight: "4px" }}
-                              onClick={(e) => openMenu(e, row.user_id)}
+                              onClick={(e) => openMenu(e, row)}
                             >
                               <MoreHorizIcon fontSize="small" />
                             </IconButton>
@@ -248,13 +232,13 @@ export default function UserManagementTable(props) {
       <AlertDialog
         open={Boolean(deleteId)}
         close={() => deleteIcon("")}
-        title="Delete user?"
-        content="Deleting this user will also remove all associated data and relationships. Proceed with deletion?"
+        title="Delete employer?"
+        content="Deleting this employer will also remove all associated data and relationships. Proceed with deletion?"
         actionButton={
           dataUpdatingLoadding ? (
             <LoadingButton />
           ) : (
-            <DangerButton onClick={deleteConfromation} name="Delete user" />
+            <DangerButton onClick={deleteConfromation} name="Delete employer" />
           )
         }
         cancelButton={
@@ -278,6 +262,7 @@ export default function UserManagementTable(props) {
           onClick={() => {
             editIcon();
             handleClose();
+            setEditEmployer(true);
           }}
         >
           Edit
@@ -290,76 +275,33 @@ export default function UserManagementTable(props) {
         >
           Delete
         </MenuItem>
-        <MenuItem
+        {/* <MenuItem
           onClick={() => {
             handleClose();
-            setCourseDialog(true);
+            setEditEmployer(true);
           }}
         >
           Course Allocation
-        </MenuItem>
+        </MenuItem> */}
       </Menu>
       <Dialog
-        open={courseDialog}
-        onClose={clsoeCourseDialog}
+        open={editEmployer}
+        onClose={closeEditEmployer}
+        fullScreen
+        fullWidth
         sx={{
           ".MuiDialog-paper": {
             borderRadius: "4px",
             padding: "1rem",
-            width: "440px",
           },
         }}
       >
-        <Typography variant="h6">Course Allocation</Typography>
-        <Box className="m-12 flex flex-col justify-between gap-12 sm:flex-row">
-          <div className="w-full">
-            <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }} className={Style.name}>
-              Select Course
-            </Typography>
-
-            <Autocomplete
-              disableClearable
-              fullWidth
-              size="small"
-              options={data}
-              getOptionLabel={(option: any) => option.course_name}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  placeholder="Select Course"
-                  name="role"
-                />
-              )}
-              onChange={(e, value: any) => setCourseId(value.course_id)}
-              sx={{
-                ".MuiAutocomplete-clearIndicator": {
-                  color: "#5B718F",
-                },
-              }}
-              PaperComponent={({ children }) => (
-                <Paper style={{ borderRadius: "4px" }}>{children}</Paper>
-              )}
-            />
-          </div>
-        </Box>
-        <div className="flex justify-end mt-4">
-          {loading ? (
-            <LoadingButton style={{ width: "10rem" }} />
-          ) : (
-            <>
-              <SecondaryButtonOutlined
-                name="Cancel"
-                style={{ width: "10rem", marginRight: "2rem" }}
-                onClick={clsoeCourseDialog}
-              />
-              <SecondaryButton
-                name="Allocate"
-                style={{ width: "10rem" }}
-                onClick={courseAllocation}
-              />
-            </>
-          )}
-        </div>
+        <EmployerDetails
+          setEditEmployer={setEditEmployer}
+          employerData={employerData}
+          setEmployerData={setEmployerData}
+          handleDataUpdate={handleDataUpdate}
+        />
       </Dialog>
     </>
   );

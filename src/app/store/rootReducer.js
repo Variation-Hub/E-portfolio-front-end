@@ -17,7 +17,7 @@ import storeData from "./reloadData"
 import notification from "./notification"
 import forumData from './forum';
 import skillsScan from './skillsScan';
-
+import employer from './employer';
 const createReducer = (asyncReducers) => (state, action) => {
     const combinedReducer = combineReducers({
         fuse,
@@ -37,6 +37,8 @@ const createReducer = (asyncReducers) => (state, action) => {
         notification,
         forumData,
         skillsScan,
+        employer,
+
         ...asyncReducers,
     });
 
