@@ -58,12 +58,12 @@ const Portfolio = () => {
 
   return (
     <div>
-      {role === "Learner" &&
+      {/* {role === "Learner" && */}
         <div className="m-10 flex flex-wrap justify-evenly gap-10 cursor-pointer">
           {portfolioCard?.map((value) => (
             <PortfolioCard data={value} key={value.id} />
           ))}
-        </div>}
+        </div>
       {dataUpdatingLoadding ? (
         <FuseLoading />
       ) : (

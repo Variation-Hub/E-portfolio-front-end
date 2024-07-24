@@ -1,6 +1,7 @@
 /* eslint-disable class-methods-use-this */
 /* eslint-disable no-async-promise-executor */
 import FuseUtils from '@fuse/utils/FuseUtils';
+import { slice } from 'app/store/globalUser';
 import axios from 'axios';
 import jwtDecode from 'jwt-decode';
 import jsonData from 'src/url.json';
@@ -83,9 +84,9 @@ class JwtService extends FuseUtils.EventEmitter {
                         //   }
                         // );
                         // if (res.data.status) {
+                            // }
                         connectToSocket(decoded.user_id, dispatch);
-                        // }
-
+                        dispatch(slice.setCurrentUser(response.data.data.user))
                         if (response.data.data.password_changed) {
                             this.setSession(response.data.data.accessToken);
                             this.emit('onLogin', decoded);
