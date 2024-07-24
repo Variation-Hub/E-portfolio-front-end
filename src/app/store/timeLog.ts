@@ -16,6 +16,7 @@ const initialState = {
     },
     timeLogspendData: {},
     singleData: {},
+    calenderData: []
 };
 
 const timeLogSlice = createSlice({
@@ -39,6 +40,9 @@ const timeLogSlice = createSlice({
         },
         setSingleData(state, action) {
             state.singleData = action.payload
+        },
+        setCalenderData(state, action) {
+            state.calenderData = action.payload
         }
     }
 });
@@ -131,6 +135,27 @@ export const getTimeLogSpendData = (user_id, course_id, type) => async (dispatch
         const response = await axios.get(url);
         console.log(response.data);
         dispatch(slice.setTimelogspendData(response.data.data))
+        dispatch(slice.setLoader());
+        return true;
+
+    } catch (err) {
+        dispatch(showMessage({ message: err.response.data.message, variant: "error" }))
+        dispatch(slice.setLoader());
+        return false
+    };
+
+}
+
+// get month vise Time Log data
+export const getMonthByTimeLogData = (year, month, user_id) => async (dispatch) => {
+
+    try {
+        dispatch(slice.setLoader());
+
+        let url = `${URL_BASE_LINK}/time-log/list?user_id=${user_id}&year=${year}&month=${month}`;
+
+        const response = await axios.get(url);
+        dispatch(slice.setCalenderData(response.data.data));
         dispatch(slice.setLoader());
         return true;
 

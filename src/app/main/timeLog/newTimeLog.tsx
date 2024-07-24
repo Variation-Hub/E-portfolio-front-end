@@ -262,7 +262,7 @@ const NewTimeLog = (props) => {
                     <Box style={{ margin: "auto 1rem 1rem auto" }}>
                         <>
                             {/* <SecondaryButtonOutlined name="Cancel" onClick={handleClose} style={{ width: "10rem", marginRight: "2rem" }} /> */}
-                            <SecondaryButton name={edit === "edit" ? "Update Activity" : "Add Activity"} style={{ width: "10rem" }} disable={!isTimeLog} onClick={handleSubmit} />
+                            <SecondaryButton name={edit === "edit" ? "Update Activity" : "Add Activity"} style={{ width: "12rem" }} disable={!isTimeLog} onClick={handleSubmit} />
                         </>
                     </Box>
                 </Grid>

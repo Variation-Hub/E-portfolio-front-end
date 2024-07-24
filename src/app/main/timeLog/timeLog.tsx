@@ -11,30 +11,7 @@ import FuseLoading from '@fuse/core/FuseLoading';
 import DataNotFound from 'src/app/component/Pages/dataNotFound';
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import AlertDialog from 'src/app/component/Dialogs/AlertDialog';
-
-const dataBase = [
-  {
-    activityType: "Manual",
-    activityDescription: "Traditional face-to-face session",
-    jobTraining: "Off the Job",
-    timeTaken: "1:00",
-    date: "19/06/2024"
-  },
-  {
-    activityType: "Session",
-    activityDescription: "Traditional face-to-face session",
-    jobTraining: "On the Job",
-    timeTaken: "2:00",
-    date: "01/05/2024"
-  },
-  {
-    activityType: "Session",
-    activityDescription: "Traditional face-to-face session",
-    jobTraining: "On the Job",
-    timeTaken: "2:00",
-    date: "26/03/2024"
-  }
-]
+import CalendarComponent from './calendar';
 
 const TimeLog = (props) => {
 
@@ -133,18 +110,18 @@ const TimeLog = (props) => {
   const handleCloseDialog = () => {
     setDialogType(false);
     setTimeLogData({
-        user_id: selected ? selectedUser?.user_id : currentUser?.user_id,
-        course_id: null,
-        activity_date: '',
-        activity_type: '',
-        unit: '',
-        trainer_id: null,
-        type: '',
-        spend_time: '0:0',
-        start_time: '0:0',
-        end_time: '0:0',
-        impact_on_learner: '',
-        evidence_link: '',
+      user_id: selected ? selectedUser?.user_id : currentUser?.user_id,
+      course_id: null,
+      activity_date: '',
+      activity_type: '',
+      unit: '',
+      trainer_id: null,
+      type: '',
+      spend_time: '0:0',
+      start_time: '0:0',
+      end_time: '0:0',
+      impact_on_learner: '',
+      evidence_link: '',
     })
   };
 
@@ -154,6 +131,11 @@ const TimeLog = (props) => {
     return formattedDate;
   };
 
+  const [isCalendarView, setIsCalendarView] = useState(false);
+
+  const handleToggleView = () => {
+    setIsCalendarView(!isCalendarView);
+  };
   return (
     <Grid className="flex flex-col m-10 p-10 gap-20" sx={{ minHeight: 600 }}>
       <Grid>
@@ -245,7 +227,7 @@ const TimeLog = (props) => {
         </Grid>
       </Grid>
       <Grid className='w-full rounded-4 ' sx={{ border: "1px solid #ddd" }}>
-        <Card className='rounded-4 p-10 b-grey-200'>
+        <Card className='rounded-4 p-10 bg-grey-200'>
           <Typography className='h5 font-400'>Recent Activity:</Typography>
         </Card>
         <Grid className="m-10 px-10 pt-10 ">
@@ -262,12 +244,12 @@ const TimeLog = (props) => {
                 <TableRow>
                   <TableCell>Activity Type</TableCell>
                   <TableCell align="left">On/Off the Job Training</TableCell>
-                  <TableCell align="left">Time Taken Time Taken</TableCell>
+                  <TableCell align="left">Time Taken</TableCell>
                   <TableCell align="left">Date</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {dataBase?.map((row) => (
+                {timeLog?.data?.slice(0, 3)?.map((row) => (
                   <TableRow
                     key={row.activityType}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -278,26 +260,25 @@ const TimeLog = (props) => {
                       className='flex flex-col w-full'
                       sx={{ borderBottom: "1px solid #ddd", width: "30%" }}
                     >
-                      <TableCell className='w-full'>{row.activityType}</TableCell>
-                      <TableCell className='w-full text-sm'>{row.activityDescription}</TableCell>
+                      {row?.activity_type}
                     </TableCell>
                     <TableCell
                       align="left"
                       sx={{ borderBottom: "1px solid #ddd", width: "30%" }}
                     >
-                      {row.jobTraining}
+                      {row?.type}
                     </TableCell>
                     <TableCell
                       align="left"
                       sx={{ borderBottom: "1px solid #ddd", width: "10%" }}
                     >
-                      {row.timeTaken}
+                      {row?.spend_time}
                     </TableCell>
                     <TableCell
                       align="left"
                       sx={{ borderBottom: "1px solid #ddd", width: "10%" }}
                     >
-                      {row?.date}
+                      {formatDate(row?.activity_date)}
                     </TableCell>
                   </TableRow>
                 ))}
@@ -307,204 +288,208 @@ const TimeLog = (props) => {
         </Grid>
       </Grid>
       <Grid className='flex justify-between m-10 '>
-        <SecondaryButton name="Switch to Calendar View" />
+        <SecondaryButton name={isCalendarView ? "Switch to List View" : "Switch to Calendar View"} onClick={handleToggleView} />
         <SecondaryButton name="Add New Timelog Entry" onClick={() => handleClickOpen()} />
       </Grid>
 
-      <Grid className='flex justify-between m-10 '>
-        <TableContainer sx={{ maxHeight: 500, marginBottom: "2rem" }}>
-          {timeLog?.dataFetchLoading ? (
-            <FuseLoading />
-          ) : timeLog?.data?.length ? (
-            <Table
-              sx={{ minWidth: 650, height: "100%" }}
-              size="small"
-              aria-label="simple table"
-            >
-              <TableHead className="bg-[#F8F8F8]" sx={{ borderBottom: "3px solid #ddd" }}>
-                <TableRow>
-                  <TableCell
-                    align="left"
-                    sx={{
-                      maxWidth: "9rem",
-                      overflow: "hidden",
-                      textOverflow: "inherit",
-                      // whiteSpace: "nowrap",
-                    }}>
-                    Activity Type
-                  </TableCell>
-                  <TableCell align="left"
-                    sx={{
-                      maxWidth: "9rem",
-                      overflow: "hidden",
-                      textOverflow: "inherit",
-                      // textOverflow: "ellipsis",
-                      // whiteSpace: "nowrap",
-                    }}>
-                    Course / Unit
-                  </TableCell>
-                  <TableCell align="left"
-                    sx={{
-                      maxWidth: "9rem",
-                      overflow: "hidden",
-                      textOverflow: "inherit",
-                      // textOverflow: "ellipsis",
-                      // whiteSpace: "nowrap",
-                    }}>
-                    Trainer
-                  </TableCell>
-                  <TableCell align="left"
-                    sx={{
-                      maxWidth: "9rem",
-                      overflow: "hidden",
-                      textOverflow: "inherit",
-                      // textOverflow: "ellipsis",
-                      // whiteSpace: "nowrap",
-                    }}>
-                    Time Spen
-                  </TableCell>
-                  <TableCell align="left"
-                    sx={{
-                      maxWidth: "9rem",
-                      overflow: "hidden",
-                      textOverflow: "inherit",
-                      // textOverflow: "ellipsis",
-                      // whiteSpace: "nowrap",
-                    }}>
-                    Activity Start Time
-                  </TableCell>
-                  <TableCell align="left"
-                    sx={{
-                      maxWidth: "9rem",
-                      overflow: "hidden",
-                      textOverflow: "inherit",
-                      // textOverflow: "ellipsis",
-                      // whiteSpace: "nowrap",
-                    }}>
-                    On/Off the Job Training
-                  </TableCell>
-                  <TableCell align="left"
-                    sx={{
-                      maxWidth: "9rem",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      whiteSpace: "nowrap",
-                    }}>
-                    Comment
-                  </TableCell>
-                  <TableCell align="left" sx={{ width: "15rem" }}>
-                    Date
-                  </TableCell>
-                  <TableCell align="left" sx={{ width: "5rem" }}>
-                    Action
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {timeLog?.data?.map((row) => (
-                  <TableRow
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 }, borderBottom: "1px solid #ddd", }}
-                  >
-                    <TableCell
-                      component="th"
-                      scope="row"
-                      sx={{
-                        borderBottom: "1px solid #ddd",
-                        maxWidth: "9rem",
-                        overflow: "hidden",
-                        textOverflow: "inherit",
-                        // textOverflow: "ellipsis",
-                        // whiteSpace: "nowrap",
-                      }}
-                    >
-                      {row?.activity_type}
-                    </TableCell>
+      {isCalendarView ? (
+        <CalendarComponent />
+      ) : (
+        <Grid className='flex justify-between m-10 '>
+          <TableContainer sx={{ maxHeight: 500, marginBottom: "2rem" }}>
+            {timeLog?.dataFetchLoading ? (
+              <FuseLoading />
+            ) : timeLog?.data?.length ? (
+              <Table
+                sx={{ minWidth: 650, height: "100%" }}
+                size="small"
+                aria-label="simple table"
+              >
+                <TableHead className="bg-[#F8F8F8]" sx={{ borderBottom: "3px solid #ddd" }}>
+                  <TableRow>
                     <TableCell
                       align="left"
                       sx={{
-                        borderBottom: "1px solid #ddd",
                         maxWidth: "9rem",
                         overflow: "hidden",
                         textOverflow: "inherit",
-                        // textOverflow: "ellipsis",
                         // whiteSpace: "nowrap",
-                      }}
-                    >
-                      {row?.course_id?.course_name}
-                    </TableCell>
-                    <TableCell
-                      align="left"
-                      sx={{
-                        width: "15rem",
-                        overflow: "hidden",
-                        textOverflow: "inherit",
-                        borderBottom: "1px solid #ddd",
-                        // textOverflow: "ellipsis",
-                        // whiteSpace: "nowrap"
                       }}>
-                      {row?.trainer_id?.user_name}
+                      Activity Type
                     </TableCell>
-                    <TableCell
-                      align="left"
-                      sx={{ borderBottom: "1px solid #ddd", width: "15rem" }}
-                    >
-                      {row?.spend_time}
+                    <TableCell align="left"
+                      sx={{
+                        maxWidth: "9rem",
+                        overflow: "hidden",
+                        textOverflow: "inherit",
+                        // textOverflow: "ellipsis",
+                        // whiteSpace: "nowrap",
+                      }}>
+                      Course / Unit
                     </TableCell>
-                    <TableCell
-                      align="left"
-                      sx={{ borderBottom: "1px solid #ddd", width: "15rem" }}
-                    >
-                      {row?.start_time}
+                    <TableCell align="left"
+                      sx={{
+                        maxWidth: "9rem",
+                        overflow: "hidden",
+                        textOverflow: "inherit",
+                        // textOverflow: "ellipsis",
+                        // whiteSpace: "nowrap",
+                      }}>
+                      Trainer
                     </TableCell>
-                    <TableCell
-                      align="left"
-                      sx={{ borderBottom: "1px solid #ddd", width: "15rem" }}
-                    >
-                      {row?.type}
+                    <TableCell align="left"
+                      sx={{
+                        maxWidth: "9rem",
+                        overflow: "hidden",
+                        textOverflow: "inherit",
+                        // textOverflow: "ellipsis",
+                        // whiteSpace: "nowrap",
+                      }}>
+                      Time Spent
                     </TableCell>
-                    <TableCell
-                      align="left"
-                      sx={{ borderBottom: "1px solid #ddd", width: "15rem" }}
-                    >
-                      {row?.impact_on_learner}
+                    <TableCell align="left"
+                      sx={{
+                        maxWidth: "9rem",
+                        overflow: "hidden",
+                        textOverflow: "inherit",
+                        // textOverflow: "ellipsis",
+                        // whiteSpace: "nowrap",
+                      }}>
+                      Activity Start Time
                     </TableCell>
-                    <TableCell
-                      align="left"
-                      sx={{ borderBottom: "1px solid #ddd", width: "15rem" }}
-                    >
-                      {formatDate(row?.activity_date)}
+                    <TableCell align="left"
+                      sx={{
+                        maxWidth: "9rem",
+                        overflow: "hidden",
+                        textOverflow: "inherit",
+                        // textOverflow: "ellipsis",
+                        // whiteSpace: "nowrap",
+                      }}>
+                      On/Off the Job Training
                     </TableCell>
-                    <TableCell
-                      align="left"
-                      sx={{ borderBottom: "1px solid #ddd", width: "5rem" }}
-                    >
-                      <IconButton
-                        size="small"
-                        sx={{ color: "#5B718F", marginRight: "4px" }}
-                        onClick={(e) => handleClick(e, row)}
-                      >
-                        <MoreHorizIcon fontSize="small" />
-                      </IconButton>
+                    <TableCell align="left"
+                      sx={{
+                        maxWidth: "9rem",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}>
+                      Comment
+                    </TableCell>
+                    <TableCell align="left" sx={{ width: "15rem" }}>
+                      Date
+                    </TableCell>
+                    <TableCell align="left" sx={{ width: "5rem" }}>
+                      Action
                     </TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          ) : (
-            <div
-              className="flex flex-col justify-center items-center gap-10 "
-              style={{ height: "94%" }}
-            >
-              <DataNotFound width="25%" />
-              <Typography variant="h5">No data found</Typography>
-              <Typography variant="body2" className="text-center">
-                It is a long established fact that a reader will be <br />
-                distracted by the readable content.
-              </Typography>
-            </div>
-          )}
-        </TableContainer>
-      </Grid>
+                </TableHead>
+                <TableBody>
+                  {timeLog?.data?.map((row) => (
+                    <TableRow
+                      sx={{ "&:last-child td, &:last-child th": { border: 0 }, borderBottom: "1px solid #ddd", }}
+                    >
+                      <TableCell
+                        component="th"
+                        scope="row"
+                        sx={{
+                          borderBottom: "1px solid #ddd",
+                          maxWidth: "9rem",
+                          overflow: "hidden",
+                          textOverflow: "inherit",
+                          // textOverflow: "ellipsis",
+                          // whiteSpace: "nowrap",
+                        }}
+                      >
+                        {row?.activity_type}
+                      </TableCell>
+                      <TableCell
+                        align="left"
+                        sx={{
+                          borderBottom: "1px solid #ddd",
+                          maxWidth: "9rem",
+                          overflow: "hidden",
+                          textOverflow: "inherit",
+                          // textOverflow: "ellipsis",
+                          // whiteSpace: "nowrap",
+                        }}
+                      >
+                        {row?.course_id?.course_name}
+                      </TableCell>
+                      <TableCell
+                        align="left"
+                        sx={{
+                          width: "15rem",
+                          overflow: "hidden",
+                          textOverflow: "inherit",
+                          borderBottom: "1px solid #ddd",
+                          // textOverflow: "ellipsis",
+                          // whiteSpace: "nowrap"
+                        }}>
+                        {row?.trainer_id?.user_name}
+                      </TableCell>
+                      <TableCell
+                        align="left"
+                        sx={{ borderBottom: "1px solid #ddd", width: "15rem" }}
+                      >
+                        {row?.spend_time}
+                      </TableCell>
+                      <TableCell
+                        align="left"
+                        sx={{ borderBottom: "1px solid #ddd", width: "15rem" }}
+                      >
+                        {row?.start_time}
+                      </TableCell>
+                      <TableCell
+                        align="left"
+                        sx={{ borderBottom: "1px solid #ddd", width: "15rem" }}
+                      >
+                        {row?.type}
+                      </TableCell>
+                      <TableCell
+                        align="left"
+                        sx={{ borderBottom: "1px solid #ddd", width: "15rem" }}
+                      >
+                        {row?.impact_on_learner}
+                      </TableCell>
+                      <TableCell
+                        align="left"
+                        sx={{ borderBottom: "1px solid #ddd", width: "15rem" }}
+                      >
+                        {formatDate(row?.activity_date)}
+                      </TableCell>
+                      <TableCell
+                        align="left"
+                        sx={{ borderBottom: "1px solid #ddd", width: "5rem" }}
+                      >
+                        <IconButton
+                          size="small"
+                          sx={{ color: "#5B718F", marginRight: "4px" }}
+                          onClick={(e) => handleClick(e, row)}
+                        >
+                          <MoreHorizIcon fontSize="small" />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            ) : (
+              <div
+                className="flex flex-col justify-center items-center gap-10 "
+                style={{ height: "94%" }}
+              >
+                <DataNotFound width="25%" />
+                <Typography variant="h5">No data found</Typography>
+                <Typography variant="body2" className="text-center">
+                  It is a long established fact that a reader will be <br />
+                  distracted by the readable content.
+                </Typography>
+              </div>
+            )}
+          </TableContainer>
+        </Grid>
+      )}
 
       <AlertDialog
         open={Boolean(deleteId)}
