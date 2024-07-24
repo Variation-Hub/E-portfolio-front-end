@@ -15,6 +15,7 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Visibility from "@mui/icons-material/Visibility";
 import SideView from "../../component/Sideview";
 import Style from "./style.module.css";
+import { slice } from "app/store/globalUser";
 
 const SignInPage = () => {
   const [credentials, setCredentials] = useState({

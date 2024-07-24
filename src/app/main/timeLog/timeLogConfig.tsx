@@ -25,7 +25,7 @@ const TimeLogConfig = {
       },
     },
   },
-  auth: [authRoles.Learner /* ,authRoles.Trainer, authRoles.Employer, authRoles.IQA, authRoles.LIQA */],
+  auth: [authRoles.Learner ,authRoles.Trainer, authRoles.Employer, authRoles.IQA, authRoles.LIQA, authRoles.Admin, authRoles.EQA],
   routes: [
     {
       path: "/timeLog",

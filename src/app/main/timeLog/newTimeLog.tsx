@@ -8,51 +8,61 @@ import { SecondaryButton, SecondaryButtonOutlined } from 'src/app/component/Butt
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { fetchCourseAPI, selectCourseManagement } from 'app/store/courseManagement';
+import { selectGlobalUser } from 'app/store/globalUser';
+import { getTrainerAPI, selectSession } from 'app/store/session';
+import { createTimeLogAPI, getTimeLogAPI, updateTimeLogAPI } from 'app/store/timeLog';
 
-const NewTimeLog = () => {
+const NewTimeLog = (props) => {
+
+    const { handleCloseDialog, handleDataUpdate, timeLogData, setTimeLogData, edit = "Save", } = props;
 
     const dispatch: any = useDispatch();
     const { data } = useSelector(selectCourseManagement);
+    const { currentUser, selectedUser, selected } = useSelector(selectGlobalUser);
+    const session = useSelector(selectSession);
 
     useEffect(() => {
         dispatch(fetchCourseAPI());
-    }, []);
-
-    const [courseId, setCourseId] = useState('');
-
-    const handleCourseChange = (event) => {
-        const courseId = event.target.value;
-        setCourseId(courseId);
-    };
-
-
-    const [timeLogData, setTimeLogData] = useState({
-        course_id: '',
-        activity_date: '',
-        activity_type: '',
-        unit: '',
-        type: '',
-        spend_time: '0:0',
-        start_time: '0:0',
-        end_time: '0:0',
-        impact_on_learner: '',
-        evidence_link: '',
-    });
-
-    const handleDataUpdate = (e) => {
-        const { name, value } = e.target;
-        setTimeLogData(prevState => ({
-            ...prevState,
-            [name]: value
-        }));
-    };
-
-    // const { handleClose, dataUpdatingLoadding } = props;
-
+        dispatch(getTrainerAPI("Trainer"));
+    }, [dispatch]);
 
     const handleSubmit = async () => {
-        console.log(timeLogData)
+        try {
+            let response;
+            if (edit === "edit") {
+                response = await dispatch(updateTimeLogAPI(timeLogData));
+            } else {
+                response = await dispatch(createTimeLogAPI(timeLogData));
+            }
+            dispatch(getTimeLogAPI({ page: 1, page_size: 10 }, selected ? selectedUser?.user_id : currentUser?.user_id));
+        } catch (err) {
+            console.log(err);
+        } finally {
+            handleCloseDialog();
+            setTimeLogData({
+                user_id: selected ? selectedUser?.user_id : currentUser?.user_id,
+                course_id: null,
+                activity_date: '',
+                activity_type: '',
+                unit: '',
+                trainer_id: null,
+                type: '',
+                spend_time: '0:0',
+                start_time: '0:0',
+                end_time: '0:0',
+                impact_on_learner: '',
+                evidence_link: '',
+            })
+        }
     };
+
+    const formatDate = (date) => {
+        if (!date) return "";
+        const formattedDate = date.substr(0, 10);
+        return formattedDate;
+    };
+
+    const isTimeLog = Object.values(timeLogData?.user_id || timeLogData?.course_id || timeLogData?.activity_date || timeLogData?.activity_type || timeLogData?.trainer_id || timeLogData?.type || timeLogData?.spend_time || timeLogData?.start_time || timeLogData?.end_time || timeLogData?.impact_on_learner || timeLogData?.evidence_link).find(data => data === "") === undefined;
 
     return (
         <Grid>
@@ -66,8 +76,8 @@ const NewTimeLog = () => {
                             <Grid className='w-full'>
                                 <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>1. Select Activity Date</Typography>
                                 <TextField
-                                    name="startDate"
-                                    value={timeLogData?.activity_date}
+                                    name="activity_date"
+                                    value={formatDate(timeLogData?.activity_date)}
                                     size="small"
                                     type='date'
                                     placeholder='DD / MM / YYYY'
@@ -110,7 +120,7 @@ const NewTimeLog = () => {
                                     placeholder='Select Course'
                                     required
                                     fullWidth
-                                    onChange={handleCourseChange}
+                                    onChange={handleDataUpdate}
                                 >
                                     {data?.map(data => (
                                         <MenuItem key={data.id} value={data.course_id}>
@@ -131,22 +141,30 @@ const NewTimeLog = () => {
                                     fullWidth
                                     onChange={handleDataUpdate}
                                 >
-                                    <MenuItem value={"General"}>General</MenuItem>
+                                    {data?.filter((course) => course.course_id === timeLogData.course_id)[0]?.units?.map((unit) => (
+                                        <MenuItem key={unit.id} value={unit.title}>
+                                            {unit.title}
+                                        </MenuItem>
+                                    ))}
                                 </Select>
                             </Grid>
 
                             <Grid className='w-full'>
-                                <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>5. Select Assessor</Typography>
+                                <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>5. Select Trainer</Typography>
                                 <Select
-                                    name="type"
-                                    // value={timeLogData?.type}
+                                    name="trainer_id"
+                                    value={timeLogData?.trainer_id}
                                     size="small"
-                                    placeholder='Select Assessor'
+                                    placeholder='Select Trainer'
                                     required
                                     fullWidth
-                                // onChange={handleDataUpdate}
+                                    onChange={handleDataUpdate}
                                 >
-                                    <MenuItem value={"---"}>---</MenuItem>
+                                    {session.trainer.map(data => (
+                                        <MenuItem key={data.id} value={data.user_id}>
+                                            {data.user_name}
+                                        </MenuItem>
+                                    ))}
                                 </Select>
                             </Grid>
 
@@ -244,7 +262,7 @@ const NewTimeLog = () => {
                     <Box style={{ margin: "auto 1rem 1rem auto" }}>
                         <>
                             {/* <SecondaryButtonOutlined name="Cancel" onClick={handleClose} style={{ width: "10rem", marginRight: "2rem" }} /> */}
-                            <SecondaryButton name="Add Activity" style={{ width: "10rem" }} onClick={handleSubmit} />
+                            <SecondaryButton name={edit === "edit" ? "Update Activity" : "Add Activity"} style={{ width: "10rem" }} disable={!isTimeLog} onClick={handleSubmit} />
                         </>
                     </Box>
                 </Grid>

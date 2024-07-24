@@ -38,6 +38,7 @@ import {
   selectLearnerManagement,
   slice,
 } from "app/store/learnerManagement";
+import {slice as globalSlice} from "app/store/globalUser"
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { useSelector } from "react-redux";
 import {
@@ -170,6 +171,8 @@ export default function LearnerTable(props) {
   };
 
   const handleClickData = (event, row) => {
+    console.log(row, "++++_+_+++++++++++++++++++++")
+    dispatch(globalSlice.setSelectedUser(row))
     dispatch(slice.setSingleData(row));
   };
 

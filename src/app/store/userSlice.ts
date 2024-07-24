@@ -1,6 +1,7 @@
 import history from '@history';
 import { createSlice } from '@reduxjs/toolkit';
 import { authRoles } from '../auth';
+import { slice } from './globalUser';
 
 const initialState = {
   data: {
@@ -42,7 +43,9 @@ export const setUser = (user) => async (dispatch) => {
 export const logoutUser = (redirection) => async (dispatch) => {
   if (redirection) {
     history.push('/')
+    dispatch(slice.userLoggedOut())
     dispatch(userSlice.actions.userLoggedOut())
+
   }
 }
 

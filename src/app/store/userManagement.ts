@@ -5,6 +5,7 @@ import { showMessage } from './fuse/messageSlice';
 import { userTableMetaData } from '../contanst/metaData';
 import JwtService from '../auth/services/jwtService';
 import instance from '../auth/services/jwtService/jwtService';
+import {slice as globalSlice} from './globalUser'
 
 const initialState = {
     data: [],
@@ -247,6 +248,7 @@ export const changeUserRoleHandler = (role) => async (dispatch) => {
         dispatch(slice.setUpdatingLoader());
         const response = await axios.post(`${URL_BASE_LINK}/user/changerole/`, { role })
         if (response.data.status) {
+            dispatch(globalSlice.setCurrentUser(response.data.data.user))
             instance.chnageRole(response.data.data.accessToken);
         }
         dispatch(showMessage({ message: response.data.message, variant: "success" }))
