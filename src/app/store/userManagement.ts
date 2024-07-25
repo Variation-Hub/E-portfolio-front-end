@@ -6,9 +6,11 @@ import { userTableMetaData } from '../contanst/metaData';
 import JwtService from '../auth/services/jwtService';
 import instance from '../auth/services/jwtService/jwtService';
 import {slice as globalSlice} from './globalUser'
+import { setUser } from './userSlice';
 
 const initialState = {
     data: [],
+    avarat: "",
     dataFetchLoading: false,
     dataUpdatingLoadding: false,
     meta_data: {
@@ -51,6 +53,9 @@ const userManagementSlice = createSlice({
                 }
                 return value;
             })
+        },
+        updateAvatar(state, action) {
+            state.avarat = action.payload;
         }
     }
 });
@@ -226,14 +231,15 @@ export const deleteUserHandler = (id, meta_data, search_keyword = "", search_rol
 }
 
 // Upload user avatar 
-export const uploadAvatar = (file) => async (dispatch) => {
+export const uploadAvatar = (file) => async (dispatch, getStore) => {
     try {
         const formData = new FormData();
         formData.append('avatar', file);
+        formData.append('role', getStore()?.user?.data?.role)
         dispatch(slice.setUpdatingLoader());
         const response = await axios.post(`${URL_BASE_LINK}/user/avatar`, formData);
-        dispatch(showMessage({ message: response.data.message, variant: "success" }))
-        await JwtService.emit('onLogin', response.data.data);
+        await JwtService.setSession(response.data.data)
+        window.location.reload();
         dispatch(slice.setUpdatingLoader());
         return true;
     } catch (err) {

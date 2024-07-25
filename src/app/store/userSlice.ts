@@ -31,7 +31,8 @@ export const setUser = (user) => async (dispatch) => {
     ...user
   }
 
-  dispatch(userSlice.actions.setUserDetails( userData ))
+  dispatch(userSlice.actions.setUserDetails(userData))
+
   const data = window.location.href.split("/");
   if (data[data.length - 1] === "sign-in" || data[data.length - 1] === "forgot" || data[data.length - 1] === "reset") {
     history.push("/home")

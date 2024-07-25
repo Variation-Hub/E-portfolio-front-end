@@ -15,7 +15,8 @@ const initialState = {
         pages: 1
     },
     preFillData: {},
-    singleData: {}
+    singleData: {},
+    learnerOverView: []
 };
 
 const courseManagementSlice = createSlice({
@@ -57,6 +58,9 @@ const courseManagementSlice = createSlice({
         setSingleData(state, action) {
             state.singleData = action.payload
         },
+        setLearnerOverView(state, action) {
+            state.learnerOverView = action.payload
+        }
     }
 });
 
@@ -183,4 +187,19 @@ export const courseAllocationAPI = (data) => async (dispatch) => {
     };
 }
 
+
+export const fetchAllLearnerByUserAPI = (id, role) => async (dispatch) => {
+    try {
+        dispatch(slice.setLoader());
+        const response = await axios.get(`${URL_BASE_LINK}/learner/list?user_id=${id}&role=${role}`)
+        dispatch(slice.setLearnerOverView(response.data.data));
+        dispatch(slice.setLoader());
+        return true;
+
+    } catch (err) {
+        dispatch(showMessage({ message: err.response.data.message, variant: "error" }))
+        dispatch(slice.setLoader());
+        return false;
+    };
+}
 export default courseManagementSlice.reducer;

@@ -22,7 +22,9 @@ const initialState = {
         pages: 1
     },
     learner: {},
-    singleData: {}
+    singleData: {},
+    courseData: {},
+    user_course_id: ""
 };
 
 const learnerManagementSlice = createSlice({
@@ -79,6 +81,11 @@ const learnerManagementSlice = createSlice({
         setSingleData(state, action) {
             state.singleData = action.payload
         },
+        setCourseData(state, action) {
+            state.courseData = action.payload.course
+            if (action.payload.user_course_id)
+                state.user_course_id = action.payload.user_course_id
+        }
 
     }
 });
@@ -160,13 +167,12 @@ export const getRoleAPI = (role) => async (dispatch) => {
         return false
     };
 }
-export const getLearnerDetails = (data) => async (dispatch, getStore) => {
+export const getLearnerDetails = (data = "") => async (dispatch, getStore) => {
     try {
         dispatch(slice.setUpdatingLoader());
         const id = data || getStore()?.user?.data?.id
         const response = await axios.get(`${URL_BASE_LINK}/learner/get/${id}`,)
         dispatch(showMessage({ message: response.data.message, variant: "success" }))
-        console.log(response.data.data)
         dispatch(slice.learnerDetails(response.data.data));
         dispatch(slice.setUpdatingLoader());
         return true;
@@ -175,6 +181,14 @@ export const getLearnerDetails = (data) => async (dispatch, getStore) => {
         dispatch(slice.setUpdatingLoader());
         return false;
     }
+}
+
+export const getLearnerCourseDetails = (data) => async (dispatch) => {
+    dispatch(slice.setLoader());
+    const response = await axios.get(`${URL_BASE_LINK}/course/user/get?learner_id=${data.learner_id}&course_id=${data.course_id}`,)
+    dispatch(showMessage({ message: response.data.message, variant: "success" }))
+    dispatch(slice.setCourseData(response.data.data))
+    dispatch(slice.setLoader());
 }
 
 // update learner

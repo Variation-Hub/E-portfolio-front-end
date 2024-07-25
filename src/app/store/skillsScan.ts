@@ -3,10 +3,9 @@ import axios from 'axios';
 import jsonData from 'src/url.json';
 import { showMessage } from './fuse/messageSlice';
 import { userTableMetaData } from '../contanst/metaData';
-import { dataBase } from '../main/skillsScan/skillsScan';
 
 const initialState = {
-    data: dataBase, //[]
+    data: [], //[]
     dataFetchLoading: false,
     dataUpdatingLoadding: false,
     meta_data: {
@@ -42,6 +41,25 @@ const skillsScanSlice = createSlice({
 
 export const slice = skillsScanSlice.actions;
 export const selectSkillsScan = ({ skillsScan }) => skillsScan;
+
+const URL_BASE_LINK = jsonData.API_LOCAL_URL;
+
+export const updateCourseUnitSkillAPI = (data) => async (dispatch, getStore) => {
+
+    try {
+        const id = getStore()?.learnerManagement?.user_course_id || "";
+        dispatch(slice.setUpdatingLoader());
+        const response = await axios.patch(`${URL_BASE_LINK}/course/user/update/${id}`, { course: data })
+        dispatch(showMessage({ message: "Skill scan updated", variant: "success" }))
+        return true;
+
+    } catch (err) {
+
+        dispatch(showMessage({ message: err.response.data.message, variant: "error" }))
+        dispatch(slice.setUpdatingLoader());
+        return false;
+    };
+}
 
 
 export default skillsScanSlice.reducer;

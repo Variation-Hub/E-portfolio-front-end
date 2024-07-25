@@ -1,23 +1,42 @@
 import { Card, CardContent, Checkbox, Grid, Radio, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material"
-import { selectSkillsScan, slice } from "app/store/skillsScan";
+import { selectLearnerManagement } from "app/store/learnerManagement";
+import { selectSkillsScan, slice, updateCourseUnitSkillAPI } from "app/store/skillsScan";
+import { slice as courseSlice } from "app/store/learnerManagement";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { SecondaryButton } from "src/app/component/Buttons";
-import { dataBase } from "./skillsScan";
 
-const TNAQuestionaire = () => {
+const TNAQuestionaire = (props) => {
 
-    const { data, singleData } = useSelector(selectSkillsScan);
+    const { handleTabChange } = props;
+    const { singleData } = useSelector(selectSkillsScan);
+    const { courseData } = useSelector(selectLearnerManagement);
+
 
     const dispatch: any = useDispatch();
 
-    const [sampleData, setSampleData] = useState(dataBase);
-    // const [database, setDatabase] = useState();
+    const [sampleData, setSampleData] = useState(courseData?.units || []);
 
     const handleClick = (event, row) => {
         dispatch(slice.setSingleData(row));
     };
+
+    const radioHandler = (id, value) => {
+        const data = JSON.parse(JSON.stringify(singleData));
+        const updatedData = data?.subUnit?.find(item => item?.id === id)
+        updatedData.rating = value
+        dispatch(slice.setSingleData(data));
+        const updatedCourse = JSON.parse(JSON.stringify(courseData))
+        const unitUpdate = updatedCourse.units.find(item => item.id === singleData.id)
+        unitUpdate.subUnit = unitUpdate?.subUnit?.map(item => item.id === id ? updatedData : item)
+        dispatch(courseSlice.setCourseData({ course: updatedCourse }))
+        setSampleData(updatedCourse?.units)
+    }
+
+    const saveData = () => {
+        dispatch(updateCourseUnitSkillAPI(courseData))
+    }
 
     return (
         <Grid>
@@ -34,16 +53,15 @@ const TNAQuestionaire = () => {
             </Grid>
             <Grid className="w-full flex" >
                 <Grid className="w-1/4 p-20">
-                    {sampleData?.map((row) => (
+                    {sampleData?.map((row, index) => (
                         <Card
                             variant="outlined"
                             className="rounded-0 hover:bg-grey-100 cursor-pointer"
                             elevation={0}
                             onClick={(e) => handleClick(e, row)}
                         >
-                            <CardContent>
-                                {/* <Typography level="title-md">Outlined card (default)</Typography> */}
-                                <Typography className="text-12 ">{row.standardUnits}</Typography>
+                            <CardContent style={singleData?.id === row.id ? { background: "lightgray" } : {}}>
+                                <Typography className="text-12">{index + 1}. {row.title}</Typography>
                             </CardContent>
                         </Card>
                     ))}
@@ -55,7 +73,6 @@ const TNAQuestionaire = () => {
                         elevation={0}
                     >
                         <CardContent>
-                            {/* <Typography level="title-md">Outlined card (default)</Typography> */}
                             <Typography className="font-500 text-center">{singleData.standardUnits}</Typography>
                         </CardContent>
                     </Card>
@@ -66,14 +83,8 @@ const TNAQuestionaire = () => {
                             <Typography className="text-15">🙂 - Sometimes</Typography>
                             <Typography className="text-15">😁 - Always</Typography>
                         </Grid>
-                        <Grid className="flex justify-end items-start w-1/2 mt-10 mr-24">
-                            <SecondaryButton name="Save" />
-                        </Grid>
                     </Grid>
                     <TableContainer sx={{ maxHeight: "auto" }} >
-                        {/* {dataFetchLoading ? (
-                            <FuseLoading />
-                        ) : formdata.data.length ? ( */}
                         <Table
                             sx={{ minWidth: 650, heighFaddt: "100%" }}
                             size="small"
@@ -90,9 +101,9 @@ const TNAQuestionaire = () => {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {/* {data?.map((row) => ( */}
+                                {singleData?.subUnit?.map((row, index) => (
                                     <TableRow
-                                        // key={row.group}
+                                        key={row.id}
                                         sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                                     >
                                         <TableCell
@@ -100,79 +111,50 @@ const TNAQuestionaire = () => {
                                             scope="row"
                                             sx={{ borderBottom: "2px solid #F8F8F8", width: "26%" }}
                                         >
-                                            {/* {"Duty 3 - Move and store goods safely, securely and efficiently to the designated location, utilising mechanical handling equipment, (MHE) and personal protective equipment (PPE) in line with organisational procedures when required. When using any MHE, ensure that safety checks are conducted before use to ensure that it is fit for purpose.	"} */}
-                                            {singleData?.group}
+                                            {index === 0 ?
+                                                singleData?.title : null}
                                         </TableCell>
                                         <TableCell
                                             align="left"
                                             sx={{ borderBottom: "2px solid #F8F8F8", width: "70%" }}
                                         >
-                                            {"Apply safe working practices in line with associated health and safety legislation and company policy."}
+                                            {row.subTitle}
                                         </TableCell>
                                         <TableCell
                                             align="left"
                                             sx={{ borderBottom: "2px solid #F8F8F8", width: "1%" }}
                                         >
-                                            <Radio />
-                                            {/* {singleData?.standardUnits} */}
+                                            <Radio checked={row?.rating === 1} onClick={() => radioHandler(row.id, 1)} />
                                         </TableCell>
                                         <TableCell
                                             align="left"
                                             sx={{ borderBottom: "2px solid #F8F8F8", width: "1%" }}
                                         >
-                                            <Radio />
-                                            {/* {row?.hours} */}
+                                            <Radio checked={row?.rating === 2} onClick={() => radioHandler(row.id, 2)} />
                                         </TableCell>
                                         <TableCell
                                             align="left"
                                             sx={{ borderBottom: "2px solid #F8F8F8", width: "1%" }}
                                         >
-                                            <Radio />
-                                            {/* {row.pointsCredits} */}
+                                            <Radio checked={row?.rating === 3} onClick={() => radioHandler(row.id, 3)} />
                                         </TableCell>
                                         <TableCell
                                             align="left"
                                             sx={{ borderBottom: "2px solid #F8F8F8", width: "1%" }}
                                         >
-                                            <Radio />
-                                            {/* {row.level} */}
+                                            <Radio checked={row?.rating === 4} onClick={() => radioHandler(row.id, 4)} />
                                         </TableCell>
-                                        {/* <TableCell
-                                    align="left"
-                                    sx={{ borderBottom: "2px solid #F8F8F8" }}
-                                >
-                                    <IconButton
-                                        size="small"
-                                        sx={{ color: "#5B718F", marginRight: "4px" }}
-                                        onClick={(e) => handleApply(e, row, "view")}
-                                    >
-                                        <NorthEastIcon fontSize="small" />
-                                    </IconButton>
-                                </TableCell> */}
                                     </TableRow>
-                                {/* ))} */}
+                                ))}
                             </TableBody>
                         </Table>
-                        {/* ) : (
-                            <div
-                                className="flex flex-col justify-center items-center gap-10 "
-                                style={{ height: "94%" }}
-                            >
-                                <DataNotFound width="25%" />
-                                <Typography variant="h5">No data found</Typography>
-                                <Typography variant="body2" className="text-center">
-                                    It is a long established fact that a reader will be <br />
-                                    distracted by the readable content.
-                                </Typography>
-                            </div>
-                        )} */}
                     </TableContainer>
                     <Grid className="flex justify-end items-end my-20 mr-24 gap-10">
                         <Grid>
-                            <SecondaryButton name="Save" />
+                            <SecondaryButton name="Save" onClick={saveData} />
                         </Grid>
                         <Grid>
-                            <SecondaryButton name="Next" />
+                            <SecondaryButton name="Next" onClick={() => handleTabChange("", 2)} />
                         </Grid>
                     </Grid>
                 </Grid>
