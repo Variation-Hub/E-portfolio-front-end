@@ -126,7 +126,7 @@ export default function LearnerManagementTable(props) {
 
   const deleteIcon = (id) => {
     console.log(id);
-    
+
     setDeleteId(id);
   };
 
@@ -181,8 +181,8 @@ export default function LearnerManagementTable(props) {
     console.log(courseAllocationData);
   };
 
-  const redirection = (id) => {
-    dispatch(slice.setLeanerId(id))
+  const redirection = (id, user_id) => {
+    dispatch(slice.setLeanerId({id, user_id}))
     navigate('/portfolio')
   }
   return (
@@ -252,7 +252,7 @@ export default function LearnerManagementTable(props) {
                               <>
                                 <Avatar
                                   alt={value}
-                                  src={row?.avatar?.url}
+                                  src={row?.avatar}
                                   sx={{
                                     marginRight: "8px",
                                     width: "24px",
@@ -260,7 +260,7 @@ export default function LearnerManagementTable(props) {
                                     backgroundColor: getRandomColor(row?.user_name?.toLowerCase().charAt(0))
                                   }}
                                 />
-                                <div onClick={() => redirection(row.learner_id)}>
+                                <div onClick={() => redirection(row.learner_id, row.user_id)}>
                                   {value} {row["last_name"]}
                                 </div>
                                 {/* <Link to="/portfolio" style={{ color: "inherit", textDecoration: "none" }}> */}

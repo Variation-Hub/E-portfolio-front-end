@@ -44,8 +44,8 @@ const Portfolio = () => {
   }, [data]);
 
   useEffect(() => {
-    console.log(singleData?.learner_id)
-    dispatch(getLearnerDetails(singleData?.learner_id));
+    if (singleData?.learner_id)
+      dispatch(getLearnerDetails(singleData?.learner_id));
   }, [singleData?.learner_id]);
 
   const handleOpen = () => {
@@ -59,11 +59,11 @@ const Portfolio = () => {
   return (
     <div>
       {/* {role === "Learner" && */}
-        <div className="m-10 flex flex-wrap justify-evenly gap-10 cursor-pointer">
-          {portfolioCard?.map((value) => (
-            <PortfolioCard data={value} key={value.id} />
-          ))}
-        </div>
+      <div className="m-10 flex flex-wrap justify-evenly gap-10 cursor-pointer">
+        {portfolioCard?.map((value) => (
+          <PortfolioCard data={value} key={value.id} />
+        ))}
+      </div>
       {dataUpdatingLoadding ? (
         <FuseLoading />
       ) : (
@@ -71,12 +71,9 @@ const Portfolio = () => {
           <div className="flex flex-col w-1/6 justify-center items-center border-r-1">
             <Avatar
               sx={{ width: 100, height: 100, backgroundColor: getRandomColor(learner?.first_name?.toLowerCase().charAt(0)) }}
-              src={user.data.avatar?.url}
-              alt={user.data.displayName}
-            >
-              {learner?.first_name?.toUpperCase()?.charAt(0)}
-              {learner?.last_name?.toUpperCase()?.charAt(0)}
-            </Avatar>
+              src={data?.learner_id ? learner?.avatar : user.data.avatar?.url}
+              alt={data?.learner_id ? learner?.first_name?.toUpperCase()?.charAt(0) : user.data.displayName}
+            />
             <div className="mt-10">
               {learner?.first_name} {learner?.last_name}
             </div>

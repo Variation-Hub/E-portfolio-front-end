@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
    learner_id: null,
+   user_id: null
 };
 
 const storeDataSlice = createSlice({
@@ -9,7 +10,8 @@ const storeDataSlice = createSlice({
     initialState,
     reducers: {
         setLeanerId(state, action) {
-            state.learner_id = action.payload;
+            state.learner_id = action.payload.id;
+            state.user_id = action.payload.user_id;
         }
     }
 });

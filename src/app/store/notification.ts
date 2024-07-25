@@ -24,7 +24,6 @@ const URL_BASE_LINK = jsonData.API_LOCAL_URL;
 export const fetchNotifications = () => async (dispatch) => {
     try {
         const response = await axiosInstance.get(`${URL_BASE_LINK}/notification/list`)
-        console.log(response.data.data);  // here you can update your state with the received data
         dispatch(slice.setNotification(response.data.data));
     } catch (err) {
         dispatch(slice.setNotification([]));

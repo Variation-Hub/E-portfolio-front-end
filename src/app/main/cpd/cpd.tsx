@@ -28,6 +28,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import Style from "./style.module.css"
+import { selectstoreDataSlice } from "app/store/reloadData";
 
 // Separate components for dialog content
 
@@ -76,6 +77,7 @@ const Cpd = (props) => {
   const navigate = useNavigate();
   const dispatch: any = useDispatch();
   const { singleData } = useSelector(selectCpdPlanning);
+  const { user_id } = useSelector(selectstoreDataSlice)
 
   const [formData, setFormData] = useState({
     year: singleData?.year || "",
@@ -417,6 +419,7 @@ const Cpd = (props) => {
             setDialogType={setDialogType}
             dataFetchLoading={dataFetchLoading}
             dataUpdatingLoadding={dataUpdatingLoadding}
+            learnerId={user_id}
           />
         </CustomTabPanel>
 
@@ -426,6 +429,7 @@ const Cpd = (props) => {
             setDialogType={setDialogType}
             dataFetchLoading={dataFetchLoading}
             dataUpdatingLoadding={dataUpdatingLoadding}
+            learnerId={user_id}
           />
         </CustomTabPanel>
 
@@ -435,6 +439,7 @@ const Cpd = (props) => {
             setDialogType={setDialogType}
             dataFetchLoading={dataFetchLoading}
             dataUpdatingLoadding={dataUpdatingLoadding}
+            learnerId={user_id}
           />
         </CustomTabPanel>
 
@@ -444,6 +449,7 @@ const Cpd = (props) => {
             setDialogType={setDialogType}
             dataFetchLoading={dataFetchLoading}
             dataUpdatingLoadding={dataUpdatingLoadding}
+            learnerId={user_id}
           />
         </CustomTabPanel>
       </Box>

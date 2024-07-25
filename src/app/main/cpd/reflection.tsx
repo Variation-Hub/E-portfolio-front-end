@@ -58,13 +58,13 @@ import Style from "./style.module.css";
 
 interface Column {
   id:
-    | "learning_objective"
-    | "what_went_well"
-    | "differently_next_time"
-    | "feedback"
-    | "files"
-    | "added_by"
-    | "action";
+  | "learning_objective"
+  | "what_went_well"
+  | "differently_next_time"
+  | "feedback"
+  | "files"
+  | "added_by"
+  | "action";
   label: string;
   minWidth?: number;
   align?: "right";
@@ -354,12 +354,13 @@ const Reflection = (props) => {
   const rowsPerPage = 8;
 
   const {
-    setUpdateData = () => {},
+    setUpdateData = () => { },
     dataUpdatingLoadding,
     dataFetchLoading,
     dialogType,
     setDialogType,
-    setFormData = () => {},
+    setFormData = () => { },
+    learnerId
   } = props;
 
   const { singleData } = useSelector(selectCpdPlanning);
@@ -395,7 +396,7 @@ const Reflection = (props) => {
   console.log(isFormValid);
 
   useEffect(() => {
-    dispatch(getCpdPlanningAPI(data.user_id, "reflections"));
+    dispatch(getCpdPlanningAPI(learnerId || data.user_id, "reflections"));
   }, [dispatch]);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -529,7 +530,7 @@ const Reflection = (props) => {
                       hover
                       role="checkbox"
                       tabIndex={-1}
-                      //   key={row.whosupportyou}
+                    //   key={row.whosupportyou}
                     >
                       {columns.map((column) => {
                         const value = row[column.id];

@@ -53,15 +53,15 @@ import Style from "./style.module.css";
 
 interface Column {
   id:
-    | "date"
-    | "learning_objective"
-    | "activity"
-    | "comment"
-    | "support_you"
-    | "files"
-    | "completed"
-    | "added_by"
-    | "action";
+  | "date"
+  | "learning_objective"
+  | "activity"
+  | "comment"
+  | "support_you"
+  | "files"
+  | "completed"
+  | "added_by"
+  | "action";
   label: string;
   minWidth?: number;
   align?: "right";
@@ -480,9 +480,10 @@ const Activity = (props) => {
     dialogType,
     dataFetchLoading,
     setDialogType,
-    setUpdateData = () => {},
+    setUpdateData = () => { },
     dataUpdatingLoadding,
-    setFormData = () => {},
+    setFormData = () => { },
+    learnerId
   } = props;
 
   const { singleData } = useSelector(selectCpdPlanning);
@@ -528,7 +529,7 @@ const Activity = (props) => {
 
 
   const fetchActivityData = () => {
-    dispatch(getCpdPlanningAPI(data.user_id, "activities"));
+    dispatch(getCpdPlanningAPI(learnerId || data.user_id, "activities"));
   }
 
   useEffect(() => {

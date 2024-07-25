@@ -249,32 +249,32 @@ const Index = () => {
           </div>
         ) : null}
         {
-          dataFetchLoading ? <FuseLoading /> :
-            data.length ?
-              <LearnerManagementTable
-                columns={learnerManagementTableColumn}
-                rows={data}
-                handleOpen={handleOpen}
-                setUserData={setUserData}
-                setUpdateData={setUpdateData}
-                meta_data={meta_data}
-                dataUpdatingLoadding={dataUpdatingLoadding}
-                search_keyword={searchKeyword}
-                search_role={filterValue}
-              />
-              :
-              <div className="flex flex-col justify-center items-center gap-10 " style={{ height: "94%" }}>
-                <DataNotFound width="25%" />
-                <Typography variant="h5">No data found</Typography>
-                <Typography variant="body2" className="text-center">It is a long established fact that a reader will be <br />distracted by the readable content.</Typography>
-                <SecondaryButton name="Create learner" onClick={handleOpen} startIcon={
-                  <img
-                    src="assets/images/svgimage/createcourseicon.svg"
-                    alt="Create user"
-                    className="w-6 h-6 mr-2 sm:w-8 sm:h-8 lg:w-10 lg:h-10"
-                  />
-                } />
-              </div>
+          // dataFetchLoading ? <FuseLoading /> :
+          data.length ?
+            <LearnerManagementTable
+              columns={learnerManagementTableColumn}
+              rows={data}
+              handleOpen={handleOpen}
+              setUserData={setUserData}
+              setUpdateData={setUpdateData}
+              meta_data={meta_data}
+              dataUpdatingLoadding={dataUpdatingLoadding}
+              search_keyword={searchKeyword}
+              search_role={filterValue}
+            />
+            :
+            <div className="flex flex-col justify-center items-center gap-10 " style={{ height: "94%" }}>
+              <DataNotFound width="25%" />
+              <Typography variant="h5">No data found</Typography>
+              <Typography variant="body2" className="text-center">It is a long established fact that a reader will be <br />distracted by the readable content.</Typography>
+              <SecondaryButton name="Create learner" onClick={handleOpen} startIcon={
+                <img
+                  src="assets/images/svgimage/createcourseicon.svg"
+                  alt="Create user"
+                  className="w-6 h-6 mr-2 sm:w-8 sm:h-8 lg:w-10 lg:h-10"
+                />
+              } />
+            </div>
 
         }
         <Dialog
