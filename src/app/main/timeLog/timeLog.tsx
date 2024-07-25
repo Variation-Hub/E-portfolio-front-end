@@ -98,8 +98,10 @@ const TimeLog = (props) => {
   };
 
   useEffect(() => {
-    dispatch(getTimeLogSpendData(selected ? selectedUser?.user_id : currentUser?.user_id, filterData?.courseId, filterData?.jobType));
-  }, [dispatch, filterData]);
+    if (selectedUser?.user_id || currentUser?.user_id) {
+      dispatch(getTimeLogSpendData(selected ? selectedUser?.user_id : currentUser?.user_id, filterData?.courseId, filterData?.jobType));
+    }
+  }, [dispatch, filterData, selectedUser, selected]);
 
   const [dialogType, setDialogType] = useState(false);
 
