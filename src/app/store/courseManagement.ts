@@ -89,7 +89,7 @@ export const createCourseAPI = (data) => async (dispatch) => {
 export const fetchCourseAPI = (data = { page: 1, page_size: 25 }, search_keyword = "", search_role = "") => async (dispatch) => {
 
     try {
-        dispatch(slice.setLoader());
+        // dispatch(slice.setLoader());
         const { page = 1, page_size = 25 } = data;
 
         let url = `${URL_BASE_LINK}/course/list?page=${page}&limit=${page_size}&meta=true`;
@@ -105,7 +105,7 @@ export const fetchCourseAPI = (data = { page: 1, page_size: 25 }, search_keyword
         const response = await axios.get(url);
         // dispatch(showMessage({ message: response.data.message, variant: "success" }))
         dispatch(slice.updateCourse(response.data));
-        dispatch(slice.setLoader());
+        // dispatch(slice.setLoader());
         return true;
 
     } catch (err) {

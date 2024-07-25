@@ -47,15 +47,15 @@ import Style from "./style.module.css";
 
 interface Column {
   id:
-    | "year"
-    | "start_date"
-    | "end_date"
-    | "cpd_plan"
-    | "impact_on_you"
-    | "impact_on_colleagues"
-    | "impact_on_managers"
-    | "impact_on_organisation"
-    | "action";
+  | "year"
+  | "start_date"
+  | "end_date"
+  | "cpd_plan"
+  | "impact_on_you"
+  | "impact_on_colleagues"
+  | "impact_on_managers"
+  | "impact_on_organisation"
+  | "action";
   label: string;
   minWidth?: number;
   align?: "right";
@@ -114,7 +114,7 @@ const AddPlanDialogContent = (props) => {
   const {
     edit = "Save",
     formData = {},
-    handleChange = () => {},
+    handleChange = () => { },
     minEndDate,
   } = props;
 
@@ -301,7 +301,7 @@ const AddPlanDialogContent = (props) => {
 };
 
 const Planning = (props) => {
-  const { dialogType, setDialogType, dataUpdatingLoadding, dataFetchLoading } =
+  const { dialogType, setDialogType, dataUpdatingLoadding, dataFetchLoading, learnerId } =
     props;
 
   const { singleData } = useSelector(selectCpdPlanning);
@@ -342,7 +342,7 @@ const Planning = (props) => {
     Object.values(formData).find((data) => data === "") === undefined;
 
   const fetchPlanningData = () => {
-    dispatch(getCpdPlanningAPI(data.user_id, ""));
+    dispatch(getCpdPlanningAPI(learnerId || data.user_id, ""));
   }
 
   useEffect(() => {
