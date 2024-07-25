@@ -1,26 +1,27 @@
-import { Card, Dialog, DialogContent, Grid, IconButton, Menu, MenuItem, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@mui/material'
-import { fetchCourseAPI, selectCourseManagement } from 'app/store/courseManagement';
+import { Autocomplete, Card, Checkbox, Dialog, DialogContent, Grid, IconButton, Menu, MenuItem, Pagination, Select, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@mui/material'
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { DangerButton, LoadingButton, SecondaryButton, SecondaryButtonOutlined } from 'src/app/component/Buttons';
 import NewTimeLog from './newTimeLog';
-import { deleteTimeLogHandler, getTimeLogAPI, getTimeLogSpendData, selectTimeLog } from 'app/store/timeLog';
+import { deleteTimeLogHandler, getTimeLogAPI, getTimeLogSliceData, getTimeLogSpendData, selectTimeLog, updateTimeLogAPI } from 'app/store/timeLog';
 import { selectGlobalUser } from 'app/store/globalUser';
 import FuseLoading from '@fuse/core/FuseLoading';
 import DataNotFound from 'src/app/component/Pages/dataNotFound';
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import AlertDialog from 'src/app/component/Dialogs/AlertDialog';
 import CalendarComponent from './calendar';
+import { getLearnerDetails, selectLearnerManagement } from 'app/store/learnerManagement';
+import { verify } from 'crypto';
 
 const TimeLog = (props) => {
 
   const dispatch: any = useDispatch();
-  const { data } = useSelector(selectCourseManagement);
   const { currentUser, selectedUser, selected } = useSelector(selectGlobalUser);
   const timeLog = useSelector(selectTimeLog);
-  const [edit, setEdit] = useState("save");
+  const { learner } = useSelector(selectLearnerManagement);
 
+  const [edit, setEdit] = useState("save");
   const [timeLogData, setTimeLogData] = useState({
     user_id: selected ? selectedUser?.user_id : currentUser?.user_id,
     course_id: null,
@@ -44,6 +45,11 @@ const TimeLog = (props) => {
     }));
   };
 
+  const handleCheckboxChange = async(e, row) => {
+    const { checked } = e.target;
+    console.log(checked);
+    await dispatch(updateTimeLogAPI({id : row.id, verified: checked}));
+  };
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [deleteId, setDeleteId] = useState("");
@@ -58,7 +64,7 @@ const TimeLog = (props) => {
 
   const handleEdit = (edit) => {
     setEdit(edit);
-    setTimeLogData(selectedRow);
+    setTimeLogData({ ...selectedRow, course_id: selectedRow.course_id.course_id, trainer_id: selectedRow.trainer_id.user_id });
     handleClickOpen();
   };
 
@@ -71,37 +77,47 @@ const TimeLog = (props) => {
     setSelectedRow(null);
   };
 
-  const deleteConfromation = async () => {
-    await dispatch(deleteTimeLogHandler(deleteId));
-    dispatch(getTimeLogAPI({ page: 1, page_size: 10 }, selected ? selectedUser?.user_id : currentUser?.user_id));
-    setDeleteId("");
-  };
-
-  useEffect(() => {
-    dispatch(fetchCourseAPI());
-    dispatch(getTimeLogAPI({ page: 1, page_size: 10 }, selected ? selectedUser?.user_id : currentUser?.user_id));
-    // dispatch(getTimeLogSpendData(selected ? selectedUser?.user_id : currentUser?.user_id,));
-  }, [dispatch]);
 
   const [filterData, setFilterData] = useState({
     courseId: "",
-    jobType: ""
+    jobType: "",
   });
+  const [approvedFilter, setAprovedFilter] = useState("")
   console.log(filterData);
 
   const handleFilterChange = (event) => {
     const { name, value } = event.target;
+    console.log(name, value)
     setFilterData((prevData) => ({
       ...prevData,
       [name]: value
     }));
   };
 
+
+  const deleteConfromation = async () => {
+    await dispatch(deleteTimeLogHandler(deleteId));
+    dispatch(getTimeLogAPI({ page: 1, page_size: 10 }, selected ? selectedUser?.user_id : currentUser?.user_id, filterData?.courseId, filterData?.jobType, approvedFilter));
+    setDeleteId("");
+  };
+
+  useEffect(() => {
+    dispatch(getLearnerDetails(selected ? selectedUser?.learner_id : currentUser?.learner_id))
+  }, [])
+
   useEffect(() => {
     if (selectedUser?.user_id || currentUser?.user_id) {
+      dispatch(getTimeLogAPI({ page: 1, page_size: 10 }, selected ? selectedUser?.user_id : currentUser?.user_id, filterData?.courseId, filterData?.jobType));
+      dispatch(getTimeLogSliceData(selected ? selectedUser?.user_id : currentUser?.user_id, filterData?.courseId, filterData?.jobType));
       dispatch(getTimeLogSpendData(selected ? selectedUser?.user_id : currentUser?.user_id, filterData?.courseId, filterData?.jobType));
     }
   }, [dispatch, filterData, selectedUser, selected]);
+
+  useEffect(() => {
+    if (approvedFilter !== "") {
+      dispatch(getTimeLogAPI({ page: 1, page_size: 10 }, selected ? selectedUser?.user_id : currentUser?.user_id, filterData?.courseId, filterData?.jobType, approvedFilter));
+    }
+  }, [dispatch, approvedFilter]);
 
   const [dialogType, setDialogType] = useState(false);
 
@@ -109,9 +125,16 @@ const TimeLog = (props) => {
     setDialogType(true);
   };
 
+  const handleChangePage = (event: unknown, newPage: number) => {
+    dispatch(
+      getTimeLogAPI({ page: newPage, page_size: 10 }, selected ? selectedUser?.user_id : currentUser?.user_id, filterData?.courseId, filterData?.jobType, approvedFilter)
+    );
+  };
+
   const handleCloseDialog = () => {
     setDialogType(false);
-    setTimeLogData({
+    setTimeLogData(prevState => ({
+      ...prevState,
       user_id: selected ? selectedUser?.user_id : currentUser?.user_id,
       course_id: null,
       activity_date: '',
@@ -124,8 +147,9 @@ const TimeLog = (props) => {
       end_time: '0:0',
       impact_on_learner: '',
       evidence_link: '',
-    })
+    }));
   };
+
 
   const formatDate = (date) => {
     if (!date) return "";
@@ -141,31 +165,37 @@ const TimeLog = (props) => {
   return (
     <Grid className="flex flex-col m-10 p-10 gap-20" sx={{ minHeight: 600 }}>
       <Grid>
-        <Typography className='h2 font-500 pb-10'>Viewing E-Timelog for All Courses and General Activities</Typography>
+        <Typography className='h3 font-500 '>Welcome, {selected ? selectedUser?.user_name : currentUser?.user_name}</Typography>
       </Grid>
+
+      <hr style={{ borderBottom: "1px solid #ddd" }} />
+
+      <Grid>
+        <Typography className='h2 font-500 '>Viewing E-Timelog for All Courses and General Activities</Typography>
+      </Grid>
+
+      <hr style={{ borderBottom: "1px solid #ddd" }} />
+
       <Grid className='w-full pb-10 flex flex-row gap-40 '>
-        <TextField
+        <Autocomplete
           className='w-9/12'
-          name="courseId"
-          select
-          value={filterData?.courseId}
+          disablePortal
+          options={learner?.course}
+          getOptionLabel={(option: any) => option.course?.course_name}
           size="small"
-          label="Select Course"
-          required
           fullWidth
-          onChange={handleFilterChange}
           sx={{
-            ".muiltr-156t61m-MuiSvgIcon-root-MuiSelect-icon": {
+            ".muiltr-hgpioi-MuiSvgIcon-root": {
               color: "black"
             }
           }}
-        >
-          {data?.map(data => (
-            <MenuItem key={data.id} value={data.course_id}>
-              {data.course_name}
-            </MenuItem>
-          ))}
-        </TextField>
+          renderInput={(params) => <TextField {...params} label='Select Course' size='small'
+          />}
+          onChange={(e, value) => setFilterData((prevData) => ({
+            ...prevData,
+            courseId: value?.course?.course_id
+          }))}
+        />
         <Typography className="font-600 mb-2 flex items-center  "> &lt; Change View by Course</Typography>
       </Grid>
       <Grid className='w-full pb-10 flex flex-row gap-40 '>
@@ -176,7 +206,6 @@ const TimeLog = (props) => {
           label="Select Job Training"
           value={filterData?.jobType}
           size="small"
-          required
           fullWidth
           sx={{
             ".muiltr-156t61m-MuiSvgIcon-root-MuiSelect-icon": {
@@ -185,6 +214,7 @@ const TimeLog = (props) => {
           }}
           onChange={handleFilterChange}
         >
+          <MenuItem value={"All"}>All</MenuItem>
           <MenuItem value={"Not Applicable"}>Not Applicable</MenuItem>
           <MenuItem value={"On the job"}>On the job</MenuItem>
           <MenuItem value={"Off the job"}>Off the job</MenuItem>
@@ -251,7 +281,7 @@ const TimeLog = (props) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {timeLog?.data?.slice(0, 3)?.map((row) => (
+                {timeLog?.sliceData?.map((row) => (
                   <TableRow
                     key={row.activityType}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -296,9 +326,33 @@ const TimeLog = (props) => {
 
       {isCalendarView ? (
         <CalendarComponent />
-      ) : (
-        <Grid className='flex justify-between m-10 '>
-          <TableContainer sx={{ maxHeight: 500, marginBottom: "2rem" }}>
+      ) : (<>
+        <Grid className='w-full flex justify-end'>
+          <Grid className='w-[50%] flex flex-row gap-20 ml-20'>
+            <Typography className="font-600 flex items-center">Assessor Approved:</Typography>
+            <TextField
+              className='w-1/2'
+              name="approved"
+              select
+              label="Select Assessor Approved"
+              value={approvedFilter}
+              size="small"
+              fullWidth
+              sx={{
+                ".muiltr-156t61m-MuiSvgIcon-root-MuiSelect-icon": {
+                  color: "black"
+                }
+              }}
+              onChange={(e) => setAprovedFilter(e.target.value)}
+            >
+              <MenuItem value={"All"}>All</MenuItem>
+              <MenuItem value={"true"}>Approved</MenuItem>
+              <MenuItem value={"false"}>Not Approved</MenuItem>
+            </TextField>
+          </Grid>
+        </Grid>
+        <Grid className='m-10 '>
+          <TableContainer sx={{ maxHeight: "100%", marginBottom: "2rem", overflow: "unset" }}>
             {timeLog?.dataFetchLoading ? (
               <FuseLoading />
             ) : timeLog?.data?.length ? (
@@ -368,6 +422,9 @@ const TimeLog = (props) => {
                         // whiteSpace: "nowrap",
                       }}>
                       On/Off the Job Training
+                    </TableCell>
+                    <TableCell align="left" sx={{ width: "20rem" }}>
+                      Approved
                     </TableCell>
                     <TableCell align="left"
                       sx={{
@@ -450,6 +507,28 @@ const TimeLog = (props) => {
                       </TableCell>
                       <TableCell
                         align="left"
+                        sx={{ borderBottom: "1px solid #ddd", width: "20rem" }}
+                      >
+                      {(row?.trainer_id?.user_id === currentUser.user_id && currentUser.role === "Trainer") ?
+                        <>
+                          <Checkbox
+                            checked={row?.verified}
+                            onChange={(e) => handleCheckboxChange(e, row)}
+                            name="declaration"
+                            // color="primary"
+                            sx={{
+                              color: row?.verified ? "green" : "default", // Change color when checked
+                              '&.Mui-checked': {
+                                color: "green",
+                              }
+                            }}
+                          /> Assessor
+                        </>:
+                        row?.verified ? "Approved" : "Not Approved"
+                      }
+                      </TableCell>
+                      <TableCell
+                        align="left"
                         sx={{ borderBottom: "1px solid #ddd", width: "15rem" }}
                       >
                         {row?.impact_on_learner}
@@ -491,6 +570,20 @@ const TimeLog = (props) => {
             )}
           </TableContainer>
         </Grid>
+        <Stack
+          spacing={2}
+          className="flex justify-center items-center w-full"
+        >
+          <Pagination
+            count={timeLog?.meta_data?.pages}
+            page={timeLog?.meta_data?.page}
+            variant="outlined" shape="rounded"
+            siblingCount={1}
+            boundaryCount={1}
+            onChange={handleChangePage}
+          />
+        </Stack>
+      </>
       )}
 
       <AlertDialog
@@ -557,6 +650,7 @@ const TimeLog = (props) => {
           timeLogData={timeLogData}
           setTimeLogData={setTimeLogData}
           handleDataUpdate={handleDataUpdate}
+          filterData={filterData}
         />
       </Dialog>
     </Grid>

@@ -473,13 +473,13 @@ export default function LearnerManagementTable(props) {
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  placeholder="Select Learner"
+                  placeholder="Select LIQA"
                   name="role"
-                  value={courseAllocationData?.learner_id}
+                  value={courseAllocationData?.LIQA_id}
                 />
               )}
               onChange={(e, value: any) =>
-                handleUpdateData("LIQA_id", value.learner_id)
+                handleUpdateData("LIQA_id", value.user_id)
               }
               sx={{
                 ".MuiAutocomplete-clearIndicator": {

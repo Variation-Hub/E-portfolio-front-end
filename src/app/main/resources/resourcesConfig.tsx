@@ -25,7 +25,7 @@ const ResourcesConfig = {
       },
     },
   },
-  auth: [authRoles.Trainer, authRoles.Learner, authRoles.Employer, authRoles.IQA, authRoles.LIQA],
+  auth: [authRoles.Trainer, authRoles.Learner, authRoles.Employer, authRoles.IQA, authRoles.LIQA, authRoles.Admin, authRoles.EQA],
   routes: [
     {
       path: "/resources",
@@ -33,6 +33,10 @@ const ResourcesConfig = {
     },
     {
       path: "/resources-card",
+      element: <ResourcesCard />
+    },
+    {
+      path: "/portfolio/resourcess",
       element: <ResourcesCard />
     },
   ],
