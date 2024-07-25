@@ -10,12 +10,13 @@ import { Link, useNavigate } from 'react-router-dom';
 import { selectUser } from 'app/store/userSlice';
 import { useAuth } from 'src/app/auth/AuthContext'
 import jwtService from 'src/app/auth/services/jwtService';
-import { changeUserRoleHandler } from 'app/store/userManagement';
+import { changeUserRoleHandler, selectUserManagement } from 'app/store/userManagement';
 import { style } from './Style';
 import { getRandomColor } from 'src/utils/randomColor';
 
 function UserMenu(props) {
   const user = useSelector(selectUser);
+  const userAvarat = useSelector(selectUserManagement)
   const { isAuthenticated } = useAuth();
   const { logout } = jwtService;
   const [userMenu, setUserMenu] = useState(null);
@@ -42,7 +43,7 @@ function UserMenu(props) {
     setAnchorEl(null);
   };
 
-  
+
   const changeRole = (role) => {
     dispatch(changeUserRoleHandler(role))
     navigate('/Home')
@@ -70,8 +71,8 @@ function UserMenu(props) {
           </Typography>
         </div>
 
-        {user.data.avatar?.url ? (
-          <Avatar className="md:mx-4" alt="user photo" src={user.data.avatar?.url} />
+        {(user.data.avatar?.url || userAvarat?.avatar) ? (
+          <Avatar className="md:mx-4" alt="user photo" src={userAvarat?.avatar || user.data.avatar?.url} />
         ) : (
           <Avatar className="md:mx-4" sx={{backgroundColor: getRandomColor(user?.data?.displayName?.toLowerCase().charAt(0))}}>{user.data.displayName?.toUpperCase().charAt(0)}</Avatar>
         )}
