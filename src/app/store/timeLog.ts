@@ -6,6 +6,7 @@ import { userTableMetaData } from '../contanst/metaData';
 
 const initialState = {
     data: [],
+    sliceData: [],
     dataFetchLoading: false,
     dataUpdatingLoadding: false,
     meta_data: {
@@ -32,6 +33,9 @@ const timeLogSlice = createSlice({
         setTimeLog(state, action) {
             state.data = action.payload
         },
+        setSliceData(state, action) {
+            state.sliceData = action.payload
+        },
         setTimeLogMetadata(state, action) {
             state.meta_data = action.payload
         },
@@ -43,6 +47,16 @@ const timeLogSlice = createSlice({
         },
         setCalenderData(state, action) {
             state.calenderData = action.payload
+        },
+        setTimeLogVerified(state, action){
+            console.log()
+            state.data = state.data.map(time => {
+                if (time.id === action.payload.id) {
+                    return {...time, verified: action.payload.verified};
+                } else {
+                    return time;
+                }
+            });            
         }
     }
 });
@@ -75,6 +89,11 @@ export const updateTimeLogAPI = (data) => async (dispatch) => {
         const response = await axios.patch(`${URL_BASE_LINK}/time-log/update/${data.id}`, payload)
         dispatch(showMessage({ message: response.data.message, variant: "success" }))
         dispatch(slice.setUpdatingLoader());
+
+        if(data.verified === true || data.verified === false){
+            console.log(data, "{{{{{{}}}}}}}}}}}}}}}}}}}")
+            dispatch(slice.setTimeLogVerified(data))
+        }
         return true;
     } catch (err) {
         dispatch(showMessage({ message: err.response?.data.message, variant: "error" }))
@@ -99,7 +118,7 @@ export const deleteTimeLogHandler = (id) => async (dispatch) => {
     }
 }
 
-export const getTimeLogAPI = (data = { page: 1, page_size: 10 }, user_id) => async (dispatch) => {
+export const getTimeLogAPI = (data = { page: 1, page_size: 10 }, user_id, course_id, type, approved = "") => async (dispatch) => {
 
     try {
 
@@ -107,12 +126,54 @@ export const getTimeLogAPI = (data = { page: 1, page_size: 10 }, user_id) => asy
 
         const { page = 1, page_size = 10 } = data;
 
-        let url = `${URL_BASE_LINK}/time-log/list?meta=true&page=${page}&limit=${page_size}&user_id=${user_id}`
+        let url = `${URL_BASE_LINK}/time-log/list?pagination=true&meta=true&page=${page}&limit=${page_size}&user_id=${user_id}`
+
+        if (course_id) {
+            url = `${url}&course_id=${course_id}`
+        }
+
+        if (type && type !== "All") {
+            url = `${url}&type=${type}`
+        }
+
+        if (approved && approved !== "All") {
+            url = `${url}&approved=${approved}`
+        }
 
         const response = await axios.get(url);
         // dispatch(showMessage({ message: response.data.message, variant: "success" }))
         dispatch(slice.setTimeLog(response.data.data))
         dispatch(slice.setTimeLogMetadata(response.data.meta_data))
+        dispatch(slice.setLoader());
+        return true;
+
+    } catch (err) {
+        dispatch(showMessage({ message: err.response.data.message, variant: "error" }))
+        dispatch(slice.setLoader());
+        return false
+    };
+
+}
+
+export const getTimeLogSliceData = (user_id, course_id, type) => async (dispatch) => {
+
+    try {
+
+        dispatch(slice.setLoader());
+
+        let url = `${URL_BASE_LINK}/time-log/list?pagination=true&meta=true&page=1&limit=3&user_id=${user_id}`
+
+        if (course_id) {
+            url = `${url}&course_id=${course_id}`
+        }
+
+        if (type && type !== "All") {
+            url = `${url}&type=${type}`
+        }
+
+        const response = await axios.get(url);
+        // dispatch(showMessage({ message: response.data.message, variant: "success" }))
+        dispatch(slice.setSliceData(response.data.data))
         dispatch(slice.setLoader());
         return true;
 
@@ -130,7 +191,15 @@ export const getTimeLogSpendData = (user_id, course_id, type) => async (dispatch
 
         dispatch(slice.setLoader());
 
-        let url = `${URL_BASE_LINK}/time-log/spend?user_id=${user_id}&course_id=${course_id}&type=${type}`
+        let url = `${URL_BASE_LINK}/time-log/spend?user_id=${user_id}`
+
+        if (course_id) {
+            url = `${url}&course_id=${course_id}`
+        }
+
+        if (type && type !== "All") {
+            url = `${url}&type=${type}`
+        }
 
         const response = await axios.get(url);
         console.log(response.data);

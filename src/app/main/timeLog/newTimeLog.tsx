@@ -14,7 +14,7 @@ import { createTimeLogAPI, getTimeLogAPI, updateTimeLogAPI } from 'app/store/tim
 
 const NewTimeLog = (props) => {
 
-    const { handleCloseDialog, handleDataUpdate, timeLogData, setTimeLogData, edit = "Save", } = props;
+    const { handleCloseDialog, handleDataUpdate, timeLogData, setTimeLogData, filterData, edit = "Save", } = props;
 
     const dispatch: any = useDispatch();
     const { data } = useSelector(selectCourseManagement);
@@ -26,6 +26,7 @@ const NewTimeLog = (props) => {
         dispatch(getTrainerAPI("Trainer"));
     }, [dispatch]);
 
+
     const handleSubmit = async () => {
         try {
             let response;
@@ -34,7 +35,7 @@ const NewTimeLog = (props) => {
             } else {
                 response = await dispatch(createTimeLogAPI(timeLogData));
             }
-            dispatch(getTimeLogAPI({ page: 1, page_size: 10 }, selected ? selectedUser?.user_id : currentUser?.user_id));
+            dispatch(getTimeLogAPI({ page: 1, page_size: 10 }, selected ? selectedUser?.user_id : currentUser?.user_id, filterData?.courseId, filterData?.jobType, filterData?.approved));
         } catch (err) {
             console.log(err);
         } finally {

@@ -19,7 +19,7 @@ const colors = [
 
 const atoz = "abcdefghijklmnopqrstuvwxyz";
 
-function CalendarComponent() {
+function CalendarComponent(props) {
   const { calenderData } = useSelector(selectTimeLog);
   const { currentUser, selectedUser, selected } = useSelector(selectGlobalUser);
 
