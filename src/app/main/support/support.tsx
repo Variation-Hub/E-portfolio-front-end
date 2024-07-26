@@ -136,7 +136,6 @@ const Support = (props) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedRow, setSelectedRow] = useState<any>(null);
   const [dialogType, setDialogType] = useState(false);
-  const [page, setPage] = useState(1);
 
   const [deleteId, setDeleteId] = useState("");
 

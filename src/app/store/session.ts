@@ -9,6 +9,7 @@ const initialState = {
     trainer: [],
     learner: [],
     singleData: {},
+    update: false,
     dataFetchLoading: false,
     dataUpdatingLoadding: false,
     dialogType: "",
@@ -37,6 +38,9 @@ const sessionSlice = createSlice({
         setSessiondata(state, action) {
             state.data = action.payload
         },
+        setSessionMetadata(state, action) {
+            state.meta_data = action.payload
+        },
         setTrainer(state, action) {
             state.trainer = action.payload
         },
@@ -45,6 +49,11 @@ const sessionSlice = createSlice({
         },
         setSingledata(state, action) {
             state.singleData = action.payload
+            state.update = true
+        },
+        setClearSingledata(state) {
+            state.singleData = {}
+            state.update = false
         },
         setCalenderData(state, action) {
             state.calenderData = action.payload
@@ -57,6 +66,7 @@ export const selectSession = ({ session }) => session;
 
 const URL_BASE_LINK = jsonData.API_LOCAL_URL;
 
+// get Trainer
 export const getTrainerAPI = (role) => async (dispatch) => {
 
     try {
@@ -81,6 +91,7 @@ export const getTrainerAPI = (role) => async (dispatch) => {
 
 }
 
+// get Learner
 export const getLearnerAPI = () => async (dispatch) => {
 
     try {
@@ -104,17 +115,20 @@ export const getLearnerAPI = () => async (dispatch) => {
     };
 
 }
-
-export const getSessionAPI = (id, field) => async (dispatch) => {
+// get session 
+export const getSessionAPI = (data = { page: 1, page_size: 10 }) => async (dispatch) => {
 
     try {
         dispatch(slice.setLoader());
 
-        let url = `${URL_BASE_LINK}/session/list`
+        const { page = 1, page_size = 10 } = data;
+
+        let url = `${URL_BASE_LINK}/session/list?meta=true&page=${page}&limit=${page_size}`
 
         const response = await axios.get(url);
         // dispatch(showMessage({ message: response.data.message, variant: "success" }))
         dispatch(slice.setSessiondata(response.data.data))
+        dispatch(slice.setSessionMetadata(response.data.meta_data))
         dispatch(slice.setLoader());
         return true;
 
