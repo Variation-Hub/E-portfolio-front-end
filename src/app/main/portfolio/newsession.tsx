@@ -1,22 +1,15 @@
 import { Box, Card, Checkbox, Grid, IconButton, ListItemText, MenuItem, Paper, Select, TextField, Tooltip, Typography } from '@mui/material';
-import CloseIcon from "@mui/icons-material/Close";
-import { AdminRedirect, EmployerRedirect, fundingBodyData, roles } from 'src/app/contanst';
 import { LoadingButton, SecondaryButton, SecondaryButtonOutlined } from 'src/app/component/Buttons';
-import { timezones } from 'src/app/contanst/timezoneData';
-import { emailValidationMsg, mobileValidationMsg, nameValidationMsg, passwordValidation, usernameValidationMsg } from 'src/app/contanst/regValidation';
-import HelpOutlinedIcon from "@mui/icons-material/HelpOutlined";
-import { DatePicker } from '@mui/x-date-pickers';
-import { FileUploader } from 'react-drag-drop-files';
 import { useEffect, useState } from 'react';
-import Breadcrumb from 'src/app/component/Breadcrumbs';
 import { useDispatch } from 'react-redux';
-import { createSessionAPI, getLearnerAPI, getTrainerAPI, selectSession } from 'app/store/session';
+import { createSessionAPI, getLearnerAPI, getSessionAPI, getTrainerAPI, selectSession, slice, updateSessionAPI } from 'app/store/session';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 
 const NewSession = (props) => {
 
+    const { edit, handleCloseDialog } = props;
     const dispatch: any = useDispatch();
     const navigate = useNavigate();
     const session = useSelector(selectSession);
@@ -41,6 +34,12 @@ const NewSession = (props) => {
         type: '',
     });
 
+    useEffect(() => {
+        if (session.update) {
+            setSessionData({ ...session.singleData, trainer_id: session.singleData?.trainer_id?.user_id, learners: session.singleData?.learners.map((learner) => learner.learner_id), startDate: new Date(session.singleData?.startDate) })
+        }
+    }, [])
+
     const handleDataUpdate = (e) => {
         const { name, value } = e.target;
         setSessionData(prevState => ({
@@ -49,22 +48,45 @@ const NewSession = (props) => {
         }));
     };
 
-    const { handleClose, dataUpdatingLoadding } = props;
+    const { dataUpdatingLoadding } = props;
 
 
     const handleSubmit = async () => {
         try {
 
             let response;
-            response = await dispatch(createSessionAPI({ ...sessionData }));
-
-            if (response) {
-                navigate("/portfolio");
+            if (session?.update) {
+                response = await dispatch(updateSessionAPI(session?.singleData?.session_id, sessionData));
+            } else {
+                response = await dispatch(createSessionAPI({ ...sessionData }));
             }
+            dispatch(getSessionAPI({ page: 1, page_size: 10 }));
+
+            if (!edit)
+                navigate("/portfolio");
+            else
+                handleCloseDialog();
         } catch (error) {
             console.error("Error during submission:", error);
+        } finally {
+            dispatch(slice.setClearSingledata())
         }
     };
+
+    const handleClose = () => {
+        if (!edit)
+            navigate("/portfolio");
+        else
+            handleCloseDialog();
+    };
+
+    const formatDate = (date) => {
+        if (!date) return "";
+        const dateStr = date instanceof Date ? date.toISOString() : String(date);
+        const formattedDate = dateStr.substring(0, 16);
+        return formattedDate;
+    };
+
 
     return (
         <Grid>
@@ -185,7 +207,7 @@ const NewSession = (props) => {
                                     <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Select Session Date and Time</Typography>
                                     <TextField
                                         name="startDate"
-                                        value={sessionData.startDate}
+                                        value={formatDate(sessionData.startDate)}
                                         size="small"
                                         type='datetime-local'
                                         placeholder='DD / MM / YYYY  HH:MM'
@@ -198,75 +220,63 @@ const NewSession = (props) => {
                                 <Grid className='w-full'>
                                     <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Select Session Duration</Typography>
                                     <Grid className='w-full flex gap-10'>
-                                        {/* <TextField
-                                            name="hours"
-                                            value={sessionData.Duration}
-                                            size="small"
-                                            placeholder='Hours'
-                                            required
-                                            fullWidth
-                                            onChange={handleDataUpdate}
-                                        />
-                                        <TextField
-                                            name="minutes"
-                                            value={sessionData.Duration}
-                                            size="small"
-                                            placeholder='Minutes'
-                                            required
-                                            fullWidth
-                                            onChange={handleDataUpdate}
-                                            /> */}
-                                        <TextField
-                                            placeholder='Hours'
-                                            name="hours"
-                                            size="small"
-                                            required
-                                            type="number"
-                                            fullWidth
-                                            value={(sessionData.Duration.split(":")[0])}
-                                            onChange={(e) => {
-                                                const value = Number(e.target.value);
+                                        <Grid className='w-full gap-10'>
+                                            <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Hours</Typography>
+                                            <TextField
+                                                placeholder='Hours'
+                                                name="hours"
+                                                size="small"
+                                                required
+                                                type="number"
+                                                fullWidth
+                                                value={(sessionData.Duration.split(":")[0])}
+                                                onChange={(e) => {
+                                                    const value = Number(e.target.value);
 
-                                                if (value < 0 || value > 23) {
-                                                    return
-                                                }
-                                                setSessionData((prevState: any) => ({
-                                                    ...prevState,
-                                                    Duration: `${value}:${sessionData.Duration.split(':')[1]}`
-                                                }));
-                                            }}
-                                        />
-                                        <TextField
-                                            placeholder='Minutes'
-                                            name="minutes"
-                                            required
-                                            size="small"
-                                            type="number"
-                                            fullWidth
-                                            value={(sessionData.Duration.split(':')[1])}
-                                            onChange={(e) => {
-                                                const value = Number(e.target.value);
+                                                    if (value < 0 || value > 23) {
+                                                        return
+                                                    }
+                                                    setSessionData((prevState: any) => ({
+                                                        ...prevState,
+                                                        Duration: `${value}:${sessionData.Duration.split(':')[1]}`
+                                                    }));
+                                                }}
+                                            />
+                                        </Grid>
+                                        <Grid className='w-full gap-10'>
+                                            <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Minutes</Typography>
+                                            <TextField
+                                                placeholder='Minutes'
+                                                name="minutes"
+                                                required
+                                                size="small"
+                                                type="number"
+                                                fullWidth
+                                                value={(sessionData.Duration.split(':')[1])}
+                                                onChange={(e) => {
+                                                    const value = Number(e.target.value);
 
-                                                if (value < 0 || value > 59) {
-                                                    return
-                                                }
-                                                setSessionData((prevState: any) => ({
-                                                    ...prevState,
-                                                    Duration: `${sessionData.Duration.split(':')[0]}:${value}`
-                                                }));
-                                            }}
-                                        />
+                                                    if (value < 0 || value > 59) {
+                                                        return
+                                                    }
+                                                    setSessionData((prevState: any) => ({
+                                                        ...prevState,
+                                                        Duration: `${sessionData.Duration.split(':')[0]}:${value}`
+                                                    }));
+                                                }}
+                                            />
+                                        </Grid>
                                     </Grid>
                                 </Grid>
 
                                 <Grid className='w-full'>
-                                    <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Select Trainer</Typography>
+                                    <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Select Session Type</Typography>
                                     <Select
                                         name="type"
                                         // label="Username"
                                         value={sessionData.type}
                                         size="small"
-                                        placeholder='Select Type'
+                                        placeholder='Select Session Type'
                                         required
                                         fullWidth
                                         onChange={handleDataUpdate}
@@ -296,7 +306,7 @@ const NewSession = (props) => {
                                 :
                                 <>
                                     <SecondaryButtonOutlined name="Cancel" onClick={handleClose} style={{ width: "10rem", marginRight: "2rem" }} />
-                                    <SecondaryButton name="Save" style={{ width: "10rem" }} onClick={handleSubmit} />
+                                    <SecondaryButton name={session?.update ? "Update" : "Save"} style={{ width: "10rem" }} onClick={handleSubmit} />
                                 </>
                             }
                         </Box>
