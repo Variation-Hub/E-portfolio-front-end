@@ -8,6 +8,7 @@ import {
 import {
   Checkbox,
   FormControlLabel,
+  FormGroup,
   Grid,
   MenuItem,
   Select,
@@ -38,7 +39,7 @@ const UploadedEvidenceFile = (props) => {
       response = await dispatch(updateAssignmentAPI(id, formData));
     } catch (error) {
       console.error("Error uploading file:", error);
-    }finally{
+    } finally {
       handleClose();
     }
 
@@ -52,7 +53,7 @@ const UploadedEvidenceFile = (props) => {
         <Box className="m-12 flex flex-col justify-between gap-12">
           <div className="w-full">
             <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
-            Title
+              Title
             </Typography>
             <TextField
               name="title"
@@ -162,38 +163,54 @@ const UploadedEvidenceFile = (props) => {
               disabled={user.data.role !== "Trainer" || edit === "view"}
               style={user.data.role !== "Trainer" ? { backgroundColor: "whitesmoke" } : {}}
             >
-              <MenuItem value={"Workplace Observation(WO)"}>
-                Workplace Observation(WO)
+              <MenuItem value={"WO"}>
+                WO
               </MenuItem>
               <MenuItem
-                value={"Workplace Projects/Projects away from work(WP)"}
+                value={"WP"}
               >
-                Workplace Projects/Projects away from work(WP)
+                WP
               </MenuItem>
-              <MenuItem value={"Portfolio of Work(PW)"}>
-                Portfolio of Work(PW)
+              <MenuItem value={"PW"}>
+                PW
               </MenuItem>
-              <MenuItem value={"Viva(VI)"}>Viva(VI)</MenuItem>
-              <MenuItem value={"Log Book/Assignment"}>
-                Log Book/Assignment
+              <MenuItem value={"VI"}>VI</MenuItem>
+              <MenuItem value={"LB"}>
+                LB
               </MenuItem>
-              <MenuItem value={"Professional Discussions(PD)"}>
-                Professional Discussions(PD)
+              <MenuItem value={"PD"}>
+                PD
               </MenuItem>
-              <MenuItem value={"Practical Test(PT)"}>
-                Practical Test(PT)
+              <MenuItem value={"PT"}>
+                PT
               </MenuItem>
-              <MenuItem value={"Test/Examinations(TE)"}>
-                Test/Examinations(TE)
+              <MenuItem value={"TE"}>
+                TE
               </MenuItem>
-              <MenuItem value={"Reflective Journal(RJ)"}>
-                Reflective Journal(RJ)
+              <MenuItem value={"RJ"}>
+                RJ
               </MenuItem>
-              <MenuItem value={"Other(OT)"}>Other(OT)</MenuItem>
-              <MenuItem value={"Recognized Prior Learning"}>
-                Recognized Prior Learning
+              <MenuItem value={"OT"}>OT</MenuItem>
+              <MenuItem value={"RPL"}>
+                RPL
               </MenuItem>
             </Select>
+            <FormGroup>
+              {['WO', 'WP', 'PW', 'VI', 'LB', 'PD', 'PT', 'TE', 'RJ', 'OT', 'RPL'].map((method) => (
+                <FormControlLabel
+                  key={method}
+                  control={
+                    <Checkbox
+                      checked={formData?.assessment_method?.includes(method) || false}
+                      onChange={(e) => handleChange(e, method)}
+                      name="assessment_method"
+                      disabled={user.data.role !== "Trainer" || edit === "view"}
+                    />
+                  }
+                  label={method}
+                />
+              ))}
+            </FormGroup>
           </div>
         </Box>
 
