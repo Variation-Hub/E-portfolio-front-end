@@ -6,8 +6,12 @@ import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import DoughnutChart from 'src/app/component/Chart/doughnut'
+import { slice } from 'app/store/reloadData'
+import { slice as courseSlice } from "app/store/courseManagement";
 
-const Protfolio = ({ learner, handleClickData }) => {
+
+const Protfolio = ({ learner, handleClickData, handleClickSingleData }) => {
+
   return (
     <div className="m-24 flex items-center border-1 rounded-8 py-12">
       <div className="flex flex-col w-1/6 justify-center items-center border-r-1">
@@ -35,7 +39,10 @@ const Protfolio = ({ learner, handleClickData }) => {
                       color: "inherit",
                       textDecoration: "none",
                     }}
-                    onClick={(e) => handleClickData(e, value)}
+                    onClick={(e) => {
+                      handleClickSingleData(value)
+                      handleClickData(learner.learner_id, learner.user_id)
+                    }}
                   >
                     <DoughnutChart />
                   </Link>
@@ -67,12 +74,17 @@ const LearnerOverview = () => {
     }
   }, [data]);
 
-  const handleClickData = () => {
-
+  const handleClickData = (id, user_id) => {
+    dispatch(slice.setLeanerId({ id, user_id }))
   }
+
+  const handleClickSingleData = (row) => {
+    dispatch(courseSlice.setSingleData(row));
+  };
+
   return (
     <div>
-      {learnerOverView?.map(item => <Protfolio learner={item} handleClickData={handleClickData} />)}
+      {learnerOverView?.map(item => <Protfolio learner={item} handleClickSingleData={handleClickSingleData} handleClickData={handleClickData} />)}
     </div>
   )
 }
