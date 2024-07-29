@@ -21,12 +21,11 @@ const Home = () => {
             </p>
 
             <h2 className="text-3xl font-extrabold mt-12 sm:text-4xl lg:text-5xl">
-              LOREM IPSUM IS DUMMY CONTEXT
+              SMART APPRENTICES MANAGEMENT SOFTWARE
             </h2>
 
             <p className="text-base mt-12 text-justify break-words">
-              We have the technology and industry expertise to develop solutions
-              that can connect people and businesses.
+              Supporting apprentices from enrollment to assessment with a top-tier ePortfolio platform, empowering tutors and assessors to deliver exceptional training and tracking.
             </p>
 
             <Button className="hover:bg-[#ffffff] w-96 font-bold text-sm mt-16 inline-block bg-[#ffffff] p-15 rounded text-black">
@@ -214,7 +213,7 @@ const Home = () => {
                 tickets portal website.
               </p>
 
-              <h3 className="text-xl font-semibold sm:text-3xl lg:text-xl">
+              <h3 className="text-xl font-semibold sm:text-3xl lg:text-xl cursor-pointer">
                 Read More
               </h3>
             </div>
@@ -252,7 +251,7 @@ const Home = () => {
                 tickets portal website.
               </p>
 
-              <h3 className="text-xl font-semibold sm:text-3xl lg:text-xl">
+              <h3 className="text-xl font-semibold sm:text-3xl lg:text-xl cursor-pointer">
                 Read More
               </h3>
             </div>
@@ -292,7 +291,7 @@ const Home = () => {
                 tickets portal website.
               </p>
 
-              <h3 className="text-xl font-semibold sm:text-3xl lg:text-xl">
+              <h3 className="text-xl font-semibold sm:text-3xl lg:text-xl cursor-pointer">
                 Read More
               </h3>
             </div>
@@ -330,7 +329,7 @@ const Home = () => {
                 tickets portal website.
               </p>
 
-              <h3 className="text-xl font-semibold sm:text-3xl lg:text-xl">
+              <h3 className="text-xl font-semibold sm:text-3xl lg:text-xl cursor-pointer">
                 Read More
               </h3>
             </div>
