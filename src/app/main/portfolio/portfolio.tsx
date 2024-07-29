@@ -33,7 +33,6 @@ const Portfolio = () => {
   );
 
   const data = useSelector(selectstoreDataSlice);
-  const { role, photoURL, } = useSelector(selectUser)?.data;
   const user = useSelector(selectUser);
   const { singleData } = useSelector(selectLearnerManagement);
 
@@ -46,7 +45,8 @@ const Portfolio = () => {
   useEffect(() => {
     if (singleData?.learner_id)
       dispatch(getLearnerDetails(singleData?.learner_id));
-  }, [singleData?.learner_id]);
+    else if (user.data?.learner_id) dispatch(getLearnerDetails(user.data?.learner_id));
+  }, [singleData?.learner_id, user.data]);
 
   const handleOpen = () => {
     setOpen(true);

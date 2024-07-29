@@ -52,6 +52,9 @@ const resourceManagementSlice = createSlice({
         },
         setSingleData(state, action) {
             state.singleData = action.payload
+        },
+        updateResourceData(state, action) {
+            state.singleData = state.singleData.map((value) => value.resource_id === action.payload ? ({ ...value, isAccessed: true }) : value)
         }
     }
 });
@@ -175,4 +178,22 @@ export const fetchResourceByCourseAPI = (course_id, user_id) => async (dispatch)
 
 }
 
+export const resourceAccess = (resource_id, user_id) => async (dispatch) => {
+
+    try {
+        let url = `${URL_BASE_LINK}/resource-status/create`;
+
+        const response = await axios.post(url, { resource_id, user_id });
+        if (response.data.status) {
+            dispatch(slice.updateResourceData(resource_id));
+        }
+        return true;
+
+    } catch (err) {
+        dispatch(showMessage({ message: err.response.data.message, variant: "error" }))
+        dispatch(slice.setLoader());
+        return false
+    };
+
+}
 export default resourceManagementSlice.reducer;

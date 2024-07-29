@@ -1,10 +1,12 @@
 import { selectCourseManagement } from 'app/store/courseManagement';
-import { fetchResourceByCourseAPI, selectResourceManagement } from 'app/store/resourcesManagement';
+import { fetchResourceByCourseAPI, resourceAccess, selectResourceManagement } from 'app/store/resourcesManagement';
 import { selectUser } from 'app/store/userSlice';
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Typography } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Typography, IconButton } from '@mui/material';
 import { OpenInNew } from '@mui/icons-material';
+import axiosInstance from 'src/utils/axios';
+import { roles } from 'src/app/contanst';
 
 const ResourceData = () => {
   const dispatch: any = useDispatch();
@@ -18,8 +20,11 @@ const ResourceData = () => {
     }
   }, [dispatch, singleData, user]);
 
-  const handleOpenInNewTab = (resourceUrl) => {
-    window.open(resourceUrl, '_blank');
+  const handleOpenInNewTab = async (url, id) => {
+    if (user?.role === "Learner") {
+      dispatch(resourceAccess(id, user?.user_id));
+    }
+    window.open(url, '_blank');
   };
 
   return (
@@ -37,7 +42,8 @@ const ResourceData = () => {
               <TableCell><strong>Hours</strong></TableCell>
               <TableCell><strong>Minutes</strong></TableCell>
               <TableCell><strong>Job Type</strong></TableCell>
-              <TableCell><strong>Open</strong></TableCell>
+              <TableCell><strong>Access</strong></TableCell>
+              <TableCell><strong>Action</strong></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -48,15 +54,14 @@ const ResourceData = () => {
                 <TableCell>{row.hours}</TableCell>
                 <TableCell>{row.minute}</TableCell>
                 <TableCell>{row.job_type}</TableCell>
+                <TableCell>{row.isAccessed ? "Opened" : "Not Opened"}</TableCell>
                 <TableCell>
-                  <Button
-                    variant="contained"
+                  <IconButton
                     color="primary"
-                    startIcon={<OpenInNew />}
-                    onClick={() => handleOpenInNewTab(row.url)} // Assuming `row.url` contains the URL
+                    onClick={() => !row.isAccessed && handleOpenInNewTab(row?.url?.url, row?.resource_id)} // Assuming `row.url` contains the URL
                   >
-                    Open
-                  </Button>
+                    <OpenInNew />
+                  </IconButton>
                 </TableCell>
               </TableRow>
             ))}
