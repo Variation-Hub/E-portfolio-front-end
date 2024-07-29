@@ -32,7 +32,7 @@ import { useDispatch } from "react-redux";
 import FuseLoading from "@fuse/core/FuseLoading";
 import Close from "@mui/icons-material/Close";
 import SearchIcon from "@mui/icons-material/Search";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import FileCopyIcon from '@mui/icons-material/FileCopy';
 import AlertDialog from "src/app/component/Dialogs/AlertDialog";
@@ -76,6 +76,7 @@ const CreateAssignment = (props) => {
   const user = useSelector(selectUser).data;
 
   const dispatch: any = useDispatch();
+  const navigate = useNavigate();
 
   const [deleteId, setDeleteId] = useState("");
   const [open, setOpen] = useState(false);
@@ -187,6 +188,10 @@ const CreateAssignment = (props) => {
 
   const handleEdit = () => {
     setFormData(singleData);
+  };
+
+  const handleReview = () => {
+    navigate('/review')
   };
 
   const deleteConfromation = async () => {
@@ -446,6 +451,14 @@ const CreateAssignment = (props) => {
             }}
           >
             Delete
+          </MenuItem>
+          <MenuItem
+            onClick={() => {
+              handleClose();
+              handleReview();
+            }}
+          >
+            Review
           </MenuItem>
         </Menu>
         <Dialog

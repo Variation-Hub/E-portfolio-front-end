@@ -1,6 +1,7 @@
 import { lazy } from "react";
 const CreateAssignmentView = lazy(() => import("./createAssignment"));
 import authRoles from 'src/app/auth/authRoles';
+import ReviewAssignment from "./reviewAssignment";
 
 const CreateAssignmentConfig = {
   settings: {
@@ -29,6 +30,10 @@ const CreateAssignmentConfig = {
     {
       path: "/createAssignment",
       element: <CreateAssignmentView />
+    },
+    {
+      path: "/review",
+      element: <ReviewAssignment />
     },
   ],
 };
