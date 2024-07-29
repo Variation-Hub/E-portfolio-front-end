@@ -69,9 +69,7 @@ const columns: readonly Column[] = [
 
 const CreateAssignment = (props) => {
 
-  const { data, dataFetchLoading, dataUpdatingLoadding, singleData, meta_data } = useSelector(selectAssignment);
-
-  console.log(singleData);
+  const { data, dataFetchLoading, dataUpdatingLoadding, singleData } = useSelector(selectAssignment);
 
   const user = useSelector(selectUser).data;
 

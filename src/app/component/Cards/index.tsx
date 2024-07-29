@@ -11,6 +11,8 @@ import Uploading from "src/app/component/Cards/uploading";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { slice as globalSlice } from "app/store/globalUser"
+import { useSelector } from "react-redux";
+import { selectstoreDataSlice } from "app/store/reloadData";
 
 export const Card = (props) => {
   const {
@@ -62,9 +64,10 @@ export const PortfolioCard = (props) => {
   const [open, setOpen] = useState(false);
   const dispatch: any = useDispatch();
   const navigate = useNavigate();
+  const data = useSelector(selectstoreDataSlice);
 
   const { id = 0, name = "No title", color = "#FCA14E" } = props?.data;
-  const handleClick = (row = "" ) => {
+  const handleClick = (row = "") => {
     if (name === "Upload Work") {
       setOpen(true);
     } else if (name === "Unit Progress") {
@@ -83,8 +86,38 @@ export const PortfolioCard = (props) => {
   };
 
   return (
-    !["Upload Work", "Choose Units", "Choose Units"].includes(name) ?
-      <>
+    data?.learner_id ?
+      !["Upload Work", "Choose Units", "Choose Units"].includes(name) ?
+        <>
+          <div
+            className={Style.cardContain}
+            style={{ background: color }}
+            onClick={() => {
+              handleClick();
+            }}
+          >
+            <div>
+              <div className={Style.index}>{id}</div>
+              <div className={Style.emptyRing}></div>
+              <div className={Style.filledRing}></div>
+            </div>
+            <div className={Style.title}>{name}</div>
+          </div>
+          <Dialog
+            open={open}
+            onClose={handleClose}
+            sx={{
+              ".MuiDialog-paper": {
+                borderRadius: "4px",
+                padding: "1rem",
+              },
+            }}
+          >
+            <UploadWorkDialog dialogFn={{ handleClose }} />
+          </Dialog>
+        </> :
+        null
+      : <>
         <div
           className={Style.cardContain}
           style={{ background: color }}
@@ -111,7 +144,6 @@ export const PortfolioCard = (props) => {
         >
           <UploadWorkDialog dialogFn={{ handleClose }} />
         </Dialog>
-      </> :
-      null
-  );
+      </>
+    );
 };
