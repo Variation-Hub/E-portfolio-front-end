@@ -1,11 +1,11 @@
 import FuseLoading from '@fuse/core/FuseLoading';
-import { Dialog, DialogActions, DialogContent, Grid, IconButton, Menu, MenuItem, Pagination, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
+import { Autocomplete, Dialog, DialogActions, DialogContent, Grid, IconButton, Menu, MenuItem, Pagination, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { DangerButton, LoadingButton, SecondaryButton, SecondaryButtonOutlined } from 'src/app/component/Buttons';
 import AlertDialog from 'src/app/component/Dialogs/AlertDialog';
 import DataNotFound from 'src/app/component/Pages/dataNotFound';
 import NewSession from '../portfolio/newsession';
-import { deleteSessionHandler, getSessionAPI, selectSession, slice } from 'app/store/session';
+import { deleteSessionHandler, getSessionAPI, selectSession, slice, updateSessionAPI } from 'app/store/session';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
@@ -71,7 +71,7 @@ const Calendar = () => {
   return (
     <Grid className="m-10">
       <div>
-        <TableContainer sx={{ maxHeight: 500 }}>
+        <TableContainer sx={{ maxHeight: 575 }}>
           {session?.dataFetchLoading ? (
             <FuseLoading />
           ) : session?.data.length ? (
@@ -102,7 +102,8 @@ const Calendar = () => {
                     Location
                   </TableCell>
                   <TableCell align="left" sx={{ width: "15rem" }}>Start Date</TableCell>
-                  <TableCell align="left" sx={{ width: "15rem" }}>Duration</TableCell>
+                  <TableCell align="left" sx={{ width: "10rem" }}>Duration</TableCell>
+                  <TableCell align="center" sx={{ width: "20rem" }}>Attended</TableCell>
                   <TableCell align="left" sx={{ width: "15rem" }}>Type</TableCell>
                   <TableCell align="left" sx={{ width: "15rem" }}>Action</TableCell>
                 </TableRow>
@@ -146,9 +147,51 @@ const Calendar = () => {
                     </TableCell>
                     <TableCell
                       align="left"
-                      sx={{ borderBottom: "2px solid #F8F8F8", width: "15rem" }}
+                      sx={{ borderBottom: "2px solid #F8F8F8", width: "10rem" }}
                     >
                       {row?.Duration}
+                    </TableCell>
+                    <TableCell
+                      align="left"
+                      sx={{ borderBottom: "2px solid #F8F8F8", width: "20rem" }}
+                    >
+                      <Autocomplete
+                        disableClearable
+                        fullWidth
+                        size="small"
+                        value={row?.Attended}
+                        options={[
+                          'Not Set',
+                          'Attended',
+                          'Cancelled',
+                          'Cancelled by Assessor',
+                          'Cancelled by Learner',
+                          'Cancelled by Employer',
+                          'Learner Late',
+                          'Assessor Late',
+                          'Learner not Attended'
+                        ].map((option) => option)}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            placeholder="Select funding body"
+                            name="funding_body"
+                          // error={true || userDataError?.funding_body}
+                          />
+                        )}
+                        onChange={async (e, value) => {
+                          await dispatch(updateSessionAPI(row?.session_id, { Attended: value }))
+                          dispatch(getSessionAPI())
+                        }}
+                        sx={{
+                          ".MuiAutocomplete-clearIndicator": {
+                            color: "#5B718F",
+                          },
+                        }}
+                        PaperComponent={({ children }) => (
+                          <Paper style={{ borderRadius: "4px" }}>{children}</Paper>
+                        )}
+                      />
                     </TableCell>
                     <TableCell
                       align="left"
@@ -185,22 +228,22 @@ const Calendar = () => {
               </Typography>
             </div>
           )}
+          <div className="fixed bottom-0 left-0 w-full flex justify-center ">
+            <Stack
+              spacing={2}
+              className="flex justify-center items-center w-full my-12"
+            >
+              <Pagination
+                count={session?.meta_data?.pages}
+                page={session?.meta_data?.page}
+                variant="outlined" shape="rounded"
+                siblingCount={1}
+                boundaryCount={1}
+                onChange={handleChangePage}
+              />
+            </Stack>
+          </div>
         </TableContainer>
-        <div className="fixed bottom-0 left-0 w-full flex justify-center py-4 mb-14">
-          <Stack
-            spacing={2}
-            className="flex justify-center items-center w-full my-12"
-          >
-            <Pagination
-              count={session?.meta_data?.pages}
-              page={session?.meta_data?.page}
-              variant="outlined" shape="rounded"
-              siblingCount={1}
-              boundaryCount={1}
-              onChange={handleChangePage}
-            />
-          </Stack>
-        </div>
       </div>
       <AlertDialog
         open={Boolean(deleteId)}
@@ -264,7 +307,7 @@ const Calendar = () => {
         }}
       >
         <DialogContent className='p-0'>
-          <NewSession edit={true} handleCloseDialog={handleCloseDialog}/>
+          <NewSession edit={true} handleCloseDialog={handleCloseDialog} />
         </DialogContent>
         {/* <DialogActions>
           {session?.dataUpdatingLoadding ? (
