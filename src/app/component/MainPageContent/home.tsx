@@ -28,9 +28,6 @@ const Home = () => {
               Supporting apprentices from enrollment to assessment with a top-tier ePortfolio platform, empowering tutors and assessors to deliver exceptional training and tracking.
             </p>
 
-            <Button className="hover:bg-[#ffffff] w-96 font-bold text-sm mt-16 inline-block bg-[#ffffff] p-15 rounded text-black">
-              Read More
-            </Button>
           </div>
         </div>
       </div>
@@ -53,18 +50,12 @@ const Home = () => {
         </div>
 
         <div className="w-full p-4 px-20 sm:w-2/5">
-          <p className="font-medium">Enter Small Title here</p>
-
           <h2 className=" uppercase text-3xl font-bold mt-12 sm:text-3xl lg:text-3xl">
-            Lorem Ipsum is simply dummy text of the printing.
+            Empower Your Management with Custom Insights
           </h2>
 
           <p className="mt-12 text-justify break-words">
-            Browse through our free content and learn how to grow your own
-            e-commerce business or take your current online store to the next
-            level with battle- tested digital marketing strategies. View our
-            successful case studies and learn the secrets your own e-commerce
-            business.
+            Discover the power of personalized management reporting with our platform. Our bespoke analytics and detailed reports provide deep insights tailored to your specific business needs. By offering actionable data and trends, our system helps you make informed decisions that drive growth and efficiency. Empower your management team with the tools they need to optimize performance and achieve strategic goals
           </p>
 
           <div className={`${Style.icons} py-20`}>
@@ -108,13 +99,6 @@ const Home = () => {
               </div>
             </div>
           </div>
-          <div className={`${Style.button_div}`}>
-            <Button
-              className={`${Style.button} hover:bg-[#6D81A3] w-1/4 font-bold text-sm mt-16 inline-block bg-[#6D81A3] p-15 rounded text-white`}
-            >
-              Read More
-            </Button>
-          </div>
         </div>
       </div>
 
@@ -134,7 +118,6 @@ const Home = () => {
         </div>
 
         <div className="w-full p-4 px-20 sm:w-2/5">
-          <p className="font-medium">Enter Small Title here</p>
 
           <h2 className=" uppercase text-3xl font-bold mt-12 sm:text-3xl lg:text-3xl">
             Features
@@ -180,18 +163,13 @@ const Home = () => {
 
       <div className="flex flex-col justify-center py-52 items-center bg-[#F9F9FD] sm:flex-col gap-40 ">
         <div className="text-center w-full py-24 px-20 sm:w-3/5">
-          <p className="font-medium">Enter Small Title here</p>
 
           <h2 className=" uppercase text-3xl font-bold mt-12 sm:text-3xl lg:text-3xl">
-            Lorem Ipsum is simply dummy text
+            Seamless Enrollment Process Made Simple
           </h2>
 
           <p className="mt-12 text-justify break-words">
-            Browse through our free content and learn how to grow your own
-            e-commerce business or take your current online store to the next
-            level with battle- tested digital marketing strategies. View our
-            successful case studies and learn the secrets your own e-commerce
-            business.
+            Streamline your online registration and enrollment process with ease. Our platform offers a user-friendly system that simplifies student data management, making it easy to organize and track enrolments. With free templates and automated processes, you can reduce administrative burdens and ensure a smooth experience for both students and staff.
           </p>
         </div>
 
@@ -202,20 +180,13 @@ const Home = () => {
             <div
               className={`w-1/2 flex flex-col justify-around h-full p-12 ${Style.color_card_text}`}
             >
-              <h3 className="text-3xl font-bold sm:text-3xl lg:text-3xl">
-                Event Management and Ticketing Website
+              <h3 className="text-xl font-bold">
+                Flexible Forms for All Your Educational Needs
               </h3>
 
               <p className="text-justify break-words">
-                The System provides an easily customizable, personalized
-                ticketing website for venues of all sizes. To provide an
-                e-ticketing solution that any venue can afford. With this event
-                tickets portal website.
+                Create and manage a wide range of forms with our versatile platform, designed to meet all your educational and administrative requirements. Whether you need Individual Learning Plans (ILP), progress reviews, or custom forms, our tool offers flexibility and ease of use. Our intuitive interface allows you to design and deploy forms quickly.
               </p>
-
-              <h3 className="text-xl font-semibold sm:text-3xl lg:text-xl cursor-pointer">
-                Read More
-              </h3>
             </div>
 
             <div
@@ -240,20 +211,13 @@ const Home = () => {
             <div
               className={`w-1/2 flex flex-col justify-around h-full p-12 ${Style.color_card_text}`}
             >
-              <h3 className="text-3xl font-bold sm:text-3xl lg:text-3xl">
-                Event Management and Ticketing Website
+              <h3 className="text-xl font-bold">
+                Engaging Video Content for Every Course
               </h3>
 
               <p className="text-justify break-words">
-                The System provides an easily customizable, personalized
-                ticketing website for venues of all sizes. To provide an
-                e-ticketing solution that any venue can afford. With this event
-                tickets portal website.
+                Enrich your curriculum with high-quality video teaching and learning resources available for every course. Our extensive library offers engaging content that caters to various learning styles, enhancing the educational experience for students. From instructional videos to interactive tutorials, our resources are designed to support effective learning and retention.
               </p>
-
-              <h3 className="text-xl font-semibold sm:text-3xl lg:text-xl cursor-pointer">
-                Read More
-              </h3>
             </div>
 
             <div
@@ -280,20 +244,13 @@ const Home = () => {
             <div
               className={`w-1/2 flex flex-col justify-around h-full p-12 ${Style.color_card_text}`}
             >
-              <h3 className="text-3xl font-bold sm:text-3xl lg:text-3xl">
-                Event Management and Ticketing Website
+              <h3 className="text-xl font-bold">
+                Maintain Excellence with Comprehensive Quality Assurance
               </h3>
 
               <p className="text-justify break-words">
-                The System provides an easily customizable, personalized
-                ticketing website for venues of all sizes. To provide an
-                e-ticketing solution that any venue can afford. With this event
-                tickets portal website.
+                Ensure your educational programs maintain the highest standards with our robust (IQA) tools. Our platform offers comprehensive monitoring capabilities, helping you stay compliant and uphold excellence. From detailed evaluations to regular audits, provides insights needed to identify areas for improvement and implement effective strategies.
               </p>
-
-              <h3 className="text-xl font-semibold sm:text-3xl lg:text-xl cursor-pointer">
-                Read More
-              </h3>
             </div>
 
             <div
@@ -318,20 +275,14 @@ const Home = () => {
             <div
               className={`w-1/2 flex flex-col justify-around h-full p-12 ${Style.color_card_text}`}
             >
-              <h3 className="text-3xl font-bold sm:text-3xl lg:text-3xl">
-                Event Management and Ticketing Website
+              <h3 className="text-xl font-bold">
+                Visualize Progress and Identify Learning Gaps
               </h3>
 
               <p className="text-justify break-words">
-                The System provides an easily customizable, personalized
-                ticketing website for venues of all sizes. To provide an
-                e-ticketing solution that any venue can afford. With this event
-                tickets portal website.
+                Monitor and track student progress with our advanced visual gap analysis tools. Our platform provides intuitive visualizations, helping educators and administrators quickly identify strengths and areas for improvement. With detailed charts and reports, you can analyze performance, track outcomes, and implement targeted interventions.
               </p>
 
-              <h3 className="text-xl font-semibold sm:text-3xl lg:text-xl cursor-pointer">
-                Read More
-              </h3>
             </div>
 
             <div
@@ -359,18 +310,13 @@ const Home = () => {
           <div
             className={`rounded w-2/6 p-4 py-28 px-28 sm:w-1/4 flex flex-col ${Style.mui_text_box} `}
           >
-            <p className="font-medium">Enter Small Title here</p>
 
-            <h2 className="text-3xl font-bold mt-12 sm:text-3xl lg:text-3xl">
-              Solutions for all, always
+            <h2 className="text-xl font-bold mt-12">
+              Integrate Seamlessly with Existing Systems
             </h2>
 
             <p className="mt-12 text-justify break-words">
-              It is a long established fact that a reader will be distracted by
-              the readable content of a page when looking at its layout. The
-              point of using Lorem Ipsum is that it has a more-or-less normal
-              distribution of letters, as opposed to using 'Content here,
-              content here', making it look like readable English.
+              Maximize efficiency with our platform's seamless API integration capabilities. Designed to work harmoniously with your existing systems, our platform allows for smooth data exchange and workflow optimization. Enjoy a unified and efficient experience that enhances productivity and simplifies administrative tasks.
             </p>
           </div>
 
@@ -390,20 +336,16 @@ const Home = () => {
                 gutterBottom
                 variant="h5"
                 component="div"
-                className="text-3xl font-bold sm:text-3xl lg:text-3xl"
+                className="text-xl font-bold"
               >
-                Freelancer
+                Access Anytime,<br /> Anywhere on Any Device
               </Typography>
               <Typography
                 variant="body2"
                 color="text.secondary"
                 className="mt-12 text-justify break-words"
               >
-                It is a long established fact that a reader will be distracted
-                by the readable content of a page when looking at its layout.
-                The point of using Lorem Ipsum is that it has a more-or-less
-                normal distribution of letters, as opposed to using 'Content
-                here, content here', making it look like readable English.
+                Experience the flexibility of our platform, designed for accessibility on any device, including desktops, tablets, and smartphones. Whether you're at the office, at home, or on the go, our platform ensures you can stay connected and productive.
               </Typography>
             </CardContent>
           </Card>
@@ -424,20 +366,16 @@ const Home = () => {
                 gutterBottom
                 variant="h5"
                 component="div"
-                className="text-3xl font-bold sm:text-3xl lg:text-3xl"
+                className="text-xl font-bold"
               >
-                Startups
+                User-Friendly Design for Effortless Navigation
               </Typography>
               <Typography
                 variant="body2"
                 color="text.secondary"
                 className="mt-12 text-justify break-words"
               >
-                It is a long established fact that a reader will be distracted
-                by the readable content of a page when looking at its layout.
-                The point of using Lorem Ipsum is that it has a more-or-less
-                normal distribution of letters, as opposed to using 'Content
-                here, content here', making it look like readable English.
+                Our intuitive interface makes it simple to access the tools and resources you need, enhancing efficiency and productivity. Whether you're managing courses, tracking student progress, or handling administrative tasks, our platform's clear layout.
               </Typography>
             </CardContent>
           </Card>
@@ -461,16 +399,12 @@ const Home = () => {
               </div>
             </div>
 
-            <h2 className="text-3xl text-white font-bold mt-12 sm:text-3xl lg:text-3xl">
-              Freelancer
+            <h2 className="text-xl text-white font-bold mt-12">
+              Discover the Locker Advantage
             </h2>
 
             <p className="mt-12 text-white text-justify break-words">
-              It is a long established fact that a reader will be distracted by
-              the readable content of a page when looking at its layout. The
-              point of using Lorem Ipsum is that it has a more-or-less normal
-              distribution of letters, as opposed to using 'Content here,
-              content here', making it look like readable English.
+              Our platform combines cutting-edge features, a user-friendly interface, and robust support to provide a seamless experience for educators and administrators. From custom reporting to flexible form creation, our solutions are designed to streamline operations and enhance the learning experience.
             </p>
           </div>
 
@@ -490,20 +424,16 @@ const Home = () => {
                 gutterBottom
                 variant="h5"
                 component="div"
-                className="text-3xl font-bold sm:text-3xl lg:text-3xl"
+                className="text-xl font-bold"
               >
-                Freelancer
+                Connect and Collaborate in Vibrant Learner Forums
               </Typography>
               <Typography
                 variant="body2"
                 color="text.secondary"
                 className="mt-12 text-justify break-words"
               >
-                It is a long established fact that a reader will be distracted
-                by the readable content of a page when looking at its layout.
-                The point of using Lorem Ipsum is that it has a more-or-less
-                normal distribution of letters, as opposed to using 'Content
-                here, content here', making it look like readable English.
+                Our platform encourages students to engage with peers, share knowledge, and participate in meaningful discussions. Whether discussing course content, seeking help with assignments, or sharing experiences, our forums provide a space for learners to connect and grow together.
               </Typography>
             </CardContent>
           </Card>
@@ -524,20 +454,16 @@ const Home = () => {
                 gutterBottom
                 variant="h5"
                 component="div"
-                className="text-3xl font-bold sm:text-3xl lg:text-3xl"
+                className="text-xl font-bold"
               >
-                Freelancer
+                A Trusted Solution for Modern Educational Needs
               </Typography>
               <Typography
                 variant="body2"
                 color="text.secondary"
                 className="mt-12 text-justify break-words"
               >
-                It is a long established fact that a reader will be distracted
-                by the readable content of a page when looking at its layout.
-                The point of using Lorem Ipsum is that it has a more-or-less
-                normal distribution of letters, as opposed to using 'Content
-                here, content here', making it look like readable English.
+                Our platform leverages the latest technologies to provide efficient and scalable solutions that cater to diverse educational needs. Whether you're managing courses, tracking student progress, or engaging with learners, Locker offers the tools and support you need to succeed.
               </Typography>
             </CardContent>
           </Card>
@@ -563,7 +489,6 @@ const Home = () => {
         <div
           className={`text-white flex flex-col justify-center py-20 items-left bg-[#6D81A3] sm:flex-col w-full pl-52 sm:w-1/2 ${Style.why_locker_text}`}
         >
-          <p className="font-medium">Enter Small Title here</p>
 
           <h2 className=" uppercase text-3xl font-bold mt-12 sm:text-3xl lg:text-3xl">
             WHY LOCKER?
@@ -571,30 +496,28 @@ const Home = () => {
 
           <ul className="list-disc list-outside">
             <li className="p-5">
-              It is a long established fact that a reader will be distracted the
-              readable content.
+              Comprehensive Features for All Educational Needs
             </li>
             <li className="p-5">
-              The point of using Lorem Ipsum is that it has a more-or-less
-              normal distribution
+              User-Friendly Interface for Effortless Navigation
             </li>
             <li className="p-5">
-              There are many variations of passages of Lorem Ipsum available.
+              Seamless Integration with Existing Systems
             </li>
             <li className="p-5">
-              Contrary to popular belief, Lorem Ipsum is not simply random text.
+              Robust Quality Assurance Tools and Compliance
             </li>
             <li className="p-5">
-              All the Lorem Ipsum generators on the Internet tend to repeat
+              Accessible Anywhere, Anytime on Any Device
             </li>
             <li className="p-5">
-              It uses a dictionary of over 200 Latin words, combined with of
-              model sentence
+              Collaborative Learning Environment with Forums
             </li>
             <li className="p-5">
-              The standard chunk of Lorem Ipsum used since the 1500s.
+              Trusted and Proven Solution for Modern Education
             </li>
           </ul>
+
         </div>
       </div>
     </>

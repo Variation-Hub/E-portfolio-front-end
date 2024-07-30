@@ -25,14 +25,14 @@ const CreateAssignmentConfig = {
       },
     },
   },
-  auth: [authRoles.Learner],
+  auth: [authRoles.Learner, authRoles.Trainer, authRoles.Admin],
   routes: [
     {
       path: "/createAssignment",
       element: <CreateAssignmentView />
     },
     {
-      path: "/review",
+      path: "/assignment/review",
       element: <ReviewAssignment />
     },
   ],
