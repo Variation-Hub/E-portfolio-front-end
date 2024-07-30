@@ -35,7 +35,7 @@ function OtpValidation({ numberOfDigits, setOtpError, setOtp }) {
   }, [otp]);
 
   return (
-    <div className="w-full mb-10">
+    <div className="w-full mb-10 h-full">
       <p className="text-base mt-4 mb-4">One Time Password (OTP)</p>
 
       <div className="flex items-center justify-between">

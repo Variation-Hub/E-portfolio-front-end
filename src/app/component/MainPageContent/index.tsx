@@ -1,11 +1,12 @@
 import React from "react";
 import Style from "./style.module.css";
+import Home from "./home";
 
 const MainPageContent = () => {
   return (
     <>
-      <div>
-        {/* <div className={Style.screenshort}></div> */}
+    <Home/>
+      {/* <div>
         <div className="flex flex-col justify-evenly py-24 items-center bg-[#F9F9FD] sm:flex-row">
 
           <div className="w-full p-4 px-20 sm:w-1/3">
@@ -51,34 +52,6 @@ const MainPageContent = () => {
             Empower educators with comprehensive tools for dynamic learner progress monitoring, ensuring timely completion of educational milestones. Our platform provides real-time insights, enabling proactive guidance and support to optimize learning outcomes effectively. With intuitive features and robust analytics, educators can efficiently track progress and intervene when needed, fostering a conducive environment for student success.
             </p>
 
-            {/* <div className="flex items-center justify-between mt-32">
-              <div className="flex w-2/5">
-                <img
-                  src="assets/images/svgImage/landing2-1.svg"
-                  alt="img1"
-                  className="w-32 h-auto mr-10"
-                />
-                <div>
-                  <h4 className=" font-bold ">Lorem ipsum context</h4>
-                  <p>
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                  </p>
-                </div>
-              </div>
-              <div className="flex w-2/5">
-                <img
-                  src="assets/images/svgImage/landing2-2.svg"
-                  alt="img2"
-                  className="w-32 h-auto mr-10"
-                />
-                <div>
-                  <h4 className=" font-bold ">Lorem ipsum context</h4>
-                  <p>
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                  </p>
-                </div>
-              </div>
-            </div> */}
           </div>
         </div>
 
@@ -128,7 +101,7 @@ const MainPageContent = () => {
             </ol>
           </div>
         </div>
-      </div>
+      </div> */}
     </>
   );
 };

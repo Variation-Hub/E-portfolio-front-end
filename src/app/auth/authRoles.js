@@ -1,8 +1,9 @@
 const authRoles = {
   Admin: ['Admin'],
-  Learner: ['Learner '],
+  Learner: ['Learner'],
   Trainer: ['Trainer'],
   Employer: ['Employer'],
+  LIQA: ['LIQA'],
   IQA: ['IQA'],
   EQA: ['EQA'],
   onlyGuest: null,

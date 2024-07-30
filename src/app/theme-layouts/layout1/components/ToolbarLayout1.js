@@ -10,6 +10,7 @@ import { selectFuseNavbar } from 'app/store/fuse/navbarSlice';
 import AdjustFontSize from '../../shared-components/AdjustFontSize';
 import LanguageSwitcher from '../../shared-components/LanguageSwitcher';
 import NotificationPanelToggleButton from '../../shared-components/notificationPanel/NotificationPanelToggleButton';
+import Notification from './notification';
 import NavbarToggleButton from '../../shared-components/NavbarToggleButton';
 import UserMenu from '../../shared-components/UserMenu';
 import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
@@ -63,7 +64,8 @@ function ToolbarLayout1(props) {
           <div className="flex items-center px-8 h-full overflow-x-auto">
             <LanguageSwitcher />
             <AdjustFontSize />
-            <NotificationPanelToggleButton />
+            {/* <NotificationPanelToggleButton /> */}
+            <Notification />
             <UserMenu />
           </div>
 

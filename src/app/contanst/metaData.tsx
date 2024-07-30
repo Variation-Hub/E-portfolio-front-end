@@ -1,3 +1,3 @@
 export const userTableMetaData={
-    page_size: 25
+    page_size: 10
 }

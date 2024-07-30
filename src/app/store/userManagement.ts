@@ -4,9 +4,13 @@ import jsonData from 'src/url.json';
 import { showMessage } from './fuse/messageSlice';
 import { userTableMetaData } from '../contanst/metaData';
 import JwtService from '../auth/services/jwtService';
+import instance from '../auth/services/jwtService/jwtService';
+import {slice as globalSlice} from './globalUser'
+import { setUser } from './userSlice';
 
 const initialState = {
     data: [],
+    avarat: "",
     dataFetchLoading: false,
     dataUpdatingLoadding: false,
     meta_data: {
@@ -14,7 +18,9 @@ const initialState = {
         items: 0,
         page_size: userTableMetaData.page_size,
         pages: 1
-    }
+    },
+    learnerData: [],
+    trainerData: []
 };
 
 const userManagementSlice = createSlice({
@@ -22,6 +28,7 @@ const userManagementSlice = createSlice({
     initialState,
     reducers: {
         updateUser(state, action) {
+            console.log("loglog", action.payload.data, Array.isArray(action.payload.data))
             if (Array.isArray(action.payload.data)) {
                 state.data = action.payload.data;
                 state.meta_data = action.payload.meta_data
@@ -49,6 +56,15 @@ const userManagementSlice = createSlice({
                 }
                 return value;
             })
+        },
+        updateAvatar(state, action) {
+            state.avarat = action.payload;
+        },
+        setEQALearnerData(state, action) {
+            state.learnerData = action.payload;
+        },
+        setEQATrainerData(state, action) {
+            state.trainerData = action.payload;
         }
     }
 });
@@ -149,11 +165,11 @@ export const createUserAPI = (data) => async (dispatch) => {
 }
 
 // get user
-export const fetchUserAPI = (data = { page: 1, page_size: 25 }, search_keyword = "", search_role = "") => async (dispatch) => {
+export const fetchUserAPI = (data = { page: 1, page_size: 10 }, search_keyword = "", search_role = "") => async (dispatch) => {
 
     try {
         dispatch(slice.setLoader());
-        const { page = 1, page_size = 25 } = data;
+        const { page = 1, page_size = 10 } = data;
 
         let url = `${URL_BASE_LINK}/user/list?page=${page}&limit=${page_size}&meta=true`;
 
@@ -162,11 +178,11 @@ export const fetchUserAPI = (data = { page: 1, page_size: 25 }, search_keyword =
         }
 
         if (search_role) {
-            url = `${url}&role=${search_role}`
+            url = `${url}&role=${search_role === "Lead IQA" ? "LIQA" : search_role}`
         }
 
         const response = await axios.get(url);
-        dispatch(showMessage({ message: response.data.message, variant: "success" }))
+        // dispatch(showMessage({ message: response.data.message, variant: "success" }))
         dispatch(slice.updateUser(response.data));
         dispatch(slice.setLoader());
         return true;
@@ -223,19 +239,85 @@ export const deleteUserHandler = (id, meta_data, search_keyword = "", search_rol
     };
 }
 
-export const uploadAvatar = (file) => async (dispatch) => {
-    try{
+// Upload user avatar 
+export const uploadAvatar = (file) => async (dispatch, getStore) => {
+    try {
         const formData = new FormData();
         formData.append('avatar', file);
+        formData.append('role', getStore()?.user?.data?.role)
         dispatch(slice.setUpdatingLoader());
         const response = await axios.post(`${URL_BASE_LINK}/user/avatar`, formData);
-        dispatch(showMessage({ message: response.data.message, variant: "success" }))
-        await JwtService.emit('onLogin', response.data.data);
+        await JwtService.setSession(response.data.data)
+        window.location.reload();
         dispatch(slice.setUpdatingLoader());
         return true;
-    }catch(err){
+    } catch (err) {
         dispatch(slice.setUpdatingLoader());
         return false;
     }
+}
+
+// chnage user role
+export const changeUserRoleHandler = (role) => async (dispatch) => {
+    try {
+        dispatch(slice.setUpdatingLoader());
+        const response = await axios.post(`${URL_BASE_LINK}/user/changerole/`, { role })
+        if (response.data.status) {
+            dispatch(globalSlice.setCurrentUser(response.data.data.user))
+            instance.chnageRole(response.data.data.accessToken);
+        }
+        dispatch(showMessage({ message: response.data.message, variant: "success" }))
+        dispatch(slice.setUpdatingLoader());
+        return true;
+    } catch (err) {
+        dispatch(showMessage({ message: err.response.data.message, variant: "error" }))
+        dispatch(slice.setUpdatingLoader());
+        return false;
+    };
+}
+
+
+// Change Password
+export const changePassword = (data) => async (dispatch) => {
+    try {
+        dispatch(slice.setUpdatingLoader());
+        const response = await axios.post(`${URL_BASE_LINK}/user/password/change`, data)
+        dispatch(showMessage({ message: response.data.message, variant: "success" }))
+        dispatch(slice.setUpdatingLoader());
+        return true;
+    } catch (err) {
+        dispatch(showMessage({ message: err.response?.data.message, variant: "error" }))
+        dispatch(slice.setUpdatingLoader());
+        return false;
+    };
+}
+
+
+// get user
+export const getEQAUserData = (data = { page: 1, page_size: 5 }, user, user_id) => async (dispatch) => {
+
+    try {
+        dispatch(slice.setLoader());
+        const { page = 1, page_size = 5 } = data;
+
+        let url = `${URL_BASE_LINK}/user/list/eqa?meta=true&page=${page}&limit=${page_size}&user=${user}&EQA_id=${user_id}`;
+
+        const response = await axios.get(url);
+        // dispatch(showMessage({ message: response.data.message, variant: "success" }))
+        if (user === "trainer_id") {
+            dispatch(slice.setEQATrainerData(response.data.data));
+        }
+        if (user === "learner_id") {
+            dispatch(slice.setEQALearnerData(response.data.data));
+        }
+        dispatch(slice.setLoader());
+        return true;
+
+    } catch (err) {
+        dispatch(showMessage({ message: err.response.data.message, variant: "error" }))
+        dispatch(slice.setLoader());
+        return false
+    };
+
 }
 export default userManagementSlice.reducer;

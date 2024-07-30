@@ -1,4 +1,7 @@
+/* eslint-disable class-methods-use-this */
+/* eslint-disable no-async-promise-executor */
 import FuseUtils from '@fuse/utils/FuseUtils';
+import { slice } from 'app/store/globalUser';
 import axios from 'axios';
 import jwtDecode from 'jwt-decode';
 import jsonData from 'src/url.json';
@@ -63,7 +66,6 @@ class JwtService extends FuseUtils.EventEmitter {
     // };
 
     signInWithEmailAndPassword = (credentials, dispatch) => {
-
         const payload = { ...credentials };
 
         return new Promise((resolve, reject) => {
@@ -72,43 +74,56 @@ class JwtService extends FuseUtils.EventEmitter {
                 .then(async (response) => {
                     if (response.data.status) {
                         const decoded = jwtDecode(response.data.data.accessToken);
-                        const res = await axios.post(`${URL_BASE_LINK}/notification/connect`, {}, {
-                            headers: {
-                                Authorization: `Bearer ${response.data.data.accessToken}`
-                            }
-                        })
-
-                        console.log(res.data)
-                        if (res.data.status) {
-                            connectToSocket(dispatch)
-                        }
-
+                        // const res = await axios.post(
+                        //   `${URL_BASE_LINK}/notification/connect`,
+                        //   {},
+                        //   {
+                        //     headers: {
+                        //       Authorization: `Bearer ${response.data.data.accessToken}`,
+                        //     },
+                        //   }
+                        // );
+                        // if (res.data.status) {
+                            // }
+                        connectToSocket(decoded.user_id, dispatch);
+                        dispatch(slice.setCurrentUser(response.data.data.user))
                         if (response.data.data.password_changed) {
                             this.setSession(response.data.data.accessToken);
                             this.emit('onLogin', decoded);
                         } else {
-                            sessionStorage.setItem("email", decoded?.email)
-                            resolve({ token: response.data.data.accessToken, decoded })
+                            sessionStorage.setItem('email', decoded?.email);
+                            resolve({ token: response.data.data.accessToken, decoded });
                         }
                     } else {
                         reject(response.data.error);
                     }
-                }).catch(err => reject(err));
+                })
+                .catch((err) => reject(err));
         });
     };
+
+    chnageRole = (token) => {
+        const decoded = jwtDecode(token);
+        this.setSession(token);
+        this.emit('onLogin', decoded);
+    }
 
     signInWithToken = (dispatch) => {
         return new Promise(async (resolve, reject) => {
             const decoded = jwtDecode(this.getAccessToken());
-            const response = await axios.post(`${URL_BASE_LINK}/notification/connect`, {}, {
-                headers: {
-                    Authorization: `Bearer ${this.getAccessToken()}`
-                }
-            })
+            // const response = await axios.post(
+            //     `${URL_BASE_LINK}/notification/connect`,
+            //     {},
+            //     {
+            //         headers: {
+            //             Authorization: `Bearer ${this.getAccessToken()}`,
+            //         },
+            //     }
+            // );
 
-            if (response.data.status) {
-                connectToSocket(dispatch)
-            }
+            // if (response.data.status) {
+            connectToSocket(decoded.user_id, dispatch);
+            // }
             resolve(decoded);
         });
     };
@@ -128,6 +143,7 @@ class JwtService extends FuseUtils.EventEmitter {
         this.emit('onLogout', 'Logged out');
     };
 
+    // eslint-disable-next-line class-methods-use-this
     isAuthTokenValid = (access_token) => {
         if (!access_token) {
             return false;
@@ -145,7 +161,6 @@ class JwtService extends FuseUtils.EventEmitter {
     getAccessToken = () => {
         return window.localStorage.getItem('token');
     };
-
 }
 
 const instance = new JwtService();

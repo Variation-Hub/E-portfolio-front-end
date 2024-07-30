@@ -3,13 +3,19 @@ import Breadcrumb from "src/app/component/Breadcrumbs";
 import { SecondaryButton } from "src/app/component/Buttons";
 import DataNotFound from "src/app/component/Pages/dataNotFound";
 import { AdminRedirect, roles } from "src/app/contanst";
-import Style from '../style.module.css'
+import Style from "../style.module.css";
 import { useSelector } from "react-redux";
-import { createUserAPI, fetchUserAPI, selectUserManagement, updateUserAPI } from "app/store/userManagement";
+import {
+  createUserAPI,
+  fetchUserAPI,
+  selectUserManagement,
+  updateUserAPI,
+} from "app/store/userManagement";
 import UserManagementTable from "src/app/component/Table/UserManagementTable";
 import { userManagementTableColumn } from "src/app/contanst";
 import {
   Autocomplete,
+  Card,
   Dialog,
   Drawer,
   IconButton,
@@ -54,7 +60,7 @@ const Index = () => {
     password: "",
     confrimpassword: "",
     mobile: "",
-    role: "Trainer",
+    role: [],
     time_zone: "",
   });
 
@@ -94,7 +100,7 @@ const Index = () => {
       password: "",
       confrimpassword: "",
       mobile: "",
-      role: "Trainer",
+      role: [],
       time_zone: "",
     });
     setUserDataError({
@@ -103,25 +109,36 @@ const Index = () => {
       user_name: false,
       email: false,
       password: false,
-      // sso_id: false,
       confrimpassword: false,
       mobile: false,
-      // phone: false,
       role: false,
     });
   };
 
   const createUserHandler = async () => {
     if (validation()) {
-      const response = await dispatch(createUserAPI(userData));
+      const data = {
+        ...userData,
+        roles: userData.role.map((item) =>
+          item === "Lead IQA" ? "LIQA" : item
+        ),
+      };
+      delete data.role;
+      const response = await dispatch(createUserAPI(data));
       if (response) {
         resetValue();
       }
+      handleClose();
     }
   };
 
   const updateUserHandler = async () => {
-    const response = await dispatch(updateUserAPI(updateData, userData));
+    const data = {
+      ...userData,
+      roles: userData.role.map((item) => (item === "Lead IQA" ? "LIQA" : item)),
+    };
+    delete data.role;
+    const response = await dispatch(updateUserAPI(updateData, data));
     if (response) {
       handleClose();
       setUpdateData("");
@@ -140,12 +157,14 @@ const Index = () => {
 
   const filterHandler = (e, value) => {
     setFilterValue(value);
-    dispatch(fetchUserAPI({ page: 1, page_size: 25 }, searchKeyword, value));
-  }
+    dispatch(fetchUserAPI({ page: 1, page_size: 10 }, searchKeyword, value));
+  };
 
   const searchAPIHandler = () => {
-    dispatch(fetchUserAPI({ page: 1, page_size: 25 }, searchKeyword, filterValue));
-  }
+    dispatch(
+      fetchUserAPI({ page: 1, page_size: 10 }, searchKeyword, filterValue)
+    );
+  };
 
   const validation = () => {
     setUserDataError({
@@ -154,73 +173,82 @@ const Index = () => {
       user_name: !usernameReg.test(userData?.user_name),
       email: !emailReg.test(userData?.email),
       password: !passwordReg.test(userData?.password),
-      confrimpassword: userData?.password !== userData?.confrimpassword || !passwordReg.test(userData?.password),
+      confrimpassword:
+        userData?.password !== userData?.confrimpassword ||
+        !passwordReg.test(userData?.password),
       mobile: !mobileReg.test(userData.mobile),
-      role: userData?.role === "",
-    })
+      role: userData?.role.length !== 0,
+    });
 
-    if (nameReg.test(userData?.first_name) &&
+    if (
+      nameReg.test(userData?.first_name) &&
       nameReg.test(userData?.last_name) &&
       usernameReg.test(userData?.user_name) &&
       emailReg.test(userData?.email) &&
       passwordReg.test(userData?.password) &&
       userData?.password === userData?.confrimpassword &&
       mobileReg.test(userData.mobile) &&
-      userData?.role !== "") {
+      userData?.role.length !== 0
+    ) {
       return true;
     }
     return false;
   };
 
   return (
-    <div className="w-full h-full">
-      <Breadcrumb linkData={[AdminRedirect]} currPage="User" />
-
-      {data.length ? (
+    <Card className="m-12 rounded-6 relative" style={{ height: "87.9vh" }}>
+      <div className="w-full h-full">
+        <Breadcrumb linkData={[AdminRedirect]} currPage="User" />
         <div className={Style.create_user}>
           <div className={Style.search_filed}>
             <TextField
               label="Search by keyword"
-              fullWidth size="small"
+              fullWidth
+              size="small"
               onKeyDown={searchByKeywordUser}
               onChange={searchHandler}
               value={searchKeyword}
               InputProps={{
-                endAdornment:
-                  <InputAdornment position="end" >
-                    {
-                      searchKeyword ? (
-                        <Close
-                          onClick={() => {
-                            setSearchKeyword("");
-                            dispatch(fetchUserAPI({ page: 1, page_size: 25 }, "", filterValue));
-                          }}
-                          sx={{
-                            color: "#5B718F",
-                            fontSize: 18,
-                            cursor: "pointer",
-                          }}
-                        />
-                      ) : (
-                        <IconButton
-                          id="dashboard-search-events-btn"
-                          disableRipple
-                          sx={{ color: "#5B718F" }}
-                          onClick={() => searchAPIHandler()}
-                          size="small"
-                        >
-                          <SearchIcon fontSize="small" />
-                        </IconButton>
-                      )}
+                endAdornment: (
+                  <InputAdornment position="end">
+                    {searchKeyword ? (
+                      <Close
+                        onClick={() => {
+                          setSearchKeyword("");
+                          dispatch(
+                            fetchUserAPI(
+                              { page: meta_data?.page, page_size: 10 },
+                              "",
+                              filterValue
+                            )
+                          );
+                        }}
+                        sx={{
+                          color: "#5B718F",
+                          fontSize: 18,
+                          cursor: "pointer",
+                        }}
+                      />
+                    ) : (
+                      <IconButton
+                        id="dashboard-search-events-btn"
+                        disableRipple
+                        sx={{ color: "#5B718F" }}
+                        onClick={() => searchAPIHandler()}
+                        size="small"
+                      >
+                        <SearchIcon fontSize="small" />
+                      </IconButton>
+                    )}
                   </InputAdornment>
+                ),
               }}
             />
             <Autocomplete
-              
               fullWidth
               size="small"
               value={filterValue}
-              options={roles.map((option) => option.label)}
+              options={roles.filter(item => item.label !== "Employer")?.map((option) => option.label)}
               renderInput={(params) => (
                 <TextField {...params} label="Search by role" />
               )}
@@ -231,7 +259,7 @@ const Index = () => {
                 },
               }}
               PaperComponent={({ children }) => (
-                <Paper style={{ borderRadius:"4px" }}>{children}</Paper>
+                <Paper style={{ borderRadius: "4px" }}>{children}</Paper>
               )}
             />
           </div>
@@ -247,52 +275,55 @@ const Index = () => {
             onClick={handleOpen}
           />
         </div>
-      ) : null}
-      {
-        dataFetchLoading ? <FuseLoading /> :
-          data.length ?
-            <UserManagementTable
-              columns={userManagementTableColumn}
-              rows={data}
-              handleOpen={handleOpen}
-              setUserData={setUserData}
-              setUpdateData={setUpdateData}
-              meta_data={meta_data}
-              dataUpdatingLoadding={dataUpdatingLoadding}
-              search_keyword={searchKeyword}
-              search_role={filterValue}
-            />
-            :
-            <div className="flex flex-col justify-center items-center gap-10 " style={{ height: "94%" }}>
-              <DataNotFound width="25%" />
-              <Typography variant="h5">No data found</Typography>
-              <Typography variant="body2" className="text-center">It is a long established fact that a reader will be <br />distracted by the readable content.</Typography>
-              <SecondaryButton name="Create user" onClick={handleOpen} />
-            </div>
-
-      }
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        sx={{
-          ".MuiDialog-paper": {
-            borderRadius: "4px",
-            padding: "1rem",
-          },
-        }}
-      >
-        <UserDetails
-          handleClose={handleClose}
-          updateData={Boolean(updateData)}
-          userData={userData}
-          handleUpdate={handleUpdate}
-          createUserHandler={createUserHandler}
-          updateUserHandler={updateUserHandler}
-          dataUpdatingLoadding={dataUpdatingLoadding}
-          userDataError={userDataError}
-        />
-      </Dialog>
-    </div>
+        {dataFetchLoading ? (
+          <FuseLoading />
+        ) : data.length ? (
+          <UserManagementTable
+            columns={userManagementTableColumn}
+            rows={data}
+            handleOpen={handleOpen}
+            setUserData={setUserData}
+            setUpdateData={setUpdateData}
+            meta_data={meta_data}
+            dataUpdatingLoadding={dataUpdatingLoadding}
+            search_keyword={searchKeyword}
+            search_role={filterValue}
+          />
+        ) : (
+          <div
+            className="flex flex-col justify-center items-center gap-10 "
+            style={{ height: "94%" }}
+          >
+            <DataNotFound width="25%" />
+            <Typography variant="h5">No data found</Typography>
+            <Typography variant="body2" className="text-center">
+              It is a long established fact that a reader will be <br />
+              distracted by the readable content.
+            </Typography>
+          </div>
+        )}
+        <Dialog
+          open={open}
+          sx={{
+            ".MuiDialog-paper": {
+              borderRadius: "4px",
+              padding: "1rem",
+            },
+          }}
+        >
+          <UserDetails
+            handleClose={handleClose}
+            updateData={Boolean(updateData)}
+            userData={userData}
+            handleUpdate={handleUpdate}
+            createUserHandler={createUserHandler}
+            updateUserHandler={updateUserHandler}
+            dataUpdatingLoadding={dataUpdatingLoadding}
+            userDataError={userDataError}
+          />
+        </Dialog>
+      </div>
+    </Card>
   );
 };
 

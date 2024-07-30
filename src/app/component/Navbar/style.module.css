@@ -18,7 +18,7 @@
     gap: 2vw;
 }
 
-.menu a{
+.menu a {
     text-decoration: none !important;
 }
 
@@ -33,7 +33,6 @@
     transition: 0.2s;
     padding: 0.2rem 1rem;
 }
-
 
 .navbar_link_mobile {
     cursor: pointer;
@@ -65,5 +64,8 @@
     }
     .menu_open_icon {
         display: block;
+    }
+    .logo {
+        margin-left: 0px;
     }
 }

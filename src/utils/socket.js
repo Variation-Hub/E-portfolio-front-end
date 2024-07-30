@@ -1,30 +1,34 @@
 import { showMessage } from 'app/store/fuse/messageSlice';
 import { getLearnerDetails } from 'app/store/learnerManagement';
-import io from 'socket.io-client';
+import { fetchNotifications } from 'app/store/notification';
 import jsonData from 'src/url.json';
-
+import { SocketDomain } from './randomColor';
+import { slice } from 'app/store/forum';
+// import slice from ''
 const SERVER_URL = jsonData.SOCKER_LINK
 
 let socket;
 
-export const connectToSocket = (dispatch) => {
-    socket = io(SERVER_URL);
+export const connectToSocket = async (id, dispatch) => {
+    socket = await new WebSocket(`${SERVER_URL}?id=${id}`);
 
-    socket.on('message', (message) => {
-        console.log('Received message:', message);
-        dispatch(showMessage({ message: message.message, variant:"success"}));
-        dispatch(getLearnerDetails())
-    });
+    socket.onmessage = (Data) => {
+        const { data, domain, } = JSON.parse(Data.data);
 
-    socket.on('connect_user', (message) => {
-        console.log('Received user:', message);
-    })
+        if (domain === SocketDomain.CourseAllocation) {
+            dispatch(showMessage({ message: data.message, variant: "success" }));
+            dispatch(getLearnerDetails())
+            dispatch(fetchNotifications())
+        } else if (domain === SocketDomain.MessageSend) {
+            dispatch(slice.newMassageHandler(data))
+        }
+    };
 
     return socket;
 };
 
 export const disconnectFromSocket = () => {
-    if (socket) {
-        socket.disconnect();
-    }
+    // if (socket) {
+    //     socket.disconnect();
+    // }
 };

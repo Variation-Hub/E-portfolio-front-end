@@ -6,7 +6,7 @@ import LandingConfig from "../main/landing/landingConfig";
 import HomeConfig from "../main/home/homeConfig";
 import CpdConfig from "../main/cpd/cpdConfig";
 import LearnerOverviewConfig from "../main/learnerOverview/learnerOverviewConfig";
-import CaseloadConfig from "../main/caseload/caseloadConfig";
+// import CaseloadConfig from "../main/caseload/caseloadConfig";
 import ReportsConfig from "../main/reports/reportsConfig";
 import ResourcesConfig from "../main/resources/resourcesConfig";
 import ForumConfig from "../main/forum/forumConfig";
@@ -24,14 +24,14 @@ import CreateResourcesConfig from "../main/createResources/createResourcesConfig
 import LearnerPortfolioConfig from "../main/learnerPortfolio/learnerPortfolioConfig";
 import AdminConfig from "../main/admin/adminConfig";
 import CourseBuilderConfig from "../main/courseBuilder/courseBuilderConfig";
-import AllLearnersConfig from "../main/allLearners/allLearnersConfig";
+// import AllLearnersConfig from "../main/allLearners/allLearnersConfig";
 import FormsConfig from "../main/forms/formsConfig";
-import EnrolmentsConfig from "../main/enrolments/enrolmentsConfig";
 import SurverysConfig from "../main/surverys/surverysConfig";
 import CommunicationsConfig from "../main/communications/communicationsConfig";
 import ForgotConfig from "../main/forgotPassword/forgotConfig";
 import MyProfileConfig from "../main/myProfile/myProfileConfig";
-
+import NotificationConfig from "../main/notification/notificationConfig";
+import TimeLogConfig from "../main/timeLog/timeLogConfig";
 
 const routeConfigs = [
     LandingConfig,
@@ -39,7 +39,7 @@ const routeConfigs = [
     HomeConfig,
     CpdConfig,
     LearnerOverviewConfig,
-    CaseloadConfig,
+    // CaseloadConfig,
     ReportsConfig,
     ResourcesConfig,
     ForumConfig,
@@ -57,13 +57,14 @@ const routeConfigs = [
     LearnerPortfolioConfig,
     AdminConfig,
     CourseBuilderConfig,
-    AllLearnersConfig,
+    // AllLearnersConfig,
     FormsConfig,
-    EnrolmentsConfig,
     SurverysConfig,
     CommunicationsConfig,
     ForgotConfig,
-    MyProfileConfig
+    MyProfileConfig,
+    NotificationConfig,
+    TimeLogConfig,
 ];
 
 const routes = [
@@ -73,7 +74,7 @@ const routes = [
     ),
     {
         path: "*",
-        element: < Navigate to = "/" / > ,
+        element: < Navigate to="/" />,
     }
 ];
 

@@ -1,4 +1,6 @@
 {
-    "API_LOCAL_URL": "http://ec2-13-233-8-111.ap-south-1.compute.amazonaws.com:3005/api/v1",
-    "SOCKER_LINK": "http://ec2-13-233-8-111.ap-south-1.compute.amazonaws.com:3005"
+    "API_LOCAL_URL": "https://testigndomain.online/api/v1",
+    "SOCKER_LINK": "wss://testigndomain.online/",
+    "API_LOCAL_URL_": "http://192.168.1.4:3005/api/v1",
+    "SOCKER_LINK_": "ws://192.168.1.4:3005"
 }

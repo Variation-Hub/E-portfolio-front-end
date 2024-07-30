@@ -2,21 +2,19 @@ import React, { useEffect, useState } from "react";
 import Breadcrumb from "src/app/component/Breadcrumbs";
 import { SecondaryButton } from "src/app/component/Buttons";
 import DataNotFound from "src/app/component/Pages/dataNotFound";
-import { AdminRedirect, learnerManagementTableColumn, roles } from "src/app/contanst";
+import { AdminRedirect, learnerManagementTableColumn } from "src/app/contanst";
 import Style from '../style.module.css'
 import { useSelector } from "react-redux";
-import UserManagementTable from "src/app/component/Table/UserManagementTable";
-import { userManagementTableColumn } from "src/app/contanst";
-import { Autocomplete, Dialog, Drawer, IconButton, InputAdornment, OutlinedInput, Paper, TextField, Typography } from "@mui/material";
+import { Card, Dialog, IconButton, InputAdornment, TextField, Typography } from "@mui/material";
 import UserDetails from "./usetDetails";
 import { useDispatch } from "react-redux";
-import FuseLoading from '@fuse/core/FuseLoading';
 import Close from "@mui/icons-material/Close";
 import SearchIcon from '@mui/icons-material/Search';
 import { emailReg, mobileReg, nameReg, passwordReg, usernameReg } from "src/app/contanst/regValidation";
-import { createLearnerAPI, fetchLearnerAPI, selectLearnerManagement, updateLearnerAPI } from "app/store/learnerManagement";
+import { createLearnerAPI, fetchLearnerAPI, getRoleAPI, selectLearnerManagement, updateLearnerAPI } from "app/store/learnerManagement";
 import LearnerManagementTable from "src/app/component/Table/LearnerManagementTable";
 import { fetchCourseAPI } from "app/store/courseManagement";
+import { getEmployerAPI } from "app/store/employer";
 
 const Index = () => {
 
@@ -26,7 +24,6 @@ const Index = () => {
   const [open, setOpen] = useState(false);
   const [updateData, setUpdateData] = useState("");
   const [searchKeyword, setSearchKeyword] = useState("");
-  const [filterValue, setFilterValue] = useState("");
 
   useEffect(() => {
     dispatch(fetchLearnerAPI())
@@ -105,6 +102,7 @@ const Index = () => {
       const response = await dispatch(createLearnerAPI(userData));
       if (response) {
         resetValue();
+        setOpen(false);
       }
     }
   }
@@ -114,6 +112,7 @@ const Index = () => {
     if (response) {
       handleClose();
       setUpdateData("");
+      setOpen(false);
     }
   }
 
@@ -127,14 +126,18 @@ const Index = () => {
     setSearchKeyword(e.target.value);
   }
 
-  const filterHandler = (e, value) => {
-    setFilterValue(value);
-    dispatch(fetchLearnerAPI({ page: 1, page_size: 25 }, searchKeyword, value));
+  const searchAPIHandler = () => {
+    dispatch(fetchLearnerAPI({ page: 1, page_size: 10 }, searchKeyword));
   }
 
-  const searchAPIHandler = () => {
-    dispatch(fetchLearnerAPI({ page: 1, page_size: 25 }, searchKeyword, filterValue));
-  }
+  useEffect(() => {
+    dispatch(getRoleAPI("Trainer"));
+    dispatch(getRoleAPI("IQA"));
+    dispatch(getRoleAPI("EQA"));
+    dispatch(getRoleAPI("Employer"));
+    dispatch(getRoleAPI("LIQA"));
+    dispatch(getEmployerAPI());
+  }, []);
 
   const validation = () => {
 
@@ -164,10 +167,10 @@ const Index = () => {
   }
 
   return (
-    <div className="w-full h-full">
-      <Breadcrumb linkData={[AdminRedirect]} currPage="Learner" />
+    <Card className="m-12 rounded-6" style={{ height: "87.9vh" }}>
+      <div className="w-full h-full">
+        <Breadcrumb linkData={[AdminRedirect]} currPage="Learner" />
 
-      {data.length ? (
         <div className={Style.create_user}>
           <div className={Style.search_filed}>
             <TextField
@@ -186,7 +189,7 @@ const Index = () => {
                         <Close
                           onClick={() => {
                             setSearchKeyword("");
-                            dispatch(fetchLearnerAPI({ page: 1, page_size: 25 }, "", filterValue));
+                            dispatch(fetchLearnerAPI({ page: 1, page_size: 10 }, ""));
                           }}
                           sx={{
                             color: "#5B718F",
@@ -208,23 +211,6 @@ const Index = () => {
                   </InputAdornment>
               }}
             />
-            {/* <Autocomplete
-
-              fullWidth
-              size="small"
-              value={filterValue}
-              options={roles.map((option) => option.label)}
-              renderInput={(params) => <TextField {...params} label="Search by role" />}
-              onChange={filterHandler}
-              sx={{
-                '.MuiAutocomplete-clearIndicator': {
-                  color: "#5B718F"
-                }
-              }}
-              PaperComponent={({ children }) => (
-                <Paper style={{ borderRadius: "4px" }}>{children}</Paper>
-              )}
-            /> */}
           </div>
           <SecondaryButton name="Create learner" onClick={handleOpen} startIcon={
             <img
@@ -235,9 +221,7 @@ const Index = () => {
           } />
 
         </div>
-      ) : null}
-      {
-        dataFetchLoading ? <FuseLoading /> :
+        {
           data.length ?
             <LearnerManagementTable
               columns={learnerManagementTableColumn}
@@ -248,46 +232,39 @@ const Index = () => {
               meta_data={meta_data}
               dataUpdatingLoadding={dataUpdatingLoadding}
               search_keyword={searchKeyword}
-              search_role={filterValue}
             />
             :
             <div className="flex flex-col justify-center items-center gap-10 " style={{ height: "94%" }}>
               <DataNotFound width="25%" />
               <Typography variant="h5">No data found</Typography>
               <Typography variant="body2" className="text-center">It is a long established fact that a reader will be <br />distracted by the readable content.</Typography>
-              <SecondaryButton name="Create learner" onClick={handleOpen} startIcon={
-                <img
-                  src="assets/images/svgimage/createcourseicon.svg"
-                  alt="Create user"
-                  className="w-6 h-6 mr-2 sm:w-8 sm:h-8 lg:w-10 lg:h-10"
-                />
-              } />
             </div>
 
-      }
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        fullWidth
-        sx={{
-          '.MuiDialog-paper': {
-            borderRadius: "4px",
-            padding: "1rem"
-          }
-        }}
-      >
-        <UserDetails
-          handleClose={handleClose}
-          updateData={Boolean(updateData)}
-          userData={userData}
-          handleUpdate={handleUpdate}
-          createUserHandler={createUserHandler}
-          updateUserHandler={updateUserHandler}
-          dataUpdatingLoadding={dataUpdatingLoadding}
-          userDataError={userDataError}
-        />
-      </Dialog>
-    </div >
+        }
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          fullWidth
+          sx={{
+            '.MuiDialog-paper': {
+              borderRadius: "4px",
+              padding: "1rem"
+            }
+          }}
+        >
+          <UserDetails
+            handleClose={handleClose}
+            updateData={Boolean(updateData)}
+            userData={userData}
+            handleUpdate={handleUpdate}
+            createUserHandler={createUserHandler}
+            updateUserHandler={updateUserHandler}
+            dataUpdatingLoadding={dataUpdatingLoadding}
+            userDataError={userDataError}
+          />
+        </Dialog>
+      </div >
+    </Card>
   );
 };
 

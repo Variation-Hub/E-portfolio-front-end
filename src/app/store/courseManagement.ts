@@ -14,7 +14,10 @@ const initialState = {
         page_size: userTableMetaData.page_size,
         pages: 1
     },
-    preFillData: {}
+    preFillData: {},
+    singleData: {},
+    unitData: [],
+    learnerOverView: []
 };
 
 const courseManagementSlice = createSlice({
@@ -42,9 +45,9 @@ const courseManagementSlice = createSlice({
             state.dataUpdatingLoadding = !state.dataUpdatingLoadding
         },
         updateCourseById(state, action) {
-            const { learner_id, ...rest } = action.payload;
+            const { course_id, ...rest } = action.payload;
             state.data = state.data.map((value) => {
-                if (value.learner_id === learner_id) {
+                if (value.course_id === course_id) {
                     return rest;
                 }
                 return value;
@@ -52,6 +55,15 @@ const courseManagementSlice = createSlice({
         },
         updatePreFillData(state, action) {
             state.preFillData = action.payload
+        },
+        setSingleData(state, action) {
+            state.singleData = action.payload
+        },
+        setUnitData(state, action) {
+            state.unitData = action.payload
+        },
+        setLearnerOverView(state, action) {
+            state.learnerOverView = action.payload
         }
     }
 });
@@ -77,11 +89,36 @@ export const createCourseAPI = (data) => async (dispatch) => {
     }
 }
 
-// get learner
-export const fetchCourseAPI = (data = { page: 1, page_size: 25 }, search_keyword = "", search_role = "") => async (dispatch) => {
+// get Course By Id
+export const fetchCourseById = (course_id) => async (dispatch) => {
 
     try {
         dispatch(slice.setLoader());
+
+        let url = `${URL_BASE_LINK}/course/get/${course_id}`;
+
+        const response = await axios.get(url);
+
+        // dispatch(showMessage({ message: response.data.message, variant: "success" }))
+        dispatch(slice.setUnitData(response.data.data.units));
+        dispatch(slice.updateCourse(response.data));
+        
+        // dispatch(slice.setLoader());
+        return true;
+
+    } catch (err) {
+        dispatch(showMessage({ message: err.response.data.message, variant: "error" }))
+        dispatch(slice.setLoader());
+        return false
+    };
+
+}
+
+// get Course
+export const fetchCourseAPI = (data = { page: 1, page_size: 25 }, search_keyword = "", search_role = "") => async (dispatch) => {
+
+    try {
+        // dispatch(slice.setLoader());
         const { page = 1, page_size = 25 } = data;
 
         let url = `${URL_BASE_LINK}/course/list?page=${page}&limit=${page_size}&meta=true`;
@@ -95,9 +132,9 @@ export const fetchCourseAPI = (data = { page: 1, page_size: 25 }, search_keyword
         }
 
         const response = await axios.get(url);
-        dispatch(showMessage({ message: response.data.message, variant: "success" }))
+        // dispatch(showMessage({ message: response.data.message, variant: "success" }))
         dispatch(slice.updateCourse(response.data));
-        dispatch(slice.setLoader());
+        // dispatch(slice.setLoader());
         return true;
 
     } catch (err) {
@@ -168,7 +205,7 @@ export const jsonConverter = (data) => async (dispatch) => {
 export const courseAllocationAPI = (data) => async (dispatch) => {
 
     try {
-        const response = await axios.post(`${URL_BASE_LINK}/course/add-learner`, data)
+        const response = await axios.post(`${URL_BASE_LINK}/course/enrollment`, data)
         dispatch(showMessage({ message: response.data.message, variant: "success" }))
         return true;
 
@@ -179,4 +216,19 @@ export const courseAllocationAPI = (data) => async (dispatch) => {
     };
 }
 
+
+export const fetchAllLearnerByUserAPI = (id, role) => async (dispatch) => {
+    try {
+        dispatch(slice.setLoader());
+        const response = await axios.get(`${URL_BASE_LINK}/learner/list?user_id=${id}&role=${role}`)
+        dispatch(slice.setLearnerOverView(response.data.data));
+        dispatch(slice.setLoader());
+        return true;
+
+    } catch (err) {
+        dispatch(showMessage({ message: err.response.data.message, variant: "error" }))
+        dispatch(slice.setLoader());
+        return false;
+    };
+}
 export default courseManagementSlice.reducer;
