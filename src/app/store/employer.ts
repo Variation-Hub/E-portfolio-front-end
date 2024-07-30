@@ -94,7 +94,7 @@ export const deleteEmployerHandler = (id) => async (dispatch, getStore) => {
     }
 }
 
-export const getEmployerAPI = (data = { page: 1, page_size: 10 }) => async (dispatch) => {
+export const getEmployerAPI = (data = { page: 1, page_size: 10 }, search_keyword = "") => async (dispatch) => {
 
     try {
 
@@ -103,6 +103,9 @@ export const getEmployerAPI = (data = { page: 1, page_size: 10 }) => async (disp
         const { page = 1, page_size = 10 } = data;
 
         let url = `${URL_BASE_LINK}/employer/list?meta=true&page=${page}&limit=${page_size}`
+        if (search_keyword) {
+            url = `${url}&keyword=${search_keyword}`
+        }
 
         const response = await axios.get(url);
         // dispatch(showMessage({ message: response.data.message, variant: "success" }))

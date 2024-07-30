@@ -49,14 +49,6 @@ const navigationConfig = [{
     visible: [UserRole.Trainer],
 },
 {
-    id: 'dashboards.reports',
-    title: 'Reports',
-    type: 'item',
-    icon: 'heroicons-outline:document-report',
-    url: '/reports',
-    visible: [UserRole.Trainer, UserRole.Employer, UserRole.IQA, UserRole.Admin, UserRole.LIQA],
-},
-{
     id: 'dashboards.resources',
     title: 'Resources',
     type: 'item',

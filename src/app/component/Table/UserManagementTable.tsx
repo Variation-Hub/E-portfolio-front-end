@@ -7,8 +7,6 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { Avatar, IconButton, Pagination } from "@mui/material";
-import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
-import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import Style from "./style.module.css";
 import { useDispatch } from "react-redux";
 import { deleteUserHandler, fetchUserAPI } from "app/store/userManagement";
@@ -233,7 +231,7 @@ export default function UserManagementTable(props) {
               })}
             </TableBody>
           </Table>
-          <div className="fixed bottom-0 left-0 w-full flex justify-center py-4 mb-14">
+          <div className="absolute bottom-0 left-0 w-full flex justify-center py-4 mb-14">
             <Stack
               spacing={2}
               className="flex justify-center items-center w-full mt-14"
@@ -295,14 +293,6 @@ export default function UserManagementTable(props) {
           }}
         >
           Delete
-        </MenuItem>
-        <MenuItem
-          onClick={() => {
-            handleClose();
-            setCourseDialog(true);
-          }}
-        >
-          Course Allocation
         </MenuItem>
       </Menu>
       <Dialog

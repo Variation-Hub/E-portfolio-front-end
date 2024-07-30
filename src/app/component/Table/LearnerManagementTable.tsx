@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -15,15 +15,11 @@ import {
   Menu,
   MenuItem,
   Pagination,
-  Select,
   TextField,
   Typography,
 } from "@mui/material";
-import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
-import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import Style from "./style.module.css";
 import { useDispatch } from "react-redux";
-import { deleteUserHandler, fetchUserAPI } from "app/store/userManagement";
 import { userTableMetaData } from "src/app/contanst/metaData";
 import AlertDialog from "../Dialogs/AlertDialog";
 import {
@@ -34,7 +30,7 @@ import {
 } from "../Buttons";
 import {
   deleteLearnerHandler,
-  getRoleAPI,
+  fetchLearnerAPI,
   selectLearnerManagement,
 } from "app/store/learnerManagement";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
@@ -44,8 +40,7 @@ import {
   selectCourseManagement,
 } from "app/store/courseManagement";
 import { Stack } from "@mui/system";
-import { Link, useNavigate } from "react-router-dom";
-import { color } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import { slice } from 'app/store/reloadData'
 import { getRandomColor } from "src/utils/randomColor";
 
@@ -91,7 +86,7 @@ export default function LearnerManagementTable(props) {
 
   const handleChangePage = (event: unknown, newPage: number) => {
     dispatch(
-      fetchUserAPI({ page: newPage, page_size: userTableMetaData.page_size })
+      fetchLearnerAPI({ page: newPage, page_size: userTableMetaData.page_size })
     );
   };
 
@@ -125,8 +120,6 @@ export default function LearnerManagementTable(props) {
   };
 
   const deleteIcon = (id) => {
-    console.log(id);
-
     setDeleteId(id);
   };
 
@@ -178,11 +171,10 @@ export default function LearnerManagementTable(props) {
       });
     }
     setLoading(false);
-    console.log(courseAllocationData);
   };
 
   const redirection = (id, user_id) => {
-    dispatch(slice.setLeanerId({id, user_id}))
+    dispatch(slice.setLeanerId({ id, user_id }))
     navigate('/portfolio')
   }
   return (
@@ -217,13 +209,6 @@ export default function LearnerManagementTable(props) {
                             align={column.align}
                             sx={{ borderBottom: "2px solid #F8F8F8" }}
                           >
-                            {/* <IconButton
-                              size="small"
-                              sx={{ color: "#5B718F", marginRight: "4px" }}
-                              onClick={() => editIcon(row.learner_id)}
-                            >
-                              <ModeEditOutlineOutlinedIcon fontSize="small" />
-                            </IconButton> */}
                             <IconButton
                               size="small"
                               sx={{ color: "#5B718F", marginRight: "4px" }}
@@ -231,13 +216,6 @@ export default function LearnerManagementTable(props) {
                             >
                               <MoreHorizIcon fontSize="small" />
                             </IconButton>
-                            {/* <IconButton
-                              size="small"
-                              sx={{ color: "maroon", marginLeft: "4px" }}
-                              onClick={() => deleteIcon(row.learner_id)}
-                            >
-                              <DeleteOutlineOutlinedIcon fontSize="small" />
-                            </IconButton> */}
                           </TableCell>
                         );
                       }

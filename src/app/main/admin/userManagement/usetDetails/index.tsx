@@ -355,7 +355,7 @@ const UserDetails = (props) => {
               input={<OutlinedInput placeholder="Select Role" />}
               renderValue={(selected) => selected.join(", ")}
             >
-              {roles.map((item) => (
+              {roles.filter(item => item.label !== "Employer")?.map((item) => (
                 <MenuItem
                   key={item.value}
                   value={item.label}
