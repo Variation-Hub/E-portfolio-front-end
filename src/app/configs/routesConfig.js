@@ -6,7 +6,8 @@ import LandingConfig from "../main/landing/landingConfig";
 import HomeConfig from "../main/home/homeConfig";
 import CpdConfig from "../main/cpd/cpdConfig";
 import LearnerOverviewConfig from "../main/learnerOverview/learnerOverviewConfig";
-import CaseloadConfig from "../main/caseload/caseloadConfig";
+// import CaseloadConfig from "../main/caseload/caseloadConfig";
+import ReportsConfig from "../main/reports/reportsConfig";
 import ResourcesConfig from "../main/resources/resourcesConfig";
 import ForumConfig from "../main/forum/forumConfig";
 import CalendarConfig from "../main/calendar/calendarConfig";
@@ -23,7 +24,7 @@ import CreateResourcesConfig from "../main/createResources/createResourcesConfig
 import LearnerPortfolioConfig from "../main/learnerPortfolio/learnerPortfolioConfig";
 import AdminConfig from "../main/admin/adminConfig";
 import CourseBuilderConfig from "../main/courseBuilder/courseBuilderConfig";
-import AllLearnersConfig from "../main/allLearners/allLearnersConfig";
+// import AllLearnersConfig from "../main/allLearners/allLearnersConfig";
 import FormsConfig from "../main/forms/formsConfig";
 import SurverysConfig from "../main/surverys/surverysConfig";
 import CommunicationsConfig from "../main/communications/communicationsConfig";
@@ -38,7 +39,8 @@ const routeConfigs = [
     HomeConfig,
     CpdConfig,
     LearnerOverviewConfig,
-    CaseloadConfig,
+    // CaseloadConfig,
+    ReportsConfig,
     ResourcesConfig,
     ForumConfig,
     CalendarConfig,
@@ -55,7 +57,7 @@ const routeConfigs = [
     LearnerPortfolioConfig,
     AdminConfig,
     CourseBuilderConfig,
-    AllLearnersConfig,
+    // AllLearnersConfig,
     FormsConfig,
     SurverysConfig,
     CommunicationsConfig,

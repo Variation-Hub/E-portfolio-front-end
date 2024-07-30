@@ -6,16 +6,20 @@ import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import DoughnutChart from 'src/app/component/Chart/doughnut'
+import { selectstoreDataSlice, slice } from 'app/store/reloadData'
+import { slice as courseSlice } from "app/store/courseManagement";
+import { getLearnerDetails } from 'app/store/learnerManagement'
 
-const Protfolio = ({ learner, handleClickData }) => {
+
+const Protfolio = ({ learner, handleClickData, handleClickSingleData }) => {
+
   return (
     <div className="m-24 flex items-center border-1 rounded-8 py-12">
       <div className="flex flex-col w-1/6 justify-center items-center border-r-1">
-        <Avatar sx={{ width: 100, height: 100 }} src="">
-
-          {learner?.first_name?.charAt(0)}
-          {learner?.last_name?.charAt(0)}
-        </Avatar>
+        <Avatar sx={{ width: 100, height: 100 }}
+          src={learner?.learner_id ? learner?.avatar : learner.data.avatar?.url}
+          alt={learner?.first_name?.toUpperCase()?.charAt(0)}
+        />
         <div className="mt-10">
           {learner?.first_name} {learner?.last_name}
         </div>
@@ -35,7 +39,10 @@ const Protfolio = ({ learner, handleClickData }) => {
                       color: "inherit",
                       textDecoration: "none",
                     }}
-                    onClick={(e) => handleClickData(e, value)}
+                    onClick={(e) => {
+                      handleClickSingleData(value)
+                      handleClickData(learner.learner_id, learner.user_id)
+                    }}
                   >
                     <DoughnutChart />
                   </Link>
@@ -59,6 +66,8 @@ const LearnerOverview = () => {
   const { data } = useSelector(selectUser)
   const { learnerOverView } = useSelector(selectCourseManagement)
 
+  const storeData = useSelector(selectstoreDataSlice);
+
   const dispatch: any = useDispatch()
 
   useEffect(() => {
@@ -67,12 +76,21 @@ const LearnerOverview = () => {
     }
   }, [data]);
 
-  const handleClickData = () => {
+  useEffect(() => {
+    if (storeData?.learner_id) dispatch(getLearnerDetails(storeData?.learner_id));
+  }, [storeData]);
 
+  const handleClickData = (id, user_id) => {
+    dispatch(slice.setLeanerId({ id, user_id }))
   }
+
+  const handleClickSingleData = (row) => {
+    dispatch(courseSlice.setSingleData(row));
+  };
+
   return (
     <div>
-      {learnerOverView?.map(item => <Protfolio learner={item} handleClickData={handleClickData} />)}
+      {learnerOverView?.map(item => <Protfolio learner={item} handleClickSingleData={handleClickSingleData} handleClickData={handleClickData} />)}
     </div>
   )
 }

@@ -32,7 +32,7 @@ import { useDispatch } from "react-redux";
 import FuseLoading from "@fuse/core/FuseLoading";
 import Close from "@mui/icons-material/Close";
 import SearchIcon from "@mui/icons-material/Search";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import FileCopyIcon from '@mui/icons-material/FileCopy';
 import AlertDialog from "src/app/component/Dialogs/AlertDialog";
@@ -85,6 +85,8 @@ const AssignmentData = () => {
   const [updateData, setUpdateData] = useState("");
   const [openMenuDialog, setOpenMenuDialog] = useState<any>({});
   const [edit, setEdit] = useState("Save");
+
+  const navigate = useNavigate();
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const oopen = Boolean(anchorEl);
@@ -390,14 +392,28 @@ const AssignmentData = () => {
             open={oopen}
             onClose={handleClose}
           >
-            <MenuItem
-              onClick={() => {
-                handleClose();
-                handleOpenFile();
-              }}
-            >
-              Reupload
-            </MenuItem>
+
+            {user.role === "Learner" &&
+              <MenuItem
+                onClick={() => {
+                  handleClose();
+                  handleOpenFile();
+                }}
+              >
+                Reupload
+              </MenuItem>
+            }
+            {user.role === "Trainer" &&
+
+              <MenuItem
+                onClick={() => {
+                  handleClose();
+                  navigate('/assignment/review')
+                }}
+              >
+                Review
+              </MenuItem>
+            }
             <MenuItem
               onClick={() => {
                 handleClose();

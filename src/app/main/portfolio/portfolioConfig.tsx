@@ -5,6 +5,7 @@ import UploadedEvidenceFile from "src/app/component/Cards/uploadedEvidenceFile";
 import NewSession from "./newsession";
 import NewAssignment from "src/app/component/Cards/newAssignment";
 import LearnerToData from "./learnerData/learnertodata";
+import ReviewAssignment from "../createAssignment/reviewAssignment";
 
 const PortfolioConfig = {
   settings: {
@@ -49,7 +50,7 @@ const PortfolioConfig = {
     {
       path: "/portfolio/learnertodata",
       element: <LearnerToData />,
-    },
+    }
   ],
 };
 
