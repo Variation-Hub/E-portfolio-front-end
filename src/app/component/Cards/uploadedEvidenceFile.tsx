@@ -1,5 +1,5 @@
 import { Box } from "@mui/system";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   LoadingButton,
   SecondaryButton,
@@ -10,9 +10,12 @@ import {
   FormControlLabel,
   FormGroup,
   Grid,
+  ListItemText,
   MenuItem,
+  OutlinedInput,
   Select,
   TextField,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import axios from "axios";
@@ -22,6 +25,21 @@ import { selectUser } from "app/store/userSlice";
 import { useNavigate } from "react-router-dom";
 import { createAssignmentAPI, selectAssignment, updateAssignmentAPI } from "app/store/assignment";
 import { useDispatch } from "react-redux";
+import { fetchCourseById, selectCourseManagement } from "app/store/courseManagement";
+
+const assessmentMethod = [
+  { value: 'WO', title: 'Workplace Observation' },
+  { value: 'WP', title: 'Workplace Projects/Projects away from Work' },
+  { value: 'PW', title: 'Portfolio of Work' },
+  { value: 'VI', title: 'Viva' },
+  { value: 'LB', title: 'Log Book/Assignments' },
+  { value: 'PD', title: 'Professional Discussions' },
+  { value: 'PT', title: 'Practical Test' },
+  { value: 'TE', title: 'Tests/Examinations' },
+  { value: 'RJ', title: 'Reflective Journal' },
+  { value: 'OT', title: 'Other' },
+  { value: 'RPL', title: 'Recognised Prior Learning' },
+];
 
 const UploadedEvidenceFile = (props) => {
   const { setFormData, formData, handleChange, handleCheckboxChange, edit = "Save" } = props;
@@ -29,9 +47,15 @@ const UploadedEvidenceFile = (props) => {
   const { handleClose } = props.dialogFn || {};
   const dispatch: any = useDispatch();
   const { singleData, dataUpdatingLoadding } = useSelector(selectAssignment)
-  const navigate = useNavigate();
 
-  console.log(formData)
+  const navigate = useNavigate();
+  const singleCouse = useSelector(selectCourseManagement);
+
+  useEffect(() => {
+    if (singleData?.course_id)
+      dispatch(fetchCourseById(singleData?.course_id));
+  }, [dispatch, singleData?.course_id]);
+
   const handleSubmit = async () => {
     try {
       let response;
@@ -45,7 +69,36 @@ const UploadedEvidenceFile = (props) => {
 
   };
 
+  const handleCheckbox = (event, method) => {
+    let updatedData = formData.assessment_method || []
+    if (formData.assessment_method.includes(method)) {
+      updatedData = formData.assessment_method.filter(item => item !== method)
+    } else {
+      updatedData = [...(formData.assessment_method || []), method];
+    }
+    handleChange({ target: { name: 'assessment_method', value: updatedData } });
+  };
+
+  const handleCheckboxUnits = (event, method) => {
+    console.log(method, formData.units)
+    let updatedData = formData.units || []
+    if (formData.units.find(item => item.id === method.id)) {
+      updatedData = formData.units.filter(item => item.id !== method.id)
+    } else {
+      updatedData = [...(formData.units || []), method];
+    }
+    handleChange({ target: { name: 'units', value: updatedData } });
+  };
+
+
   const user = useSelector(selectUser);
+
+  const formatDate = (date) => {
+    if (!date) return "";
+    const dateStr = date instanceof Date ? date.toISOString() : String(date);
+    const formattedDate = dateStr.substring(0, 16);
+    return formattedDate;
+  };
 
   return (
     <div>
@@ -62,7 +115,8 @@ const UploadedEvidenceFile = (props) => {
               fullWidth
               value={formData?.title}
               onChange={handleChange}
-              disabled={edit === "view"}
+              disabled={user.data.role !== "Learner" || edit === "view"}
+              style={user.data.role !== "Learner" ? { backgroundColor: "whitesmoke" } : {}}
             />
           </div>
 
@@ -79,7 +133,8 @@ const UploadedEvidenceFile = (props) => {
               rows={5}
               value={formData?.description}
               onChange={handleChange}
-              disabled={edit === "view"}
+              disabled={user.data.role !== "Learner" || edit === "view"}
+              style={user.data.role !== "Learner" ? { backgroundColor: "whitesmoke" } : {}}
             />
           </div>
 
@@ -129,87 +184,72 @@ const UploadedEvidenceFile = (props) => {
               value={formData?.learner_comments}
               onChange={handleChange}
               disabled={user.data.role !== "Learner" || edit === "view"}
+              style={user.data.role !== "Learner" ? { backgroundColor: "whitesmoke" } : {}}
             />
           </div>
           <div className="w-full">
             <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
-              Points of Improvement
+              Points for Improvement
             </Typography>
             <TextField
-              name="points_of_improvement"
+              name="points_for_improvement"
               size="small"
               placeholder="lorem ipsum is just dummy context...."
               fullWidth
               multiline
               rows={5}
-              value={formData?.points_of_improvement}
+              value={formData?.points_for_improvement}
               onChange={handleChange}
               disabled={user.data.role !== "Trainer" || edit === "view"}
               style={user.data.role !== "Trainer" ? { backgroundColor: "whitesmoke" } : {}}
             />
           </div>
+
+          <Grid className='w-full'>
+            <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
+              Select Unit
+            </Typography>
+            <FormGroup className="flex flex-row">
+              {singleCouse?.unitData?.map((method) => (
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={formData?.units?.find((unit) => unit.id === method.id)}
+                      onChange={(e) => handleCheckboxUnits(e, method)}
+                      name="units"
+                      disabled={user.data.role !== "Learner" || edit === "view"}
+                      style={user.data.role !== "Learner" ? { backgroundColor: "whitesmoke" } : {}}
+                    />
+                  }
+                  label={method.title}
+                />
+              ))}
+            </FormGroup>
+
+          </Grid>
+
           <div className="w-full">
             <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
               Assessment Method
             </Typography>
-            <Select
-              name="assessment_method"
-              value={formData?.assessment_method}
-              onChange={handleChange}
-              fullWidth
-              size="small"
-              displayEmpty
-              placeholder="Select"
-              disabled={user.data.role !== "Trainer" || edit === "view"}
-              style={user.data.role !== "Trainer" ? { backgroundColor: "whitesmoke" } : {}}
-            >
-              <MenuItem value={"WO"}>
-                WO
-              </MenuItem>
-              <MenuItem
-                value={"WP"}
-              >
-                WP
-              </MenuItem>
-              <MenuItem value={"PW"}>
-                PW
-              </MenuItem>
-              <MenuItem value={"VI"}>VI</MenuItem>
-              <MenuItem value={"LB"}>
-                LB
-              </MenuItem>
-              <MenuItem value={"PD"}>
-                PD
-              </MenuItem>
-              <MenuItem value={"PT"}>
-                PT
-              </MenuItem>
-              <MenuItem value={"TE"}>
-                TE
-              </MenuItem>
-              <MenuItem value={"RJ"}>
-                RJ
-              </MenuItem>
-              <MenuItem value={"OT"}>OT</MenuItem>
-              <MenuItem value={"RPL"}>
-                RPL
-              </MenuItem>
-            </Select>
-            <FormGroup>
-              {['WO', 'WP', 'PW', 'VI', 'LB', 'PD', 'PT', 'TE', 'RJ', 'OT', 'RPL'].map((method) => (
-                <FormControlLabel
-                  key={method}
-                  control={
-                    <Checkbox
-                      checked={formData?.assessment_method?.includes(method) || false}
-                      onChange={(e) => handleChange(e, method)}
-                      name="assessment_method"
-                      disabled={user.data.role !== "Trainer" || edit === "view"}
-                    />
-                  }
-                  label={method}
-                />
+
+            <FormGroup className="flex flex-row">
+              {assessmentMethod.map((method) => (
+                <Tooltip key={method.value} title={method.title}>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={formData?.assessment_method?.includes(method.value) || false}
+                        onChange={(e) => handleCheckbox(e, method.value)}
+                        name="assessment_method"
+                        disabled={user.data.role !== "Trainer" || edit === "view"}
+                      />
+                    }
+                    label={method.value}
+                  />
+                </Tooltip>
               ))}
+
             </FormGroup>
           </div>
         </Box>
@@ -222,17 +262,23 @@ const UploadedEvidenceFile = (props) => {
             <Grid className='w-full flex gap-10'>
               <Grid className='w-full '>
                 <TextField
-                  name="startDate"
-                  // value={sessionData.startDate}
+                  name="date"
+                  value={formatDate(formData?.session?.date)}
                   size="small"
                   type='datetime-local'
                   placeholder='YYYY-MM-DDTHH:MM'
                   required
                   fullWidth
-                  onChange={handleChange}
+                  onChange={(e) => {
+                    setFormData((prevState) => ({
+                      ...prevState,
+                      session: { ...prevState.session, date: e.target.value }
+                    }));
+                  }}
                   disabled={user.data.role !== "Trainer" || edit === "view"}
                   style={user.data.role !== "Trainer" ? { backgroundColor: "whitesmoke" } : {}}
                 />
+
               </Grid>
               <Grid className='w-full flex gap-10'>
                 <TextField
@@ -244,7 +290,7 @@ const UploadedEvidenceFile = (props) => {
                   required
                   type="number"
                   fullWidth
-                  value={(formData?.session?.split(":")[0])}
+                  value={(formData?.session?.hours)}
                   onChange={(e) => {
                     const value = Number(e.target.value);
 
@@ -254,7 +300,7 @@ const UploadedEvidenceFile = (props) => {
 
                     setFormData((prevState: any) => ({
                       ...prevState,
-                      session: `${value}:${formData?.session?.split(':')[1]}`
+                      session: { ...prevState.session, hours: value }
                     }));
                   }}
                 />
@@ -267,7 +313,7 @@ const UploadedEvidenceFile = (props) => {
                   size="small"
                   type="number"
                   fullWidth
-                  value={(formData?.session?.split(':')[1])}
+                  value={(formData?.session?.minutes)}
                   onChange={(e) => {
                     const value = Number(e.target.value);
 
@@ -277,7 +323,7 @@ const UploadedEvidenceFile = (props) => {
 
                     setFormData((prevState: any) => ({
                       ...prevState,
-                      session: `${formData?.session?.split(':')[0]}:${value}`
+                      session: { ...prevState.session, minutes: value }
                     }));
                   }}
                 />

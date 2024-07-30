@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -8,6 +8,11 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { Avatar, Pagination, Typography } from "@mui/material";
 import { Box, Stack } from "@mui/system";
+import { useDispatch } from "react-redux";
+import { getEQAUserData, selectUserManagement } from "app/store/userManagement";
+import { useSelector } from "react-redux";
+import { selectUser } from "app/store/userSlice";
+import { getRandomColor } from "src/utils/randomColor";
 
 function createData(
   avatarUrl: string,
@@ -85,6 +90,18 @@ const rows = [
 ];
 
 const TableEQA1 = (props) => {
+
+  const { data } = useSelector(selectUser);
+  const { learnerData } = useSelector(selectUserManagement);
+  const dispatch: any = useDispatch();
+
+  useEffect(() => {
+    dispatch(getEQAUserData({ page: 1, page_size: 5 }, "learner_id", data.user_id));
+  }, [dispatch]);
+
+  console.log("Learner Data:", learnerData);
+
+
   return (
     <>
       <div className="m-8">
@@ -93,18 +110,13 @@ const TableEQA1 = (props) => {
             <TableHead className="bg-[#F8F8F8]">
               <TableRow>
                 <TableCell>Learner Name</TableCell>
-                <TableCell align="left">Course</TableCell>
-                <TableCell align="left">Trainer Name&nbsp;</TableCell>
-                <TableCell align="left">IQA Name&nbsp;</TableCell>
-                <TableCell align="left">Status&nbsp;</TableCell>
-                <TableCell align="left">IQA Reports&nbsp;</TableCell>
-                <TableCell align="left">Sampling Plan&nbsp;</TableCell>
+                <TableCell align="left">Funding Body</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map((row) => (
+              {learnerData?.map((row) => (
                 <TableRow
-                  key={row.learnerName}
+                  key={row?.user_name}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
                   <TableCell
@@ -115,48 +127,18 @@ const TableEQA1 = (props) => {
                     <Box display="flex" alignItems="center">
                       <Avatar
                         className="mr-4"
-                        alt={row.learnerName}
-                        src={row.avatarUrl}
-                        sx={{ width: 32, height: 32, marginRight: 1 }}
+                        alt={row?.user_name}
+                        src={row?.avatar?.url}
+                        sx={{ width: 32, height: 32, marginRight: 1, backgroundColor: getRandomColor(row?.user_name?.toLowerCase().charAt(0)) }}
                       />
-                      <Typography variant="body1">{row.learnerName}</Typography>
+                      <Typography variant="body1">{row?.user_name}</Typography>
                     </Box>
                   </TableCell>
                   <TableCell
                     align="left"
                     sx={{ borderBottom: "2px solid #F8F8F8" }}
                   >
-                    {row.course}
-                  </TableCell>
-                  <TableCell
-                    align="left"
-                    sx={{ borderBottom: "2px solid #F8F8F8" }}
-                  >
-                    {row.trainerName}
-                  </TableCell>
-                  <TableCell
-                    align="left"
-                    sx={{ borderBottom: "2px solid #F8F8F8" }}
-                  >
-                    {row.iqaName}
-                  </TableCell>
-                  <TableCell
-                    align="left"
-                    sx={{ borderBottom: "2px solid #F8F8F8" }}
-                  >
-                    {row.status}
-                  </TableCell>
-                  <TableCell
-                    align="left"
-                    sx={{ borderBottom: "2px solid #F8F8F8" }}
-                  >
-                    {row.iQAReports}
-                  </TableCell>
-                  <TableCell
-                    align="left"
-                    sx={{ borderBottom: "2px solid #F8F8F8" }}
-                  >
-                    {row.samplingPlan}
+                    {row?.funding_body}
                   </TableCell>
                 </TableRow>
               ))}

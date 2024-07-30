@@ -16,6 +16,7 @@ const initialState = {
     },
     preFillData: {},
     singleData: {},
+    unitData: [],
     learnerOverView: []
 };
 
@@ -58,6 +59,9 @@ const courseManagementSlice = createSlice({
         setSingleData(state, action) {
             state.singleData = action.payload
         },
+        setUnitData(state, action) {
+            state.unitData = action.payload
+        },
         setLearnerOverView(state, action) {
             state.learnerOverView = action.payload
         }
@@ -85,7 +89,32 @@ export const createCourseAPI = (data) => async (dispatch) => {
     }
 }
 
-// get learner
+// get Course By Id
+export const fetchCourseById = (course_id) => async (dispatch) => {
+
+    try {
+        dispatch(slice.setLoader());
+
+        let url = `${URL_BASE_LINK}/course/get/${course_id}`;
+
+        const response = await axios.get(url);
+
+        // dispatch(showMessage({ message: response.data.message, variant: "success" }))
+        dispatch(slice.setUnitData(response.data.data.units));
+        dispatch(slice.updateCourse(response.data));
+        
+        // dispatch(slice.setLoader());
+        return true;
+
+    } catch (err) {
+        dispatch(showMessage({ message: err.response.data.message, variant: "error" }))
+        dispatch(slice.setLoader());
+        return false
+    };
+
+}
+
+// get Course
 export const fetchCourseAPI = (data = { page: 1, page_size: 25 }, search_keyword = "", search_role = "") => async (dispatch) => {
 
     try {

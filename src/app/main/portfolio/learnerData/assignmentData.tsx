@@ -42,7 +42,7 @@ import { selectUser } from "app/store/userSlice";
 import Uploading from "src/app/component/Cards/uploading";
 import UploadWorkDialog from "src/app/component/Cards/uploadWorkDialog";
 import { selectstoreDataSlice } from "app/store/reloadData";
-import { selectCourseManagement } from "app/store/courseManagement";
+import { fetchCourseById, selectCourseManagement } from "app/store/courseManagement";
 
 interface Column {
   id:
@@ -94,6 +94,12 @@ const AssignmentData = () => {
       dispatch(getAssignmentByCourseAPI(singleData.course.course_id, user_id || user.user_id));
   }, [dispatch, user_id, user.user_id]);
 
+
+  useEffect(() => {
+    if (singleData.course.course_id)
+      dispatch(fetchCourseById(singleData.course.course_id));
+  }, [dispatch, singleData.course.course_id]);
+
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -101,7 +107,7 @@ const AssignmentData = () => {
     // uploaded_external_feedback: "",
     learner_comments: "",
     points_of_improvement: "",
-    assessment_method: "",
+    assessment_method: [],
     session: "",
     grade: "",
     declaration: false,

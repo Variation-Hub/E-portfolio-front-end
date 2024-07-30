@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -8,6 +8,11 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { Avatar, Pagination, Typography } from "@mui/material";
 import { Box, Stack } from "@mui/system";
+import { useSelector } from "react-redux";
+import { selectUser } from "app/store/userSlice";
+import { getEQAUserData, selectUserManagement } from "app/store/userManagement";
+import { useDispatch } from "react-redux";
+import { getRandomColor } from "src/utils/randomColor";
 
 function createData(
   avatarUrl: string,
@@ -64,6 +69,19 @@ const rows = [
 ];
 
 const TableEQA2 = () => {
+
+  const { data } = useSelector(selectUser);
+  const { trainerData } = useSelector(selectUserManagement);
+  const dispatch: any = useDispatch();
+
+  useEffect(() => {
+    dispatch(getEQAUserData({ page: 1, page_size: 5 }, "trainer_id", data.user_id));
+  }, [dispatch]);
+
+
+  console.log("Tranier Data:", trainerData);
+
+
   return (
     <>
       <div className="m-8 mt-0">
@@ -72,15 +90,14 @@ const TableEQA2 = () => {
             <TableHead className="bg-[#F8F8F8]">
               <TableRow>
                 <TableCell>Trainer Name</TableCell>
-                <TableCell align="left">Trainer's CV</TableCell>
-                <TableCell align="left"> Trainer's CPD&nbsp;</TableCell>
-                <TableCell align="left">Trainer's Certificates&nbsp;</TableCell>
+                <TableCell align="left">Trainer's Roles</TableCell>
+                <TableCell align="left">Status</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map((row) => (
+              {trainerData?.map((row) => (
                 <TableRow
-                  key={row.trainerName}
+                  key={row?.user_name}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
                   <TableCell
@@ -91,30 +108,24 @@ const TableEQA2 = () => {
                     <Box display="flex" alignItems="center">
                       <Avatar
                         className="mr-4"
-                        alt={row.trainerName}
-                        src={row.avatarUrl}
-                        sx={{ width: 32, height: 32, marginRight: 1 }}
+                        alt={row?.user_name}
+                        src={row?.avatar?.url}
+                        sx={{ width: 32, height: 32, marginRight: 1, backgroundColor: getRandomColor(row?.user_name?.toLowerCase().charAt(0)) }}
                       />
-                      <Typography variant="body1">{row.trainerName}</Typography>
+                      <Typography variant="body1">{row?.user_name}</Typography>
                     </Box>
                   </TableCell>
                   <TableCell
                     align="left"
                     sx={{ borderBottom: "2px solid #F8F8F8" }}
                   >
-                    {row.trainersCV}
+                    {row?.roles.join(", ")}
                   </TableCell>
                   <TableCell
                     align="left"
                     sx={{ borderBottom: "2px solid #F8F8F8" }}
                   >
-                    {row.trainersCPD}
-                  </TableCell>
-                  <TableCell
-                    align="left"
-                    sx={{ borderBottom: "2px solid #F8F8F8" }}
-                  >
-                    {row.trainersCertificates}
+                    {row.status}
                   </TableCell>
                 </TableRow>
               ))}
