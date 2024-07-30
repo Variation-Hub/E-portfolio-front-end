@@ -74,7 +74,10 @@ export const createAssignmentAPI = (data) => async (dispatch, getStore) => {
         dispatch(showMessage({ message: response.data.message, variant: "success" }))
         dispatch(slice.setSingleData(response.data.data));
         if (response.data.status) {
-            dispatch(getAssignmentAPI(getStore().user.data.user_id))
+            // dispatch(getAssignmentAPI(getStore().user.data.user_id))
+            const userId = getStore().storeData?.user_id || getStore().user?.data?.user_id;
+            const courseId = getStore().courseManagement?.singleData?.course?.course_id;
+            dispatch(getAssignmentByCourseAPI(courseId, userId))
         }
         dispatch(slice.setUpdatingLoader());
         return true;
@@ -94,7 +97,10 @@ export const updateAssignmentAPI = (id, data) => async (dispatch, getStore) => {
         const response = await axios.patch(`${URL_BASE_LINK}/assignment/update/${id}`, payload)
         dispatch(showMessage({ message: response.data.message, variant: "success" }))
         if (response.data.status) {
-            dispatch(getAssignmentAPI(getStore().user.data.user_id))
+            // dispatch(getAssignmentAPI(getStore().user.data.user_id))
+            const userId = getStore().storeData?.user_id || getStore().user?.data?.user_id;
+            const courseId = getStore().courseManagement?.singleData?.course?.course_id;
+            dispatch(getAssignmentByCourseAPI(courseId, userId))
         }
         dispatch(slice.setUpdatingLoader());
         return true;
@@ -113,7 +119,10 @@ export const deleteAssignmentHandler = (id) => async (dispatch, getStore) => {
         console.log(response);
         dispatch(showMessage({ message: response.data.message, variant: "success" }))
         if (response.data.status) {
-            dispatch(getAssignmentAPI(getStore().user.data.user_id))
+            // dispatch(getAssignmentAPI(getStore().user.data.user_id))
+            const userId = getStore().storeData?.user_id || getStore().user?.data?.user_id;
+            const courseId = getStore().courseManagement?.singleData?.course?.course_id;
+            dispatch(getAssignmentByCourseAPI(courseId, userId))
         }
         dispatch(slice.setUpdatingLoader());
         return true;

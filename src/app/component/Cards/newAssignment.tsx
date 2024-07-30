@@ -1,5 +1,5 @@
 import { Box } from "@mui/system";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   LoadingButton,
   SecondaryButton,
@@ -8,10 +8,14 @@ import {
 import {
   Checkbox,
   FormControlLabel,
+  FormGroup,
   Grid,
+  ListItemText,
   MenuItem,
+  OutlinedInput,
   Select,
   TextField,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import axios from "axios";
@@ -22,12 +26,27 @@ import { useNavigate } from "react-router-dom";
 import { createAssignmentAPI, selectAssignment, updateAssignmentAPI } from "app/store/assignment";
 import { useDispatch } from "react-redux";
 import CreateAssignment from "src/app/main/createAssignment/createAssignment";
+import { fetchCourseById, selectCourseManagement } from "app/store/courseManagement";
+
+const assessmentMethod = [
+  { value: 'WO', title: 'Workplace Observation' },
+  { value: 'WP', title: 'Workplace Projects/Projects away from Work' },
+  { value: 'PW', title: 'Portfolio of Work' },
+  { value: 'VI', title: 'Viva' },
+  { value: 'LB', title: 'Log Book/Assignments' },
+  { value: 'PD', title: 'Professional Discussions' },
+  { value: 'PT', title: 'Practical Test' },
+  { value: 'TE', title: 'Tests/Examinations' },
+  { value: 'RJ', title: 'Reflective Journal' },
+  { value: 'OT', title: 'Other' },
+  { value: 'RPL', title: 'Recognised Prior Learning' },
+];
 
 const NewAssignment = (props) => {
-  const { handleClose } = props.dialogFn || {};
   const dispatch: any = useDispatch();
   const { singleData, dataUpdatingLoadding } = useSelector(selectAssignment)
   const navigate = useNavigate();
+  const singleCouse = useSelector(selectCourseManagement);
 
   const [formData, setFormData] = useState({
     title: "",
@@ -35,12 +54,22 @@ const NewAssignment = (props) => {
     trainer_feedback: "",
     // uploaded_external_feedback: "",
     learner_comments: "",
-    points_of_improvement: "",
-    assessment_method: "",
-    session: "",
+    points_for_improvement: "",
+    units: [],
+    assessment_method: [],
+    session: {
+      date: "",
+      hours: "",
+      minutes: "",
+    },
     grade: "",
     declaration: false,
   });
+
+  useEffect(() => {
+    if (singleData?.course_id)
+      dispatch(fetchCourseById(singleData?.course_id));
+  }, [dispatch, singleData?.course_id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -56,6 +85,11 @@ const NewAssignment = (props) => {
       ...prevData,
       [name]: checked,
     }));
+  };
+
+  const handleCheckbox = (event, method) => {
+    const updatedMethods = [...(formData.assessment_method || []), method];
+    handleChange({ target: { name: 'assessment_method', value: updatedMethods } });
   };
 
   const handleSubmit = async () => {
@@ -74,7 +108,28 @@ const NewAssignment = (props) => {
 
   };
 
+  const handleClose = () => {
+    navigate("/portfolio");
+  };
   const user = useSelector(selectUser);
+
+  const formatDate = (date) => {
+    if (!date) return "";
+    const dateStr = date instanceof Date ? date.toISOString() : String(date);
+    const formattedDate = dateStr.substring(0, 16);
+    return formattedDate;
+  };
+
+
+  const handleCheckboxUnits = (event, method) => {
+    let updatedData = formData.units || []
+    if (formData.units.includes(method)) {
+      updatedData = formData.units.filter(item => item !== method)
+    } else {
+      updatedData = [...(formData.units || []), method];
+    }
+    handleChange({ target: { name: 'units', value: updatedData } });
+  };
 
   return (
     <div>
@@ -160,68 +215,69 @@ const NewAssignment = (props) => {
           </div>
           <div className="w-full">
             <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
-              Points of Improvement
+              Points for Improvement
             </Typography>
             <TextField
-              name="points_of_improvement"
+              name="points_for_improvement"
               size="small"
               placeholder="lorem ipsum is just dummy context...."
               fullWidth
               multiline
               rows={5}
-              value={formData.points_of_improvement}
+              value={formData?.points_for_improvement}
               onChange={handleChange}
               disabled={user.data.role !== "Trainer"}
               style={user.data.role !== "Trainer" ? { backgroundColor: "whitesmoke" } : {}}
             />
           </div>
+
+          <Grid className='w-full'>
+            <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
+              Select Unit
+            </Typography>
+            <FormGroup className="flex flex-row">
+              {singleCouse?.unitData?.map((method) => (
+                <FormControlLabel
+                  key={method.value}
+                  control={
+                    <Checkbox
+                      checked={formData?.units?.includes((unit) => unit.value === method.value)}
+                      onChange={(e) => handleCheckboxUnits(e, method)}
+                      name="units"
+                      disabled={user.data.role !== "Learner"}
+                      style={user.data.role !== "Learner" ? { backgroundColor: "whitesmoke" } : {}}
+                    />
+                  }
+                  label={method.title}
+                />
+              ))}
+            </FormGroup>
+
+          </Grid>
+
           <div className="w-full">
             <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
               Assessment Method
             </Typography>
-            <Select
-              name="assessment_method"
-              value={formData.assessment_method}
-              onChange={handleChange}
-              fullWidth
-              size="small"
-              displayEmpty
-              placeholder="Select"
-              disabled={user.data.role !== "Trainer"}
-              style={user.data.role !== "Trainer" ? { backgroundColor: "whitesmoke" } : {}}
-            >
-              <MenuItem value={"Workplace Observation(WO)"}>
-                Workplace Observation(WO)
-              </MenuItem>
-              <MenuItem
-                value={"Workplace Projects/Projects away from work(WP)"}
-              >
-                Workplace Projects/Projects away from work(WP)
-              </MenuItem>
-              <MenuItem value={"Portfolio of Work(PW)"}>
-                Portfolio of Work(PW)
-              </MenuItem>
-              <MenuItem value={"Viva(VI)"}>Viva(VI)</MenuItem>
-              <MenuItem value={"Log Book/Assignment"}>
-                Log Book/Assignment
-              </MenuItem>
-              <MenuItem value={"Professional Discussions(PD)"}>
-                Professional Discussions(PD)
-              </MenuItem>
-              <MenuItem value={"Practical Test(PT)"}>
-                Practical Test(PT)
-              </MenuItem>
-              <MenuItem value={"Test/Examinations(TE)"}>
-                Test/Examinations(TE)
-              </MenuItem>
-              <MenuItem value={"Reflective Journal(RJ)"}>
-                Reflective Journal(RJ)
-              </MenuItem>
-              <MenuItem value={"Other(OT)"}>Other(OT)</MenuItem>
-              <MenuItem value={"Recognized Prior Learning"}>
-                Recognized Prior Learning
-              </MenuItem>
-            </Select>
+
+            <FormGroup className="flex flex-row">
+              {assessmentMethod.map((method) => (
+                <Tooltip key={method.value} title={method.title}>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={formData?.assessment_method?.includes(method.value) || false}
+                        onChange={(e) => handleCheckbox(e, method.value)}
+                        name="assessment_method"
+                        disabled={user.data.role !== "Trainer"}
+                      />
+                    }
+                    label={method.value}
+                  />
+                </Tooltip>
+              ))}
+
+            </FormGroup>
           </div>
         </Box>
 
@@ -233,8 +289,8 @@ const NewAssignment = (props) => {
             <Grid className='w-full flex gap-10'>
               <Grid className='w-full '>
                 <TextField
-                  name="startDate"
-                  // value={sessionData.startDate}
+                  name="date"
+                  value={formatDate(formData?.session?.date)}
                   size="small"
                   type='datetime-local'
                   placeholder='YYYY-MM-DDTHH:MM'
@@ -255,7 +311,7 @@ const NewAssignment = (props) => {
                   required
                   type="number"
                   fullWidth
-                  value={(formData.session.split(":")[0])}
+                  value={(formData?.session?.hours)}
                   onChange={(e) => {
                     const value = Number(e.target.value);
 
@@ -265,7 +321,7 @@ const NewAssignment = (props) => {
 
                     setFormData((prevState: any) => ({
                       ...prevState,
-                      session: `${value}:${formData.session.split(':')[1]}`
+                      session: { ...prevState.session, hours: formData?.session?.hours }
                     }));
                   }}
                 />
@@ -278,7 +334,7 @@ const NewAssignment = (props) => {
                   size="small"
                   type="number"
                   fullWidth
-                  value={(formData.session.split(':')[1])}
+                  value={(formData?.session?.minutes)}
                   onChange={(e) => {
                     const value = Number(e.target.value);
 
@@ -288,7 +344,7 @@ const NewAssignment = (props) => {
 
                     setFormData((prevState: any) => ({
                       ...prevState,
-                      session: `${formData.session.split(':')[0]}:${value}`
+                      session: { ...prevState.session, minutes: formData?.session?.minutes }
                     }));
                   }}
                 />
@@ -341,7 +397,7 @@ const NewAssignment = (props) => {
           :
           <>
             <SecondaryButtonOutlined name="Cancel" className="mr-12" onClick={handleClose} />
-            <SecondaryButton name="Save" disable={!formData.declaration || !formData.title || !formData.description} onClick={handleSubmit} />
+            <SecondaryButton name="Save" disable={!formData.declaration || !formData.title || !formData.description || !formData.units} onClick={handleSubmit} />
           </>
         }
       </div>

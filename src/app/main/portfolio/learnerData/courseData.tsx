@@ -69,9 +69,6 @@ const CourseData = () => {
     const { singleData } = useSelector(selectCourseManagement);
     const course = singleData?.course;
 
-    console.log(getUniqueUserData(singleData));
-
-
     const formatDate = (dateString) => {
         return dayjs(dateString).format('D MMMM YYYY');
     };

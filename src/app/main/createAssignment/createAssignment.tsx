@@ -97,7 +97,7 @@ const CreateAssignment = (props) => {
     // uploaded_external_feedback: "",
     learner_comments: "",
     points_of_improvement: "",
-    assessment_method: "",
+    assessment_method: [],
     session: "",
     grade: "",
     declaration: false,
@@ -186,10 +186,6 @@ const CreateAssignment = (props) => {
 
   const handleEdit = () => {
     setFormData(singleData);
-  };
-
-  const handleReview = () => {
-    navigate('/review')
   };
 
   const deleteConfromation = async () => {
@@ -289,11 +285,12 @@ const CreateAssignment = (props) => {
         </div>
         {/* ) : null} */}
         <div>
-          <TableContainer sx={{ maxHeight: 500 }}>
+          <TableContainer sx={{ maxHeight: 550 ,paddingBottom:"2rem"}}>
             {dataFetchLoading ? (
               <FuseLoading />
             ) : data.length ? (
               <Table
+              stickyHeader 
                 sx={{ minWidth: 650, height: "100%" }}
                 size="small"
                 aria-label="simple table"
@@ -449,14 +446,6 @@ const CreateAssignment = (props) => {
             }}
           >
             Delete
-          </MenuItem>
-          <MenuItem
-            onClick={() => {
-              handleClose();
-              handleReview();
-            }}
-          >
-            Review
           </MenuItem>
         </Menu>
         <Dialog

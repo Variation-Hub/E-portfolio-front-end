@@ -5,7 +5,8 @@ import { showMessage } from './fuse/messageSlice';
 import { userTableMetaData } from '../contanst/metaData';
 import JwtService from '../auth/services/jwtService';
 import instance from '../auth/services/jwtService/jwtService';
-import { slice as globalSlice } from './globalUser'
+import {slice as globalSlice} from './globalUser'
+import { setUser } from './userSlice';
 
 const initialState = {
     data: [],
@@ -17,7 +18,9 @@ const initialState = {
         items: 0,
         page_size: userTableMetaData.page_size,
         pages: 1
-    }
+    },
+    learnerData: [],
+    trainerData: []
 };
 
 const userManagementSlice = createSlice({
@@ -56,6 +59,12 @@ const userManagementSlice = createSlice({
         },
         updateAvatar(state, action) {
             state.avarat = action.payload;
+        },
+        setEQALearnerData(state, action) {
+            state.learnerData = action.payload;
+        },
+        setEQATrainerData(state, action) {
+            state.trainerData = action.payload;
         }
     }
 });
@@ -281,5 +290,34 @@ export const changePassword = (data) => async (dispatch) => {
         dispatch(slice.setUpdatingLoader());
         return false;
     };
+}
+
+
+// get user
+export const getEQAUserData = (data = { page: 1, page_size: 5 }, user, user_id) => async (dispatch) => {
+
+    try {
+        dispatch(slice.setLoader());
+        const { page = 1, page_size = 5 } = data;
+
+        let url = `${URL_BASE_LINK}/user/list/eqa?meta=true&page=${page}&limit=${page_size}&user=${user}&EQA_id=${user_id}`;
+
+        const response = await axios.get(url);
+        // dispatch(showMessage({ message: response.data.message, variant: "success" }))
+        if (user === "trainer_id") {
+            dispatch(slice.setEQATrainerData(response.data.data));
+        }
+        if (user === "learner_id") {
+            dispatch(slice.setEQALearnerData(response.data.data));
+        }
+        dispatch(slice.setLoader());
+        return true;
+
+    } catch (err) {
+        dispatch(showMessage({ message: err.response.data.message, variant: "error" }))
+        dispatch(slice.setLoader());
+        return false
+    };
+
 }
 export default userManagementSlice.reducer;
