@@ -38,11 +38,11 @@ const AllLearners = () => {
 
   const filterHandler = (e, value) => {
     setFilterValue(value);
-    dispatch(fetchLearnerAPI({ page: 1, page_size: 25 }, searchKeyword, value));
+    dispatch(fetchLearnerAPI({ page: 1, page_size: 10 }, searchKeyword, value));
   }
 
   const searchAPIHandler = () => {
-    dispatch(fetchLearnerAPI({ page: 1, page_size: 25 }, searchKeyword, filterValue));
+    dispatch(fetchLearnerAPI({ page: 1, page_size: 10 }, searchKeyword, filterValue));
   }
 
   // useEffect(() => {
@@ -76,7 +76,7 @@ const AllLearners = () => {
                           <Close
                             onClick={() => {
                               setSearchKeyword("");
-                              dispatch(fetchLearnerAPI({ page: 1, page_size: 25 }, "", filterValue));
+                              dispatch(fetchLearnerAPI({ page: 1, page_size: 10 }, "", filterValue));
                             }}
                             sx={{
                               color: "#5B718F",

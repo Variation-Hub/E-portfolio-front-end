@@ -128,6 +128,7 @@ const Index = () => {
       if (response) {
         resetValue();
       }
+      handleClose();
     }
   };
 
@@ -195,87 +196,85 @@ const Index = () => {
   };
 
   return (
-    <Card className="m-12 rounded-6" style={{ height: "87.9vh" }}>
+    <Card className="m-12 rounded-6 relative" style={{ height: "87.9vh" }}>
       <div className="w-full h-full">
         <Breadcrumb linkData={[AdminRedirect]} currPage="User" />
-        {data.length ? (
-          <div className={Style.create_user}>
-            <div className={Style.search_filed}>
-              <TextField
-                label="Search by keyword"
-                fullWidth
-                size="small"
-                onKeyDown={searchByKeywordUser}
-                onChange={searchHandler}
-                value={searchKeyword}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      {searchKeyword ? (
-                        <Close
-                          onClick={() => {
-                            setSearchKeyword("");
-                            dispatch(
-                              fetchUserAPI(
-                                { page: meta_data?.page, page_size: meta_data?.pages },
-                                "",
-                                filterValue
-                              )
-                            );
-                          }}
-                          sx={{
-                            color: "#5B718F",
-                            fontSize: 18,
-                            cursor: "pointer",
-                          }}
-                        />
-                      ) : (
-                        <IconButton
-                          id="dashboard-search-events-btn"
-                          disableRipple
-                          sx={{ color: "#5B718F" }}
-                          onClick={() => searchAPIHandler()}
-                          size="small"
-                        >
-                          <SearchIcon fontSize="small" />
-                        </IconButton>
-                      )}
-                    </InputAdornment>
-                  ),
-                }}
-              />
-              <Autocomplete
-                fullWidth
-                size="small"
-                value={filterValue}
-                options={roles.map((option) => option.label)}
-                renderInput={(params) => (
-                  <TextField {...params} label="Search by role" />
-                )}
-                onChange={filterHandler}
-                sx={{
-                  ".MuiAutocomplete-clearIndicator": {
-                    color: "#5B718F",
-                  },
-                }}
-                PaperComponent={({ children }) => (
-                  <Paper style={{ borderRadius: "4px" }}>{children}</Paper>
-                )}
-              />
-            </div>
-            <SecondaryButton
-              name="Create user"
-              startIcon={
-                <img
-                  src="assets/images/svgimage/createcourseicon.svg"
-                  alt="Create user"
-                  className="w-6 h-6 mr-2 sm:w-8 sm:h-8 lg:w-10 lg:h-10"
-                />
-              }
-              onClick={handleOpen}
+        <div className={Style.create_user}>
+          <div className={Style.search_filed}>
+            <TextField
+              label="Search by keyword"
+              fullWidth
+              size="small"
+              onKeyDown={searchByKeywordUser}
+              onChange={searchHandler}
+              value={searchKeyword}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    {searchKeyword ? (
+                      <Close
+                        onClick={() => {
+                          setSearchKeyword("");
+                          dispatch(
+                            fetchUserAPI(
+                              { page: meta_data?.page, page_size: 10 },
+                              "",
+                              filterValue
+                            )
+                          );
+                        }}
+                        sx={{
+                          color: "#5B718F",
+                          fontSize: 18,
+                          cursor: "pointer",
+                        }}
+                      />
+                    ) : (
+                      <IconButton
+                        id="dashboard-search-events-btn"
+                        disableRipple
+                        sx={{ color: "#5B718F" }}
+                        onClick={() => searchAPIHandler()}
+                        size="small"
+                      >
+                        <SearchIcon fontSize="small" />
+                      </IconButton>
+                    )}
+                  </InputAdornment>
+                ),
+              }}
+            />
+            <Autocomplete
+              fullWidth
+              size="small"
+              value={filterValue}
+              options={roles.filter(item => item.label !== "Employer")?.map((option) => option.label)}
+              renderInput={(params) => (
+                <TextField {...params} label="Search by role" />
+              )}
+              onChange={filterHandler}
+              sx={{
+                ".MuiAutocomplete-clearIndicator": {
+                  color: "#5B718F",
+                },
+              }}
+              PaperComponent={({ children }) => (
+                <Paper style={{ borderRadius: "4px" }}>{children}</Paper>
+              )}
             />
           </div>
-        ) : null}
+          <SecondaryButton
+            name="Create user"
+            startIcon={
+              <img
+                src="assets/images/svgimage/createcourseicon.svg"
+                alt="Create user"
+                className="w-6 h-6 mr-2 sm:w-8 sm:h-8 lg:w-10 lg:h-10"
+              />
+            }
+            onClick={handleOpen}
+          />
+        </div>
         {dataFetchLoading ? (
           <FuseLoading />
         ) : data.length ? (
@@ -301,7 +300,6 @@ const Index = () => {
               It is a long established fact that a reader will be <br />
               distracted by the readable content.
             </Typography>
-            <SecondaryButton name="Create user" onClick={handleOpen} />
           </div>
         )}
         <Dialog

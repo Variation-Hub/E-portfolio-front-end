@@ -55,7 +55,7 @@ const learnerManagementSlice = createSlice({
             const { learner_id, ...rest } = action.payload;
             state.data = state.data.map((value) => {
                 if (value.learner_id === learner_id) {
-                    return rest;
+                    return action.payload;
                 }
                 return value;
             })
@@ -112,11 +112,11 @@ export const createLearnerAPI = (data) => async (dispatch) => {
 }
 
 // get learner
-export const fetchLearnerAPI = (data = { page: 1, page_size: 25 }, search_keyword = "", search_role = "") => async (dispatch) => {
+export const fetchLearnerAPI = (data = { page: 1, page_size: 10 }, search_keyword = "", search_role = "") => async (dispatch) => {
 
     try {
         // dispatch(slice.setLoader());
-        const { page = 1, page_size = 25 } = data;
+        const { page = 1, page_size = 10 } = data;
 
         let url = `${URL_BASE_LINK}/learner/list?page=${page}&limit=${page_size}&meta=true`;
 

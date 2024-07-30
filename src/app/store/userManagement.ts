@@ -5,8 +5,7 @@ import { showMessage } from './fuse/messageSlice';
 import { userTableMetaData } from '../contanst/metaData';
 import JwtService from '../auth/services/jwtService';
 import instance from '../auth/services/jwtService/jwtService';
-import {slice as globalSlice} from './globalUser'
-import { setUser } from './userSlice';
+import { slice as globalSlice } from './globalUser'
 
 const initialState = {
     data: [],
@@ -26,6 +25,7 @@ const userManagementSlice = createSlice({
     initialState,
     reducers: {
         updateUser(state, action) {
+            console.log("loglog", action.payload.data, Array.isArray(action.payload.data))
             if (Array.isArray(action.payload.data)) {
                 state.data = action.payload.data;
                 state.meta_data = action.payload.meta_data
