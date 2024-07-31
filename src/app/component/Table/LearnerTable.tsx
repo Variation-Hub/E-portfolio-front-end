@@ -518,7 +518,7 @@ export default function LearnerTable(props) {
               fullWidth
               size="small"
               options={employer}
-              getOptionLabel={(option: any) => option.user_name}
+              getOptionLabel={(option: any) => option.employer?.employer_name}
               renderInput={(params) => (
                 <TextField
                   {...params}

@@ -18,7 +18,7 @@ const UserCard = ({ user }) => {
                     </Grid>
                     <Grid item xs>
                         <Typography variant="h6" className="font-bold text-gray-800">
-                            {user.first_name} {user.last_name}
+                            {user.role.join() === "Employer" ? user?.employer?.employer_name : user.first_name + " " + user.last_name}
                         </Typography>
                         <Typography variant="body2" className="text-gray-600">
                             Email: {user.email}
