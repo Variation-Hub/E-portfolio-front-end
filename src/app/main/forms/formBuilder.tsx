@@ -209,9 +209,7 @@ const FormBuilder = (props) => {
                                                     onClick={() => {
                                                         setSearchKeyword("");
                                                         dispatch(
-                                                            fetchUserAPI(
-                                                                { page: 1, page_size: 10 },
-                                                                "")
+                                                            getFormDataAPI({ page: 1, page_size: 10 })
                                                         );
                                                     }}
                                                     sx={{
