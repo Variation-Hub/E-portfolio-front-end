@@ -724,7 +724,7 @@ const CourseBuilder = (props) => {
                           </Box>
                           <div className="w-full flex flex-col">
                             {subItem.subTopic?.length > 0 &&
-                              subItem.subTopic?.map((topicItem) => {
+                              subItem.subTopic?.map((topicItem, index) => {
                                 return (
                                   <>
                                     <div className="w-full flex flex-row gap-24 items-center ">
@@ -762,17 +762,18 @@ const CourseBuilder = (props) => {
                                                   }
                                                 />
                                               </Tooltip>
-
-                                              <SecondaryButton
-                                                name="Add Topic"
-                                                className="w-full"
-                                                onClick={() =>
-                                                  addTopicHandler(
-                                                    item.id,
-                                                    subItem?.id
-                                                  )
-                                                }
-                                              />
+                                              {index === 0 && (
+                                                <SecondaryButton
+                                                  name="Add Topic"
+                                                  className="w-full"
+                                                  onClick={() =>
+                                                    addTopicHandler(
+                                                      item.id,
+                                                      subItem?.id
+                                                    )
+                                                  }
+                                                />
+                                              )}
                                             </>
                                           )}
                                         </Box>

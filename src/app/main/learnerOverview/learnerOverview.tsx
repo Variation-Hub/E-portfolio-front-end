@@ -1,4 +1,4 @@
-import { Avatar } from '@mui/material'
+import { Avatar, Tooltip } from '@mui/material'
 import { fetchAllLearnerByUserAPI, selectCourseManagement } from 'app/store/courseManagement'
 import { selectUser } from 'app/store/userSlice'
 import { useEffect } from 'react'
@@ -44,7 +44,9 @@ const Protfolio = ({ learner, handleClickData, handleClickSingleData }) => {
                       handleClickData(learner.learner_id, learner.user_id)
                     }}
                   >
-                    <DoughnutChart />
+                    <Tooltip title={value?.course?.course_name}>
+                      <DoughnutChart />
+                    </Tooltip>
                   </Link>
 
                 </div>
