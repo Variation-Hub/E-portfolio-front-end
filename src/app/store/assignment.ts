@@ -161,9 +161,14 @@ export const getAssignmentByCourseAPI = (course_id, user_id) => async (dispatch)
     try {
         dispatch(slice.setLoader());
 
-        let url = `${URL_BASE_LINK}/assignment/list?course_id=${course_id}&user_id=${user_id}`;
+        let url = `${URL_BASE_LINK}/assignment/list?&user_id=${user_id}`;
+
+        if (course_id) {
+            url = `${url}&course_id=${course_id}`
+        }
 
         const response = await axios.get(url);
+        dispatch(slice.setAssignmentdata(response.data.data));
         dispatch(slice.setSingleAssignmentData(response.data.data));
         dispatch(slice.setLoader());
         return true;

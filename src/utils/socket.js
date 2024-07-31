@@ -4,6 +4,7 @@ import { fetchNotifications } from 'app/store/notification';
 import jsonData from 'src/url.json';
 import { SocketDomain } from './randomColor';
 import { slice } from 'app/store/forum';
+import { slice as InnovationSlice } from 'app/store/yourInnovation';
 // import slice from ''
 const SERVER_URL = jsonData.SOCKER_LINK
 
@@ -21,6 +22,9 @@ export const connectToSocket = async (id, dispatch) => {
             dispatch(fetchNotifications())
         } else if (domain === SocketDomain.MessageSend) {
             dispatch(slice.newMassageHandler(data))
+        } else if (domain === SocketDomain.InnovationChat){
+            console.log("helllllooooooooo", data)
+            dispatch(InnovationSlice.setSingleDataForSocket(data))
         }
     };
 

@@ -22,7 +22,7 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import { Stack } from "@mui/system";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   DangerButton,
   LoadingButton,
@@ -49,6 +49,7 @@ import { Link } from "react-router-dom";
 import FuseLoading from "@fuse/core/FuseLoading";
 import DataNotFound from "src/app/component/Pages/dataNotFound";
 import Style from "./style.module.css"
+import { getRandomColor } from "src/utils/randomColor";
 
 
 const timeAgo = (timestamp) => {
@@ -154,6 +155,7 @@ const AddInnocations = (props) => {
 };
 
 const ProposeYourInnovations = (props) => {
+  const chatEndRef = useRef(null);
   const { data } = useSelector(selectUser);
   const { singleData, dataUpdatingLoadding, dataFetchLoading, meta_data } = useSelector(selectYourInnovation);
 
@@ -191,7 +193,7 @@ const ProposeYourInnovations = (props) => {
   const dispatch: any = useDispatch();
 
   const clearSingleData = () => {
-    dispatch(slice.setSingleData({}));
+    // dispatch(slice.setSingleData({}));
     setYourInnovation({
       innovation_propose_by_id: data.user_id,
       topic: "",
@@ -219,7 +221,7 @@ const ProposeYourInnovations = (props) => {
     setAnchorEl(null);
     setDialogType(null);
     setDeleteId("");
-    // clearSingleData();
+    clearSingleData();
   };
 
   const handleEdit = () => {
@@ -294,15 +296,16 @@ const ProposeYourInnovations = (props) => {
         innovation_id: selectedRow.id,
         type: messageType,
         description: newMessage,
+        date: new Date(),
       };
       console.log(chatMessages);
 
       try {
         let response;
         response = await dispatch(createInnovationCommentAPI(newChatMessage));
-        dispatch(
-          getInnovationCommentAPI({ page: 1, page_size: 10 }, selectedRow?.id)
-        );
+        // dispatch(
+        //   getInnovationCommentAPI({ page: 1, page_size: 10 }, selectedRow?.id)
+        // );
       } catch (err) {
         console.log(err);
       } finally {
@@ -325,6 +328,14 @@ const ProposeYourInnovations = (props) => {
       handleSendChatMessage();
     }
   };
+
+  const scrollToBottom = () => {
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [singleData.comment]);
 
   const isAdmin = data.roles.includes('Admin');
 
@@ -617,7 +628,7 @@ const ProposeYourInnovations = (props) => {
                       ? handleUpdate
                       : handleSubmit
                   }
-                  disable={!isInnovations}
+                  disable={!yourInnovation?.topic || !yourInnovation?.description}
                 />
               </>
             )}
@@ -628,7 +639,7 @@ const ProposeYourInnovations = (props) => {
         <Drawer
           anchor="right"
           open={chatDrawerOpen}
-          onClose={() => setChatDrawerOpen(false)}
+          onClose={handleDrawerClose}
           sx={{ width: "100%", "& .MuiDrawer-paper": { width: "50%" } }}
         >
           <Box
@@ -653,56 +664,73 @@ const ProposeYourInnovations = (props) => {
               </Tooltip>
             </Box>
 
-            {/* <Box sx={{ flexGrow: 1, overflowY: "auto", p: 2 }}>
-              {singleData.comment?.map((message) => (
-                <Box key={message.id} mb={2}>
-                  <Typography
-                    className={
-                      (isAdmin && message.type == "Response") ||
-                        (!isAdmin && message.type == "Reply")
-                        ? "text-end"
-                        : "text-start"
-                    }
-                  >
-                    {message.description}
-                  </Typography>
-                </Box>
-              ))}
-            </Box> */}
             <Box sx={{ flexGrow: 1, overflowY: "auto", p: 2 }}>
               {singleData.comment?.map((message) => (
-                <Box key={message.id} mb={2}>
-                  {/* <Typography
-                    className={
-                      (isAdmin && message.type == "Response") ||
-                        (!isAdmin && message.type == "Reply")
-                        ? "text-end"
-                        : "text-start"
-                    }
-                  >
-                    {message.description}
-                  </Typography> */}
-                  {(isAdmin && message.type == "Response") ?
-                    <Grid className="w-[80%] flex ml-auto text-justify justify-end pr-10 ">
-                      <Typography sx={{ overflowWrap: "anywhere" }} className=" bg-[#5B718F] p-10 rounded-md text-base text-white ">
-                        {message?.description}
-                      </Typography>
-                    </Grid>
-                    :
-                    <Grid >
-                      <div className="flex items-start justify-start bg-[#F4F6F8] rounded-md m-10 gap-10 w-[80%] p-10">
-                        {<Avatar className="mr-4" alt={singleData.innovation_propose_by_id?.user_name?.toUpperCase().charAt(0)} src="../" />}
-                        <div style={{ overflowWrap: "anywhere" }} className="flex flex-col w-full">
-                          <div className="flex justify-between flex-row m-5 pr-10 ">
-                            <div className="font-semibold text-base">{singleData.innovation_propose_by_id?.user_name}</div>
-                            <div className="text-xs text-gray-500">{timeAgo(singleData.created_at)}</div>
+                <Box key={message.id} mb={2} >
+                  {singleData.innovation_propose_by_id?.user_id === data?.user_id ? (
+                    message.type == "Response" ? (
+
+                      <Grid className="w-[80%] flex text-justify justify-start pr-10">
+                        <div className="flex items-start justify-start bg-[#F4F6F8] rounded-md m-10 gap-10 w-full p-10">
+                          <Avatar className="mr-4" alt={"Admin"} src="../" sx={{ bgcolor: getRandomColor("a") }} />
+                          <div style={{ overflowWrap: "anywhere" }} className="flex flex-col w-full">
+                            <div className="flex justify-between flex-row m-5 pr-10">
+                              <div className="font-semibold text-base">
+                                {singleData.innovation_propose_by_id?.user_id === data?.user_id ? "Admin" : singleData.innovation_propose_by_id?.user_name}
+                              </div>
+                              <div className="text-xs text-gray-500">{timeAgo(message?.date)}</div>
+                            </div>
+                            <div className="text-justify text-base pr-10">{message.description}</div>
                           </div>
-                          <div className="text-justify text-base pr-10 ">{message.description}</div>
                         </div>
-                      </div>
-                    </Grid>}
+                      </Grid>
+                    ) : (
+                      <Grid className="w-[80%] flex ml-auto text-justify justify-end pr-10">
+                        <Typography
+                          sx={{ overflowWrap: "anywhere" }}
+                          className="bg-[#5B718F] p-10 rounded-md text-base text-white"
+                        >
+                          {message?.description}
+                          <div className="flex justify-end text-xs text-gray-500">{timeAgo(message?.date)}</div>
+                        </Typography>
+                      </Grid>
+                    )
+                  ) : (
+                    // Other users' messages
+                    message.type == "Reply" ? (
+                      <Grid className="w-[80%] flex text-justify justify-start pr-10">
+                        <div className="flex items-start justify-start bg-[#F4F6F8] rounded-md m-10 gap-10 w-full p-10">
+                          <Avatar
+                            className="mr-4"
+                            alt={singleData.innovation_propose_by_id?.user_name?.toUpperCase().charAt(0)}
+                            src={singleData.innovation_propose_by_id?.avatar?.url}
+                          />
+                          <div style={{ overflowWrap: "anywhere" }} className="flex flex-col w-full">
+                            <div className="flex justify-between flex-row m-5 pr-10">
+                              <div className="font-semibold text-base">
+                                {singleData.innovation_propose_by_id?.user_name}
+                              </div>
+                              <div className="text-xs text-gray-500">{timeAgo(message?.date)}</div>
+                            </div>
+                            <div className="text-justify text-base pr-10">{message.description}</div>
+                          </div>
+                        </div>
+                      </Grid>
+                    ) : (
+                      <Grid className="w-[80%] flex ml-auto text-justify justify-end pr-10">
+                        <Typography
+                          sx={{ overflowWrap: "anywhere" }}
+                          className="bg-[#5B718F] p-10 rounded-md text-base text-white"
+                        >
+                          {message?.description}
+                          <div className="flex justify-end text-xs text-gray-500">{timeAgo(message?.date)}</div>
+                        </Typography>
+                      </Grid>
+                    )
+                  )}
                 </Box>
               ))}
+              <div ref={chatEndRef} />
             </Box>
 
             <Box p={2} mt="auto">

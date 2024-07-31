@@ -1,5 +1,5 @@
 import FuseLoading from "@fuse/core/FuseLoading";
-import { Avatar, Dialog } from "@mui/material";
+import { Avatar, Dialog, Tooltip } from "@mui/material";
 import {
   getLearnerDetails,
   selectLearnerManagement,
@@ -87,17 +87,18 @@ const Portfolio = () => {
                 <div className="mt-12 ml-12 mr-auto flex items-center gap-12">
                   {learner?.course?.map((value) => (
                     <div className=" w-fit">
-                      <Link
-                        to="/portfolio/learnertodata"
-                        style={{
-                          color: "inherit",
-                          textDecoration: "none",
-                        }}
-                        onClick={(e) => handleClickData(e, value)}
-                      >
-                        <DoughnutChart />
-                      </Link>
-
+                      <Tooltip title={value?.course?.course_name}>
+                        <Link
+                          to="/portfolio/learnertodata"
+                          style={{
+                            color: "inherit",
+                            textDecoration: "none",
+                          }}
+                          onClick={(e) => handleClickData(e, value)}
+                        >
+                          <DoughnutChart />
+                        </Link>
+                      </Tooltip>
                     </div>
                   ))}
                 </div>
@@ -109,7 +110,8 @@ const Portfolio = () => {
             )}
           </div>
         </div>
-      )}
+      )
+      }
       <div className="flex justify-end mr-24">
         <SecondaryButtonOutlined name="Awaiting Signature" className="mr-12" />
         <SecondaryButton name="Calendar" className="mr-12" onClick={handleOpen} />
@@ -131,7 +133,7 @@ const Portfolio = () => {
       >
         <Calendar />
       </Dialog>
-    </div>
+    </div >
   );
 };
 

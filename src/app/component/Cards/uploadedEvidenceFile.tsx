@@ -70,11 +70,11 @@ const UploadedEvidenceFile = (props) => {
   };
 
   const handleCheckbox = (event, method) => {
-    let updatedData = formData.assessment_method || []
-    if (formData.assessment_method.includes(method)) {
-      updatedData = formData.assessment_method.filter(item => item !== method)
+    let updatedData = formData.assessment_method || [];
+    if (updatedData.find(item => item === method)) {
+      updatedData = updatedData.filter(item => item !== method);
     } else {
-      updatedData = [...(formData.assessment_method || []), method];
+      updatedData = [...updatedData, method];
     }
     handleChange({ target: { name: 'assessment_method', value: updatedData } });
   };
@@ -239,7 +239,7 @@ const UploadedEvidenceFile = (props) => {
                   <FormControlLabel
                     control={
                       <Checkbox
-                        checked={formData?.assessment_method?.includes(method.value) || false}
+                        checked={formData?.assessment_method?.find(item => item === method.value)}
                         onChange={(e) => handleCheckbox(e, method.value)}
                         name="assessment_method"
                         disabled={user.data.role !== "Trainer" || edit === "view"}

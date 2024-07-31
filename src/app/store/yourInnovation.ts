@@ -36,6 +36,14 @@ const yourInnovationSlice = createSlice({
         },
         setSingleData(state, action) {
             state.singleData = action.payload
+        },
+        setSingleDataForSocket(state: any, action){
+            console.log(state.singleData?.id === action.payload?.id ,action.payload , "_____________________________________________")
+            if(state.singleData?.id === action.payload?.id){
+                state.singleData = {...state.singleData, comment: action.payload.comment}
+            }else {
+                state.singleData = state.singleData
+            }
         }
     }
 });
