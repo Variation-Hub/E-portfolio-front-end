@@ -33,21 +33,21 @@ const Protfolio = ({ learner, handleClickData, handleClickSingleData }) => {
             <div className="mt-12 ml-12 mr-auto flex items-center gap-12">
               {learner?.course?.map((value) => (
                 <div className=" w-fit">
-                  <Link
-                    to="/portfolio/learnertodata"
-                    style={{
-                      color: "inherit",
-                      textDecoration: "none",
-                    }}
-                    onClick={(e) => {
-                      handleClickSingleData(value)
-                      handleClickData(learner.learner_id, learner.user_id)
-                    }}
-                  >
-                    <Tooltip title={value?.course?.course_name}>
+                  <Tooltip title={value?.course?.course_name}>
+                    <Link
+                      to="/portfolio/learnertodata"
+                      style={{
+                        color: "inherit",
+                        textDecoration: "none",
+                      }}
+                      onClick={(e) => {
+                        handleClickSingleData(value)
+                        handleClickData(learner.learner_id, learner.user_id)
+                      }}
+                    >
                       <DoughnutChart />
-                    </Tooltip>
-                  </Link>
+                    </Link>
+                  </Tooltip>
 
                 </div>
               ))}
@@ -59,7 +59,7 @@ const Protfolio = ({ learner, handleClickData, handleClickSingleData }) => {
           </div>
         )}
       </div>
-    </div>
+    </div >
   )
 }
 

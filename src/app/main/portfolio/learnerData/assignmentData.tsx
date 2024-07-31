@@ -404,7 +404,6 @@ const AssignmentData = () => {
               </MenuItem>
             }
             {user.role === "Trainer" &&
-
               <MenuItem
                 onClick={() => {
                   handleClose();
@@ -434,14 +433,16 @@ const AssignmentData = () => {
             >
               Edit
             </MenuItem>
-            <MenuItem
-              onClick={() => {
-                handleClose();
-                deleteIcon(openMenuDialog);
-              }}
-            >
-              Delete
-            </MenuItem>
+            {user.role === "Learner" &&
+              <MenuItem
+                onClick={() => {
+                  handleClose();
+                  deleteIcon(openMenuDialog);
+                }}
+              >
+                Delete
+              </MenuItem>
+            }
           </Menu>
           <Dialog
             open={open}
