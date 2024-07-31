@@ -7,7 +7,7 @@ import HomeConfig from "../main/home/homeConfig";
 import CpdConfig from "../main/cpd/cpdConfig";
 import LearnerOverviewConfig from "../main/learnerOverview/learnerOverviewConfig";
 // import CaseloadConfig from "../main/caseload/caseloadConfig";
-import ReportsConfig from "../main/reports/reportsConfig";
+// import ReportsConfig from "../main/reports/reportsConfig";
 import ResourcesConfig from "../main/resources/resourcesConfig";
 import ForumConfig from "../main/forum/forumConfig";
 import CalendarConfig from "../main/calendar/calendarConfig";
@@ -40,7 +40,7 @@ const routeConfigs = [
     CpdConfig,
     LearnerOverviewConfig,
     // CaseloadConfig,
-    ReportsConfig,
+    // ReportsConfig,
     ResourcesConfig,
     ForumConfig,
     CalendarConfig,
