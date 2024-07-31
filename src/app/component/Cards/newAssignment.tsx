@@ -122,9 +122,10 @@ const NewAssignment = (props) => {
 
 
   const handleCheckboxUnits = (event, method) => {
+    console.log(method, formData.units)
     let updatedData = formData.units || []
-    if (formData.units.includes(method)) {
-      updatedData = formData.units.filter(item => item !== method)
+    if (formData.units.find(item => item.id === method.id)) {
+      updatedData = formData.units.filter(item => item.id !== method.id)
     } else {
       updatedData = [...(formData.units || []), method];
     }
@@ -238,10 +239,9 @@ const NewAssignment = (props) => {
             <FormGroup className="flex flex-row">
               {singleCouse?.unitData?.map((method) => (
                 <FormControlLabel
-                  key={method.value}
                   control={
                     <Checkbox
-                      checked={formData?.units?.includes((unit) => unit.value === method.value)}
+                      checked={formData?.units?.find((unit) => unit.id === method.id)}
                       onChange={(e) => handleCheckboxUnits(e, method)}
                       name="units"
                       disabled={user.data.role !== "Learner"}
