@@ -61,7 +61,7 @@ function UserMenu(props) {
         color="inherit"
         sx={style}
       >
-        <div className="md:flex flex-col mx-4 items-end">
+        <div className="flex-col mx-4 items-end md:hidden">
           <Typography component="span" className="font-semibold flex">
             {user.data.displayName}
           </Typography>
