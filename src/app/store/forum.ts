@@ -47,7 +47,10 @@ const forumDataSlice = createSlice({
         },
         setMessage(state, action) {
             state.message = action.payload
-        }
+        },
+        setResetFormData(state, action) {
+            state.data = action.payload.data
+        },
     }
 });
 
