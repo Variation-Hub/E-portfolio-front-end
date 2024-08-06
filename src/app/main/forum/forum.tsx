@@ -1,11 +1,10 @@
 import { Avatar, Box, Grid, IconButton, InputAdornment, TextField, Tooltip, Typography } from "@mui/material";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import EmojiPicker from 'emoji-picker-react';
 import { LoadingButton, SecondaryButton } from "src/app/component/Buttons";
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 import SendIcon from '@mui/icons-material/Send';
 import { useDispatch } from "react-redux";
-import { fetchCourseAPI, selectCourseManagement } from "app/store/courseManagement";
 import { useSelector } from "react-redux";
 import { getChatListAPI, getMessageAPI, selectForumData, sendMessageAPI, slice } from "app/store/forum";
 import { getRandomColor } from "src/utils/randomColor";
@@ -15,9 +14,7 @@ import AttachFileIcon from '@mui/icons-material/AttachFile';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
 import { Link } from "react-router-dom";
 import ClearIcon from '@mui/icons-material/Clear';
-import CloseIcon from '@mui/icons-material/Close';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-import { selectFormData } from "app/store/formData";
 
 const timeAgo = (timestamp) => {
   if (!timestamp) return '';
@@ -32,7 +29,7 @@ const timeAgo = (timestamp) => {
   const weeks = Math.floor(diffInSeconds / 604800);
 
   if (diffInSeconds < 60) {
-    return `${diffInSeconds} sec${diffInSeconds !== 1 ? 's' : ''} ago`;
+    return `Just now`;
   } else if (minutes < 60) {
     return `${minutes} min${minutes !== 1 ? 's' : ''} ago`;
   } else if (hours < 24) {
@@ -156,7 +153,7 @@ const Forum = () => {
   );
   const screenSize = window.innerWidth;
   console.log(screenSize, "+++++++++++", selectedCourse, (screenSize > 600 || !!selectedCourse))
-  
+
   return (
     <div className="flex w-full gap-12 overflow-hidden sm:h-[630px] h-[540px]">
       {(screenSize > 600 || !selectedCourse) && <div className={`${screenSize > 600 ? 'w-[30%]' : "w-full"} p-4  rounded-0 shadow-2 overflow-hidden overflow-y-scroll`}>
@@ -222,7 +219,6 @@ const Forum = () => {
             flexDirection: 'column',
             height: "78vh",
             justifyContent: "space-between",
-
             '@media screen and (max-width:426px)': {
               height: "75vh",
             },

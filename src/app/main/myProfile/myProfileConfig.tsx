@@ -24,7 +24,7 @@ const MyProfileConfig = {
       },
     },
   },
-  auth: [authRoles.Admin, authRoles.Learner, authRoles.Trainer, authRoles.Employer, authRoles.EQA, authRoles.IQA],
+  auth: [authRoles.Admin, authRoles.Learner, authRoles.Trainer, authRoles.Employer, authRoles.EQA, authRoles.IQA, authRoles.LIQA],
   routes: [
     {
       path: "/profile",
