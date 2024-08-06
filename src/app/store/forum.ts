@@ -64,8 +64,6 @@ export const sendMessageAPI = (data) => async (dispatch) => {
     try {
         dispatch(slice.setUpdatingLoader());
         const response = await axios.post(`${URL_BASE_LINK}/forum/send`, data)
-        console.log(response.data.data, "success");
-        dispatch(slice.pushForumData(response.data.data));
         dispatch(showMessage({ message: response.data.message, variant: "success" }))
         dispatch(slice.setUpdatingLoader());
         return true;
@@ -88,7 +86,7 @@ export const getMessageAPI = (data, course_id) => async (dispatch, getStore) => 
         let url = `${URL_BASE_LINK}/forum/messages/${courseId}?meta=true&page=${1}&limit=${500}`
 
         const response = await axios.get(url);
-        dispatch(showMessage({ message: response.data.message, variant: "success" }))
+        // dispatch(showMessage({ message: response.data.message, variant: "success" }))
         dispatch(slice.setForumData(response.data))
         dispatch(slice.setLoader());
         return true;
@@ -110,7 +108,7 @@ export const getChatListAPI = () => async (dispatch) => {
         let url = `${URL_BASE_LINK}/forum/list`
 
         const response = await axios.get(url);
-        dispatch(showMessage({ message: response.data.message, variant: "success" }))
+        // dispatch(showMessage({ message: response.data.message, variant: "success" }))
         dispatch(slice.setCourseData(response.data.data))
         dispatch(slice.setLoader());
         return true;
