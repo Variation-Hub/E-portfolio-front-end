@@ -17,6 +17,7 @@ const TNAQuestionaire = (props) => {
     const dispatch: any = useDispatch();
 
     const [sampleData, setSampleData] = useState(courseData?.units || []);
+    const [highlightBlanks, setHighlightBlanks] = useState(false);
 
     const handleClick = (event, row) => {
         dispatch(slice.setSingleData(row));
@@ -38,13 +39,17 @@ const TNAQuestionaire = (props) => {
         dispatch(updateCourseUnitSkillAPI(courseData))
     }
 
+    const handleHighlightBlanksChange = (event) => {
+        setHighlightBlanks(event.target.checked);
+    };
+
     return (
         <Grid>
             <Grid className="flex items-center pl-28">
                 <Checkbox
-                    // checked={row.select}
-                    // onChange={handleCheckboxChange}
-                    name="declaration"
+                    checked={highlightBlanks}
+                    onChange={handleHighlightBlanksChange}
+                    name="highlightBlanks"
                     color="primary"
                 />
                 <Typography>
@@ -94,10 +99,10 @@ const TNAQuestionaire = (props) => {
                                 <TableRow >
                                     <TableCell >Topic</TableCell>
                                     <TableCell align="left">Skill To Be Demonstrated</TableCell>
-                                    <TableCell align="left">☹️</TableCell>
-                                    <TableCell align="left">😖</TableCell>
-                                    <TableCell align="left">🙂</TableCell>
-                                    <TableCell align="left">😁</TableCell>
+                                    <TableCell align="center">☹️</TableCell>
+                                    <TableCell align="center">😖</TableCell>
+                                    <TableCell align="center">🙂</TableCell>
+                                    <TableCell align="center">😁</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -122,25 +127,37 @@ const TNAQuestionaire = (props) => {
                                         </TableCell>
                                         <TableCell
                                             align="left"
-                                            sx={{ borderBottom: "2px solid #F8F8F8", width: "1%" }}
+                                            sx={{
+                                                borderBottom: "2px solid #F8F8F8", width: "1%",
+                                                backgroundColor: highlightBlanks && row.rating == null ? 'yellow' : 'inherit'
+                                            }}
                                         >
                                             <Radio checked={row?.rating === 1} onClick={() => radioHandler(row.id, 1)} />
                                         </TableCell>
                                         <TableCell
                                             align="left"
-                                            sx={{ borderBottom: "2px solid #F8F8F8", width: "1%" }}
+                                            sx={{
+                                                borderBottom: "2px solid #F8F8F8", width: "1%",
+                                                backgroundColor: highlightBlanks && row.rating == null ? 'yellow' : 'inherit'
+                                            }}
                                         >
                                             <Radio checked={row?.rating === 2} onClick={() => radioHandler(row.id, 2)} />
                                         </TableCell>
                                         <TableCell
                                             align="left"
-                                            sx={{ borderBottom: "2px solid #F8F8F8", width: "1%" }}
+                                            sx={{
+                                                borderBottom: "2px solid #F8F8F8", width: "1%",
+                                                backgroundColor: highlightBlanks && row.rating == null ? 'yellow' : 'inherit'
+                                            }}
                                         >
                                             <Radio checked={row?.rating === 3} onClick={() => radioHandler(row.id, 3)} />
                                         </TableCell>
                                         <TableCell
                                             align="left"
-                                            sx={{ borderBottom: "2px solid #F8F8F8", width: "1%" }}
+                                            sx={{
+                                                borderBottom: "2px solid #F8F8F8", width: "1%",
+                                                backgroundColor: highlightBlanks && row.rating == null ? 'yellow' : 'inherit'
+                                            }}
                                         >
                                             <Radio checked={row?.rating === 4} onClick={() => radioHandler(row.id, 4)} />
                                         </TableCell>
