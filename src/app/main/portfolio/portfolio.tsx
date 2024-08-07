@@ -20,6 +20,7 @@ import { selectstoreDataSlice } from "app/store/reloadData";
 import { selectUser } from "app/store/userSlice";
 import { slice } from "app/store/courseManagement";
 import { getRandomColor } from "src/utils/randomColor";
+import { slice as courseSlice } from "app/store/courseManagement";
 
 const Portfolio = () => {
   const [open, setOpen] = useState(false);
@@ -54,6 +55,10 @@ const Portfolio = () => {
 
   const handleClickData = (event, row) => {
     dispatch(slice.setSingleData(row));
+  };
+
+  const handleClickSingleData = (row) => {
+    dispatch(courseSlice.setSingleData(row));
   };
 
   return (
@@ -94,9 +99,12 @@ const Portfolio = () => {
                             color: "inherit",
                             textDecoration: "none",
                           }}
-                          onClick={(e) => handleClickData(e, value)}
+                          onClick={(e) => {
+                            handleClickSingleData(value)
+                            handleClickData(e, value)
+                          }}
                         >
-                          <DoughnutChart />
+                          <DoughnutChart value={value}/>
                         </Link>
                       </Tooltip>
                     </div>

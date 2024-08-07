@@ -373,16 +373,24 @@ export const resourceManagementTableColumn = [
 
 export const portfolioCard = [
   { id: 1, name: "Upload Work", color: "#FCA14E" },
-  { id: 2, name: "Unit Progress", color: "#8F78F4" },
-  { id: 3, name: "Gap Analysis", color: "#F44771" },
-  { id: 4, name: "Actions and Activities", color: "#009FB7" },
-  { id: 5, name: "Health and Wellbeing", color: "#E95ACB" },
-  { id: 6, name: "Choose Units", color: "#489E20" },
-  { id: 7, name: "Learning Plan", color: "#1E72AE" },
-  { id: 8, name: "Resources", color: "#A847F4" },
-  { id: 9, name: "Time Log", color: "#B7B000" },
-  { id: 10, name: "Supplementary Training", color: "#4564D0" },
+  { id: 2, name: "Unit and Gap Analysis", color: "#8F78F4" },
+  { id: 3, name: "Actions and Activities", color: "#F44771" },
+  { id: 4, name: "Resources", color: "#009FB7" },
+  { id: 5, name: "Time Log", color: "#E95ACB" },
 ];
+
+// export const portfolioCard = [
+//   { id: 1, name: "Upload Work", color: "#FCA14E" },
+//   { id: 2, name: "Unit and Gap Analysis", color: "#8F78F4" },
+// { id: 3, name: "Gap Analysis", color: "#F44771" },
+//   { id: 4, name: "Actions and Activities", color: "#009FB7" },
+// { id: 5, name: "Health and Wellbeing", color: "#E95ACB" },
+// { id: 6, name: "Choose Units", color: "#489E20" },
+// { id: 7, name: "Learning Plan", color: "#1E72AE" },
+//   { id: 8, name: "Resources", color: "#A847F4" },
+//   { id: 9, name: "Time Log", color: "#B7B000" },
+// { id: 10, name: "Supplementary Training", color: "#4564D0" },
+// ];
 
 export const fundingBodyData = [
   "Advance Learning Loan",

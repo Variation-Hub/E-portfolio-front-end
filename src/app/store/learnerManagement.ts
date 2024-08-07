@@ -46,10 +46,10 @@ const learnerManagementSlice = createSlice({
             }
         },
         setLoader(state) {
-            state.dataFetchLoading = !state.dataFetchLoading;
+            state.dataFetchLoading = false;
         },
         setUpdatingLoader(state) {
-            state.dataUpdatingLoadding = !state.dataUpdatingLoadding
+            state.dataUpdatingLoadding = false;
         },
         updateLearnerById(state, action) {
             const { learner_id, ...rest } = action.payload;

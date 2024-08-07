@@ -45,7 +45,7 @@ const Protfolio = ({ learner, handleClickData, handleClickSingleData }) => {
                         handleClickData(learner.learner_id, learner.user_id)
                       }}
                     >
-                      <DoughnutChart />
+                      <DoughnutChart value={value}/>
                     </Link>
                   </Tooltip>
 
@@ -77,10 +77,6 @@ const LearnerOverview = () => {
       dispatch(fetchAllLearnerByUserAPI(data.user_id, data.role))
     }
   }, [data]);
-
-  useEffect(() => {
-    if (storeData?.learner_id) dispatch(getLearnerDetails(storeData?.learner_id));
-  }, [storeData]);
 
   const handleClickData = (id, user_id) => {
     dispatch(slice.setLeanerId({ id, user_id }))
