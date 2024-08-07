@@ -88,9 +88,9 @@ const UploadedEvidenceFile = (props) => {
   };
 
   const handleCheckboxUnits = (event, method) => {
-    console.log(method, formData.units)
+    console.log(method, formData)
     let updatedData = formData.units || []
-    if (formData.units.find(item => item.id === method.id)) {
+    if (formData?.units?.find(item => item.id === method.id)) {
       updatedData = formData.units.filter(item => item.id !== method.id)
     } else {
       updatedData = [...(formData.units || []), method];
