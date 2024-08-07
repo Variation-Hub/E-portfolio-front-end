@@ -50,6 +50,7 @@ interface Column {
   | "description"
   | "trainer_feedback"
   | "learner_comments"
+  | "status"
   | "file"
   | "action"
   label: string;
@@ -63,6 +64,7 @@ const columns: readonly Column[] = [
   { id: "description", label: "Description", minWidth: 10 },
   { id: "trainer_feedback", label: "Trainer Feedback", minWidth: 10 },
   { id: "learner_comments", label: "Learner Comments", minWidth: 10 },
+  { id: "status", label: "Status", minWidth: 10 },
   { id: "file", label: "Files", minWidth: 10 },
   { id: "action", label: "Action", minWidth: 10 },
 ];
@@ -324,7 +326,9 @@ const AssignmentData = () => {
                                         {/* ))} */}
                                       </AvatarGroup>
                                     </div>
-                                  ) : value}
+                                  ) : column.id === "status" && user?.data?.role === "Trainer" ?
+                                      <TextField value={value}/>
+                                  :value}
                             </TableCell>
                           );
                         })}
@@ -404,7 +408,6 @@ const AssignmentData = () => {
               </MenuItem>
             }
             {user.role === "Trainer" &&
-
               <MenuItem
                 onClick={() => {
                   handleClose();
@@ -434,14 +437,16 @@ const AssignmentData = () => {
             >
               Edit
             </MenuItem>
-            <MenuItem
-              onClick={() => {
-                handleClose();
-                deleteIcon(openMenuDialog);
-              }}
-            >
-              Delete
-            </MenuItem>
+            {user.role === "Learner" &&
+              <MenuItem
+                onClick={() => {
+                  handleClose();
+                  deleteIcon(openMenuDialog);
+                }}
+              >
+                Delete
+              </MenuItem>
+            }
           </Menu>
           <Dialog
             open={open}

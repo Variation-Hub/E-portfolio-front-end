@@ -1,11 +1,10 @@
 import { Avatar, Box, Grid, IconButton, InputAdornment, TextField, Tooltip, Typography } from "@mui/material";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import EmojiPicker from 'emoji-picker-react';
 import { LoadingButton, SecondaryButton } from "src/app/component/Buttons";
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 import SendIcon from '@mui/icons-material/Send';
 import { useDispatch } from "react-redux";
-import { fetchCourseAPI, selectCourseManagement } from "app/store/courseManagement";
 import { useSelector } from "react-redux";
 import { getChatListAPI, getMessageAPI, selectForumData, sendMessageAPI, slice } from "app/store/forum";
 import { getRandomColor } from "src/utils/randomColor";
@@ -15,6 +14,7 @@ import AttachFileIcon from '@mui/icons-material/AttachFile';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
 import { Link } from "react-router-dom";
 import ClearIcon from '@mui/icons-material/Clear';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 
 const timeAgo = (timestamp) => {
   if (!timestamp) return '';
@@ -29,7 +29,7 @@ const timeAgo = (timestamp) => {
   const weeks = Math.floor(diffInSeconds / 604800);
 
   if (diffInSeconds < 60) {
-    return `${diffInSeconds} sec${diffInSeconds !== 1 ? 's' : ''} ago`;
+    return `Just now`;
   } else if (minutes < 60) {
     return `${minutes} min${minutes !== 1 ? 's' : ''} ago`;
   } else if (hours < 24) {
@@ -63,8 +63,11 @@ const Forum = () => {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [file, setFile] = useState(null);
+  const [selectedCourse, setSelectedCourse] = useState(null);
 
   const handleSendMessage = (event, row) => {
+    setSelectedCourse(row);
+
     dispatch(slice.setMessage(row));
     setSendMessage(pre => ({
       ...pre,
@@ -133,6 +136,10 @@ const Forum = () => {
     setFile(null);
   };
 
+  const handleCloseChat = () => {
+    setSelectedCourse(null);
+  };
+
   useEffect(() => {
     scrollToBottom();
   }, [forumData]);
@@ -144,10 +151,13 @@ const Forum = () => {
   const filteredCourseData = forumData.courseData.filter(row =>
     row.course_course_name.toLowerCase().includes(searchTerm.toLowerCase())
   );
+  const screenSize = window.innerWidth;
+  console.log(screenSize, "+++++++++++", selectedCourse, (screenSize > 600 || !!selectedCourse))
 
   return (
-    <div className="flex w-full h-[100%] p-16 gap-12">
-      <div className="w-[30%] p-4  rounded-md shadow-2 overflow-hidden">
+    <div className="flex w-full gap-12 overflow-hidden sm:h-[630px] h-[540px]">
+      {(screenSize > 600 || !selectedCourse) && <div className={`${screenSize > 600 ? 'w-[30%]' : "w-full"} p-4  rounded-0 shadow-2 overflow-hidden overflow-y-scroll`}>
+        {/* <div className={`w-full md:w-1/3 p-1 rounded-lg shadow-lg overflow-hidden ${selectedCourse ? 'hidden max-[600px]:block' : ''}`}> */}
         <div className="flex flex-col space-y-4">
           <div className="flex items-center justify-between p-2">
             <input
@@ -181,13 +191,20 @@ const Forum = () => {
             </div>
           ))}
         </div>
-      </div>
+      </div>}
 
-      {(forumData.message?.course_course_id !== null) ?
-        <div className="w-full p-4 max-h-fit rounded-md shadow-2">
+      {(screenSize > 600 || !!selectedCourse) && ((forumData.message?.course_course_id !== null) ?
+        <div className="w-full p-4 rounded-0 shadow-2 relative">
+          <IconButton
+            onClick={handleCloseChat}
+            className="absolute top-14 right-2 text-gray-500"
+            style={{ display: screenSize < 600 ? 'block' : 'none' }}
+          >
+            <ArrowBackIosIcon />
+          </IconButton>
           {forumData && (
             <div className="flex items-start bg-white rounded-md p-2 border-b border-gray-200 m-10 gap-10">
-              <Avatar className="mr-4" alt={forumData?.course_course_name?.toUpperCase().charAt(0)} src="../" />
+              <Avatar className="mr-4" alt={forumData?.message?.course_course_name?.toUpperCase().charAt(0)} src="../" sx={{ bgcolor: getRandomColor(forumData?.message?.course_course_name?.toLowerCase().charAt(0)) }} />
               <div className="flex  flex-col pr-10 ">
                 <div className="flex justify-between flex-row m-5">
                   <div className="font-semibold  text-lg">{forumData?.message?.course_course_name}</div>
@@ -197,7 +214,15 @@ const Forum = () => {
               </div>
             </div>
           )}
-          <Box sx={{ display: 'flex', flexDirection: 'column', height: "75vh", justifyContent: "space-between" }}>
+          <Box sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            height: "78vh",
+            justifyContent: "space-between",
+            '@media screen and (max-width:426px)': {
+              height: "75vh",
+            },
+          }}>
 
             <Box className="flex overflow-y-scroll flex-col max-w-full gap-10 h-[88%]">
               {forumData.data?.map((message) => (
@@ -240,7 +265,7 @@ const Forum = () => {
                 </>
               ))}
             </Box>
-            <Box p={2} mt="auto" className="mt-auto">
+            <Box mt="auto" className="mt-auto">
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <TextField
                   fullWidth
@@ -318,7 +343,7 @@ const Forum = () => {
               distracted by the readable content.
             </Typography>
           </div>
-        )
+        ))
       }
 
     </div>

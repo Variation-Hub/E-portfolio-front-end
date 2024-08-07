@@ -44,21 +44,21 @@ const AddForms = (props) => {
     type: "",
   });
 
-    useEffect(() => {
-        if ((mode === "view" || mode === "edit") && singleData) {
-            setFormData({
-                id: singleData.id,
-                form_name: singleData.form_name,
-                description: singleData.description,
-                form_data: singleData?.form_data?.map((item: any) => {
-                    const { id, ...rest } = item;
-                    return rest;
-                }),
-                // form_data:  singleData.form_data,
-                type: singleData.type,
-            });
-        }
-    }, [mode, singleData]);
+  useEffect(() => {
+    if ((mode === "view" || mode === "edit") && singleData) {
+      setFormData({
+        id: singleData.id,
+        form_name: singleData.form_name,
+        description: singleData.description,
+        form_data: singleData?.form_data?.map((item: any) => {
+          const { id, ...rest } = item;
+          return rest;
+        }),
+        // form_data:  singleData.form_data,
+        type: singleData.type,
+      });
+    }
+  }, [mode, singleData]);
 
   useEffect(() => {
     const link = document.createElement("link");
@@ -77,7 +77,7 @@ const AddForms = (props) => {
   const handleCloseForm = () => {
     navigate("/forms");
     dispatch(slice.setSingleData({}));
-    dispatch(slice.setMode({}));
+    dispatch(slice.setMode(""));
     setFormData({
       id: null,
       form_name: "",
@@ -93,7 +93,6 @@ const AddForms = (props) => {
       if (mode == "") response = await dispatch(createFormDataAPI(formData));
       else if (mode == "edit")
         response = await dispatch(updateFormDataAPI(formData));
-      dispatch(getFormDataAPI({ page: 1, page_size: 10 }, ""));
     } catch (err) {
       console.log(err);
     } finally {
@@ -150,6 +149,7 @@ const AddForms = (props) => {
               name="form_name"
               value={formData?.form_name}
               size="small"
+              placeholder="Enter form name"
               required
               fullWidth
               onChange={handleChange}
@@ -172,7 +172,7 @@ const AddForms = (props) => {
             <TextField
               name="description"
               size="small"
-              placeholder="Lorem dummy context....."
+              placeholder="Enter description"
               fullWidth
               multiline
               rows={1}

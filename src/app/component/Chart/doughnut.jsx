@@ -20,8 +20,24 @@ export const data = {
     ],
 };
 
-export default function DoughnutChart() {
-    return <Doughnut data={data}
+export default function DoughnutChart(props) {
+
+    const { fullyCompleted = 10, notStarted = 10, partiallyCompleted = 10, totalSubUnits = 10 } = props?.value;
+    return <Doughnut data={{
+        labels: ['Completed', 'Progress', 'Overdue'],
+        datasets: [
+            {
+                label: " Sub Units",
+                data: [fullyCompleted, partiallyCompleted, notStarted],
+                backgroundColor: [
+                    '#58C800',
+                    '#FFBF00',
+                    '#FF002D'
+                ],
+                borderWidth: 1,
+            },
+        ],
+    }}
         width={100}
         height={100}
         options={{

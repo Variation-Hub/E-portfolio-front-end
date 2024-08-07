@@ -119,7 +119,7 @@ const SubmittedForms = (props) => {
 
     const searchAPIHandler = () => {
         dispatch(
-            getFormDataAPI({ page: 1, page_size: 10 }, searchKeyword)
+            getUserAllFormAPI({ page: 1, page_size: 10 }, searchKeyword)
         );
     };
 
@@ -151,7 +151,7 @@ const SubmittedForms = (props) => {
                                                     onClick={() => {
                                                         setSearchKeyword("");
                                                         dispatch(
-                                                            fetchUserAPI(
+                                                            getUserAllFormAPI(
                                                                 { page: 1, page_size: 10 },
                                                                 "")
                                                         );
@@ -240,12 +240,12 @@ const SubmittedForms = (props) => {
                                                 align="left"
                                                 sx={{ borderBottom: "2px solid #F8F8F8" }}
                                             ><IconButton
-                                                        size="small"
-                                                        sx={{ color: "#5B718F", marginRight: "4px" }}
-                                                        onClick={(e) => handleApply(e, row, "view")}
-                                                    >
-                                                        <NorthEastIcon fontSize="small" />
-                                                    </IconButton>
+                                                size="small"
+                                                sx={{ color: "#5B718F", marginRight: "4px" }}
+                                                onClick={(e) => handleApply(e, row, "view")}
+                                            >
+                                                    <NorthEastIcon fontSize="small" />
+                                                </IconButton>
                                             </TableCell>
                                         </TableRow>
                                     ))}

@@ -36,6 +36,14 @@ const yourInnovationSlice = createSlice({
         },
         setSingleData(state, action) {
             state.singleData = action.payload
+        },
+        setSingleDataForSocket(state: any, action) {
+            console.log(state.singleData?.id === action.payload?.id, action.payload, "_____________________________________________")
+            if (state.singleData?.id === action.payload?.id) {
+                state.singleData = { ...state.singleData, comment: action.payload.comment }
+            } else {
+                state.singleData = state.singleData
+            }
         }
     }
 });
@@ -92,7 +100,7 @@ export const deleteInnovationHandler = (id) => async (dispatch) => {
     }
 }
 
-export const getYourInnovationAPI = (data = { page: 1, page_size: 10 }, id) => async (dispatch) => {
+export const getYourInnovationAPI = (data = { page: 1, page_size: 10 }, user_id) => async (dispatch, getStore) => {
 
     try {
 
@@ -101,6 +109,10 @@ export const getYourInnovationAPI = (data = { page: 1, page_size: 10 }, id) => a
         const { page = 1, page_size = 10 } = data;
 
         let url = `${URL_BASE_LINK}/innovation/list?meta=true&page=${page}&limit=${page_size}`
+
+        if (getStore().user?.data?.role !== "Admin") {
+            url = `${url}&user_id=${user_id}`
+        }
 
         const response = await axios.get(url);
         // dispatch(showMessage({ message: response.data.message, variant: "success" }))

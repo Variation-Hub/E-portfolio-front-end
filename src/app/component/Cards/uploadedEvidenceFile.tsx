@@ -1,4 +1,4 @@
-import { Box } from "@mui/system";
+import { Box, maxWidth } from "@mui/system";
 import React, { useEffect, useState } from "react";
 import {
   LoadingButton,
@@ -13,7 +13,14 @@ import {
   ListItemText,
   MenuItem,
   OutlinedInput,
+  Paper,
   Select,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
   TextField,
   Tooltip,
   Typography,
@@ -26,6 +33,7 @@ import { useNavigate } from "react-router-dom";
 import { createAssignmentAPI, selectAssignment, updateAssignmentAPI } from "app/store/assignment";
 import { useDispatch } from "react-redux";
 import { fetchCourseById, selectCourseManagement } from "app/store/courseManagement";
+import styles from './style.module.css';
 
 const assessmentMethod = [
   { value: 'WO', title: 'Workplace Observation' },
@@ -70,19 +78,19 @@ const UploadedEvidenceFile = (props) => {
   };
 
   const handleCheckbox = (event, method) => {
-    let updatedData = formData.assessment_method || []
-    if (formData.assessment_method.includes(method)) {
-      updatedData = formData.assessment_method.filter(item => item !== method)
+    let updatedData = formData.assessment_method || [];
+    if (updatedData.find(item => item === method)) {
+      updatedData = updatedData.filter(item => item !== method);
     } else {
-      updatedData = [...(formData.assessment_method || []), method];
+      updatedData = [...updatedData, method];
     }
     handleChange({ target: { name: 'assessment_method', value: updatedData } });
   };
 
   const handleCheckboxUnits = (event, method) => {
-    console.log(method, formData.units)
+    console.log(method, formData)
     let updatedData = formData.units || []
-    if (formData.units.find(item => item.id === method.id)) {
+    if (formData?.units?.find(item => item.id === method.id)) {
       updatedData = formData.units.filter(item => item.id !== method.id)
     } else {
       updatedData = [...(formData.units || []), method];
@@ -99,6 +107,42 @@ const UploadedEvidenceFile = (props) => {
     const formattedDate = dateStr.substring(0, 16);
     return formattedDate;
   };
+
+  const learnerMapHandler = (row) => {
+    const copyObject = JSON.parse(JSON.stringify(formData));
+    const unit = copyObject?.units?.find(item => item.subUnit.find(i => i.id === row.id))?.subUnit?.find(item => item.id === row.id);
+    if (unit) {
+      if (unit.learnerMap) {
+        unit.learnerMap = !unit.learnerMap
+      } else {
+        unit.learnerMap = true
+      }
+    }
+    setFormData(copyObject)
+
+  }
+
+  const trainerMapHandler = (row) => {
+    const copyObject = JSON.parse(JSON.stringify(formData));
+    const unit = copyObject?.units?.find(item => item.subUnit.find(i => i.id === row.id))?.subUnit?.find(item => item.id === row.id);
+    if (unit) {
+      if (unit.trainerMap) {
+        unit.trainerMap = !unit.trainerMap
+      } else {
+        unit.trainerMap = true
+      }
+    }
+    setFormData(copyObject)
+  }
+
+  const commentHandler = (e, id) => {
+    const copyObject = JSON.parse(JSON.stringify(formData));
+    const unit = copyObject?.units?.find(item => item.subUnit.find(i => i.id === id))?.subUnit?.find(item => item.id === id);
+    if (unit) {
+      unit.comment = e.target.value
+    }
+    setFormData(copyObject)
+  }
 
   return (
     <div>
@@ -156,20 +200,6 @@ const UploadedEvidenceFile = (props) => {
             />
           </div>
 
-          {/* <div className="w-full">
-            <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
-              Uploaded External Feedback
-            </Typography>
-            <TextField
-              name="uploaded_external_feedback"
-              size="small"
-              placeholder={"Trainer file 4.2.3(13).docx"}
-              fullWidth
-              value={formData.uploaded_external_feedback}
-              onChange={handleChange}
-            />
-          </div> */}
-
           <div className="w-full">
             <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
               Learner Comments
@@ -225,6 +255,52 @@ const UploadedEvidenceFile = (props) => {
                 />
               ))}
             </FormGroup>
+            {formData?.units?.map((units) => {
+              return (
+                <Box key={units.id} className="flex flex-col gap-2">
+                  <Typography variant="h5">
+                    {units.title}
+                  </Typography>
+                  <TableContainer>
+                    <Table sx={{ minWidth: 650 }} aria-label="simple table" size="small">
+                      <TableHead>
+                        <TableRow>
+                          <TableCell style={{ width: 130 }} align="center">Learner's Map</TableCell>
+                          <TableCell style={{ width: 400 }}>Subunit name</TableCell>
+                          <TableCell style={{ width: 400 }}>Trainer Commnet</TableCell>
+                          <TableCell align="left" style={{ width: 1 }}>Gap</TableCell>
+                          <TableCell style={{ width: 130 }} align="center">Trainer's Map</TableCell>
+
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {units?.subUnit?.map((row) => (
+                          <TableRow
+                            key={row.name}
+                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                          >
+                            <TableCell align="center"><Checkbox checked={row.learnerMap} onChange={() => learnerMapHandler(row)} /></TableCell>
+                            <TableCell>{row?.subTitle}</TableCell>
+                            <TableCell>
+                              {user.data.role === "Learner" ? row?.comment :
+                                (
+                                  <TextField size="small" value={row?.comment} onChange={(e) => commentHandler(e, row.id)} />
+                                )
+                              }</TableCell>
+                            <TableCell align="center">
+                              <div className={styles.gap}>
+                                <div style={{ backgroundColor: (row.learnerMap && row.trainerMap) ? "green" : (row.learnerMap || row.trainerMap) ? "orange" : "maroon", width: "100%", height: "100%" }}></div>
+                              </div>
+                            </TableCell>
+                            <TableCell align="center"><Checkbox checked={row?.trainerMap} disabled={user.data.role === "Learner" || edit === "view"} onChange={() => trainerMapHandler(row)} /></TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </Box>
+              )
+            })}
 
           </Grid>
 
@@ -239,7 +315,7 @@ const UploadedEvidenceFile = (props) => {
                   <FormControlLabel
                     control={
                       <Checkbox
-                        checked={formData?.assessment_method?.includes(method.value) || false}
+                        checked={formData?.assessment_method?.find(item => item === method.value)}
                         onChange={(e) => handleCheckbox(e, method.value)}
                         name="assessment_method"
                         disabled={user.data.role !== "Trainer" || edit === "view"}
