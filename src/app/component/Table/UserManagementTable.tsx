@@ -218,7 +218,7 @@ export default function UserManagementTable(props) {
                                 {value} {row["last_name"]}
                               </>
                             ) : column.id === "roles" ? (
-                              row.roles.join(", ")
+                              row?.roles?.join(", ")
                             ) : (
                               value || "Active"
                             )}
