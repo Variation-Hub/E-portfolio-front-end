@@ -21,3 +21,10 @@
         width: 100%;
     }
 }
+
+.gap {
+    border: 2px solid gray;
+    width: 16px;
+    height: 16px;
+    padding: 1px;
+}
