@@ -60,25 +60,28 @@ export const Card = (props) => {
   );
 };
 
-export const PortfolioCard = (props) => {
+export const PortfolioCard = ({ data, learner = undefined, handleClickData = (id, user_id) => { }, index }) => {
   const [open, setOpen] = useState(false);
   const dispatch: any = useDispatch();
   const navigate = useNavigate();
-  const data = useSelector(selectstoreDataSlice);
+  const learnerData = useSelector(selectstoreDataSlice);
 
-  const { id = 0, name = "No title", color = "#FCA14E" } = props?.data;
+  const { id = 0, name = "No title", color = "#FCA14E" } = data;
   const handleClick = (row = "") => {
-    if (name === "Upload Work") {
+    if (id === 1) {
       setOpen(true);
-    } else if (name === "Unit Progress") {
-      console.warn("Unit Progress clicked");
-    } else if (name === "Resources") {
-      navigate('/resources-card');
-    } else if (name === "Time Log") {
-      navigate('/timeLog');
-    } else if (name === "Actions and Activities") {
+    } else if (id === 2) {
+      navigate('/portfolio/progress');
+      if (learner) {
+        handleClickData(learner?.learner_id, learner?.user_id);
+      }
+    } else if (id === 3) {
       dispatch(globalSlice.setSelectedUser(row))
       navigate('/cpd')
+    } else if (id === 5) {
+      navigate('/timeLog');
+    } else if (id === 4) {
+      navigate('/resources-card');
     }
   };
   const handleClose = () => {
@@ -86,8 +89,8 @@ export const PortfolioCard = (props) => {
   };
 
   return (
-    data?.learner_id ?
-      !["Upload Work", "Choose Units", "Choose Units"].includes(name) ?
+    learnerData?.user_id ?
+      !["Upload Work"].includes(name) ?
         <>
           <div
             className={Style.cardContain}
@@ -97,7 +100,7 @@ export const PortfolioCard = (props) => {
             }}
           >
             <div>
-              <div className={Style.index}>{id}</div>
+              <div className={Style.index}>{name?.charAt(0)}</div>
               <div className={Style.emptyRing}></div>
               <div className={Style.filledRing}></div>
             </div>
@@ -126,7 +129,7 @@ export const PortfolioCard = (props) => {
           }}
         >
           <div>
-            <div className={Style.index}>{id}</div>
+            <div className={Style.index}>{index}</div>
             <div className={Style.emptyRing}></div>
             <div className={Style.filledRing}></div>
           </div>
@@ -145,5 +148,5 @@ export const PortfolioCard = (props) => {
           <UploadWorkDialog dialogFn={{ handleClose }} />
         </Dialog>
       </>
-    );
+  );
 };
