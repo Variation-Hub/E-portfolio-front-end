@@ -22,13 +22,13 @@ export const data = {
 
 export default function DoughnutChart(props) {
 
-    const { fullyCompleted = 10, notStarted = 10, partiallyCompleted = 10, totalSubUnits = 10 } = props?.value;
+    const { fullyCompleted = 0, notStarted = 0, partiallyCompleted = 0, totalSubUnits = 0 } = props?.value;
     return <Doughnut data={{
         labels: ['Completed', 'Progress', 'Overdue'],
         datasets: [
             {
-                label: " Sub Units",
-                data: [fullyCompleted, partiallyCompleted, notStarted],
+                label: totalSubUnits ? " Sub Units" : "No Sub Units",
+                data: [fullyCompleted, partiallyCompleted, totalSubUnits ? notStarted : 1],
                 backgroundColor: [
                     '#58C800',
                     '#FFBF00',
