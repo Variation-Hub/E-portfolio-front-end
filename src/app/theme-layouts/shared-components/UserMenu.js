@@ -61,12 +61,12 @@ function UserMenu(props) {
         color="inherit"
         sx={style}
       >
-        <div className="flex-col mx-4 items-end md:hidden">
+        <div className="flex-col mx-4 items-end sm:!flex" style={{ display: "none" }}>
           <Typography component="span" className="font-semibold flex">
-            {user.data.displayName}
+            {user?.data?.displayName}
           </Typography>
           <Typography className="text-11 font-medium capitalize" color="text.white">
-            {user.data.role.toString()}
+            {user?.data?.role?.toString()}
             {(!user.data.role || (Array.isArray(user.data.role) && user.data.role.length === 0)) && 'Guest'}
           </Typography>
         </div>
@@ -74,7 +74,7 @@ function UserMenu(props) {
         {(user.data.avatar?.url || userAvarat?.avatar) ? (
           <Avatar className="md:mx-4" alt="user photo" src={userAvarat?.avatar || user.data.avatar?.url} />
         ) : (
-          <Avatar className="md:mx-4" sx={{backgroundColor: getRandomColor(user?.data?.displayName?.toLowerCase().charAt(0))}}>{user.data.displayName?.toUpperCase().charAt(0)}</Avatar>
+          <Avatar className="md:mx-4" sx={{ backgroundColor: getRandomColor(user?.data?.displayName?.toLowerCase().charAt(0)) }}>{user.data.displayName?.toUpperCase().charAt(0)}</Avatar>
         )}
       </Button>
 
