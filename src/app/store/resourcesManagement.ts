@@ -98,7 +98,7 @@ export const fetchResourceAPI = (data = { page: 1, page_size: 25 }, search_keywo
         }
 
         const response = await axios.get(url);
-        dispatch(showMessage({ message: response.data.message, variant: "success" }))
+        // dispatch(showMessage({ message: response.data.message, variant: "success" }))
         dispatch(slice.updateResource(response.data));
         dispatch(slice.setLoader());
         return true;

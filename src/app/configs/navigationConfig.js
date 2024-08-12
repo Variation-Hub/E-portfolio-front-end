@@ -129,14 +129,6 @@ const navigationConfig = [{
     visible: [UserRole.IQA, UserRole.LIQA],
 },
 {
-    id: 'dashboards.createResources',
-    title: 'Create Resources',
-    type: 'item',
-    icon: 'feather:file-plus',
-    url: '/createResources',
-    visible: [UserRole.IQA, UserRole.LIQA],
-},
-{
     id: 'dashboards.learnerPortfolio',
     title: 'Learner Portfolio',
     type: 'item',
