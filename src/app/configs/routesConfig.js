@@ -20,7 +20,6 @@ import OffTheJobConfig from "../main/offTheJob(OTJ)/offTheJobConfig";
 import TrainerRiskRatingConfig from "../main/trainerRiskRating/trainerRiskRatingConfig";
 import SamplingPlanConfig from "../main/samplingPlan/samplingPlanConfig";
 import SamplingPlanAllocationConfig from "../main/samplingPlanAllocation/samplingPlanAllocationConfig";
-import CreateResourcesConfig from "../main/createResources/createResourcesConfig";
 import LearnerPortfolioConfig from "../main/learnerPortfolio/learnerPortfolioConfig";
 import AdminConfig from "../main/admin/adminConfig";
 import CourseBuilderConfig from "../main/courseBuilder/courseBuilderConfig";
@@ -53,7 +52,6 @@ const routeConfigs = [
     TrainerRiskRatingConfig,
     SamplingPlanConfig,
     SamplingPlanAllocationConfig,
-    CreateResourcesConfig,
     LearnerPortfolioConfig,
     AdminConfig,
     CourseBuilderConfig,

@@ -11,10 +11,13 @@ import { fetchResourceAPI, selectResourceManagement } from "app/store/resourcesM
 import FuseLoading from "@fuse/core/FuseLoading";
 import ResouresManagementTable from "src/app/component/Table/ResourseManagementTable";
 import { resourceManagementTableColumn } from "src/app/contanst";
+import { selectUser } from "app/store/userSlice";
 
 const Resources = () => {
 
   const { data, dataFetchLoading } = useSelector(selectResourceManagement)
+  const user = useSelector(selectUser);
+  console.log(user, "{{{{{{")
   const [open, setOpen] = useState(false);
   const dispatch: any = useDispatch();
 
@@ -120,7 +123,7 @@ const Resources = () => {
             <Typography variant="h5">No data found</Typography>
             <Typography variant="body2" className="text-center">It is a long established fact that a reader will be <br />distracted by the readable content.</Typography>
             <div className="flex items-center space-x-4">
-              <SecondaryButton
+              {<SecondaryButton
                 name="Create Resource"
                 startIcon={
                   <img
@@ -130,7 +133,7 @@ const Resources = () => {
                   />
                 }
                 onClick={handleOpen}
-              />
+              />}
             </div>
           </div>
       }
