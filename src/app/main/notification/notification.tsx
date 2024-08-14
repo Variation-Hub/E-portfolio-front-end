@@ -66,7 +66,7 @@ const Activity = () => {
 
   return (
     <>
-      <TableContainer sx={{ maxHeight: 440, padding: 1 }}>
+      <TableContainer sx={{  padding: 1 }}>
         <div className="flex space-x-4 mt-4 mb-10 mr-5 justify-end  ">
           <SecondaryButton name="Delete All" onClick={handleRemoveAll} />
         </div>
@@ -120,17 +120,6 @@ const Activity = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      <div className="fixed bottom-0 left-0 w-full flex justify-center py-4 mb-14">
-        <TablePagination
-          rowsPerPageOptions={[10, 25, 100]}
-          component="div"
-          count={notifications.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      </div>
     </>
   );
 };

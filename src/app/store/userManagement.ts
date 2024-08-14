@@ -19,6 +19,18 @@ const initialState = {
         page_size: userTableMetaData.page_size,
         pages: 1
     },
+    learner_meta_data: {
+        page: 1,
+        items: 0,
+        page_size: userTableMetaData.page_size,
+        pages: 1
+    },
+    trainer_meta_data: {
+        page: 1,
+        items: 0,
+        page_size: userTableMetaData.page_size,
+        pages: 1
+    },
     learnerData: [],
     trainerData: []
 };
@@ -63,9 +75,15 @@ const userManagementSlice = createSlice({
         setEQALearnerData(state, action) {
             state.learnerData = action.payload;
         },
+        setLearnerMetadata(state, action) {
+            state.learner_meta_data = action.payload
+        },
         setEQATrainerData(state, action) {
             state.trainerData = action.payload;
-        }
+        },
+        setTrainerMetadata(state, action) {
+            state.trainer_meta_data = action.payload
+        },
     }
 });
 
@@ -306,9 +324,11 @@ export const getEQAUserData = (data = { page: 1, page_size: 5 }, user, user_id) 
         // dispatch(showMessage({ message: response.data.message, variant: "success" }))
         if (user === "trainer_id") {
             dispatch(slice.setEQATrainerData(response.data.data));
+            dispatch(slice.setTrainerMetadata(response.data.meta_data))
         }
         if (user === "learner_id") {
             dispatch(slice.setEQALearnerData(response.data.data));
+            dispatch(slice.setLearnerMetadata(response.data.meta_data))
         }
         dispatch(slice.setLoader());
         return true;

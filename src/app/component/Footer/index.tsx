@@ -36,32 +36,32 @@ const Footer = () => {
             </p>
 
           </div>
-          <div className="flex justify-around text-12 sm:text-14 sm:justify-between sm:w-1/3">
+          <div className="flex justify-around text-12 sm:text-14 sm:justify-between sm:w-1/3 relative">
             <div className="text-left">
               <h3 className="text-lg font-semibold mb-2">Quick Links</h3>
               <ul className={Style.footerMenu}>
                 <li>
-                  <a href="#">
+                  <a href="#home-section">
                     Home
                   </a>
                 </li>
                 <li>
-                  <a href="#">
+                  <a href="#about-us">
                     About Us
                   </a>
                 </li>
                 <li>
-                  <a href="#">
+                  <a href="#products">
                     Products
                   </a>
                 </li>
                 <li>
-                  <a href="#">
+                  <a href="#features-section">
                     Features
                   </a>
                 </li>
                 <li>
-                  <a href="#">
+                  <a href="#why-locker">
                     Why Locker
                   </a>
                 </li>
@@ -92,27 +92,27 @@ const Footer = () => {
             <div className="text-left">
               <h3 className="text-lg font-semibold mb-2">Follow Us On</h3>
               <div className={Style.footerMenu}>
-                <div className="flex flex-row items-center gap-8 ">
-                  <div>
-                    <FacebookIcon />
-                  </div>
-                  <a href="#" className="text-white mr-2">
+                <div>
+                  <a href="https://www.facebook.com/" className="text-white mr-2 flex flex-row items-center gap-8 ">
+                    <div>
+                      <FacebookIcon />
+                    </div>
                     Facebook
                   </a>
                 </div>
-                <div className="flex flex-row items-center gap-8 ">
-                  <div>
-                    <InstagramIcon />
-                  </div>
-                  <a href="#" className="text-white mr-2">
+                <div>
+                  <a href="https://www.instagram.com/" className="text-white mr-2 flex flex-row items-center gap-8 ">
+                    <div>
+                      <InstagramIcon />
+                    </div>
                     Instagram
                   </a>
                 </div>
-                <div className="flex flex-row items-center gap-8 ">
-                  <div>
-                    <TwitterIcon />
-                  </div>
-                  <a href="#" className="text-white">
+                <div>
+                  <a href="https://twitter.com/" className="text-white mr-2 flex flex-row items-center gap-8 ">
+                    <div>
+                      <TwitterIcon />
+                    </div>
                     Twitter
                   </a>
                 </div>

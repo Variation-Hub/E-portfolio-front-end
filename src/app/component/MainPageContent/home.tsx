@@ -10,7 +10,7 @@ import { Button } from "@mui/material";
 const Home = () => {
   return (
     <>
-      <div className={Style.home_img}>
+      <div className={Style.home_img} id="home-section">
         <div className={Style.home_text}>
           <div className="w-full p-4">
             <p className="font-semibold`">
@@ -32,7 +32,7 @@ const Home = () => {
         </div>
       </div>
 
-      <div className="flex flex-col relative justify-evenly py-24 items-center overflow-hidden bg-[#ffffff] sm:flex-row">
+      <div id="home-section" className="flex flex-col relative justify-evenly py-24 items-center overflow-hidden bg-[#ffffff] sm:flex-row">
         <div className="top-0 left-0 absolute z-10">
           <img
             src="assets/images/svgImage/bg-design.svg"
@@ -103,6 +103,7 @@ const Home = () => {
       </div>
 
       <div
+       id="features-section"
         className={`${Style.features} text-white relative flex flex-col justify-evenly py-24 items-center bg-[#6D81A3] sm:flex-row`}
       >
         <div className="bottom-0 left-0 absolute">
@@ -161,7 +162,7 @@ const Home = () => {
         </div>
       </div>
 
-      <div className="flex flex-col justify-center py-52 items-center bg-[#F9F9FD] sm:flex-col gap-40 ">
+      <div id="products" className="flex flex-col justify-center py-52 items-center bg-[#F9F9FD] sm:flex-col gap-40 ">
         <div className="text-center w-full py-24 px-20 sm:w-3/5">
 
           <h2 className=" uppercase text-3xl font-bold mt-12 sm:text-3xl lg:text-3xl">
@@ -303,7 +304,7 @@ const Home = () => {
         </div>
       </div>
 
-      <div className="flex items-center flex-col py-52 gap-10 ">
+      <div id="about-us" className="flex items-center flex-col py-52 gap-10 ">
         <div
           className={`flex items-center justify-center w-11/12 gap-10 ${Style.mui_card}`}
         >
@@ -471,6 +472,7 @@ const Home = () => {
       </div>
 
       <div
+      id="why-locker"
         className={`text-white relative flex flex-col w-full ml-auto justify-end py-52 items-center bg-[#ffffff] sm:flex-row ${Style.why_locker}`}
       >
         <div className="absolute top-0 right-0 ">

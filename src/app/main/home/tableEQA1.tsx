@@ -92,7 +92,7 @@ const rows = [
 const TableEQA1 = (props) => {
 
   const { data } = useSelector(selectUser);
-  const { learnerData } = useSelector(selectUserManagement);
+  const { learnerData, learner_meta_data } = useSelector(selectUserManagement);
   const dispatch: any = useDispatch();
 
   useEffect(() => {
@@ -102,14 +102,21 @@ const TableEQA1 = (props) => {
   console.log("Learner Data:", learnerData);
 
 
+  const handleChangePage = (event: unknown, newPage: number) => {
+    dispatch(
+      getEQAUserData({ page: newPage, page_size: 5 }, "learner_id", data.user_id)
+    );
+  };
+
   return (
     <>
       <div className="m-8">
-        <TableContainer component={Paper} className="rounded-6">
+        <TableContainer component={Paper} className="rounded-6 sm:h-[320px] sm:flex sm:flex-col sm:justify-between">
           <Table sx={{ minWidth: 650 }} size="small" aria-label="simple table">
             <TableHead className="bg-[#F8F8F8]">
               <TableRow>
                 <TableCell>Learner Name</TableCell>
+                <TableCell align="left">Email</TableCell>
                 <TableCell align="left">Funding Body</TableCell>
               </TableRow>
             </TableHead>
@@ -138,6 +145,12 @@ const TableEQA1 = (props) => {
                     align="left"
                     sx={{ borderBottom: "2px solid #F8F8F8" }}
                   >
+                    {row?.email}
+                  </TableCell>
+                  <TableCell
+                    align="left"
+                    sx={{ borderBottom: "2px solid #F8F8F8" }}
+                  >
                     {row?.funding_body}
                   </TableCell>
                 </TableRow>
@@ -148,7 +161,14 @@ const TableEQA1 = (props) => {
             spacing={2}
             className="flex justify-center items-center w-full my-12"
           >
-            <Pagination count={3} variant="outlined" shape="rounded" />
+            <Pagination
+              count={learner_meta_data?.pages}
+              page={learner_meta_data?.page}
+              variant="outlined" shape="rounded"
+              siblingCount={1}
+              boundaryCount={1}
+              onChange={handleChangePage}
+            />
           </Stack>
         </TableContainer>
       </div>
