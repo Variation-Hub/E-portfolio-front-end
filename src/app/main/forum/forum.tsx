@@ -153,7 +153,7 @@ const Forum = () => {
   const screenSize = window.innerWidth;
 
   return (
-    <div className="flex w-full gap-12 overflow-hidden sm:h-[91vh] sm:p-12">
+    <div className="flex w-full gap-12 overflow-hidden sm:h-[91vh] sm:p-12 ">
       {(screenSize > 600 || !selectedCourse) && <div className={`${screenSize > 600 ? 'w-[30%]' : "w-full"} p-4  rounded-0 shadow-2 overflow-hidden overflow-y-scroll`}>
         {/* <div className={`w-full md:w-1/3 p-1 rounded-lg shadow-lg overflow-hidden ${selectedCourse ? 'hidden max-[600px]:block' : ''}`}> */}
         <div className="flex flex-col space-y-4">
