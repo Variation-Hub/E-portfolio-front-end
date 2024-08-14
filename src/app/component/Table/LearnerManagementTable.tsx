@@ -180,7 +180,7 @@ export default function LearnerManagementTable(props) {
   return (
     <>
       <div style={{ width: "100%", overflow: "hidden", marginTop: "0.5rem" }}>
-        <TableContainer sx={{ maxHeight: 530, minHeight: 530 }}>
+        <TableContainer sx={{ maxHeight: 540, minHeight: 530,display:"flex",flexDirection:"column",justifyContent:"space-between" }}>
           <Table stickyHeader aria-label="sticky table" size="small">
             <TableHead>
               <TableRow>
@@ -256,21 +256,21 @@ export default function LearnerManagementTable(props) {
               })}
             </TableBody>
           </Table>
+          <Stack
+            spacing={2}
+            className="flex justify-center items-center w-full mb-14"
+          >
+            <Pagination
+              count={meta_data?.pages}
+              page={meta_data?.page}
+              variant="outlined"
+              onChange={handleChangePage}
+              shape="rounded"
+              siblingCount={1}
+              boundaryCount={1}
+            />
+          </Stack>
         </TableContainer>
-        <Stack
-          spacing={2}
-          className="flex justify-center items-center w-full mt-14"
-        >
-          <Pagination
-            count={meta_data?.pages}
-            page={meta_data?.page}
-            variant="outlined"
-            onChange={handleChangePage}
-            shape="rounded"
-            siblingCount={1}
-            boundaryCount={1}
-          />
-        </Stack>
       </div>
       <AlertDialog
         open={Boolean(deleteId)}

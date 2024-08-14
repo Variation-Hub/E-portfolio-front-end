@@ -6,31 +6,31 @@ import { useSelector } from 'react-redux';
 import { SecondaryButton } from 'src/app/component/Buttons';
 import { Line } from 'react-chartjs-2';
 import 'chart.js/auto';
-import generatePDF, { Resolution, Margin, Options } from "react-to-pdf";
+// import generatePDF, { Resolution, Margin, Options } from "react-to-pdf";
 
 
-const pdfOptions: Options = {
-    filename: "Learner-Skill-Scan.pdf",
-    method: "save",
-    resolution: Resolution.MEDIUM,
-    page: {
-        margin: Margin.SMALL,
-        format: "letter",
-        orientation: "landscape"
-    },
-    canvas: {
-        mimeType: "image/jpeg",
-        qualityRatio: 1
-    },
-    overrides: {
-        pdf: {
-            compress: true
-        },
-        canvas: {
-            useCORS: true
-        }
-    }
-};
+// const pdfOptions: Options = {
+//     filename: "Learner-Skill-Scan.pdf",
+//     method: "save",
+//     resolution: Resolution.MEDIUM,
+//     page: {
+//         margin: Margin.SMALL,
+//         format: "letter",
+//         orientation: "landscape"
+//     },
+//     canvas: {
+//         mimeType: "image/jpeg",
+//         qualityRatio: 1
+//     },
+//     overrides: {
+//         pdf: {
+//             compress: true
+//         },
+//         canvas: {
+//             useCORS: true
+//         }
+//     }
+// };
 
 const LineChart = ({ data }) => {
     console.log(data)
@@ -93,8 +93,16 @@ const LineChart = ({ data }) => {
 };
 
 const getTargetElement = () => document.getElementById("results-container");
+const html: any=`<!DOCTYPE html>
+<html>
+<body>
 
-const downloadPdf = () => generatePDF(getTargetElement, pdfOptions);
+<h1>My First Heading</h1>
+<p>My first paragraph.</p>
+
+</body>
+</html>`
+// const downloadPdf = () => generatePDF(getTargetElement, pdfOptions);
 
 const ViewResults = () => {
 
@@ -137,15 +145,6 @@ const ViewResults = () => {
 
                         <LineChart data={result.map(a => ({ rating: a.rating, name: a.subTitle }))} />
                     </div>
-
-                    <div id="results-container">
-                        <Card className=' mt-20 rounded-0 p-10 bg-grey-200'>
-                            <Typography className='h4 font-600'>Gap Analysis</Typography>
-                        </Card>
-
-                        <LineChart data={result.map(a => ({ rating: a.rating, name: a.subTitle }))} />
-                    </div>
-
                 </Grid>
                 <Grid className='w-1/2' >
                     <Grid className="flex justify-start items-end my-20 mr-24 gap-10">
@@ -156,7 +155,7 @@ const ViewResults = () => {
                             <SecondaryButton name="Next" />
                         </Grid>
                         <Grid>
-                            <SecondaryButton name="Download PDF" onClick={downloadPdf} />
+                            <SecondaryButton name="Download PDF"/*  onClick={downloadPdf} */ />
                         </Grid>
                     </Grid>
                     <Card className=' mt-20 rounded-0 p-10 bg-grey-200'>

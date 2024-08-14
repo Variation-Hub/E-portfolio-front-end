@@ -175,11 +175,11 @@ const Forum = () => {
             >
               <Avatar className="mr-4" alt={msg.course_course_name?.toUpperCase().charAt(0)} src="../" sx={{ bgcolor: getRandomColor(msg.course_course_name?.toLowerCase().charAt(0)) }} />
               <div className="flex flex-col w-10/12 ">
-                <div className="flex justify-between flex-row m-5 ">
+                <div className="flex justify-between flex-row ml-0 m-5 ">
                   <Tooltip title={msg.course_course_name}>
                     <div className="font-semibold overflow-hidden text-ellipsis whitespace-nowrap">{msg.course_course_name}</div>
                   </Tooltip>
-                  <div className="text-xs text-gray-500">{timeAgo(msg.latest_forum_created_at)}</div>
+                  <div className="text-xs flex justify-end text-gray-500 w-[42%] sm:w-[70%]">{timeAgo(msg.latest_forum_created_at)}</div>
                 </div>
                 <Tooltip title={msg.course_course_code}>
                   <div className="text-sm text-justify overflow-hidden text-ellipsis whitespace-nowrap ">{msg.course_course_code}</div>
@@ -204,7 +204,7 @@ const Forum = () => {
             <div className="flex items-start bg-white rounded-md p-2 border-b border-gray-200 m-10 gap-10">
               <Avatar className="mr-4" alt={forumData?.message?.course_course_name?.toUpperCase().charAt(0)} src="../" sx={{ bgcolor: getRandomColor(forumData?.message?.course_course_name?.toLowerCase().charAt(0)) }} />
               <div className="flex  flex-col pr-10 ">
-                <div className="flex justify-between flex-row m-5">
+                <div className="flex justify-between flex-row ml-0 m-5">
                   <div className="font-semibold  text-lg">{forumData?.message?.course_course_name}</div>
                 </div>
                 <div className="text-justify text-sm pr-10 ">{forumData?.message?.course_course_code}</div>
@@ -249,7 +249,7 @@ const Forum = () => {
                         <div className="flex items-start justify-start bg-[#F4F6F8] rounded-md m-10 gap-10 w-[80%] p-10">
                           {<Avatar className="mr-4" alt="Cindy Baker" src={message.sender?.avatar?.url} />}
                           <div style={{ overflowWrap: "anywhere" }} className="flex flex-col w-full">
-                            <div className="flex justify-between flex-row m-5 pr-10 ">
+                            <div className="flex justify-between flex-row ml-0 m-5 pr-10 ">
                               <div className="font-semibold  text-base">{message.sender?.user_name}</div>
                               <div className="text-xs text-gray-500">{timeAgo(message.created_at)}</div>
                             </div>
