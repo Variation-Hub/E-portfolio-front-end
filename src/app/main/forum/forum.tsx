@@ -126,7 +126,6 @@ const Forum = () => {
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      console.log('File selected:', file);
       setFile(file);
       setSendMessage(pre => ({ ...pre, file }));
     }
@@ -152,10 +151,9 @@ const Forum = () => {
     row.course_course_name.toLowerCase().includes(searchTerm.toLowerCase())
   );
   const screenSize = window.innerWidth;
-  console.log(screenSize, "+++++++++++", selectedCourse, (screenSize > 600 || !!selectedCourse))
 
   return (
-    <div className="flex w-full gap-12 overflow-hidden sm:h-[630px] h-[540px]">
+    <div className="flex w-full gap-12 overflow-hidden sm:h-[91vh] sm:p-12">
       {(screenSize > 600 || !selectedCourse) && <div className={`${screenSize > 600 ? 'w-[30%]' : "w-full"} p-4  rounded-0 shadow-2 overflow-hidden overflow-y-scroll`}>
         {/* <div className={`w-full md:w-1/3 p-1 rounded-lg shadow-lg overflow-hidden ${selectedCourse ? 'hidden max-[600px]:block' : ''}`}> */}
         <div className="flex flex-col space-y-4">
@@ -208,7 +206,6 @@ const Forum = () => {
               <div className="flex  flex-col pr-10 ">
                 <div className="flex justify-between flex-row m-5">
                   <div className="font-semibold  text-lg">{forumData?.message?.course_course_name}</div>
-                  {/* <div className="text-xs text-gray-500">{selectedMessage.time}</div> */}
                 </div>
                 <div className="text-justify text-sm pr-10 ">{forumData?.message?.course_course_code}</div>
               </div>
@@ -224,7 +221,7 @@ const Forum = () => {
             },
           }}>
 
-            <Box className="flex overflow-y-scroll flex-col max-w-full gap-10 h-[88%]">
+            <Box className="flex overflow-y-scroll flex-col max-w-full gap-10 h-[85%]">
               {forumData.data?.map((message) => (
                 <>
                   {user.data.user_id === message.sender.user_id ?
@@ -265,7 +262,7 @@ const Forum = () => {
                 </>
               ))}
             </Box>
-            <Box mt="auto" className="mt-auto">
+            <Box mb='20px'>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <TextField
                   fullWidth
