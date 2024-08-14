@@ -7,7 +7,7 @@ import Style from "./style.module.css";
 
 const Admin = () => {
   return (
-    <div className="w-full h-full flex flex-wrap justify-start">
+    <div className="w-full h-full flex flex-wrap justify-center sm:justify-start">
       {AdminPageData.map((item) => {
         return (
           <div className="p-10" key={item.path}>
