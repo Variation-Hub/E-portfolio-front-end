@@ -15,7 +15,7 @@ const Admin = () => {
               <Link to={item.path} style={{ textDecoration: "none" }}>
                 <Paper
                   elevation={3}
-                  className={`rounded-sm w-[18rem] p-40 h-[13rem] mt-20 mx-20 my-0 flex flex-col items-center justify-center ${Style.paper}`}
+                  className={`rounded-sm w-[18rem] p-52 h-[13rem] mt-20 mx-20 my-0 flex flex-col items-center justify-center ${Style.paper}`}
                 >
                   <img
                     src={item.svg}
