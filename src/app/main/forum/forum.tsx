@@ -221,7 +221,7 @@ const Forum = () => {
             },
           }}>
 
-            <Box className="flex overflow-y-scroll flex-col max-w-full gap-10 h-[88%]">
+            <Box className="flex overflow-y-scroll flex-col max-w-full gap-10 h-[85%]">
               {forumData.data?.map((message) => (
                 <>
                   {user.data.user_id === message.sender.user_id ?
@@ -262,7 +262,7 @@ const Forum = () => {
                 </>
               ))}
             </Box>
-            <Box mt="auto" className="mt-auto">
+            <Box mb='20px'>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <TextField
                   fullWidth
