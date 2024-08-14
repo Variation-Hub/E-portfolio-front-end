@@ -15,12 +15,14 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { createAssignmentAPI, selectAssignment, slice, uploadPDF } from "app/store/assignment";
 import { Grid, MenuItem, Select, Typography } from "@mui/material";
+import { selectLearnerManagement } from "app/store/learnerManagement";
 
 const UploadWorkDialog = (props) => {
   const { handleClose } = props.dialogFn || {};
   const { dataUpdatingLoadding } = useSelector(selectAssignment);
   const dispatch: any = useDispatch();
   const navigate = useNavigate();
+  const data = useSelector(selectLearnerManagement)?.learner?.course?.map(item => item.course) || [];
 
   const fileTypes = ["PDF"];
   const [file, setFile] = useState(null);
@@ -47,13 +49,6 @@ const UploadWorkDialog = (props) => {
       
     };
   }
-
-  useEffect(() => {
-    dispatch(fetchCourseAPI());
-  }, []);
-
-  const { data } = useSelector(selectCourseManagement);
-  console.log(data);
 
 
   return (

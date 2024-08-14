@@ -578,7 +578,7 @@ const ProposeYourInnovations = (props) => {
               handleView();
             }}
           >
-            View
+            View & Chat
           </MenuItem>
           <MenuItem
             onClick={() => {

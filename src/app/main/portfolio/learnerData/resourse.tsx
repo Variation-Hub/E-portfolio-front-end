@@ -7,16 +7,18 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import { OpenInNew } from '@mui/icons-material';
 import axiosInstance from 'src/utils/axios';
 import { roles } from 'src/app/contanst';
+import { selectstoreDataSlice } from 'app/store/reloadData';
 
 const ResourceData = () => {
   const dispatch: any = useDispatch();
   const user = useSelector(selectUser).data;
   const { singleData } = useSelector(selectCourseManagement);
   const resource = useSelector(selectResourceManagement);
+  const { user_id } = useSelector(selectstoreDataSlice);
 
   useEffect(() => {
     if (singleData?.course?.course_id && user?.user_id) {
-      dispatch(fetchResourceByCourseAPI(singleData.course.course_id, user.user_id));
+      dispatch(fetchResourceByCourseAPI(singleData.course.course_id, user_id || user.user_id));
     }
   }, [dispatch, singleData, user]);
 

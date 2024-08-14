@@ -53,7 +53,7 @@ const ProgressMap = () => {
   
 
   return (
-    <div style={{ margin: 16, width: '100%' }}>
+    <div style={{ padding: 16, width: '100%' }}>
       <Card variant="outlined">
         <CardContent>
           <Typography variant="h5" component="div" gutterBottom>

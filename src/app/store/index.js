@@ -9,9 +9,9 @@ const persistConfig = {
   whitelist: [
     'storeData',
     'globalUser',
-    // 'userManagement',
-    // 'learnerManagement',
-    // 'courseManagement'
+    'userManagement',
+    'learnerManagement',
+    'courseManagement'
   ]
 };
 
