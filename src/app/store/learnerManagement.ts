@@ -3,8 +3,6 @@ import axios from 'axios';
 import jsonData from 'src/url.json';
 import { showMessage } from './fuse/messageSlice';
 import { userTableMetaData } from '../contanst/metaData';
-import JwtService from '../auth/services/jwtService';
-import HelpOutlined from '@mui/icons-material/HelpOutlined';
 
 const initialState = {
     data: [],
@@ -173,7 +171,7 @@ export const getLearnerDetails = (data = "") => async (dispatch, getStore) => {
         dispatch(slice.setUpdatingLoader());
         const id = data || getStore()?.user?.data?.id
         const response = await axios.get(`${URL_BASE_LINK}/learner/get/${id}`,)
-        dispatch(showMessage({ message: response.data.message, variant: "success" }))
+        // dispatch(showMessage({ message: response.data.message, variant: "success" }))
         dispatch(slice.learnerDetails(response.data.data));
         dispatch(slice.setUpdatingLoader());
         return true;
@@ -187,7 +185,7 @@ export const getLearnerDetails = (data = "") => async (dispatch, getStore) => {
 export const getLearnerCourseDetails = (data) => async (dispatch) => {
     dispatch(slice.setLoader());
     const response = await axios.get(`${URL_BASE_LINK}/course/user/get?learner_id=${data.learner_id}&course_id=${data.course_id}`,)
-    dispatch(showMessage({ message: response.data.message, variant: "success" }))
+    // dispatch(showMessage({ message: response.data.message, variant: "success" }))
     dispatch(slice.setCourseData(response.data.data))
     dispatch(slice.setLoader());
 }
