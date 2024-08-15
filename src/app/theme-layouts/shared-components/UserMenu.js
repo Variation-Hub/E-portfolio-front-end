@@ -99,12 +99,13 @@ function UserMenu(props) {
             <MenuItem onClick={() => navigate('/profile')} >
               <ListItemText primary="My Profile" />
             </MenuItem>
+            {user?.data?.role !== 'Learner' && (
+              <MenuItem onClick={handleClick}>
+                <ListItemText primary="Change Role" />
+              </MenuItem>
+            )}
 
-            <MenuItem onClick={handleClick}>
-              <ListItemText primary="Change Role" />
-            </MenuItem>
-
-            <MenuItem onClick={() => logout()} >
+            <MenuItem MenuItem onClick={() => logout()} >
               <ListItemText primary="Sign Out" />
             </MenuItem>
 
@@ -144,7 +145,7 @@ function UserMenu(props) {
             </MenuItem>
           </Link>
         )}
-      </Popover>
+      </Popover >
     </>
   );
 }

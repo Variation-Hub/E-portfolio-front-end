@@ -17,12 +17,19 @@ const navigationConfig = [{
     visible: [
         UserRole.Admin,
         UserRole.Trainer,
-        UserRole.Learner,
         UserRole.Employer,
         UserRole.IQA,
         UserRole.EQA,
         UserRole.LIQA,
     ],
+},
+{
+    id: 'dashboards.portfolio',
+    title: 'Portfolio',
+    type: 'item',
+    icon: 'heroicons-outline:user-circle',
+    url: '/portfolio',
+    visible: [UserRole.Learner],
 },
 {
     id: 'dashboards.cpd',
@@ -78,14 +85,6 @@ const navigationConfig = [{
     type: 'item',
     icon: 'heroicons-outline:pencil-alt',
     url: '/createAssignment',
-    visible: [UserRole.Learner],
-},
-{
-    id: 'dashboards.portfolio',
-    title: 'Portfolio',
-    type: 'item',
-    icon: 'heroicons-outline:user-circle',
-    url: '/portfolio',
     visible: [UserRole.Learner],
 },
 {
