@@ -35,7 +35,11 @@ export const setUser = (user) => async (dispatch) => {
 
   const data = window.location.href.split("/");
   if (data[data.length - 1] === "sign-in" || data[data.length - 1] === "forgot" || data[data.length - 1] === "reset") {
-    history.push("/home")
+    if (user?.role === "Learner") {
+      history.push("/portfolio");
+    } else {
+      history.push("/home")
+    }
   }
   history.push(window.location.href)
 }
