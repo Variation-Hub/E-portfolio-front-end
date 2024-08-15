@@ -1,4 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
+import jsonData from 'src/url.json';
+import axios from 'axios';
 
 const initialState = {
     currentUser: {},
@@ -37,3 +39,26 @@ export const slice = globalUserSlice.actions;
 export const selectGlobalUser = ({ globalUser }) => globalUser;
 
 export default globalUserSlice.reducer;
+
+const URL_BASE_LINK = jsonData.API_LOCAL_URL;
+
+export const DownloadFile = (fileUrl, fileName = 'fileName') => async (dispatch) => {
+    try {
+        const response: any = await axios.get(`${URL_BASE_LINK}/file?file=${encodeURIComponent(fileUrl)}`, {
+            responseType: 'blob',
+        });
+
+        const downloadUrl = window.URL.createObjectURL(new Blob([response.data]));
+
+        const link = document.createElement('a');
+        link.href = downloadUrl;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        window.URL.revokeObjectURL(downloadUrl);
+    } catch (err) {
+        console.log("Error in Download file:", err)
+    }
+}
