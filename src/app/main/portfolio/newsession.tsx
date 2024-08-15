@@ -63,7 +63,7 @@ const NewSession = (props) => {
             dispatch(getSessionAPI({ page: 1, page_size: 10 }));
 
             if (!edit)
-                navigate("/portfolio");
+                navigate("/calendar");
             else
                 handleCloseDialog();
         } catch (error) {
@@ -75,7 +75,7 @@ const NewSession = (props) => {
 
     const handleClose = () => {
         if (!edit)
-            navigate("/portfolio");
+            navigate("/calendar");
         else
             handleCloseDialog();
     };

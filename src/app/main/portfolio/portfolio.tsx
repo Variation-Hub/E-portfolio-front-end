@@ -123,9 +123,9 @@ const Portfolio = () => {
       <div className="flex justify-end mr-24">
         <SecondaryButtonOutlined name="Awaiting Signature" className="mr-12" />
         <SecondaryButton name="Calendar" className="mr-12" onClick={handleOpen} />
-        <Link to="/portfolio/newsession">
+        {/* <Link to="/portfolio/newsession">
           <SecondaryButton name="New Session" />
-        </Link>
+        </Link> */}
       </div>
       <Dialog
         open={open}

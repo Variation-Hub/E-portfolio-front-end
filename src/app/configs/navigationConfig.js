@@ -69,7 +69,7 @@ const navigationConfig = [{
     type: 'item',
     icon: 'heroicons-outline:calendar',
     url: '/calendar',
-    visible: [UserRole.Trainer, UserRole.Employer, UserRole.IQA, UserRole.LIQA],
+    visible: [UserRole.Admin, UserRole.Trainer, UserRole.Employer, UserRole.IQA, UserRole.LIQA],
 },
 {
     id: 'dashboards.skillsScan',

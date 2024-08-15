@@ -23,12 +23,14 @@ import {
 import CourseBuilderComponent from "src/app/component/Courses";
 import {
   deleteResourceHandler,
+  resourceAccess,
   selectResourceManagement,
 } from "app/store/resourcesManagement";
 import { useSelector } from "react-redux";
 import { slice } from "app/store/courseManagement";
 import { Link } from "react-router-dom";
 import { DownloadFile } from "app/store/globalUser";
+import { selectUser } from "app/store/userSlice";
 
 export default function ResouresTable(props) {
   const { columns, rows, search_keyword = "", search_role = "" } = props;
@@ -41,6 +43,7 @@ export default function ResouresTable(props) {
   );
 
   const [open, setOpen] = useState(false);
+  const { data } = useSelector(selectUser)
 
   const dispatch: any = useDispatch();
 
@@ -57,6 +60,8 @@ export default function ResouresTable(props) {
   const openMenu = (e, id) => {
     handleClick(e);
     setOpenMenuDialog(id);
+    if(data?.role === "Learner")
+      dispatch(resourceAccess(id?.resource_id, data?.user_id));
   };
 
   const deleteConfromation = async () => {
@@ -70,9 +75,11 @@ export default function ResouresTable(props) {
     setAnchorEl(null)
   };
 
-  const downlaodFile = async (fileUrl, name) => {
+  const downlaodFile = async (fileUrl, name, id) => {
     try {
       dispatch(DownloadFile(fileUrl, name))
+      if(data?.role === "Learner")
+        dispatch(resourceAccess(id?.resource_id, data?.user_id));
     } catch (error) {
       console.error('Error downloading file:', error);
     }
@@ -118,14 +125,8 @@ export default function ResouresTable(props) {
                             <IconButton
                               size="small"
                               sx={{ color: "#5B718F" }}
-                            >
-                              <EditIcon className="text-24 " />
-                            </IconButton>
-                            <IconButton
-                              size="small"
-                              sx={{ color: "#5B718F" }}
                               onClick={() =>
-                                downlaodFile(row?.url?.url, row?.url.key)
+                                downlaodFile(row?.url?.url, row?.url.key, row)
                               }
                             >
                               <DownloadIcon className="text-24 " />

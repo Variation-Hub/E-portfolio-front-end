@@ -327,8 +327,8 @@ const AssignmentData = () => {
                                       </AvatarGroup>
                                     </div>
                                   ) : column.id === "status" && user?.data?.role === "Trainer" ?
-                                      <TextField value={value}/>
-                                  :value}
+                                    <TextField value={value} />
+                                    : value}
                             </TableCell>
                           );
                         })}
@@ -397,7 +397,7 @@ const AssignmentData = () => {
             onClose={handleClose}
           >
 
-            {user.role === "Learner" &&
+            {/* {user.role === "Learner" &&
               <MenuItem
                 onClick={() => {
                   handleClose();
@@ -406,17 +406,7 @@ const AssignmentData = () => {
               >
                 Reupload
               </MenuItem>
-            }
-            {user.role === "Trainer" &&
-              <MenuItem
-                onClick={() => {
-                  handleClose();
-                  navigate('/assignment/review')
-                }}
-              >
-                Review
-              </MenuItem>
-            }
+            } */}
             <MenuItem
               onClick={() => {
                 handleClose();
@@ -435,7 +425,7 @@ const AssignmentData = () => {
                 setEdit("edit")
               }}
             >
-              Edit
+              {user.role === "Learner" ? "Edit" : "Edit & Review"}
             </MenuItem>
             {user.role === "Learner" &&
               <MenuItem

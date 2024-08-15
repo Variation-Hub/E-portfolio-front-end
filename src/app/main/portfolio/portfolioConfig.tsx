@@ -44,7 +44,7 @@ const PortfolioConfig = {
       element: <NewAssignment />,
     },
     {
-      path: "/portfolio/newsession",
+      path: "/newsession",
       element: <NewSession />,
     },
     {
