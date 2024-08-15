@@ -14,6 +14,12 @@ import {
   MenuItem,
   OutlinedInput,
   Select,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
   TextField,
   Tooltip,
   Typography,
@@ -27,6 +33,7 @@ import { createAssignmentAPI, selectAssignment, updateAssignmentAPI } from "app/
 import { useDispatch } from "react-redux";
 import CreateAssignment from "src/app/main/createAssignment/createAssignment";
 import { fetchCourseById, selectCourseManagement } from "app/store/courseManagement";
+import styles from './style.module.css';
 
 const assessmentMethod = [
   { value: 'WO', title: 'Workplace Observation' },
@@ -43,6 +50,8 @@ const assessmentMethod = [
 ];
 
 const NewAssignment = (props) => {
+  const { edit = "Save" } = props;
+
   const dispatch: any = useDispatch();
   const { singleData, dataUpdatingLoadding } = useSelector(selectAssignment)
   const navigate = useNavigate();
@@ -122,7 +131,6 @@ const NewAssignment = (props) => {
 
 
   const handleCheckboxUnits = (event, method) => {
-    console.log(method, formData.units)
     let updatedData = formData.units || []
     if (formData.units.find(item => item.id === method.id)) {
       updatedData = formData.units.filter(item => item.id !== method.id)
@@ -130,7 +138,44 @@ const NewAssignment = (props) => {
       updatedData = [...(formData.units || []), method];
     }
     handleChange({ target: { name: 'units', value: updatedData } });
+    console.log(method, formData.units, updatedData);
   };
+
+  const learnerMapHandler = (row) => {
+    const copyObject = JSON.parse(JSON.stringify(formData));
+    const unit = copyObject?.units?.find(item => item.subUnit.find(i => i.id === row.id))?.subUnit?.find(item => item.id === row.id);
+    if (unit) {
+      if (unit.learnerMap) {
+        unit.learnerMap = !unit.learnerMap
+      } else {
+        unit.learnerMap = true
+      }
+    }
+    setFormData(copyObject)
+
+  }
+
+  const trainerMapHandler = (row) => {
+    const copyObject = JSON.parse(JSON.stringify(formData));
+    const unit = copyObject?.units?.find(item => item.subUnit.find(i => i.id === row.id))?.subUnit?.find(item => item.id === row.id);
+    if (unit) {
+      if (unit.trainerMap) {
+        unit.trainerMap = !unit.trainerMap
+      } else {
+        unit.trainerMap = true
+      }
+    }
+    setFormData(copyObject)
+  }
+
+  const commentHandler = (e, id) => {
+    const copyObject = JSON.parse(JSON.stringify(formData));
+    const unit = copyObject?.units?.find(item => item.subUnit.find(i => i.id === id))?.subUnit?.find(item => item.id === id);
+    if (unit) {
+      unit.comment = e.target.value
+    }
+    setFormData(copyObject)
+  }
 
   return (
     <div>
@@ -252,7 +297,52 @@ const NewAssignment = (props) => {
                 />
               ))}
             </FormGroup>
+            {formData?.units?.map((units) => {
+              return (
+                <Box key={units.id} className="flex flex-col gap-2">
+                  <Typography variant="h5">
+                    {units.title}
+                  </Typography>
+                  <TableContainer>
+                    <Table sx={{ minWidth: 650 }} aria-label="simple table" size="small">
+                      <TableHead>
+                        <TableRow>
+                          <TableCell style={{ width: 130 }} align="center">Learner's Map</TableCell>
+                          <TableCell style={{ width: 400 }}>Subunit name</TableCell>
+                          <TableCell style={{ width: 400 }}>Trainer Commnet</TableCell>
+                          <TableCell align="left" style={{ width: 1 }}>Gap</TableCell>
+                          <TableCell style={{ width: 130 }} align="center">Trainer's Map</TableCell>
 
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {units?.subUnit?.map((row) => (
+                          <TableRow
+                            key={row.name}
+                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                          >
+                            <TableCell align="center"><Checkbox checked={row.learnerMap} onChange={() => learnerMapHandler(row)} /></TableCell>
+                            <TableCell>{row?.subTitle}</TableCell>
+                            <TableCell>
+                              {user.data.role === "Learner" ? row?.comment :
+                                (
+                                  <TextField size="small" value={row?.comment} onChange={(e) => commentHandler(e, row.id)} />
+                                )
+                              }</TableCell>
+                            <TableCell align="center">
+                              <div className={styles.gap}>
+                                <div style={{ backgroundColor: (row.learnerMap && row.trainerMap) ? "green" : (row.learnerMap || row.trainerMap) ? "orange" : "maroon", width: "100%", height: "100%" }}></div>
+                              </div>
+                            </TableCell>
+                            <TableCell align="center"><Checkbox checked={row?.trainerMap} disabled={user.data.role === "Learner" || edit === "view"} onChange={() => trainerMapHandler(row)} /></TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </Box>
+              )
+            })}
           </Grid>
 
           <div className="w-full">
