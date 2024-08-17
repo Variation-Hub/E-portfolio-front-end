@@ -377,6 +377,7 @@ export const portfolioCard = [
   { id: 3, name: "Actions and Activities", color: "#F44771" },
   { id: 4, name: "Resources", color: "#009FB7" },
   { id: 5, name: "Time Log", color: "#E95ACB" },
+  { id: 6, name: "Skill Scan", color: "#489E20" }
 ];
 
 // export const portfolioCard = [

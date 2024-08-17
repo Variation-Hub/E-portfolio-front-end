@@ -5,6 +5,8 @@ import TNAQuestionaire from './tnaQuestionaire';
 import ViewResults from './viewResults';
 import { useDispatch } from 'react-redux';
 import { getLearnerDetails } from 'app/store/learnerManagement';
+import { useSelector } from 'react-redux';
+import { selectUser } from 'app/store/userSlice';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -43,6 +45,7 @@ const SkillsScan = () => {
 
   const [value, setValue] = useState(0);
   const dispatch: any = useDispatch();
+  const { data } = useSelector(selectUser);
 
   const handleTabChange = (event, newValue) => {
     setValue(newValue);
@@ -55,7 +58,7 @@ const SkillsScan = () => {
   return (
     <>
       <Grid className="m-10" sx={{ minHeight: 600 }}>
-        <Typography className='h1 pl-10'>Daniel Stefan Ciapa</Typography>
+        <Typography className='h1 pl-10'>{data?.displayName}</Typography>
         <Box
           sx={{
             borderBottom: 1,

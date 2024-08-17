@@ -86,6 +86,8 @@ export const PortfolioCard = ({ data, learner = undefined, handleClickData = (id
       navigate('/timeLog');
     } else if (id === 4) {
       navigate('/resources-card');
+    } else if (id === 6) {
+      navigate('/skillsScan');
     }
 
   };
@@ -125,33 +127,36 @@ export const PortfolioCard = ({ data, learner = undefined, handleClickData = (id
           </Dialog>
         </> :
         null
-      : <>
-        <div
-          className={Style.cardContain}
-          style={{ background: color }}
-          onClick={() => {
-            handleClick();
-          }}
-        >
-          <div>
-            <div className={Style.index}>{index}</div>
-            <div className={Style.emptyRing}></div>
-            <div className={Style.filledRing}></div>
+      :
+      !["Skill Scan"].includes(name) ?
+        <>
+          <div
+            className={Style.cardContain}
+            style={{ background: color }}
+            onClick={() => {
+              handleClick();
+            }}
+          >
+            <div>
+              <div className={Style.index}>{index}</div>
+              <div className={Style.emptyRing}></div>
+              <div className={Style.filledRing}></div>
+            </div>
+            <div className={Style.title}>{name}</div>
           </div>
-          <div className={Style.title}>{name}</div>
-        </div>
-        <Dialog
-          open={open}
-          onClose={handleClose}
-          sx={{
-            ".MuiDialog-paper": {
-              borderRadius: "4px",
-              padding: "1rem",
-            },
-          }}
-        >
-          <UploadWorkDialog dialogFn={{ handleClose }} />
-        </Dialog>
-      </>
+          <Dialog
+            open={open}
+            onClose={handleClose}
+            sx={{
+              ".MuiDialog-paper": {
+                borderRadius: "4px",
+                padding: "1rem",
+              },
+            }}
+          >
+            <UploadWorkDialog dialogFn={{ handleClose }} />
+          </Dialog>
+        </> :
+        null
   );
 };
