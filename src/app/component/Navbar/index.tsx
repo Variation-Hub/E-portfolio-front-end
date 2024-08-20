@@ -44,9 +44,13 @@ const Index = () => {
           </div>
           <div className="flex items-center">
             <ul className={Style.menu}>
-              <li className={Style.navbar_link}>About Us</li>
-              <li className={Style.navbar_link}>Products</li>
-              <a href="#features">
+              <a href="#about-us">
+                <li className={Style.navbar_link}>About Us</li>
+              </a>
+              <a href="#products">
+                <li className={Style.navbar_link}>Products</li>
+              </a>
+              <a href="#features-section">
                 <li className={Style.navbar_link}>Features</li>
               </a>
               <a href="#why-locker">
@@ -83,13 +87,17 @@ const Index = () => {
             <CloseIcon />
           </IconButton>
           <Divider light />
-          <li className={`${Style.navbar_link_mobile}`} onClick={handleClose}>
-            About Us
-          </li>
-          <li className={`${Style.navbar_link_mobile}`} onClick={handleClose}>
-            Products
-          </li>
-          <a href="#features">
+          <a href="#about-us">
+            <li className={`${Style.navbar_link_mobile}`} onClick={handleClose}>
+              About Us
+            </li>
+          </a>
+          <a href="#products">
+            <li className={`${Style.navbar_link_mobile}`} onClick={handleClose}>
+              Products
+            </li>
+          </a>
+          <a href="#features-section">
             <li className={`${Style.navbar_link_mobile}`} onClick={handleClose}>
               Features
             </li>
