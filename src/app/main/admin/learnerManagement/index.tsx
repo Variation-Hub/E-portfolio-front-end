@@ -24,6 +24,7 @@ const Index = () => {
   const [open, setOpen] = useState(false);
   const [updateData, setUpdateData] = useState("");
   const [searchKeyword, setSearchKeyword] = useState("");
+  console.log(updateData,"++++++++++++");
 
   useEffect(() => {
     dispatch(fetchLearnerAPI())

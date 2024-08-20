@@ -304,17 +304,18 @@ const UserDetails = (props) => {
               size="small"
               options={data}
               getOptionLabel={(option: any) => option.employer_name}
+              isOptionEqualToValue={(option, value) => option.employer_id === value.employer_id}
               renderInput={(params) => (
                 <TextField
                   {...params}
                   placeholder="Select employer"
-                  value={userData?.employer_id}
                   name="employer_id"
                 />
               )}
+              value={data.find(option => option.employer_id === userData?.employer_id) || null}
               onChange={(e, value: any) =>
                 handleUpdate({
-                  target: { name: "employer_id", value: value.employer_id },
+                  target: { name: "employer_id", value: value ? value.employer_id : "" },
                 })
               }
               sx={{
@@ -326,6 +327,7 @@ const UserDetails = (props) => {
                 <Paper style={{ borderRadius: "4px" }}>{children}</Paper>
               )}
             />
+
           </div>
 
           <div className="w-1/2">
@@ -429,7 +431,7 @@ const UserDetails = (props) => {
                   {...params}
                   placeholder="Select funding body"
                   name="funding_body"
-                  error={true || userDataError?.funding_body}
+                  error={userDataError?.funding_body}
                 />
               )}
               onChange={(e, value) =>

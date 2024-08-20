@@ -44,7 +44,7 @@ const UserDetails = (props) => {
     dataUpdatingLoadding,
     userDataError,
   } = props;
-
+  
   const handleChange = (event) => {
     const {
       target: { value },
