@@ -76,8 +76,10 @@ export default function UserManagementTable(props) {
   };
 
   const openMenu = (e, id) => {
+    console.log(e, id);
+
     handleClick(e);
-    setOpenMenuDialog(id);
+    setOpenMenuDialog(id?.user_id);
   };
 
   const editIcon = () => {
@@ -189,7 +191,7 @@ export default function UserManagementTable(props) {
                             <IconButton
                               size="small"
                               sx={{ color: "#5B718F", marginRight: "4px" }}
-                              onClick={(e) => openMenu(e, row.user_id)}
+                              onClick={(e) => openMenu(e, row)}
                             >
                               <MoreHorizIcon fontSize="small" />
                             </IconButton>

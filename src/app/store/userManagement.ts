@@ -5,7 +5,7 @@ import { showMessage } from './fuse/messageSlice';
 import { userTableMetaData } from '../contanst/metaData';
 import JwtService from '../auth/services/jwtService';
 import instance from '../auth/services/jwtService/jwtService';
-import {slice as globalSlice} from './globalUser'
+import { slice as globalSlice } from './globalUser'
 import { setUser } from './userSlice';
 
 const initialState = {
@@ -64,10 +64,10 @@ const userManagementSlice = createSlice({
             const { user_id, ...rest } = action.payload;
             state.data = state.data.map((value) => {
                 if (value.user_id === user_id) {
-                    return rest;
+                    return { ...value, ...rest };
                 }
                 return value;
-            })
+            });
         },
         updateAvatar(state, action) {
             state.avarat = action.payload;
