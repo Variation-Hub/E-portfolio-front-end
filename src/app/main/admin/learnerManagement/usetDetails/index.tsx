@@ -267,7 +267,7 @@ const UserDetails = (props) => {
                       onMouseDown={handleMouseDownPassword}
                       edge="end"
                     >
-                      {showPassword ?
+                      {showConfirmPassword ?
                         <VisibilityOff
                           sx={{
                             fontSize: "2rem",
