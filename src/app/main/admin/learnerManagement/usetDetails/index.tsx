@@ -2,6 +2,7 @@ import {
   Autocomplete,
   Box,
   IconButton,
+  InputAdornment,
   MenuItem,
   Paper,
   TextField,
@@ -27,6 +28,8 @@ import HelpOutlinedIcon from "@mui/icons-material/HelpOutlined";
 import Style from "./style.module.css";
 import { useSelector } from "react-redux";
 import { selectEmployer } from "app/store/employer";
+import { useState } from "react";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 const UserDetails = (props) => {
   const { data } = useSelector(selectEmployer);
@@ -41,6 +44,22 @@ const UserDetails = (props) => {
     dataUpdatingLoadding,
     userDataError,
   } = props;
+
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const handleClickShowPassword = () => {
+    setShowPassword((prev) => !prev);
+  };
+
+  const handleClickShowConfirmPassword = () => {
+    setShowConfirmPassword((prev) => !prev);
+  };
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
 
   return (
     <div className="h-full flex flex-col">
@@ -174,23 +193,48 @@ const UserDetails = (props) => {
               placeholder="Enter Password"
               value={updateData ? "Locker@2024" : userData?.password}
               size="small"
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               required={!updateData}
               fullWidth
               onChange={handleUpdate}
               error={userDataError?.password}
+              helperText={userDataError?.password ? "Password: 6+ chars, with 1 each: A, a, 0-9." : ""}
               InputProps={{
                 endAdornment: (
-                  <Tooltip title={passwordValidation} placement="bottom" arrow>
-                    <HelpOutlinedIcon
-                      sx={{
-                        fontSize: "16px",
-                        color: "gray",
-                        marginLeft: "2px",
-                        cursor: "help",
-                      }}
-                    />
-                  </Tooltip>
+                  // <Tooltip title={passwordValidation} placement="bottom" arrow>
+                  //   <HelpOutlinedIcon
+                  //     sx={{
+                  //       fontSize: "16px",
+                  //       color: "gray",
+                  //       marginLeft: "2px",
+                  //       cursor: "help",
+                  //     }}
+                  //   />
+                  // </Tooltip>
+                  <InputAdornment position="end" className="ml-0">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      edge="end"
+                    >
+                      {showPassword ?
+                        <VisibilityOff
+                          sx={{
+                            fontSize: "2rem",
+                            color: "gray",
+                            marginLeft: "2px",
+                          }}
+                        /> :
+                        <Visibility
+                          sx={{
+                            fontSize: "2rem",
+                            color: "gray",
+                            marginLeft: "2px",
+                          }}
+                        />}
+                    </IconButton>
+                  </InputAdornment>
                 ),
               }}
             />
@@ -208,17 +252,40 @@ const UserDetails = (props) => {
               placeholder="Enter confirm password"
               value={updateData ? "Locker@2024" : userData?.confrimpassword}
               size="small"
-              type={updateData ? "password" : "text"}
+              type={showConfirmPassword ? 'text' : 'password'}
               required={!updateData}
               fullWidth
               onChange={handleUpdate}
               error={userDataError?.confrimpassword}
-            // InputProps={{
-            //     endAdornment:
-            //         <Tooltip title="Password must be same" placement="bottom" arrow>
-            //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
-            //         </Tooltip>
-            // }}
+              helperText={userDataError?.password ? "Password must be same" : ""}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end" className="ml-0">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowConfirmPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      edge="end"
+                    >
+                      {showPassword ?
+                        <VisibilityOff
+                          sx={{
+                            fontSize: "2rem",
+                            color: "gray",
+                            marginLeft: "2px",
+                          }}
+                        /> :
+                        <Visibility
+                          sx={{
+                            fontSize: "2rem",
+                            color: "gray",
+                            marginLeft: "2px",
+                          }}
+                        />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
             />
           </div>
         </Box>

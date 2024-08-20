@@ -22,7 +22,7 @@ function Logo() {
 
   return (
     <Root className="flex items-center" onClick={()=>{
-      navigate("/")
+      navigate("/home")
     }} style={{cursor: "pointer"}}>
       <img className="mx-auto w-96" style={{width:"50%"}}src="assets/images/logo/logo-text.svg" alt="logo" />
     </Root>

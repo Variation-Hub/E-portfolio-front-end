@@ -5,6 +5,7 @@ import {
   Dialog,
   DialogContent,
   IconButton,
+  InputAdornment,
   Paper,
   TextField,
   Typography,
@@ -21,6 +22,7 @@ import { changePassword, selectUserManagement, uploadAvatar } from "app/store/us
 import { useDispatch } from "react-redux";
 import { margin, padding } from "@mui/system";
 import { getRandomColor } from "src/utils/randomColor";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 const CustomInputField = ({ label, name, placeholder, value }) => {
   return (
@@ -68,7 +70,6 @@ const MyProfile: React.FC = () => {
   };
 
   const handleButtonClick = () => {
-    // Trigger click on file input
     fileInputRef.current.click();
   };
 
@@ -78,13 +79,13 @@ const MyProfile: React.FC = () => {
     confirmPassword: "",
   });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setPasswordData(prevState => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
+  // const handleChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setPasswordData(prevState => ({
+  //     ...prevState,
+  //     [name]: value,
+  //   }));
+  // };
 
   const handleChangePassword = async () => {
     try {
@@ -100,6 +101,34 @@ const MyProfile: React.FC = () => {
       });
     }
   };
+
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const handleClickShowCurrentPassword = () => {
+    setShowCurrentPassword((prev) => !prev);
+  };
+
+  const handleClickShowNewPassword = () => {
+    setShowNewPassword((prev) => !prev);
+  };
+
+  const handleClickShowConfirmPassword = () => {
+    setShowConfirmPassword((prev) => !prev);
+  };
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
+
+  const handleChange = (e) => {
+    setPasswordData({
+      ...passwordData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
 
   return (
     <div className="p-4 m-4 flex">
@@ -359,6 +388,22 @@ const MyProfile: React.FC = () => {
                 className="w-full"
                 name="currentPassword"
                 placeholder="Enter current password"
+                type={showCurrentPassword ? 'text' : 'password'}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowCurrentPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        sx={{ color: 'black' }}
+                        edge="end"
+                      >
+                        {showCurrentPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
               />
               <TextField
                 size="small"
@@ -368,6 +413,22 @@ const MyProfile: React.FC = () => {
                 className="w-full"
                 name="newPassword"
                 placeholder="Enter new password"
+                type={showNewPassword ? 'text' : 'password'}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowNewPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        sx={{ color: 'black' }}
+                        edge="end"
+                      >
+                        {showNewPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
               />
               <TextField
                 size="small"
@@ -377,6 +438,22 @@ const MyProfile: React.FC = () => {
                 className="w-full"
                 name="confirmPassword"
                 placeholder="Enter confirm password"
+                type={showConfirmPassword ? 'text' : 'password'}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowConfirmPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        sx={{ color: 'black' }}
+                        edge="end"
+                      >
+                        {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
               />
             </Box>
             <Box
