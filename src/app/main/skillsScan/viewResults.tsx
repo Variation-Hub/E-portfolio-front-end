@@ -181,11 +181,14 @@ const ViewResults = () => {
                             <div class="header-box bg-gray-200 p-2 border border-gray-300 rounded-0">
                                 <h4 class="text-sm font-semibold">Legend</h4>
                             </div>
-                            <div class="p-3 border border-gray-300 rounded" id="data-show">
-                            ${legendData.map(item => `
-                                <li>${item}</li>
-                            `).join()}
-                            </div>
+                          <div class="p-4 border border-gray-300 rounded-lg bg-white shadow-sm" id="data-show">
+                             <ul class="list-disc list-inside text-gray-800 space-y-2">
+                                 ${legendData.map(item => `
+                                     <li>${item}</li>
+                                 `).join('')}
+                             </ul>
+                        </div>
+
                         </div>
                     </div>
                     <div class="footer my-8 flex justify-between text-sm">
