@@ -9,6 +9,7 @@ import TableRow from "@mui/material/TableRow";
 import {
   Autocomplete,
   Avatar,
+  AvatarGroup,
   Box,
   Dialog,
   IconButton,
@@ -16,6 +17,7 @@ import {
   MenuItem,
   Pagination,
   TextField,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import Style from "./style.module.css";
@@ -43,6 +45,7 @@ import { Stack } from "@mui/system";
 import { useNavigate } from "react-router-dom";
 import { slice } from 'app/store/reloadData'
 import { getRandomColor } from "src/utils/randomColor";
+import { AutoStories } from "@mui/icons-material";
 
 
 export default function LearnerManagementTable(props) {
@@ -55,7 +58,7 @@ export default function LearnerManagementTable(props) {
     meta_data,
     dataUpdatingLoadding,
     search_keyword = "",
-    search_role = "",
+    search_C = "",
   } = props;
 
   const navigate = useNavigate();
@@ -125,7 +128,7 @@ export default function LearnerManagementTable(props) {
 
   const deleteConfromation = async () => {
     await dispatch(
-      deleteLearnerHandler(deleteId, meta_data, search_keyword, search_role)
+      deleteLearnerHandler(deleteId, meta_data, search_keyword, search_C)
     );
     setDeleteId("");
   };
@@ -180,7 +183,7 @@ export default function LearnerManagementTable(props) {
   return (
     <>
       <div style={{ width: "100%", overflow: "hidden", marginTop: "0.5rem" }}>
-        <TableContainer sx={{ maxHeight: 540, minHeight: 530,display:"flex",flexDirection:"column",justifyContent:"space-between" }}>
+        <TableContainer sx={{ maxHeight: 540, minHeight: 530, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
           <Table stickyHeader aria-label="sticky table" size="small">
             <TableHead>
               <TableRow>
@@ -244,6 +247,33 @@ export default function LearnerManagementTable(props) {
                                 {/* <Link to="/portfolio" style={{ color: "inherit", textDecoration: "none" }}> */}
                                 {/* </Link> */}
                               </>
+                            ) : column.id === "course" ? (
+                              row?.course && row.course.length > 0 ? (
+                                <AvatarGroup
+                                  max={4}
+                                  className="items-center gap-8"
+                                  sx={{
+                                    ".MuiAvatar-root": {
+                                      backgroundColor: "#6d81a3",
+                                      width: "3rem",
+                                      height: "3rem",
+                                      fontSize: "medium",
+                                      border: "1px solid #FFFFFF",
+                                    },
+                                  }}>
+                                  {row?.course.map((course) => (
+                                    <>
+                                      <Tooltip key={course.course.course_id} title={course.course.course_name}>
+                                        <Avatar sx={{ bgcolor: '#5B718F', cursor: 'pointer' }}>
+                                          <AutoStories />
+                                        </Avatar>
+                                      </Tooltip>
+                                    </>
+                                  ))}
+                                </AvatarGroup >
+                              ) : (
+                                <strong>-</strong> 
+                              )
                             ) : (
                               value || "Active"
                             )}
@@ -258,7 +288,7 @@ export default function LearnerManagementTable(props) {
           </Table>
           <Stack
             spacing={2}
-            className="flex justify-center items-center w-full mb-14"
+            className="flex justify-center items-center w-full mt-12"
           >
             <Pagination
               count={meta_data?.pages}

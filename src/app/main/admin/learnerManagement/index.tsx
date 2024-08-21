@@ -5,7 +5,7 @@ import DataNotFound from "src/app/component/Pages/dataNotFound";
 import { AdminRedirect, learnerManagementTableColumn } from "src/app/contanst";
 import Style from '../style.module.css'
 import { useSelector } from "react-redux";
-import { Card, Dialog, IconButton, InputAdornment, TextField, Typography } from "@mui/material";
+import { Autocomplete, Card, Dialog, IconButton, InputAdornment, Paper, TextField, Typography } from "@mui/material";
 import UserDetails from "./usetDetails";
 import { useDispatch } from "react-redux";
 import Close from "@mui/icons-material/Close";
@@ -13,19 +13,21 @@ import SearchIcon from '@mui/icons-material/Search';
 import { emailReg, mobileReg, nameReg, passwordReg, usernameReg } from "src/app/contanst/regValidation";
 import { createLearnerAPI, fetchLearnerAPI, getRoleAPI, selectLearnerManagement, updateLearnerAPI } from "app/store/learnerManagement";
 import LearnerManagementTable from "src/app/component/Table/LearnerManagementTable";
-import { fetchCourseAPI } from "app/store/courseManagement";
+import { fetchCourseAPI, selectCourseManagement } from "app/store/courseManagement";
 import { getEmployerAPI } from "app/store/employer";
 
 const Index = () => {
 
   const { data, dataFetchLoading, dataUpdatingLoadding, meta_data } = useSelector(selectLearnerManagement)
   const dispatch: any = useDispatch();
+  const course = useSelector(selectCourseManagement)?.data
 
   const [open, setOpen] = useState(false);
   const [updateData, setUpdateData] = useState("");
   const [searchKeyword, setSearchKeyword] = useState("");
-  console.log(updateData,"++++++++++++");
-
+  const [courseId, setCourseId] = useState("");
+  const [filterValue, setFilterValue] = useState("");
+  
   useEffect(() => {
     dispatch(fetchLearnerAPI())
     dispatch(fetchCourseAPI())
@@ -127,8 +129,15 @@ const Index = () => {
     setSearchKeyword(e.target.value);
   }
 
+  const filterHandler = (e, value) => {
+    const selectedCourse = course.find(course => course.course_name === value);
+    setCourseId(selectedCourse ? selectedCourse.course_id : "");
+    setFilterValue(value);
+    dispatch(fetchLearnerAPI({ page: 1, page_size: 10 }, searchKeyword, selectedCourse ? selectedCourse.course_id : ""));
+  };
+
   const searchAPIHandler = () => {
-    dispatch(fetchLearnerAPI({ page: 1, page_size: 10 }, searchKeyword));
+    dispatch(fetchLearnerAPI({ page: 1, page_size: 10 }, searchKeyword, courseId));
   }
 
   useEffect(() => {
@@ -139,6 +148,11 @@ const Index = () => {
     dispatch(getRoleAPI("LIQA"));
     dispatch(getEmployerAPI());
   }, []);
+
+  const top100Films = [
+    { label: 'The Shawshank Redemption', year: 1994 },
+    { label: 'The Godfather', year: 1972 },
+  ]
 
   const validation = () => {
 
@@ -190,7 +204,7 @@ const Index = () => {
                         <Close
                           onClick={() => {
                             setSearchKeyword("");
-                            dispatch(fetchLearnerAPI({ page: 1, page_size: 10 }, ""));
+                            dispatch(fetchLearnerAPI({ page: 1, page_size: 10 }, "", courseId));
                           }}
                           sx={{
                             color: "#5B718F",
@@ -211,6 +225,24 @@ const Index = () => {
                     }
                   </InputAdornment>
               }}
+            />
+            <Autocomplete
+              fullWidth
+              size="small"
+              value={filterValue}
+              options={course.map((option) => option.course_name)}
+              renderInput={(params) => (
+                <TextField {...params} label="Search by course" />
+              )}
+              onChange={filterHandler}
+              sx={{
+                ".MuiAutocomplete-clearIndicator": {
+                  color: "#5B718F",
+                },
+              }}
+              PaperComponent={({ children }) => (
+                <Paper style={{ borderRadius: "4px" }}>{children}</Paper>
+              )}
             />
           </div>
           <SecondaryButton name="Create learner" onClick={handleOpen} startIcon={
@@ -262,6 +294,7 @@ const Index = () => {
             updateUserHandler={updateUserHandler}
             dataUpdatingLoadding={dataUpdatingLoadding}
             userDataError={userDataError}
+            search_course={filterValue}
           />
         </Dialog>
       </div >
