@@ -27,7 +27,7 @@ const Index = () => {
   const [searchKeyword, setSearchKeyword] = useState("");
   const [courseId, setCourseId] = useState("");
   const [filterValue, setFilterValue] = useState("");
-  
+
   useEffect(() => {
     dispatch(fetchLearnerAPI())
     dispatch(fetchCourseAPI())
@@ -245,14 +245,22 @@ const Index = () => {
               )}
             />
           </div>
-          <SecondaryButton name="Create learner" onClick={handleOpen} startIcon={
-            <img
-              src="assets/images/svgimage/createcourseicon.svg"
-              alt="Create user"
-              className="w-6 h-6 mr-2 sm:w-8 sm:h-8 lg:w-10 lg:h-10"
-            />
-          } />
-
+          <div className="flex gap-10">
+            <SecondaryButton name="Export Report" startIcon={
+              <img
+                src="assets/images/svgimage/uploadfileicon.svg"
+                alt="Export Report"
+                className="w-6 h-6 mr-2 sm:w-8 sm:h-8 lg:w-10 lg:h-10"
+              />
+            } />
+            <SecondaryButton name="Create learner" onClick={handleOpen} startIcon={
+              <img
+                src="assets/images/svgimage/createcourseicon.svg"
+                alt="Create user"
+                className="w-6 h-6 mr-2 sm:w-8 sm:h-8 lg:w-10 lg:h-10"
+              />
+            } />
+          </div>
         </div>
         {
           data.length ?

@@ -162,8 +162,8 @@ const ProposeYourInnovations = (props) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedRow, setSelectedRow] = useState<any>(null);
   const [dialogType, setDialogType] = useState(null);
-  const [chatDrawerOpen, setChatDrawerOpen] = useState(false); // State for chat drawer
-  const [chatMessages, setChatMessages] = useState([]); // State to store chat messages
+  const [chatDrawerOpen, setChatDrawerOpen] = useState(false);
+  const [chatMessages, setChatMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
 
   const [deleteId, setDeleteId] = useState("");
@@ -193,7 +193,7 @@ const ProposeYourInnovations = (props) => {
   const dispatch: any = useDispatch();
 
   const clearSingleData = () => {
-    // dispatch(slice.setSingleData({}));
+    dispatch(slice.setSingleData({}));
     setYourInnovation({
       innovation_propose_by_id: data.user_id,
       topic: "",
@@ -221,7 +221,6 @@ const ProposeYourInnovations = (props) => {
     setAnchorEl(null);
     setDialogType(null);
     setDeleteId("");
-    clearSingleData();
   };
 
   const handleEdit = () => {
@@ -363,7 +362,7 @@ const ProposeYourInnovations = (props) => {
             }}
           >
             <SecondaryButton
-              name="Add Innovation"
+              name="Submit An Idea"
               className="py-6 px-12 mb-10"
               startIcon={<AddIcon sx={{ mx: -0.5 }} />}
               onClick={() => handleClickOpen("add")}

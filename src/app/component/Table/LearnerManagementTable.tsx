@@ -47,7 +47,6 @@ import { slice } from 'app/store/reloadData'
 import { getRandomColor } from "src/utils/randomColor";
 import { AutoStories } from "@mui/icons-material";
 
-
 export default function LearnerManagementTable(props) {
   const {
     columns,
@@ -75,6 +74,8 @@ export default function LearnerManagementTable(props) {
     EQA_id: "",
     LIQA_id: "",
     employer_id: "",
+    start_date: "",
+    end_date: ""
   });
 
   const handleUpdateData = (name, value) => {
@@ -171,6 +172,8 @@ export default function LearnerManagementTable(props) {
         EQA_id: "",
         LIQA_id: "",
         employer_id: "",
+        start_date: "",
+        end_date: ""
       });
     }
     setLoading(false);
@@ -241,7 +244,7 @@ export default function LearnerManagementTable(props) {
                                     backgroundColor: getRandomColor(row?.user_name?.toLowerCase().charAt(0))
                                   }}
                                 />
-                                <div onClick={() => redirection(row.learner_id, row.user_id)}>
+                                <div className="hover:text-[#2D6498] cursor-pointer " onClick={() => redirection(row.learner_id, row.user_id)}>
                                   {value} {row["last_name"]}
                                 </div>
                                 {/* <Link to="/portfolio" style={{ color: "inherit", textDecoration: "none" }}> */}
@@ -272,7 +275,7 @@ export default function LearnerManagementTable(props) {
                                   ))}
                                 </AvatarGroup >
                               ) : (
-                                <strong>-</strong> 
+                                <strong>-</strong>
                               )
                             ) : (
                               value || "Active"
@@ -564,6 +567,46 @@ export default function LearnerManagementTable(props) {
                 <Paper style={{ borderRadius: "4px" }}>{children}</Paper>
               )}
             />
+          </div>
+        </Box>
+        <Box className="m-4 flex flex-col justify-between gap-12 sm:flex-row">
+          <div className="w-full">
+            <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }} className={Style.name}>
+              Start Date
+            </Typography>
+            <TextField
+              name="start_date"
+              value={courseAllocationData?.start_date}
+              size="small"
+              type='date'
+              required
+              fullWidth
+              onChange={(e) => setCourseAllocationData({
+                ...courseAllocationData,
+                start_date: e.target.value
+              })}
+            />
+
+          </div>
+        </Box>
+        <Box className="m-4 flex flex-col justify-between gap-12 sm:flex-row">
+          <div className="w-full">
+            <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }} className={Style.name}>
+              End Date
+            </Typography>
+            <TextField
+              name="end_date"
+              value={courseAllocationData?.end_date}
+              size="small"
+              type='date'
+              required
+              fullWidth
+              onChange={(e) => setCourseAllocationData({
+                ...courseAllocationData,
+                end_date: e.target.value
+              })}
+            />
+
           </div>
         </Box>
         <div className="flex justify-end mt-4">
