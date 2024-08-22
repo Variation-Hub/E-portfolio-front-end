@@ -20,7 +20,7 @@ import { deleteNotifications, fetchNotifications, readNotifications, selectnotif
 
 function Notification(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [notifications, setNotifications] = React.useState([]);
+  // const [notifications, setNotifications] = React.useState([]);
   const [dot, setDot] = React.useState(false);
 
   const { notification } = useSelector(selectnotificationSlice);
@@ -31,13 +31,13 @@ function Notification(props) {
     dispatch(fetchNotifications())
   }, []);
 
-  React.useEffect(() => {
-    setNotifications(notification);
-  }, [notification])
+  // React.useEffect(() => {
+  //   setNotifications(notification);
+  // }, [notification])
 
   React.useEffect(() => {
-    setDot(notification.filter(n =>!n.read).length > 0);
-  }, [notifications])
+    setDot(notification.filter(n => !n.read).length > 0);
+  }, [notification])
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -49,26 +49,22 @@ function Notification(props) {
 
   const handleRead = async (id) => {
     await dispatch(readNotifications(id))
-    setNotifications(notifications.map(notification =>
-      notification.notification_id
-        === id ? { ...notification, read: true } : notification
-    ));
+    dispatch(fetchNotifications())
   };
 
   const handleReadAll = async () => {
     await dispatch(readNotifications())
-    setNotifications(notifications.map(notification => ({ ...notification, read: true })));
+    dispatch(fetchNotifications())
   };
 
   const handleRemove = async (id) => {
     await dispatch(deleteNotifications(id))
-    setNotifications(notifications.filter(notification => notification.notification_id
-      !== id));
+    dispatch(fetchNotifications())
   };
 
   const handleRemoveAll = async () => {
     await dispatch(deleteNotifications())
-    setNotifications([]);
+    dispatch(fetchNotifications())
   };
 
   const open = Boolean(anchorEl);
@@ -99,7 +95,7 @@ function Notification(props) {
         }}
       >
         <Grid className='flex flex-col items-center h-360 w-320 '>
-          {notifications.length === 0 ? (
+          {notification.length === 0 ? (
             <>
               <div className='flex flex-col items-center justify-center pt-44'>
                 <div>
@@ -119,7 +115,7 @@ function Notification(props) {
           ) : (
             <>
               <List className='px-10 pt-3 pb-0 w-320'>
-                {notifications?.slice(0, 5)?.map((notification) => (
+                {notification?.slice(0, 5)?.map((notification) => (
                   <ListItem key={notification.notification_id
                   } className='flex px-0 py-2 gap-7' divider>
                     <Grid className='px-5 '>

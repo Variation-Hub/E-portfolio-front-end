@@ -44,7 +44,7 @@ const UserDetails = (props) => {
     dataUpdatingLoadding,
     userDataError,
   } = props;
-  
+
   const handleChange = (event) => {
     const {
       target: { value },
@@ -197,6 +197,7 @@ const UserDetails = (props) => {
               fullWidth
               onChange={handleUpdate}
               error={userDataError?.email}
+              autoComplete="new-email"
               InputProps={{
                 endAdornment: (
                   <Tooltip title={emailValidationMsg} placement="bottom" arrow>
@@ -234,6 +235,7 @@ const UserDetails = (props) => {
               onChange={handleUpdate}
               error={userDataError?.password}
               helperText={userDataError?.password ? "Password : 6+ chars, with 1 each: A, a, 0-9." : ""}
+              autoComplete="new-password"
               InputProps={{
                 endAdornment: (
                   // <Tooltip title={passwordValidation} placement="bottom" arrow>

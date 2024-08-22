@@ -28,8 +28,9 @@ export const connectToSocket = async (id, dispatch) => {
         } else if (domain === SocketDomain.MessageSend) {
             dispatch(slice.newMassageHandler(data))
         } else if (domain === SocketDomain.InnovationChat) {
-            console.log("helllllooooooooo", data)
             dispatch(InnovationSlice.setSingleDataForSocket(data))
+        } else if (domain === SocketDomain.Notification) {
+            dispatch(fetchNotifications())
         }
     };
 

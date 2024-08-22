@@ -4,12 +4,11 @@ import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
-import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import { SecondaryButton } from "src/app/component/Buttons";
-import { Button, Grid, Tooltip } from "@mui/material";
+import { Button, Tooltip } from "@mui/material";
 import { useSelector } from "react-redux";
-import { deleteNotifications, selectnotificationSlice } from "app/store/notification";
+import { deleteNotifications, fetchNotifications, selectnotificationSlice } from "app/store/notification";
 import { useDispatch } from "react-redux";
 
 interface Column {
@@ -30,43 +29,23 @@ const columns: readonly Column[] = [
 
 const Activity = () => {
 
-  const [notifications, setNotifications] = React.useState([]);
-
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-
-  const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage);
-  };
-
   const { notification } = useSelector(selectnotificationSlice);
 
   const dispatch: any = useDispatch()
 
-  React.useEffect(() => {
-    setNotifications(notification);
-  }, [notification])
-
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
-
   const handleRemoveAll = async () => {
     await dispatch(deleteNotifications())
-    setNotifications([]);
+    dispatch(fetchNotifications())
   };
 
   const handleRemove = async (id) => {
     await dispatch(deleteNotifications(id))
-    setNotifications(notifications.filter(row => row.notification_id !== id));
+    dispatch(fetchNotifications())
   };
 
   return (
     <>
-      <TableContainer sx={{  padding: 1 }}>
+      <TableContainer sx={{ padding: 1 }}>
         <div className="flex space-x-4 mt-4 mb-10 mr-5 justify-end  ">
           <SecondaryButton name="Delete All" onClick={handleRemoveAll} />
         </div>
@@ -88,7 +67,7 @@ const Activity = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {notifications
+            {notification
               ?.map((row) => {
                 return (
                   <TableRow

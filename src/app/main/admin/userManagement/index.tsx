@@ -48,8 +48,6 @@ const Index = () => {
   const [searchKeyword, setSearchKeyword] = useState("");
   const [filterValue, setFilterValue] = useState("");
 
-  console.log(updateData,"++++++++++++");
-   
   useEffect(() => {
     dispatch(fetchUserAPI());
   }, [dispatch]);
