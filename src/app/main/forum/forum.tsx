@@ -253,7 +253,21 @@ const Forum = () => {
                               <div className="font-semibold  text-base">{message.sender?.user_name}</div>
                               <div className="text-xs text-gray-500">{timeAgo(message.created_at)}</div>
                             </div>
-                            <div className="text-justify text-base pr-10 ">{message.message}</div>
+                            <div className="text-justify text-base pr-10 ">
+                              {message?.message && message?.file ?
+                                <>
+                                  <Link to={message?.file?.url} target="_blank" rel="noopener" style={{ border: '0px', backgroundColor: 'unset' }}>
+                                    <FileCopyIcon style={{ fontSize: '2rem', color: "black" }} />
+                                  </Link>
+                                  {message?.message}
+                                </>
+                                :
+                                message?.message || (message?.file &&
+                                  <Link to={message?.file?.url} target="_blank" rel="noopener" style={{ border: '0px', backgroundColor: 'unset' }}>
+                                    <FileCopyIcon style={{ fontSize: '2rem', color: "black" }} />
+                                  </Link>
+                                )}
+                            </div>
                           </div>
                         </div>
                       )}
