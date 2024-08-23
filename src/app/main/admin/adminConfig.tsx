@@ -5,6 +5,7 @@ const LearnerManagement = lazy(() => import("./learnerManagement"));
 const EmployerManagement = lazy(() => import("./employerManagement"));
 import CreateEmployerDetails from "./employerManagement/userDetails/createEmploye";
 import authRoles from 'src/app/auth/authRoles';
+import AdminDetails from "./adminDeatils";
 
 const AdminConfig = {
   settings: {
@@ -33,6 +34,10 @@ const AdminConfig = {
     {
       path: "/admin",
       element: <AdminView />,
+    },
+    {
+      path: "/admin/admin-details",
+      element: <AdminDetails />,
     },
     {
       path: "/admin/user",
