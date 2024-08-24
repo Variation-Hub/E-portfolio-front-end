@@ -122,4 +122,24 @@ export const getEmployerAPI = (data = { page: 1, page_size: 10 }, search_keyword
 
 }
 
+// Upload PDF
+export const uploadPDF = (file: any) => async (dispatch) => {
+    try {
+        const formData = new FormData();
+
+        file.forEach(value => formData.append("files", value));
+
+        formData.append('folder', "employer");
+
+        dispatch(slice.setUpdatingLoader());
+        const response: any = await axios.post(`${URL_BASE_LINK}/upload/files`, formData);
+        // dispatch(showMessage({ message: response.data.message, variant: "success" }))
+        dispatch(slice.setUpdatingLoader());
+        return response.data;
+    } catch (err) {
+        dispatch(showMessage({ message: err.response.data.message, variant: "error" }))
+        dispatch(slice.setUpdatingLoader());
+        return false;
+    }
+}
 export default employerSlice.reducer;

@@ -15,7 +15,7 @@ import { PortfolioCard } from "src/app/component/Cards";
 import DoughnutChart from "src/app/component/Chart/doughnut";
 import { portfolioCard } from "src/app/contanst";
 import Calendar from "./calendar";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { selectstoreDataSlice } from "app/store/reloadData";
 import { selectUser } from "app/store/userSlice";
 import { slice } from "app/store/courseManagement";
@@ -24,6 +24,7 @@ import { slice as courseSlice } from "app/store/courseManagement";
 
 const Portfolio = () => {
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
 
   const handleClose = () => {
     setOpen(false);
@@ -51,6 +52,10 @@ const Portfolio = () => {
 
   const handleOpen = () => {
     setOpen(true);
+  };
+
+  const handleOpenProfile = () => {
+    navigate('/portfolio/learner-details')
   };
 
   const handleClickData = (event, row) => {
@@ -104,7 +109,7 @@ const Portfolio = () => {
                             handleClickData(e, value)
                           }}
                         >
-                          <DoughnutChart value={value}/>
+                          <DoughnutChart value={value} />
                         </Link>
                       </Tooltip>
                     </div>
@@ -123,6 +128,7 @@ const Portfolio = () => {
       <div className="flex justify-end mr-24">
         <SecondaryButtonOutlined name="Awaiting Signature" className="mr-12" />
         <SecondaryButton name="Calendar" className="mr-12" onClick={handleOpen} />
+        <SecondaryButton name="Profile" className="mr-12" onClick={handleOpenProfile} />
         {/* <Link to="/portfolio/newsession">
           <SecondaryButton name="New Session" />
         </Link> */}

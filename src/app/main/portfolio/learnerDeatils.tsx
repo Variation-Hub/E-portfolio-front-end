@@ -3,13 +3,15 @@ import { fetchLearnerAPI, selectLearnerManagement, updateLearnerAPI } from 'app/
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
-import { SecondaryButton } from 'src/app/component/Buttons';
+import { useNavigate } from 'react-router-dom';
+import { SecondaryButton, SecondaryButtonOutlined } from 'src/app/component/Buttons';
 
-const AdminDetails = () => {
+const LearnerDetails = () => {
 
     const [isChecked, setIsChecked] = useState(false);
     const dispatch: any = useDispatch();
     const { employer } = useSelector(selectLearnerManagement);
+    const navigate = useNavigate();
 
     const handleCheckboxChange = (event) => {
         setIsChecked(event.target.checked);
@@ -98,6 +100,10 @@ const AdminDetails = () => {
     useEffect(() => {
         dispatch(fetchLearnerAPI())
     }, [dispatch])
+
+    const handleClose = () => {
+        navigate("/portfolio");
+    };
 
     return (
         <Grid>
@@ -654,7 +660,7 @@ const AdminDetails = () => {
                                             onChange={(event, value) => {
                                                 setAdminData((prevData) => ({
                                                     ...prevData,
-                                                    employer: value?.employer?.employer_name, 
+                                                    employer: value?.employer?.employer_name,
                                                 }));
                                             }}
                                             sx={{
@@ -1078,6 +1084,7 @@ const AdminDetails = () => {
                 </Card >
 
                 <div className="flex justify-end mr-24 mb-20">
+                    <SecondaryButtonOutlined name="Cancel" className="mr-12" onClick={handleClose} />
                     <SecondaryButton name="Save" onClick={handleSubmit} />
                 </div>
 
@@ -1085,4 +1092,4 @@ const AdminDetails = () => {
         </Grid>
     )
 }
-export default AdminDetails
+export default LearnerDetails

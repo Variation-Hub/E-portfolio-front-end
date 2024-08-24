@@ -6,6 +6,7 @@ import NewSession from "./newsession";
 import NewAssignment from "src/app/component/Cards/newAssignment";
 import LearnerToData from "./learnerData/learnertodata";
 import ProgressMap from "../createAssignment/progressMap";
+import LearnerDetails from "./learnerDeatils";
 
 const PortfolioConfig = {
   settings: {
@@ -54,7 +55,11 @@ const PortfolioConfig = {
     {
       path: "/portfolio/progress",
       element: <ProgressMap />,
-    }
+    },
+    {
+      path: "/portfolio/learner-details",
+      element: <LearnerDetails />,
+    },
   ],
 };
 

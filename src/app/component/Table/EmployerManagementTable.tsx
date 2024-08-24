@@ -79,6 +79,10 @@ export default function EmployerManagementTable(props) {
     email: "",
     business_description: "",
     comments: "",
+    assessment_date: "",
+    assessment_renewal_date: "",
+    insurance_renewal_date: "",
+    file: null
   });
 
   const handleDataUpdate = (e) => {
