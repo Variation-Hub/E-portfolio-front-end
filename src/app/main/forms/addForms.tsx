@@ -12,12 +12,14 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import {
   createFormDataAPI,
+  createTemplateData,
   createUserFormDataAPI,
   getFormDataAPI,
   getUserFormDataAPI,
   selectFormData,
   slice,
   updateFormDataAPI,
+  updateTemplate,
 } from "app/store/formData";
 import { useSelector } from "react-redux";
 import "formiojs/dist/formio.full.css";
@@ -27,8 +29,7 @@ import { selectUser } from "app/store/userSlice";
 import { User } from "@auth0/auth0-react";
 
 const AddForms = (props) => {
-  const { data, formDataDetails, dataUpdatingLoadding, singleData, mode } =
-    useSelector(selectFormData);
+  const { data, formDataDetails, dataUpdatingLoadding, singleData, mode, singleFrom = null, modeTemaplate = '' } = useSelector(selectFormData);
   console.log(formDataDetails);
 
   const user = useSelector(selectUser)?.data;
@@ -37,13 +38,17 @@ const AddForms = (props) => {
   const dispatch: any = useDispatch();
 
   const [formData, setFormData] = useState({
-    id: null,
-    form_name: "",
+    id: singleFrom?.id || null,
+    form_name: singleFrom?.template_name || "",
     description: "",
-    form_data: [],
+    form_data: singleFrom?.data?.map((item: any) => {
+      const { id, ...rest } = item;
+      return rest;
+    }) || [],
     type: "",
   });
 
+  console.log(formData)
   useEffect(() => {
     if ((mode === "view" || mode === "edit") && singleData) {
       setFormData({
@@ -126,6 +131,23 @@ const AddForms = (props) => {
       [name]: value,
     }));
   };
+
+  const handleSubmitTemplate = async () => {
+    try {
+      let response;
+      const data = {
+        template_name: formData.form_name || " ",
+        data: formData.form_data,
+      }
+      if (modeTemaplate == "") response = await dispatch(createTemplateData(data));
+      else if (modeTemaplate == "T")
+        response = await dispatch(updateTemplate(formData?.id, data));
+    } catch (err) {
+      console.log(err);
+    } finally {
+      handleCloseForm();
+    }
+  }
 
   const isFormData =
     Object.values(formData).find((data) => data === "") === undefined;
@@ -250,6 +272,13 @@ const AddForms = (props) => {
                 name={mode === "edit" ? "Update Form" : "Create Form"}
                 onClick={handleSubmit}
                 disable={!isFormData}
+              />
+            )}
+
+            {mode !== "view" && user.role === UserRole.Admin && (
+              <SecondaryButton
+                name={modeTemaplate === "T" ? "Update Template" : "Create template"}
+                onClick={handleSubmitTemplate}
               />
             )}
           </>

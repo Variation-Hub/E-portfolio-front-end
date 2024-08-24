@@ -1,64 +1,15 @@
-import {
-  Autocomplete,
-  Checkbox,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  FormControl,
-  FormControlLabel,
-  FormLabel,
-  Grid,
-  IconButton,
-  InputAdornment,
-  ListItemText,
-  Menu,
-  MenuItem,
-  Pagination,
-  Paper,
-  Radio,
-  RadioGroup,
-  Select,
-  Tabs,
-  Tab,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-} from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
-import AddIcon from "@mui/icons-material/Add";
-import { Stack } from "@mui/system";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import NorthEastIcon from '@mui/icons-material/NorthEast';
-import React, { useEffect, useState } from "react";
-import {
-  DangerButton,
-  LoadingButton,
-  SecondaryButton,
-  SecondaryButtonOutlined,
-} from "src/app/component/Buttons";
-import { TextField, Typography } from "@mui/material";
+import React, { useState } from "react";
+import { Grid, Tab, Tabs, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import { tr } from "date-fns/locale";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { selectUser } from "app/store/userSlice";
-import AlertDialog from "src/app/component/Dialogs/AlertDialog";
-import FuseLoading from "@fuse/core/FuseLoading";
-import DataNotFound from "src/app/component/Pages/dataNotFound";
-import { FormBuilder as FormBuilderIo } from "react-formio";
 import "formiojs/dist/formio.full.css";
 import './style.css'
-import { useNavigate } from "react-router-dom";
-import { AddUsersToForm, deleteFormHandler, fetchUserAllAPI, getFormDataAPI, getUserFormDataAPI, selectFormData, slice } from "app/store/formData";
-import { userTableMetaData } from "src/app/contanst/metaData";
-import { UserRole } from "src/enum";
-import { fetchUserAPI } from "app/store/userManagement";
-import Close from "@mui/icons-material/Close";
+import { slice } from "app/store/formData";
 import SubmittedForms from "./submittedForms";
 import FormBuilder from "./formBuilder";
+import Templates from "./tamplates";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -95,8 +46,10 @@ function a11yProps(index: number) {
 
 const Forms = (props) => {
   const [value, setValue] = useState(0);
+  const dispatch = useDispatch();
 
   const handleTabChange = (event, newValue) => {
+    dispatch(slice.storeFormData({ data: {}, mode: "" }))
     setValue(newValue);
   };
 
@@ -145,8 +98,21 @@ const Forms = (props) => {
                 }}
               />
               <Tab
-                label="Submitted Form"
+                label="Templates"
                 {...a11yProps(1)}
+                sx={{
+                  borderRight: "1px solid #e5e7eb",
+                  "&:last-child": { borderRight: "none" },
+                  "&.Mui-selected": {
+                    backgroundColor: "#6D81A3",
+                    color: "#ffffff",
+                    borderRadius: "0px",
+                  },
+                }}
+              />
+              <Tab
+                label="Submitted Form"
+                {...a11yProps(2)}
                 sx={{
                   borderRight: "1px solid #e5e7eb",
                   "&:last-child": { borderRight: "none" },
@@ -167,9 +133,14 @@ const Forms = (props) => {
         </CustomTabPanel>
 
         <CustomTabPanel value={value} index={1}>
+          <Templates />
+        </CustomTabPanel>
+
+        <CustomTabPanel value={value} index={2}>
           {<SubmittedForms />}
           {/* <h1>Tab 2</h1> */}
         </CustomTabPanel>
+
       </Grid >
     </>
   );
