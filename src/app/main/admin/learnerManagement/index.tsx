@@ -15,6 +15,7 @@ import { createLearnerAPI, fetchLearnerAPI, getRoleAPI, selectLearnerManagement,
 import LearnerManagementTable from "src/app/component/Table/LearnerManagementTable";
 import { fetchCourseAPI, selectCourseManagement } from "app/store/courseManagement";
 import { getEmployerAPI } from "app/store/employer";
+import { DownloadLearnerExcel } from "app/store/globalUser";
 
 const Index = () => {
 
@@ -246,7 +247,7 @@ const Index = () => {
             />
           </div>
           <div className="flex gap-10">
-            <SecondaryButton name="Export Report" startIcon={
+            <SecondaryButton name="Export Report" onClick={() => { dispatch(DownloadLearnerExcel()) }} startIcon={
               <img
                 src="assets/images/svgimage/uploadfileicon.svg"
                 alt="Export Report"

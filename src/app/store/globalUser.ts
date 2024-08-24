@@ -62,3 +62,24 @@ export const DownloadFile = (fileUrl, fileName = 'fileName') => async (dispatch)
         console.log("Error in Download file:", err)
     }
 }
+
+export const DownloadLearnerExcel = () => async (dispatch) => {
+    try {
+        const response: any = await axios.get(`${URL_BASE_LINK}/learner/excel`, {
+            responseType: 'blob',
+        });
+
+        const downloadUrl = window.URL.createObjectURL(new Blob([response.data]));
+
+        const link = document.createElement('a');
+        link.href = downloadUrl;
+        link.download = "learner_data.xlsx";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        window.URL.revokeObjectURL(downloadUrl);
+    } catch (err) {
+        console.log("Error in Download file:", err)
+    }
+}
