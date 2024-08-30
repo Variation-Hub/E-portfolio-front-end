@@ -14,7 +14,7 @@ import { emailReg, mobileReg, nameReg, passwordReg, usernameReg } from "src/app/
 import { createLearnerAPI, fetchLearnerAPI, getRoleAPI, selectLearnerManagement, updateLearnerAPI } from "app/store/learnerManagement";
 import LearnerManagementTable from "src/app/component/Table/LearnerManagementTable";
 import { fetchCourseAPI, selectCourseManagement } from "app/store/courseManagement";
-import { getEmployerAPI } from "app/store/employer";
+import { getEmployerAPI, selectEmployer } from "app/store/employer";
 import { DownloadLearnerExcel } from "app/store/globalUser";
 
 const Index = () => {
@@ -22,16 +22,20 @@ const Index = () => {
   const { data, dataFetchLoading, dataUpdatingLoadding, meta_data } = useSelector(selectLearnerManagement)
   const dispatch: any = useDispatch();
   const course = useSelector(selectCourseManagement)?.data
+  const employer = useSelector(selectEmployer)?.data
 
   const [open, setOpen] = useState(false);
   const [updateData, setUpdateData] = useState("");
   const [searchKeyword, setSearchKeyword] = useState("");
   const [courseId, setCourseId] = useState("");
   const [filterValue, setFilterValue] = useState("");
+  const [employerId, setEmployereId] = useState("");
+  const [searchEmployer, setSearchEmployer] = useState("");
 
   useEffect(() => {
     dispatch(fetchLearnerAPI())
     dispatch(fetchCourseAPI())
+    dispatch(getEmployerAPI())
   }, [dispatch])
 
   const [userData, setUserData] = useState({
@@ -134,11 +138,18 @@ const Index = () => {
     const selectedCourse = course.find(course => course.course_name === value);
     setCourseId(selectedCourse ? selectedCourse.course_id : "");
     setFilterValue(value);
-    dispatch(fetchLearnerAPI({ page: 1, page_size: 10 }, searchKeyword, selectedCourse ? selectedCourse.course_id : ""));
+    dispatch(fetchLearnerAPI({ page: 1, page_size: 10 }, searchKeyword, selectedCourse ? selectedCourse.course_id : "", employerId));
+  };
+
+  const searchEmployerHandler = (e, value) => {
+    const selectedEmployer = employer.find(employer => employer.employer_name === value);
+    setEmployereId(selectedEmployer ? selectedEmployer.employer_id : "");
+    setSearchEmployer(value);
+    dispatch(fetchLearnerAPI({ page: 1, page_size: 10 }, searchKeyword, courseId, selectedEmployer ? selectedEmployer.employer_id : ""));
   };
 
   const searchAPIHandler = () => {
-    dispatch(fetchLearnerAPI({ page: 1, page_size: 10 }, searchKeyword, courseId));
+    dispatch(fetchLearnerAPI({ page: 1, page_size: 10 }, searchKeyword, courseId, employerId));
   }
 
   useEffect(() => {
@@ -193,7 +204,6 @@ const Index = () => {
               label="Search by keyword"
               fullWidth
               size="small"
-              className="w-1/2"
               onKeyDown={searchByKeywordUser}
               onChange={searchHandler}
               value={searchKeyword}
@@ -240,6 +250,26 @@ const Index = () => {
                 ".MuiAutocomplete-clearIndicator": {
                   color: "#5B718F",
                 },
+                ".muiltr-1okx3q8-MuiButtonBase-root-MuiIconButton-root-MuiAutocomplete-popupIndicator": { color: "black" }
+              }}
+              PaperComponent={({ children }) => (
+                <Paper style={{ borderRadius: "4px" }}>{children}</Paper>
+              )}
+            />
+            <Autocomplete
+              fullWidth
+              size="small"
+              value={searchEmployer}
+              options={employer.map((option) => option.employer_name)}
+              renderInput={(params) => (
+                <TextField {...params} label="Search by employer" />
+              )}
+              onChange={searchEmployerHandler}
+              sx={{
+                ".MuiAutocomplete-clearIndicator": {
+                  color: "#5B718F",
+                },
+                ".muiltr-1okx3q8-MuiButtonBase-root-MuiIconButton-root-MuiAutocomplete-popupIndicator": { color: "black" }
               }}
               PaperComponent={({ children }) => (
                 <Paper style={{ borderRadius: "4px" }}>{children}</Paper>
@@ -304,6 +334,7 @@ const Index = () => {
             dataUpdatingLoadding={dataUpdatingLoadding}
             userDataError={userDataError}
             search_course={filterValue}
+            search_employer={searchEmployer}
           />
         </Dialog>
       </div >

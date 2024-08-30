@@ -55,7 +55,8 @@ const Portfolio = () => {
   };
 
   const handleOpenProfile = () => {
-    navigate('/portfolio/learner-details')
+    const learnerId = learner?.learner_id;
+    navigate(`/portfolio/learner-details?learner_id=${learnerId}`)
   };
 
   const handleClickData = (event, row) => {

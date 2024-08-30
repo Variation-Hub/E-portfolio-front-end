@@ -202,7 +202,7 @@ export default function LearnerManagementTable(props) {
                 ))}
               </TableRow>
             </TableHead>
-            <TableBody>
+            <TableBody sx={{ overflow: "scroll" }}>
               {rows?.map((row) => {
                 return (
                   <TableRow role="checkbox" tabIndex={-1} key={row.learner_id}>
@@ -289,9 +289,11 @@ export default function LearnerManagementTable(props) {
               })}
             </TableBody>
           </Table>
+        </TableContainer>
+        <div className="absolute bottom-0 left-0 w-full flex justify-center py-4 mb-14">
           <Stack
             spacing={2}
-            className="flex justify-center items-center w-full mt-12"
+            className="flex justify-center items-center w-full mt-12 bg-white"
           >
             <Pagination
               count={meta_data?.pages}
@@ -303,7 +305,7 @@ export default function LearnerManagementTable(props) {
               boundaryCount={1}
             />
           </Stack>
-        </TableContainer>
+        </div>
       </div>
       <AlertDialog
         open={Boolean(deleteId)}

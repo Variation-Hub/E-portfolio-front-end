@@ -42,7 +42,7 @@ function Layout1(props) {
       <div className="flex flex-auto min-w-0">
         {config.navbar.display && config.navbar.position === 'left' && <NavbarWrapperLayout1 />}
 
-        <main id="fuse-main" className="flex flex-col flex-auto min-h-full min-w-0 relative z-10">
+        <main id="fuse-main" className="flex flex-col flex-auto min-h-full min-w-0 relative z-10 overflow-y-scroll">
           {config.toolbar.display && (
             <ToolbarLayout1 className={config.toolbar.style === 'fixed' && 'sticky top-0'} />
           )}

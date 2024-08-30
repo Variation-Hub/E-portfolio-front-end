@@ -1,82 +1,88 @@
 import { Autocomplete, Box, Card, Checkbox, FormControlLabel, Grid, ListSubheader, MenuItem, Paper, Select, TextField, Typography } from '@mui/material';
-import { fetchLearnerAPI, selectLearnerManagement, updateLearnerAPI } from 'app/store/learnerManagement';
+import { fetchLearnerAPI, getLearnerDetails, selectLearnerManagement, updateLearnerAPI } from 'app/store/learnerManagement';
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { SecondaryButton, SecondaryButtonOutlined } from 'src/app/component/Buttons';
 
 const LearnerDetails = () => {
 
+    const [searchParams] = useSearchParams();
+    const learnerId = searchParams.get("learner_id");
+
     const [isChecked, setIsChecked] = useState(false);
     const dispatch: any = useDispatch();
-    const { employer } = useSelector(selectLearnerManagement);
+    const { employer, learner } = useSelector(selectLearnerManagement);
     const navigate = useNavigate();
 
     const handleCheckboxChange = (event) => {
         setIsChecked(event.target.checked);
     };
 
-    const [adminData, setAdminData] = useState({
-        uln: "",
-        mis_learner_id: "",
-        student_id: "",
-        user_id: "",
-        first_name: "",
-        surname: "",
-        known_as: "",
-        email: "",
-        telephone: "",
-        mobile: "",
-        date_of_birth: "",
-        gender: "",
-        national_insurance_no: "",
-        ethnicity: "",
-        learner_disability: "",
-        learning_difficulties: "",
-        initial_assessment_numeracy: "",
-        initial_ssessment_literacy: "",
-        initial_assessment_ict: "",
-        functional_skills_date: "",
-        technical_certificate_date: "",
-        err_date: "",
-        house_name: "",
-        village: "",
-        city: "",
-        county: "",
-        postcode: "",
-        country_of_domicile: "",
-        external_data_code: "",
-        employer: "",
-        cost_centre: "",
-        job_title: "",
-        location: "",
-        manager_name: "",
-        manager_job_title: "",
-        mentor: "",
-        funding_contractor: "",
-        partner: "",
-        area: "",
-        sub_area: "",
-        shift: "",
-        cohort: "",
-        lsf: "",
-        curriculum_area: "",
-        ssa_1: "",
-        ssa_2: "",
-        director_of_curriculum: "",
-        wage: "",
-        wage_type: "",
-        archived_access: "",
-        branding_type: "",
-        learner_type: "",
-        funding_body: "",
-        exprcted_job_hours: "",
+    useEffect(() => {
+        dispatch(getLearnerDetails(learnerId));
+    }, [learnerId]);
+
+    const [learnerData, setLearnerData] = useState({
+        uln: learner?.uln || "",
+        mis_learner_id: learner?.mis_learner_id || "",
+        student_id: learner?.student_id || "",
+        first_name: learner?.first_name || "",
+        last_name: learner?.last_name || "",
+        user_name: learner?.user_name || "",
+        email: learner?.email || "",
+        telephone: learner?.telephone || "",
+        mobile: learner?.mobile || "",
+        dob: learner?.dob || "",
+        gender: learner?.gender || "",
+        national_ins_no: learner?.national_ins_no || "",
+        ethnicity: learner?.ethnicity || "",
+        learner_disability: learner?.learner_disability || "",
+        learner_difficulity: learner?.learner_difficulity || "",
+        Initial_Assessment_Numeracy: learner?.Initial_Assessment_Numeracy || "",
+        Initial_Assessment_Literacy: learner?.Initial_Assessment_Literacy || "",
+        Initial_Assessment_ICT: learner?.Initial_Assessment_ICT || "",
+        functional_skills: learner?.functional_skills || "",
+        technical_certificate: learner?.technical_certificate || "",
+        err: learner?.err || "",
+        street: learner?.street || "",
+        suburb: learner?.suburb || "",
+        town: learner?.town || "",
+        country: learner?.country || "",
+        home_postcode: learner?.home_postcode || "",
+        country_of_domicile: learner?.country_of_domicile || "",
+        external_data_code: learner?.external_data_code || "",
+        employer_id: learner?.employer_id || null,
+        cost_centre: learner?.cost_centre || "",
+        job_title: learner?.job_title || "",
+        location: learner?.location || "",
+        manager_name: learner?.manager_name || "",
+        manager_job_title: learner?.manager_job_title || "",
+        mentor: learner?.mentor || "",
+        funding_contractor: learner?.funding_contractor || "",
+        partner: learner?.partner || "",
+        area: learner?.area || "",
+        sub_area: learner?.sub_area || "",
+        shift: learner?.shift || "",
+        cohort: learner?.cohort || "",
+        lsf: learner?.lsf || "",
+        curriculum_area: learner?.curriculum_area || "",
+        ssa1: learner?.ssa1 || "",
+        ssa2: learner?.ssa2 || "",
+        director_of_curriculum: learner?.director_of_curriculum || "",
+        wage: learner?.wage || "",
+        wage_type: learner?.wage_type || "",
+        allow_archived_access: learner?.allow_archived_access || "",
+        branding_type: learner?.branding_type || "",
+        learner_type: learner?.learner_type || "",
+        funding_body: learner?.funding_body || "",
+        expected_off_the_job_hours: learner?.expected_off_the_job_hours || "",
     })
 
     const handleDataUpdate = (e) => {
         const { name, value } = e.target;
-        setAdminData((prevData) => ({
+        setLearnerData((prevData) => ({
             ...prevData,
             [name]: value,
         }));
@@ -85,16 +91,15 @@ const LearnerDetails = () => {
     const handleSubmit = async () => {
         try {
             let response;
-            let id = 1;
-            //   response = await dispatch(updateLearnerAPI(id, adminData));
+            response = await dispatch(updateLearnerAPI(learnerId, learnerData));
 
-            //   if (response) {
-            //     navigate("/home")
-            //   }
+            if (response) {
+                navigate("/portfolio")
+            }
         } catch (error) {
             console.error("Error updated data:", error);
         }
-        console.log(adminData);
+        console.log(learnerData);
     }
 
     useEffect(() => {
@@ -103,6 +108,12 @@ const LearnerDetails = () => {
 
     const handleClose = () => {
         navigate("/portfolio");
+    };
+
+    const formatDate = (date) => {
+        if (!date) return "";
+        const formattedDate = date.substr(0, 10);
+        return formattedDate;
     };
 
     return (
@@ -121,9 +132,8 @@ const LearnerDetails = () => {
                                         <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>ULN</Typography>
                                         <TextField
                                             name="uln"
-                                            value={adminData?.uln}
+                                            value={learnerData?.uln}
                                             size="small"
-                                            required
                                             fullWidth
                                             onChange={handleDataUpdate}
                                             className='bg-none '
@@ -133,9 +143,8 @@ const LearnerDetails = () => {
                                         <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>MIS Learner ID</Typography>
                                         <TextField
                                             name="mis_learner_id"
-                                            value={adminData?.mis_learner_id}
+                                            value={learnerData?.mis_learner_id}
                                             size="small"
-                                            required
                                             fullWidth
                                             onChange={handleDataUpdate}
                                             className='bg-none '
@@ -147,23 +156,10 @@ const LearnerDetails = () => {
                                         <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Student ID</Typography>
                                         <TextField
                                             name="student_id"
-                                            value={adminData?.student_id}
+                                            value={learnerData?.student_id}
                                             size="small"
-                                            required
                                             fullWidth
                                             placeholder='Internal Student Number'
-                                            onChange={handleDataUpdate}
-                                            className='bg-none '
-                                        />
-                                    </Grid>
-                                    <Grid className='w-1/2'>
-                                        <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>User ID*</Typography>
-                                        <TextField
-                                            name="user_id"
-                                            value={adminData?.user_id}
-                                            size="small"
-                                            required
-                                            fullWidth
                                             onChange={handleDataUpdate}
                                             className='bg-none '
                                         />
@@ -188,9 +184,8 @@ const LearnerDetails = () => {
                                         <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>First Name*</Typography>
                                         <TextField
                                             name="first_name"
-                                            value={adminData?.first_name}
+                                            value={learnerData?.first_name}
                                             size="small"
-                                            required
                                             fullWidth
                                             onChange={handleDataUpdate}
                                             className='bg-none '
@@ -199,10 +194,9 @@ const LearnerDetails = () => {
                                     <Grid className='w-1/2'>
                                         <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Surname*</Typography>
                                         <TextField
-                                            name="surname"
-                                            value={adminData?.surname}
+                                            name="last_name"
+                                            value={learnerData?.last_name}
                                             size="small"
-                                            required
                                             fullWidth
                                             onChange={handleDataUpdate}
                                             className='bg-none '
@@ -214,12 +208,11 @@ const LearnerDetails = () => {
                                     <Grid className='w-1/2'>
                                         <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Also Known As</Typography>
                                         <TextField
-                                            name="known_as"
-                                            value={adminData?.known_as}
+                                            name="user_name"
+                                            value={learnerData?.user_name}
                                             size="small"
-                                            required
                                             fullWidth
-                                            placeholder='Internal Student Number'
+                                            placeholder='User Name'
                                             onChange={handleDataUpdate}
                                             className='bg-none '
                                         />
@@ -228,9 +221,8 @@ const LearnerDetails = () => {
                                         <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Email*</Typography>
                                         <TextField
                                             name="email"
-                                            value={adminData?.email}
+                                            value={learnerData?.email}
                                             size="small"
-                                            required
                                             fullWidth
                                             onChange={handleDataUpdate}
                                             className='bg-none '
@@ -243,10 +235,9 @@ const LearnerDetails = () => {
                                         <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Telephone</Typography>
                                         <TextField
                                             name="telephone"
-                                            value={adminData?.telephone}
+                                            value={learnerData?.telephone}
                                             type='number'
                                             size="small"
-                                            required
                                             fullWidth
                                             onChange={handleDataUpdate}
                                             className='bg-none '
@@ -256,10 +247,9 @@ const LearnerDetails = () => {
                                         <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Mobile</Typography>
                                         <TextField
                                             name="mobile"
-                                            value={adminData?.mobile}
+                                            value={learnerData?.mobile}
                                             type='number'
                                             size="small"
-                                            required
                                             fullWidth
                                             onChange={handleDataUpdate}
                                             className='bg-none '
@@ -271,11 +261,10 @@ const LearnerDetails = () => {
                                     <Grid className='w-1/2'>
                                         <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Date of birth</Typography>
                                         <TextField
-                                            name="date_of_birth"
-                                            value={adminData?.date_of_birth}
+                                            name="dob"
+                                            value={formatDate(learnerData?.dob)}
                                             size="small"
                                             type='date'
-                                            required
                                             fullWidth
                                             placeholder='Internal Student Number'
                                             onChange={handleDataUpdate}
@@ -287,10 +276,9 @@ const LearnerDetails = () => {
                                         <Select
                                             name="gender"
                                             // label="Username"
-                                            value={adminData?.gender}
+                                            value={learnerData?.gender}
                                             size="small"
                                             placeholder='Please Select'
-                                            required
                                             fullWidth
                                             onChange={handleDataUpdate}
                                             sx={{ ".muiltr-156t61m-MuiSvgIcon-root-MuiSelect-icon": { color: "black" } }}
@@ -307,11 +295,10 @@ const LearnerDetails = () => {
                                     <Grid className='w-1/4'>
                                         <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>National Insurance No</Typography>
                                         <TextField
-                                            name="national_insurance_no"
-                                            value={adminData?.national_insurance_no}
+                                            name="national_ins_no"
+                                            value={learnerData?.national_ins_no}
                                             type='number'
                                             size="small"
-                                            required
                                             fullWidth
                                             onChange={handleDataUpdate}
                                             className='bg-none '
@@ -322,10 +309,9 @@ const LearnerDetails = () => {
                                         <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Ethnicity</Typography>
                                         <TextField
                                             name="ethnicity"
-                                            value={adminData?.ethnicity}
+                                            value={learnerData?.ethnicity}
                                             type='text'
                                             size="small"
-                                            required
                                             fullWidth
                                             onChange={handleDataUpdate}
                                             className='bg-none '
@@ -337,10 +323,9 @@ const LearnerDetails = () => {
                                         <Select
                                             name="learner_disability"
                                             // label="Username"
-                                            value={adminData?.learner_disability}
+                                            value={learnerData?.learner_disability}
                                             size="small"
                                             placeholder='Please Select'
-                                            required
                                             fullWidth
                                             onChange={handleDataUpdate}
                                             sx={{ ".muiltr-156t61m-MuiSvgIcon-root-MuiSelect-icon": { color: "black" } }}
@@ -365,12 +350,11 @@ const LearnerDetails = () => {
                                     <Grid className='w-1/4'>
                                         <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Learning Difficulties</Typography>
                                         <Select
-                                            name="learning_difficulties"
+                                            name="learner_difficulity"
                                             // label="Username"
-                                            value={adminData?.learning_difficulties}
+                                            value={learnerData?.learner_difficulity}
                                             size="small"
                                             placeholder='Please Select'
-                                            required
                                             fullWidth
                                             onChange={handleDataUpdate}
                                             sx={{ ".muiltr-156t61m-MuiSvgIcon-root-MuiSelect-icon": { color: "black" } }}
@@ -411,11 +395,10 @@ const LearnerDetails = () => {
                                     <Grid className='w-1/3'>
                                         <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Initial Assessment Numeracy</Typography>
                                         <TextField
-                                            name="initial_assessment_numeracy"
-                                            value={adminData?.initial_assessment_numeracy}
+                                            name="Initial_Assessment_Numeracy"
+                                            value={learnerData?.Initial_Assessment_Numeracy}
                                             type='text'
                                             size="small"
-                                            required
                                             fullWidth
                                             onChange={handleDataUpdate}
                                             className='bg-none '
@@ -425,11 +408,10 @@ const LearnerDetails = () => {
                                     <Grid className='w-1/3'>
                                         <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Initial Assessment Literacy</Typography>
                                         <TextField
-                                            name="initial_ssessment_literacy"
-                                            value={adminData?.initial_ssessment_literacy}
+                                            name="Initial_Assessment_Literacy"
+                                            value={learnerData?.Initial_Assessment_Literacy}
                                             type='text'
                                             size="small"
-                                            required
                                             fullWidth
                                             onChange={handleDataUpdate}
                                             className='bg-none '
@@ -439,11 +421,10 @@ const LearnerDetails = () => {
                                     <Grid className='w-1/3'>
                                         <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Initial Assessment ICT</Typography>
                                         <TextField
-                                            name="initial_assessment_ict"
-                                            value={adminData?.initial_assessment_ict}
+                                            name="Initial_Assessment_ICT"
+                                            value={learnerData?.Initial_Assessment_ICT}
                                             type='text'
                                             size="small"
-                                            required
                                             fullWidth
                                             onChange={handleDataUpdate}
                                             className='bg-none '
@@ -459,11 +440,10 @@ const LearnerDetails = () => {
                                             label="Functional Skills"
                                         />
                                         <TextField
-                                            name="functional_skills_date"
-                                            value={adminData?.functional_skills_date}
+                                            name="functional_skills"
+                                            value={formatDate(learnerData?.functional_skills)}
                                             type='date'
                                             size="small"
-                                            required
                                             fullWidth
                                             onChange={handleDataUpdate}
                                             className='bg-none '
@@ -476,11 +456,10 @@ const LearnerDetails = () => {
                                             label="Technical Certificate"
                                         />
                                         <TextField
-                                            name="technical_certificate_date"
-                                            value={adminData?.technical_certificate_date}
+                                            name="technical_certificate"
+                                            value={formatDate(learnerData?.technical_certificate)}
                                             type='date'
                                             size="small"
-                                            required
                                             fullWidth
                                             onChange={handleDataUpdate}
                                             className='bg-none '
@@ -493,11 +472,10 @@ const LearnerDetails = () => {
                                             label="ERR"
                                         />
                                         <TextField
-                                            name="err_date"
-                                            value={adminData?.err_date}
+                                            name="err"
+                                            value={formatDate(learnerData?.err)}
                                             type='date'
                                             size="small"
-                                            required
                                             fullWidth
                                             onChange={handleDataUpdate}
                                             className='bg-none '
@@ -523,10 +501,9 @@ const LearnerDetails = () => {
                                     <Grid className='w-1/2'>
                                         <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>House No/Name and Street</Typography>
                                         <TextField
-                                            name="house_name"
-                                            value={adminData?.house_name}
+                                            name="street"
+                                            value={learnerData?.street}
                                             size="small"
-                                            required
                                             fullWidth
                                             onChange={handleDataUpdate}
                                             className='bg-none '
@@ -535,10 +512,9 @@ const LearnerDetails = () => {
                                     <Grid className='w-1/2'>
                                         <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Suburb/Village</Typography>
                                         <TextField
-                                            name="village"
-                                            value={adminData?.village}
+                                            name="suburb"
+                                            value={learnerData?.suburb}
                                             size="small"
-                                            required
                                             fullWidth
                                             onChange={handleDataUpdate}
                                             className='bg-none '
@@ -549,12 +525,10 @@ const LearnerDetails = () => {
                                     <Grid className='w-1/2'>
                                         <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Town/City</Typography>
                                         <TextField
-                                            name="city"
-                                            value={adminData?.city}
+                                            name="town"
+                                            value={learnerData?.town}
                                             size="small"
-                                            required
                                             fullWidth
-                                            placeholder='Internal Student Number'
                                             onChange={handleDataUpdate}
                                             className='bg-none '
                                         />
@@ -562,10 +536,9 @@ const LearnerDetails = () => {
                                     <Grid className='w-1/2'>
                                         <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>County</Typography>
                                         <TextField
-                                            name="county"
-                                            value={adminData?.county}
+                                            name="country"
+                                            value={learnerData?.country}
                                             size="small"
-                                            required
                                             fullWidth
                                             onChange={handleDataUpdate}
                                             className='bg-none '
@@ -577,11 +550,10 @@ const LearnerDetails = () => {
                                     <Grid className='w-1/3'>
                                         <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Home Postcode</Typography>
                                         <TextField
-                                            name="postcode"
-                                            value={adminData?.postcode}
+                                            name="home_postcode"
+                                            value={learnerData?.home_postcode}
                                             type='number'
                                             size="small"
-                                            required
                                             fullWidth
                                             onChange={handleDataUpdate}
                                             className='bg-none '
@@ -593,10 +565,9 @@ const LearnerDetails = () => {
                                         <Select
                                             name="country_of_domicile"
                                             // label="Username"
-                                            value={adminData?.country_of_domicile}
+                                            value={learnerData?.country_of_domicile}
                                             size="small"
                                             placeholder='Please Select'
-                                            required
                                             fullWidth
                                             onChange={handleDataUpdate}
                                             sx={{ ".muiltr-156t61m-MuiSvgIcon-root-MuiSelect-icon": { color: "black" } }}
@@ -616,10 +587,9 @@ const LearnerDetails = () => {
                                         <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>External Data Code</Typography>
                                         <TextField
                                             name="external_data_code"
-                                            value={adminData?.external_data_code}
+                                            value={learnerData?.external_data_code}
                                             type='text'
                                             size="small"
-                                            required
                                             fullWidth
                                             onChange={handleDataUpdate}
                                             className='bg-none '
@@ -654,13 +624,13 @@ const LearnerDetails = () => {
                                                     {...params}
                                                     placeholder="Select Employer"
                                                     name="role"
-                                                    value={adminData?.employer}
+                                                    value={learnerData?.employer_id}
                                                 />
                                             )}
                                             onChange={(event, value) => {
-                                                setAdminData((prevData) => ({
+                                                setLearnerData((prevData) => ({
                                                     ...prevData,
-                                                    employer: value?.employer?.employer_name,
+                                                    employer_id: value?.employer?.employer_id,
                                                 }));
                                             }}
                                             sx={{
@@ -677,9 +647,8 @@ const LearnerDetails = () => {
                                         <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Cost Centre</Typography>
                                         <TextField
                                             name="cost_centre"
-                                            value={adminData?.cost_centre}
+                                            value={learnerData?.cost_centre}
                                             size="small"
-                                            required
                                             fullWidth
                                             onChange={handleDataUpdate}
                                             className='bg-none '
@@ -692,9 +661,8 @@ const LearnerDetails = () => {
                                         <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Job Title</Typography>
                                         <TextField
                                             name="job_title"
-                                            value={adminData?.job_title}
+                                            value={learnerData?.job_title}
                                             size="small"
-                                            required
                                             fullWidth
                                             onChange={handleDataUpdate}
                                             className='bg-none '
@@ -704,9 +672,8 @@ const LearnerDetails = () => {
                                         <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Location</Typography>
                                         <TextField
                                             name="location"
-                                            value={adminData?.location}
+                                            value={learnerData?.location}
                                             size="small"
-                                            required
                                             fullWidth
                                             onChange={handleDataUpdate}
                                             className='bg-none '
@@ -719,9 +686,8 @@ const LearnerDetails = () => {
                                         <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Manager Name</Typography>
                                         <TextField
                                             name="manager_name"
-                                            value={adminData?.manager_name}
+                                            value={learnerData?.manager_name}
                                             size="small"
-                                            required
                                             fullWidth
                                             onChange={handleDataUpdate}
                                             className='bg-none '
@@ -731,9 +697,8 @@ const LearnerDetails = () => {
                                         <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Manager Job Title</Typography>
                                         <TextField
                                             name="manager_job_title"
-                                            value={adminData?.manager_job_title}
+                                            value={learnerData?.manager_job_title}
                                             size="small"
-                                            required
                                             fullWidth
                                             onChange={handleDataUpdate}
                                             className='bg-none '
@@ -746,9 +711,8 @@ const LearnerDetails = () => {
                                         <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Mentor</Typography>
                                         <TextField
                                             name="mentor"
-                                            value={adminData?.mentor}
+                                            value={learnerData?.mentor}
                                             size="small"
-                                            required
                                             fullWidth
                                             onChange={handleDataUpdate}
                                             className='bg-none '
@@ -758,9 +722,8 @@ const LearnerDetails = () => {
                                         <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Funding Contractor</Typography>
                                         <TextField
                                             name="funding_contractor"
-                                            value={adminData?.funding_contractor}
+                                            value={learnerData?.funding_contractor}
                                             size="small"
-                                            required
                                             fullWidth
                                             onChange={handleDataUpdate}
                                             className='bg-none '
@@ -773,9 +736,8 @@ const LearnerDetails = () => {
                                         <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Partner</Typography>
                                         <TextField
                                             name="partner"
-                                            value={adminData?.partner}
+                                            value={learnerData?.partner}
                                             size="small"
-                                            required
                                             fullWidth
                                             onChange={handleDataUpdate}
                                             className='bg-none '
@@ -785,9 +747,8 @@ const LearnerDetails = () => {
                                         <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Area</Typography>
                                         <TextField
                                             name="area"
-                                            value={adminData?.area}
+                                            value={learnerData?.area}
                                             size="small"
-                                            required
                                             fullWidth
                                             onChange={handleDataUpdate}
                                             className='bg-none '
@@ -800,9 +761,8 @@ const LearnerDetails = () => {
                                         <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Sub Area</Typography>
                                         <TextField
                                             name="sub_area"
-                                            value={adminData?.sub_area}
+                                            value={learnerData?.sub_area}
                                             size="small"
-                                            required
                                             fullWidth
                                             onChange={handleDataUpdate}
                                             className='bg-none '
@@ -812,9 +772,8 @@ const LearnerDetails = () => {
                                         <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Shift</Typography>
                                         <TextField
                                             name="shift"
-                                            value={adminData?.shift}
+                                            value={learnerData?.shift}
                                             size="small"
-                                            required
                                             fullWidth
                                             onChange={handleDataUpdate}
                                             className='bg-none '
@@ -827,9 +786,8 @@ const LearnerDetails = () => {
                                         <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Cohort</Typography>
                                         <TextField
                                             name="cohort"
-                                            value={adminData?.cohort}
+                                            value={learnerData?.cohort}
                                             size="small"
-                                            required
                                             fullWidth
                                             onChange={handleDataUpdate}
                                             className='bg-none '
@@ -839,9 +797,8 @@ const LearnerDetails = () => {
                                         <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>LSF</Typography>
                                         <TextField
                                             name="lsf"
-                                            value={adminData?.lsf}
+                                            value={learnerData?.lsf}
                                             size="small"
-                                            required
                                             fullWidth
                                             onChange={handleDataUpdate}
                                             className='bg-none '
@@ -854,9 +811,8 @@ const LearnerDetails = () => {
                                         <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Curriculum Area</Typography>
                                         <TextField
                                             name="curriculum_area"
-                                            value={adminData?.curriculum_area}
+                                            value={learnerData?.curriculum_area}
                                             size="small"
-                                            required
                                             fullWidth
                                             onChange={handleDataUpdate}
                                             className='bg-none '
@@ -865,10 +821,9 @@ const LearnerDetails = () => {
                                     <Grid className='w-1/2'>
                                         <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>SSA1</Typography>
                                         <TextField
-                                            name="ssa_1"
-                                            value={adminData?.ssa_1}
+                                            name="ssa1"
+                                            value={learnerData?.ssa1}
                                             size="small"
-                                            required
                                             fullWidth
                                             onChange={handleDataUpdate}
                                             className='bg-none '
@@ -880,10 +835,9 @@ const LearnerDetails = () => {
                                     <Grid className='w-1/2'>
                                         <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>SSA2</Typography>
                                         <TextField
-                                            name="ssa_2"
-                                            value={adminData?.ssa_2}
+                                            name="ssa2"
+                                            value={learnerData?.ssa2}
                                             size="small"
-                                            required
                                             fullWidth
                                             onChange={handleDataUpdate}
                                             className='bg-none '
@@ -893,9 +847,8 @@ const LearnerDetails = () => {
                                         <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Director of Curriculum</Typography>
                                         <TextField
                                             name="director_of_curriculum"
-                                            value={adminData?.director_of_curriculum}
+                                            value={learnerData?.director_of_curriculum}
                                             size="small"
-                                            required
                                             fullWidth
                                             onChange={handleDataUpdate}
                                             className='bg-none '
@@ -908,9 +861,8 @@ const LearnerDetails = () => {
                                         <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Wage(£)</Typography>
                                         <TextField
                                             name="wage"
-                                            value={adminData?.wage}
+                                            value={learnerData?.wage}
                                             size="small"
-                                            required
                                             fullWidth
                                             onChange={handleDataUpdate}
                                             className='bg-none '
@@ -921,10 +873,9 @@ const LearnerDetails = () => {
                                         <Select
                                             name="wage_type"
                                             // label="Username"
-                                            value={adminData?.wage_type}
+                                            value={learnerData?.wage_type}
                                             size="small"
                                             placeholder='Please Select'
-                                            required
                                             fullWidth
                                             onChange={handleDataUpdate}
                                             sx={{ ".muiltr-156t61m-MuiSvgIcon-root-MuiSelect-icon": { color: "black" } }}
@@ -956,18 +907,17 @@ const LearnerDetails = () => {
                                     <Grid className='w-1/2'>
                                         <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Allow Archived Access</Typography>
                                         <Select
-                                            name="archived_access"
+                                            name="allow_archived_access"
                                             // label="Username"
-                                            value={adminData?.archived_access}
+                                            value={learnerData?.allow_archived_access}
                                             size="small"
                                             placeholder='Please Select'
-                                            required
                                             fullWidth
                                             onChange={handleDataUpdate}
                                             sx={{ ".muiltr-156t61m-MuiSvgIcon-root-MuiSelect-icon": { color: "black" } }}
                                         >
-                                            <MenuItem value={"Yes"}>Yes</MenuItem>
-                                            <MenuItem value={"No"}>No</MenuItem>
+                                            <MenuItem value={true as any}>Yes</MenuItem>
+                                            <MenuItem value={false as any}>No</MenuItem>
                                         </Select>
                                     </Grid>
                                     <Grid className='w-1/2'>
@@ -975,10 +925,9 @@ const LearnerDetails = () => {
                                         <Select
                                             name="branding_type"
                                             // label="Username"
-                                            value={adminData?.branding_type}
+                                            value={learnerData?.branding_type}
                                             size="small"
                                             placeholder='Please Select'
-                                            required
                                             fullWidth
                                             onChange={handleDataUpdate}
                                             sx={{ ".muiltr-156t61m-MuiSvgIcon-root-MuiSelect-icon": { color: "black" } }}
@@ -994,10 +943,9 @@ const LearnerDetails = () => {
                                         <Select
                                             name="learner_type"
                                             // label="Username"
-                                            value={adminData?.learner_type}
+                                            value={learnerData?.learner_type}
                                             size="small"
                                             placeholder='Please Select'
-                                            required
                                             fullWidth
                                             onChange={handleDataUpdate}
                                             sx={{ ".muiltr-156t61m-MuiSvgIcon-root-MuiSelect-icon": { color: "black" } }}
@@ -1014,10 +962,9 @@ const LearnerDetails = () => {
                                         <Select
                                             name="funding_body"
                                             // label="Username"
-                                            value={adminData?.funding_body}
+                                            value={learnerData?.funding_body}
                                             size="small"
                                             placeholder='Please Select'
-                                            required
                                             fullWidth
                                             onChange={handleDataUpdate}
                                             sx={{ ".muiltr-156t61m-MuiSvgIcon-root-MuiSelect-icon": { color: "black" } }}
@@ -1062,11 +1009,10 @@ const LearnerDetails = () => {
                                     <Grid className='w-1/2'>
                                         <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Expected off the Job hours</Typography>
                                         <TextField
-                                            name="exprcted_job_hours"
-                                            value={adminData?.exprcted_job_hours}
+                                            name="expected_off_the_job_hours"
+                                            value={learnerData?.expected_off_the_job_hours}
                                             size="small"
                                             type='number'
-                                            required
                                             fullWidth
                                             onChange={handleDataUpdate}
                                             disabled={!isChecked}

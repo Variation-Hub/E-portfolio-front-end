@@ -110,7 +110,7 @@ export const createLearnerAPI = (data) => async (dispatch) => {
 }
 
 // get learner
-export const fetchLearnerAPI = (data = { page: 1, page_size: 10 }, search_keyword = "", search_course = "") => async (dispatch) => {
+export const fetchLearnerAPI = (data = { page: 1, page_size: 10 }, search_keyword = "", search_course = "", search_employer = "") => async (dispatch) => {
 
     try {
         // dispatch(slice.setLoader());
@@ -124,6 +124,10 @@ export const fetchLearnerAPI = (data = { page: 1, page_size: 10 }, search_keywor
 
         if (search_course) {
             url = `${url}&course_id=${search_course}`
+        }
+
+        if (search_employer) {
+            url = `${url}&employer_id=${search_employer}`
         }
 
         const response = await axios.get(url);
