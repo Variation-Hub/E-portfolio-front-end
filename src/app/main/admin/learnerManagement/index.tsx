@@ -20,6 +20,7 @@ import { FaFolderOpen } from "react-icons/fa";
 import { GiCheckMark } from "react-icons/gi";
 import { IoCloseSharp } from "react-icons/io5";
 import { IoLockClosedSharp } from "react-icons/io5";
+import { IconsData } from "src/utils/randomColor";
 
 
 const Index = () => {
@@ -36,6 +37,18 @@ const Index = () => {
   const [filterValue, setFilterValue] = useState("");
   const [employerId, setEmployereId] = useState("");
   const [searchEmployer, setSearchEmployer] = useState("");
+  const [checkedLabels, setCheckedLabels] = useState({
+    'Awaiting Induction': false,
+    'Certificated': false,
+    'Completed': false,
+    'Early Leaver': false,
+    'Exempt': false,
+    'In Training': false,
+    'IQA Approved': false,
+    'Training Suspended': false,
+    'Transferred': false,
+    'Show only archived users': false,
+  });
 
   useEffect(() => {
     dispatch(fetchLearnerAPI())
@@ -198,25 +211,37 @@ const Index = () => {
     return false
   }
 
-  const iconsData = [
-    { name: 'Nvq', color: '#717F84' },
-    { name: 'Functional skills', color: '#904887' },
-    { name: 'Err', color: '#1D9EB4' },
-    { name: 'Technical Certificate', color: '#2FA286' },
-    { name: 'Plts', color: '#D06984' },
-    { name: 'Svq', color: '#C5975B' },
-    { name: 'Vcq', color: '#D0AB3F' },
-    { name: 'Vrq', color: '#816855' },
-    { name: 'Core Skill', color: '#34D55B' },
-    { name: 'Btec National', color: '#5787E0' },
-    { name: 'Key Skill', color: '#DA8530' },
-    { name: 'Gateway', color: '#335F33' }
-  ];
+  const handleCheckboxChange = (event) => {
+    const { name, checked } = event.target;
+    const data = {
+      ...checkedLabels,
+      [name]: checked
+    }
+    setCheckedLabels((prevState) => ({
+      ...prevState,
+      [name]: checked,
+    }));
+
+    let status = '';
+    for (const [label, value] of Object.entries(data)) {
+      if (value) {
+        if (status === "") {
+          status += label;
+        } else {
+          status += ", " + label;
+        }
+      }
+    }
+
+    dispatch(
+      fetchLearnerAPI({ page: 1, page_size: 10 }, "", "", "", status)
+    );
+  };
 
   return (
     <Grid >
-      <Card className="m-12 rounded-6" style={{ height: "87.9vh" }}>
-        <div className="w-full h-full">
+      <Card className="m-12 rounded-6">
+        <div className="w-full">
           <Breadcrumb linkData={[AdminRedirect]} currPage="Learner" />
 
           <div className={Style.create_user}>
@@ -325,9 +350,11 @@ const Index = () => {
                 meta_data={meta_data}
                 dataUpdatingLoadding={dataUpdatingLoadding}
                 search_keyword={searchKeyword}
+                checkedLabels={checkedLabels}
+                handleCheckboxChange={handleCheckboxChange}
               />
               :
-              <div className="flex flex-col justify-center items-center gap-10 " style={{ height: "94%" }}>
+              <div className="flex flex-col justify-center items-center gap-10" style={{ height: "94%" }}>
                 <DataNotFound width="25%" />
                 <Typography variant="h5">No data found</Typography>
                 <Typography variant="body2" className="text-center">It is a long established fact that a reader will be <br />distracted by the readable content.</Typography>
@@ -361,33 +388,11 @@ const Index = () => {
           </Dialog>
         </div >
       </Card>
-      {/* <Grid className="bg-[#e1e1e1] m-12 p-12 rounded-6">
-        <Grid className="py-12 text-2xl flex">
-          <Grid className="py-12 text-2xl flex flex-col">
-            <FaFolderOpen />
-            <FaFolderOpen />
-            <FaFolderOpen />
-            <FaFolderOpen />
-            <FaFolderOpen />
-            <FaFolderOpen />
-            <FaFolderOpen />
-          </Grid>
-          <Grid className="py-12 text-2xl flex flex-col">
-            <FaFolderOpen />
-            <FaFolderOpen />
-            <FaFolderOpen />
-            <FaFolderOpen />
-            <FaFolderOpen />
-            <FaFolderOpen />
-            <FaFolderOpen />
-          </Grid>
-        </Grid>
-      </Grid> */}
-      <Grid container spacing={4} className="bg-[#e1e1e1] m-10 p-20 rounded-6 w-[99%]">
+      <Grid container spacing={4} className="bg-[#e1e1e1] m-12 p-20 rounded-6 w-auto">
         <Grid xs={3} className="p-16">
           <Grid container direction="column" className="gap-3" spacing={2}>
             <Typography sx={{ borderBottom: "1px solid black" }} className="pb-10 font-600">Portfolio</Typography>
-            {iconsData.slice(0, 8).map((item, index) => (
+            {IconsData.slice(0, 8).map((item, index) => (
               <Grid className="flex gap-14" item key={index} container alignItems="center" spacing={1}>
                 <FaFolderOpen className="text-2xl -rotate-12" style={{ color: item.color }} />
                 <span>{item.name}</span>
@@ -398,7 +403,7 @@ const Index = () => {
         <Grid xs={3} className="p-16">
           <Grid container direction="column" className="gap-3" spacing={2}>
             <Typography sx={{ borderBottom: "1px solid black" }} className="pb-10">&nbsp;</Typography>
-            {iconsData.slice(8).map((item, index) => (
+            {IconsData.slice(8).map((item, index) => (
               <Grid className="flex gap-10" item key={index} container alignItems="center" spacing={1}>
                 <FaFolderOpen className="text-2xl -rotate-12" style={{ color: item.color }} />
                 <span>{item.name}</span>

@@ -48,8 +48,11 @@ import {
 import { Stack } from "@mui/system";
 import { useNavigate } from "react-router-dom";
 import { slice } from 'app/store/reloadData'
-import { getRandomColor } from "src/utils/randomColor";
+import { getRandomColor, IconsData } from "src/utils/randomColor";
 import { AutoStories } from "@mui/icons-material";
+import { FaFolderOpen } from "react-icons/fa";
+import { GiCheckMark } from "react-icons/gi";
+import { IoCloseSharp, IoLockClosedSharp } from "react-icons/io5";
 
 export default function LearnerManagementTable(props) {
   const {
@@ -62,6 +65,8 @@ export default function LearnerManagementTable(props) {
     dataUpdatingLoadding,
     search_keyword = "",
     search_C = "",
+    checkedLabels,
+    handleCheckboxChange
   } = props;
 
   const navigate = useNavigate();
@@ -188,34 +193,6 @@ export default function LearnerManagementTable(props) {
     navigate('/portfolio')
   }
 
-  const [checkedLabels, setCheckedLabels] = useState({
-    'Awaiting Induction': false,
-    'Certificated': false,
-    'Completed': false,
-    'Early Leaver': false,
-    'Exempt': false,
-    'In Training': false,
-    'IQA Approved': false,
-    'Training Suspended': false,
-    'Transferred': false,
-    'Show only archived users': false,
-  });
-
-  const handleCheckboxChange = (event) => {
-    const { name, checked } = event.target;
-    setCheckedLabels((prevState) => ({
-      ...prevState,
-      [name]: checked,
-    }));
-
-    let status = checked ? name : ""
-
-    dispatch(
-      fetchLearnerAPI({ page: 1, page_size: 10 }, "", "", "", status)
-    );
-  };
-
-
   return (
     <>
       <Grid className='w-full p-12'>
@@ -238,8 +215,8 @@ export default function LearnerManagementTable(props) {
           ))}
         </FormGroup>
       </Grid>
-      <div style={{ width: "100%", overflow: "hidden", marginTop: "0.5rem" }}>
-        <TableContainer sx={{ maxHeight: 540, minHeight: 530, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+      <div style={{ width: "100%", marginTop: "0.5rem" }}>
+        <TableContainer sx={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
           <Table stickyHeader aria-label="sticky table" size="small">
             <TableHead>
               <TableRow>
@@ -255,7 +232,7 @@ export default function LearnerManagementTable(props) {
                 ))}
               </TableRow>
             </TableHead>
-            <TableBody sx={{ overflow: "scroll" }}>
+            <TableBody>
               {rows?.map((row) => {
                 return (
                   <TableRow role="checkbox" tabIndex={-1} key={row.learner_id}>
@@ -300,8 +277,6 @@ export default function LearnerManagementTable(props) {
                                 <div className="hover:text-[#2D6498] cursor-pointer " onClick={() => redirection(row.learner_id, row.user_id)}>
                                   {value} {row["last_name"]}
                                 </div>
-                                {/* <Link to="/portfolio" style={{ color: "inherit", textDecoration: "none" }}> */}
-                                {/* </Link> */}
                               </>
                             ) : column.id === "course" ? (
                               row?.course && row.course.length > 0 ? (
@@ -320,9 +295,33 @@ export default function LearnerManagementTable(props) {
                                   {row?.course.map((course) => (
                                     <>
                                       <Tooltip key={course.course.course_id} title={course.course.course_name}>
-                                        <Avatar sx={{ bgcolor: '#5B718F', cursor: 'pointer' }}>
-                                          <AutoStories />
-                                        </Avatar>
+                                        {
+                                          false // Course Completed
+                                            ?
+                                            <Grid className="relative cursor-pointer">
+                                              <FaFolderOpen className="text-3xl -rotate-12" style={{ color: IconsData[(IconsData.findIndex((item) => item.name === course.course.course_type))]?.color || "#1d61b5" }} />
+                                              <Grid>
+                                                <GiCheckMark className="text-base absolute top-8 left-5" style={{ color: '#000000' }} />
+                                              </Grid>
+                                            </Grid> :
+                                            false ? // Early Leaver
+                                              <Grid className="relative cursor-pointer">
+                                                <FaFolderOpen className="text-3xl -rotate-12" style={{ color: IconsData[(IconsData.findIndex((item) => item.name === course.course.course_type))]?.color || "#1d61b5" }} />
+                                                <Grid>
+                                                  <IoCloseSharp className="text-base absolute top-8 left-5 font-600" style={{ color: '#CC1D17' }} />
+                                                </Grid>
+                                              </Grid> :
+                                              false ? // Training Suspended
+                                                <Grid className="relative cursor-pointer">
+                                                  <FaFolderOpen className="text-3xl -rotate-12" style={{ color: IconsData[(IconsData.findIndex((item) => item.name === course.course.course_type))]?.color || "#1d61b5" }} />
+                                                  <Grid>
+                                                    <IoLockClosedSharp className="text-base absolute top-8 left-5" style={{ color: '#D0AD45' }} />
+                                                  </Grid>
+                                                </Grid> :
+                                                <Grid className="cursor-pointer">
+                                                  <FaFolderOpen className="text-3xl -rotate-12" style={{ color: IconsData[(IconsData.findIndex((item) => item.name === course.course.course_type))]?.color || "#1d61b5" }} />
+                                                </Grid>
+                                        }
                                       </Tooltip>
                                     </>
                                   ))}
@@ -343,7 +342,7 @@ export default function LearnerManagementTable(props) {
             </TableBody>
           </Table>
         </TableContainer>
-        <div className="absolute bottom-0 left-0 w-full flex justify-center py-4 mb-14">
+        <div className="w-full flex justify-center py-4 mb-14">
           <Stack
             spacing={2}
             className="flex justify-center items-center w-full mt-12 bg-white"
@@ -359,7 +358,7 @@ export default function LearnerManagementTable(props) {
             />
           </Stack>
         </div>
-      </div>
+      </div >
       <AlertDialog
         open={Boolean(deleteId)}
         close={() => deleteIcon("")}

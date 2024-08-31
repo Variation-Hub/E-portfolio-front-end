@@ -73,7 +73,7 @@ export const DownloadLearnerExcel = () => async (dispatch) => {
 
         const link = document.createElement('a');
         link.href = downloadUrl;
-        link.download = "learner_data.xlsx";
+        link.download = "learner_export.xlsx";
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
