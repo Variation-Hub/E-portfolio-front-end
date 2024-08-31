@@ -238,6 +238,10 @@ const Index = () => {
     );
   };
 
+  const refetchLearner = () => {
+    dispatch(fetchLearnerAPI())
+  }
+
   return (
     <Grid >
       <Card className="m-12 rounded-6">
@@ -352,6 +356,7 @@ const Index = () => {
                 search_keyword={searchKeyword}
                 checkedLabels={checkedLabels}
                 handleCheckboxChange={handleCheckboxChange}
+                refetchLearner={refetchLearner}
               />
               :
               <div className="flex flex-col justify-center items-center gap-10" style={{ height: "94%" }}>

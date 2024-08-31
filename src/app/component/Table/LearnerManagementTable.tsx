@@ -66,7 +66,8 @@ export default function LearnerManagementTable(props) {
     search_keyword = "",
     search_C = "",
     checkedLabels,
-    handleCheckboxChange
+    handleCheckboxChange,
+    refetchLearner
   } = props;
 
   const navigate = useNavigate();
@@ -171,6 +172,7 @@ export default function LearnerManagementTable(props) {
       courseAllocationAPI(courseAllocationData)
     );
     if (response) {
+      refetchLearner()
       clsoeCourseDialog();
       setOpenMenuDialog("");
       setCourseAllocationData({
