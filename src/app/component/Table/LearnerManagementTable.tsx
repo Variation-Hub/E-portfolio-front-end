@@ -11,7 +11,11 @@ import {
   Avatar,
   AvatarGroup,
   Box,
+  Checkbox,
   Dialog,
+  FormControlLabel,
+  FormGroup,
+  Grid,
   IconButton,
   Menu,
   MenuItem,
@@ -183,8 +187,57 @@ export default function LearnerManagementTable(props) {
     dispatch(slice.setLeanerId({ id, user_id }))
     navigate('/portfolio')
   }
+
+  const [checkedLabels, setCheckedLabels] = useState({
+    'Awaiting Induction': false,
+    'Certificated': false,
+    'Completed': false,
+    'Early Leaver': false,
+    'Exempt': false,
+    'In Training': false,
+    'IQA Approved': false,
+    'Training Suspended': false,
+    'Transferred': false,
+    'Show only archived users': false,
+  });
+
+  const handleCheckboxChange = (event) => {
+    const { name, checked } = event.target;
+    setCheckedLabels((prevState) => ({
+      ...prevState,
+      [name]: checked,
+    }));
+
+    let status = checked ? name : ""
+
+    dispatch(
+      fetchLearnerAPI({ page: 1, page_size: 10 }, "", "", "", status)
+    );
+  };
+
+
   return (
     <>
+      <Grid className='w-full p-12'>
+        <Typography className="font-600" sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
+          Status
+        </Typography>
+        <FormGroup className="flex flex-row flex-wrap">
+          {Object.keys(checkedLabels).map((label) => (
+            <FormControlLabel
+              key={label}
+              control={
+                <Checkbox
+                  checked={checkedLabels[label]}
+                  onChange={handleCheckboxChange}
+                  name={label}
+                />
+              }
+              label={label}
+            />
+          ))}
+        </FormGroup>
+      </Grid>
       <div style={{ width: "100%", overflow: "hidden", marginTop: "0.5rem" }}>
         <TableContainer sx={{ maxHeight: 540, minHeight: 530, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
           <Table stickyHeader aria-label="sticky table" size="small">
