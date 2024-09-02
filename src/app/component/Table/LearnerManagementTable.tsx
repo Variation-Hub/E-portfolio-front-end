@@ -11,10 +11,7 @@ import {
   Avatar,
   AvatarGroup,
   Box,
-  Checkbox,
   Dialog,
-  FormControlLabel,
-  FormGroup,
   Grid,
   IconButton,
   Menu,
@@ -26,7 +23,6 @@ import {
 } from "@mui/material";
 import Style from "./style.module.css";
 import { useDispatch } from "react-redux";
-import { userTableMetaData } from "src/app/contanst/metaData";
 import AlertDialog from "../Dialogs/AlertDialog";
 import {
   DangerButton,
@@ -36,7 +32,7 @@ import {
 } from "../Buttons";
 import {
   deleteLearnerHandler,
-  fetchLearnerAPI,
+  restoreLearnerHandler,
   selectLearnerManagement,
 } from "app/store/learnerManagement";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
@@ -49,7 +45,6 @@ import { Stack } from "@mui/system";
 import { useNavigate } from "react-router-dom";
 import { slice } from 'app/store/reloadData'
 import { getRandomColor, IconsData } from "src/utils/randomColor";
-import { AutoStories } from "@mui/icons-material";
 import { FaFolderOpen } from "react-icons/fa";
 import { GiCheckMark } from "react-icons/gi";
 import { IoCloseSharp, IoLockClosedSharp } from "react-icons/io5";
@@ -63,16 +58,15 @@ export default function LearnerManagementTable(props) {
     setUpdateData = () => { },
     meta_data,
     dataUpdatingLoadding,
-    search_keyword = "",
-    search_C = "",
-    checkedLabels,
-    handleCheckboxChange,
-    refetchLearner
+    refetchLearner,
+    handleChangePage
   } = props;
 
   const navigate = useNavigate();
-  const [deleteId, setDeleteId] = useState("");
+  const [archiveId, setArchiveId] = useState("");
+  const [unArchiveId, setUnArchiveId] = useState("");
   const [openMenuDialog, setOpenMenuDialog] = useState("");
+  const [deletedAt, setDeletedAt] = useState("");
   const [courseDialog, setCourseDialog] = useState(false);
   const [loading, setLoading] = useState(false);
   const dispatch: any = useDispatch();
@@ -97,12 +91,6 @@ export default function LearnerManagementTable(props) {
 
   const { data } = useSelector(selectCourseManagement);
   const { LIQA, IQA, trainer, employer, EQA } = useSelector(selectLearnerManagement);
-
-  const handleChangePage = (event: unknown, newPage: number) => {
-    dispatch(
-      fetchLearnerAPI({ page: newPage, page_size: userTableMetaData.page_size })
-    );
-  };
 
   const editIcon = () => {
     setUpdateData(openMenuDialog);
@@ -133,15 +121,30 @@ export default function LearnerManagementTable(props) {
     handleOpen();
   };
 
-  const deleteIcon = (id) => {
-    setDeleteId(id);
+  const archiveItem = (id) => {
+    setArchiveId(id?.learner_id);
   };
 
-  const deleteConfromation = async () => {
+  const archiveConfromation = async () => {
     await dispatch(
-      deleteLearnerHandler(deleteId, meta_data, search_keyword, search_C)
+      deleteLearnerHandler(archiveId)
     );
-    setDeleteId("");
+    refetchLearner()
+    setArchiveId("");
+  };
+
+  
+  const UnarchiveItem = (id) => {
+    setUnArchiveId(id?.learner_id);
+  };
+
+  const UnarchiveConfromation = async () => {
+    await dispatch(
+      restoreLearnerHandler(unArchiveId)
+    );
+
+    refetchLearner()
+    setUnArchiveId("");
   };
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -156,6 +159,8 @@ export default function LearnerManagementTable(props) {
   const openMenu = (e, id) => {
     handleClick(e);
     setOpenMenuDialog(id);
+    setDeletedAt(id?.deleted_at)
+
     setCourseAllocationData((prevState) => ({
       ...prevState,
       "learner_id": id,
@@ -197,28 +202,8 @@ export default function LearnerManagementTable(props) {
 
   return (
     <>
-      <Grid className='w-full p-12'>
-        <Typography className="font-600" sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
-          Status
-        </Typography>
-        <FormGroup className="flex flex-row flex-wrap">
-          {Object.keys(checkedLabels).map((label) => (
-            <FormControlLabel
-              key={label}
-              control={
-                <Checkbox
-                  checked={checkedLabels[label]}
-                  onChange={handleCheckboxChange}
-                  name={label}
-                />
-              }
-              label={label}
-            />
-          ))}
-        </FormGroup>
-      </Grid>
-      <div style={{ width: "100%", marginTop: "0.5rem" }}>
-        <TableContainer sx={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+      <div style={{ width: "100%", overflow: "hidden", marginTop: "0.5rem" }}>
+        <TableContainer sx={{ maxHeight: 540, minHeight: 480, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
           <Table stickyHeader aria-label="sticky table" size="small">
             <TableHead>
               <TableRow>
@@ -250,7 +235,7 @@ export default function LearnerManagementTable(props) {
                             <IconButton
                               size="small"
                               sx={{ color: "#5B718F", marginRight: "4px" }}
-                              onClick={(e) => openMenu(e, row.learner_id)}
+                              onClick={(e) => openMenu(e, row)}
                             >
                               <MoreHorizIcon fontSize="small" />
                             </IconButton>
@@ -331,6 +316,8 @@ export default function LearnerManagementTable(props) {
                               ) : (
                                 <strong>-</strong>
                               )
+                            ) : column.id === "status" ? (
+                              row.deleted_at ? "Archive" : "Active"
                             ) : (
                               value || "Active"
                             )}
@@ -362,21 +349,41 @@ export default function LearnerManagementTable(props) {
         </div>
       </div >
       <AlertDialog
-        open={Boolean(deleteId)}
-        close={() => deleteIcon("")}
-        title="Delete learner?"
-        content="Deleting this learner will also remove all associated data and relationships. Proceed with deletion?"
+        open={Boolean(archiveId)}
+        close={() => archiveItem("")}
+        title="Archive Learner?"
+        content="Archiving this learner will make their data inactive but retain all associated data and relationships. Proceed with archiving?"
         actionButton={
           dataUpdatingLoadding ? (
             <LoadingButton />
           ) : (
-            <DangerButton onClick={deleteConfromation} name="Delete learner" />
+            <DangerButton onClick={archiveConfromation} name="Archive learner" />
           )
         }
         cancelButton={
           <SecondaryButtonOutlined
             className="px-24"
-            onClick={() => deleteIcon("")}
+            onClick={() => archiveItem("")}
+            name="Cancel"
+          />
+        }
+      />
+      <AlertDialog
+        open={Boolean(unArchiveId)}
+        close={() => UnarchiveItem("")}
+        title="Unarchive Learner?"
+        content="Unarchiving this learner will reactivate their data and restore all associated data and relationships. Proceed with unarchiving?"
+        actionButton={
+          dataUpdatingLoadding ? (
+            <LoadingButton />
+          ) : (
+            <DangerButton onClick={UnarchiveConfromation} name="Unarchive learner" />
+          )
+        }
+        cancelButton={
+          <SecondaryButtonOutlined
+            className="px-24"
+            onClick={() => UnarchiveItem("")}
             name="Cancel"
           />
         }
@@ -401,11 +408,17 @@ export default function LearnerManagementTable(props) {
         <MenuItem
           onClick={() => {
             handleClose();
-            deleteIcon(openMenuDialog);
+            if (deletedAt === null) {
+              archiveItem(openMenuDialog);
+            } else {
+              UnarchiveItem(openMenuDialog);
+
+            }
           }}
         >
-          Delete
+          {deletedAt === null ? "Archive" : "Unarchive"}
         </MenuItem>
+
         <MenuItem
           onClick={() => {
             handleClose();

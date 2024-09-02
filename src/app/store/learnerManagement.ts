@@ -43,8 +43,8 @@ const learnerManagementSlice = createSlice({
                 state.meta_data.pages = Math.ceil(items / userTableMetaData.page_size)
             }
         },
-        setLoader(state) {
-            state.dataFetchLoading = false;
+        setLoader(state, action) {
+            state.dataFetchLoading = action.payload;
         },
         setUpdatingLoader(state) {
             state.dataUpdatingLoadding = false;
@@ -113,7 +113,7 @@ export const createLearnerAPI = (data) => async (dispatch) => {
 export const fetchLearnerAPI = (data = { page: 1, page_size: 10 }, search_keyword = "", search_course = "", search_employer = "", status = "") => async (dispatch) => {
 
     try {
-        // dispatch(slice.setLoader());
+        dispatch(slice.setLoader(true));
         const { page = 1, page_size = 10 } = data;
 
         let url = `${URL_BASE_LINK}/learner/list?page=${page}&limit=${page_size}&meta=true`;
@@ -135,26 +135,21 @@ export const fetchLearnerAPI = (data = { page: 1, page_size: 10 }, search_keywor
         }
 
         const response = await axios.get(url);
-        // dispatch(showMessage({ message: response.data.message, variant: "success" }))
         dispatch(slice.updateLearner(response.data));
-        // alert("value")
-        dispatch(slice.setLoader());
         return true;
 
     } catch (err) {
         dispatch(showMessage({ message: err.response.data.message, variant: "error" }))
-        dispatch(slice.setLoader());
         return false
-    };
-
+    } finally{
+        dispatch(slice.setLoader(false));
+    }
 }
 
 export const getRoleAPI = (role) => async (dispatch) => {
     try {
-        dispatch(slice.setLoader());
         let url = `${URL_BASE_LINK}/user/list?role=${role}`
         const response = await axios.get(url);
-        // dispatch(showMessage({ message: response.data.message, variant: "success" }))
         if (role === "Trainer")
             dispatch(slice.setTrainer(response.data.data))
         else if (role === "IQA")
@@ -165,11 +160,9 @@ export const getRoleAPI = (role) => async (dispatch) => {
             dispatch(slice.setEmployer(response.data.data))
         else if (role === "LIQA")
             dispatch(slice.setLIQA(response.data.data))
-        dispatch(slice.setLoader());
         return true;
 
     } catch (err) {
-        dispatch(slice.setLoader());
         dispatch(slice.updateLearner([]))
         return false
     };
@@ -179,7 +172,6 @@ export const getLearnerDetails = (data = "") => async (dispatch, getStore) => {
         dispatch(slice.setUpdatingLoader());
         const id = data || getStore()?.user?.data?.id
         const response = await axios.get(`${URL_BASE_LINK}/learner/get/${id}`,)
-        // dispatch(showMessage({ message: response.data.message, variant: "success" }))
         dispatch(slice.learnerDetails(response.data.data));
         dispatch(slice.setUpdatingLoader());
         return true;
@@ -191,11 +183,8 @@ export const getLearnerDetails = (data = "") => async (dispatch, getStore) => {
 }
 
 export const getLearnerCourseDetails = (data) => async (dispatch) => {
-    dispatch(slice.setLoader());
     const response = await axios.get(`${URL_BASE_LINK}/course/user/get?learner_id=${data.learner_id}&course_id=${data.course_id}`,)
-    // dispatch(showMessage({ message: response.data.message, variant: "success" }))
     dispatch(slice.setCourseData(response.data.data))
-    dispatch(slice.setLoader());
 }
 
 // update learner
@@ -220,18 +209,31 @@ export const updateLearnerAPI = (id, data) => async (dispatch) => {
 
 
 // Delete learner
-export const deleteLearnerHandler = (id, meta_data, search_keyword = "", search_role = "") => async (dispatch) => {
+export const deleteLearnerHandler = (id) => async (dispatch) => {
 
     try {
-        let { page, page_size, items } = meta_data;
         dispatch(slice.setUpdatingLoader());
         const response = await axios.delete(`${URL_BASE_LINK}/learner/delete/${id}`)
         dispatch(showMessage({ message: response.data.message, variant: "success" }))
         dispatch(slice.setUpdatingLoader());
-        if (items % page_size === 1) {
-            page--;
-        }
-        dispatch(fetchLearnerAPI({ page, page_size }, search_keyword, search_role));
+        return true;
+
+    } catch (err) {
+        dispatch(showMessage({ message: err.response.data.message, variant: "error" }))
+        dispatch(slice.setUpdatingLoader());
+        return false;
+    };
+}
+
+// restore learner
+export const restoreLearnerHandler = (id) => async (dispatch) => {
+
+    try {
+        dispatch(slice.setUpdatingLoader());
+        const response = await axios.post(`${URL_BASE_LINK}/learner/restore/${id}`)
+        dispatch(showMessage({ message: response.data.message, variant: "success" }))
+        dispatch(slice.setUpdatingLoader());
+    
         return true;
 
     } catch (err) {

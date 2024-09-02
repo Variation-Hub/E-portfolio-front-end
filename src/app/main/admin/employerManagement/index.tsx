@@ -19,9 +19,6 @@ import { useDispatch } from "react-redux";
 import FuseLoading from "@fuse/core/FuseLoading";
 import Close from "@mui/icons-material/Close";
 import SearchIcon from "@mui/icons-material/Search";
-import {
-  fetchLearnerAPI,
-} from "app/store/learnerManagement";
 import { Link } from "react-router-dom";
 import { getEmployerAPI, selectEmployer } from "app/store/employer";
 import EmployerManagementTable from "src/app/component/Table/EmployerManagementTable";

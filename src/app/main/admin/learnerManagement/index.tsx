@@ -5,7 +5,7 @@ import DataNotFound from "src/app/component/Pages/dataNotFound";
 import { AdminRedirect, learnerManagementTableColumn } from "src/app/contanst";
 import Style from '../style.module.css'
 import { useSelector } from "react-redux";
-import { Autocomplete, Card, Dialog, Grid, IconButton, InputAdornment, Paper, TextField, Typography } from "@mui/material";
+import { Autocomplete, Card, Checkbox, Dialog, FormControlLabel, FormGroup, Grid, IconButton, InputAdornment, Paper, TextField, Typography } from "@mui/material";
 import UserDetails from "./usetDetails";
 import { useDispatch } from "react-redux";
 import Close from "@mui/icons-material/Close";
@@ -21,6 +21,7 @@ import { GiCheckMark } from "react-icons/gi";
 import { IoCloseSharp } from "react-icons/io5";
 import { IoLockClosedSharp } from "react-icons/io5";
 import { IconsData } from "src/utils/randomColor";
+import FuseLoading from "@fuse/core/FuseLoading";
 
 
 const Index = () => {
@@ -51,7 +52,6 @@ const Index = () => {
   });
 
   useEffect(() => {
-    dispatch(fetchLearnerAPI())
     dispatch(fetchCourseAPI())
     dispatch(getEmployerAPI())
   }, [dispatch])
@@ -156,18 +156,16 @@ const Index = () => {
     const selectedCourse = course.find(course => course.course_name === value);
     setCourseId(selectedCourse ? selectedCourse.course_id : "");
     setFilterValue(value);
-    dispatch(fetchLearnerAPI({ page: 1, page_size: 10 }, searchKeyword, selectedCourse ? selectedCourse.course_id : "", employerId));
   };
 
   const searchEmployerHandler = (e, value) => {
     const selectedEmployer = employer.find(employer => employer.employer_name === value);
     setEmployereId(selectedEmployer ? selectedEmployer.employer_id : "");
     setSearchEmployer(value);
-    dispatch(fetchLearnerAPI({ page: 1, page_size: 10 }, searchKeyword, courseId, selectedEmployer ? selectedEmployer.employer_id : ""));
   };
 
   const searchAPIHandler = () => {
-    dispatch(fetchLearnerAPI({ page: 1, page_size: 10 }, searchKeyword, courseId, employerId));
+    refetchLearner()
   }
 
   useEffect(() => {
@@ -213,17 +211,20 @@ const Index = () => {
 
   const handleCheckboxChange = (event) => {
     const { name, checked } = event.target;
-    const data = {
-      ...checkedLabels,
-      [name]: checked
-    }
+
     setCheckedLabels((prevState) => ({
       ...prevState,
       [name]: checked,
     }));
+  };
 
+  const handleChangePage = (event: unknown, newPage: number) => {
+    refetchLearner(searchKeyword, newPage)
+  };
+  
+  const refetchLearner = (a=searchKeyword, page=1) => {
     let status = '';
-    for (const [label, value] of Object.entries(data)) {
+    for (const [label, value] of Object.entries(checkedLabels)) {
       if (value) {
         if (status === "") {
           status += label;
@@ -232,20 +233,16 @@ const Index = () => {
         }
       }
     }
-
-    dispatch(
-      fetchLearnerAPI({ page: 1, page_size: 10 }, "", "", "", status)
-    );
-  };
-
-  const refetchLearner = () => {
-    dispatch(fetchLearnerAPI())
+    dispatch(fetchLearnerAPI({ page, page_size: 10 }, a, courseId, employerId, status))
   }
-
+  
+  useEffect(() => {
+    refetchLearner();
+  }, [checkedLabels, courseId, employerId])
   return (
     <Grid >
       <Card className="m-12 rounded-6">
-        <div className="w-full">
+        <div className="w-full h-full">
           <Breadcrumb linkData={[AdminRedirect]} currPage="Learner" />
 
           <div className={Style.create_user}>
@@ -265,7 +262,7 @@ const Index = () => {
                           <Close
                             onClick={() => {
                               setSearchKeyword("");
-                              dispatch(fetchLearnerAPI({ page: 1, page_size: 10 }, "", courseId));
+                              refetchLearner("")
                             }}
                             sx={{
                               color: "#5B718F",
@@ -343,7 +340,30 @@ const Index = () => {
               } />
             </div>
           </div>
-          {
+
+          <Grid className='w-full p-12'>
+            <Typography className="font-600" sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}>
+              Status
+            </Typography>
+            <FormGroup className="flex flex-row flex-wrap">
+              {Object.keys(checkedLabels).map((label) => (
+                <FormControlLabel
+                  key={label}
+                  control={
+                    <Checkbox
+                      checked={checkedLabels[label]}
+                      onChange={handleCheckboxChange}
+                      name={label}
+                    />
+                  }
+                  label={label}
+                />
+              ))}
+            </FormGroup>
+          </Grid>
+          {dataFetchLoading ? (
+            <FuseLoading />
+          ) :
             data.length ?
               <LearnerManagementTable
                 columns={learnerManagementTableColumn}
@@ -353,13 +373,11 @@ const Index = () => {
                 setUpdateData={setUpdateData}
                 meta_data={meta_data}
                 dataUpdatingLoadding={dataUpdatingLoadding}
-                search_keyword={searchKeyword}
-                checkedLabels={checkedLabels}
-                handleCheckboxChange={handleCheckboxChange}
                 refetchLearner={refetchLearner}
+                handleChangePage={handleChangePage}
               />
               :
-              <div className="flex flex-col justify-center items-center gap-10" style={{ height: "94%" }}>
+              <div className="flex flex-col justify-center items-center gap-10" style={{ height: "75vh" }}>
                 <DataNotFound width="25%" />
                 <Typography variant="h5">No data found</Typography>
                 <Typography variant="body2" className="text-center">It is a long established fact that a reader will be <br />distracted by the readable content.</Typography>
