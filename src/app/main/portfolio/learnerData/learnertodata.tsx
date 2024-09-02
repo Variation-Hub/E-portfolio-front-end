@@ -3,7 +3,8 @@ import React, { useState } from 'react'
 import CourseData from './courseData';
 import AssignmentData from './assignmentData';
 import ResourseData from './resourse';
-
+import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
+import { Link } from 'react-router-dom';
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
@@ -113,6 +114,9 @@ const LearnerToData = () => {
               }}
             />
           </Tabs>
+          <Link to="/portfolio" className='!no-underline'>
+            <KeyboardBackspaceIcon />Back
+          </Link>
         </Box>
 
         <CustomTabPanel value={value} index={0} >

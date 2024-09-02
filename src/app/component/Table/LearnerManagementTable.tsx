@@ -47,6 +47,7 @@ import { slice } from 'app/store/reloadData'
 import { getRandomColor, IconsData } from "src/utils/randomColor";
 import { FaFolderOpen } from "react-icons/fa";
 import { slice as courseSlice } from "app/store/courseManagement";
+import CustomPagination from "../Pagination/CustomPagination";
 
 export default function LearnerManagementTable(props) {
   const {
@@ -336,7 +337,13 @@ export default function LearnerManagementTable(props) {
             </TableBody>
           </Table>
         </TableContainer>
-        <div className="w-full flex justify-center py-4 mb-14">
+        <CustomPagination
+          pages={meta_data?.pages}
+          page={meta_data?.page}
+          handleChangePage={handleChangePage}
+          items={meta_data?.items}
+        />
+        {/* <div className="w-full flex justify-center py-4 mb-14">
           <Stack
             spacing={2}
             className="flex justify-center items-center w-full mt-12 bg-white"
@@ -351,7 +358,7 @@ export default function LearnerManagementTable(props) {
               boundaryCount={1}
             />
           </Stack>
-        </div>
+        </div> */}
       </div >
       <AlertDialog
         open={Boolean(archiveId)}
