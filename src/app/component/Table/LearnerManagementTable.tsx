@@ -16,7 +16,6 @@ import {
   IconButton,
   Menu,
   MenuItem,
-  Pagination,
   TextField,
   Tooltip,
   Typography,
@@ -41,7 +40,6 @@ import {
   courseAllocationAPI,
   selectCourseManagement,
 } from "app/store/courseManagement";
-import { Stack } from "@mui/system";
 import { useNavigate } from "react-router-dom";
 import { slice } from 'app/store/reloadData'
 import { getRandomColor, IconsData } from "src/utils/randomColor";
@@ -65,7 +63,7 @@ export default function LearnerManagementTable(props) {
   const navigate = useNavigate();
   const [archiveId, setArchiveId] = useState("");
   const [unArchiveId, setUnArchiveId] = useState("");
-  const [openMenuDialog, setOpenMenuDialog] = useState("");
+  const [openMenuDialog, setOpenMenuDialog]: any = useState("");
   const [deletedAt, setDeletedAt] = useState("");
   const [courseDialog, setCourseDialog] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -93,7 +91,7 @@ export default function LearnerManagementTable(props) {
   const { LIQA, IQA, trainer, employer, EQA } = useSelector(selectLearnerManagement);
 
   const editIcon = () => {
-    setUpdateData(openMenuDialog);
+    setUpdateData(openMenuDialog.learner_id);
     const {
       first_name,
       last_name,
@@ -105,7 +103,7 @@ export default function LearnerManagementTable(props) {
       employer_id,
       funding_body,
       national_ins_no,
-    } = rows.filter((item) => item.learner_id === openMenuDialog)[0];
+    } = rows.filter((item) => item.learner_id === openMenuDialog.learner_id)[0];
     setUserData({
       first_name,
       last_name,
@@ -114,7 +112,7 @@ export default function LearnerManagementTable(props) {
       password,
       confrimpassword,
       mobile,
-      employer_id,
+      employer_id: employer_id.employer_id,
       funding_body,
       national_ins_no,
     });
@@ -156,14 +154,14 @@ export default function LearnerManagementTable(props) {
     setAnchorEl(null);
   };
 
-  const openMenu = (e, id) => {
+  const openMenu = (e, row) => {
     handleClick(e);
-    setOpenMenuDialog(id);
-    setDeletedAt(id?.deleted_at)
+    setOpenMenuDialog(row);
+    setDeletedAt(row?.deleted_at)
 
     setCourseAllocationData((prevState) => ({
       ...prevState,
-      "learner_id": id,
+      "learner_id": row.learner_id,
     }));
   };
 
@@ -209,7 +207,7 @@ export default function LearnerManagementTable(props) {
   return (
     <>
       <div style={{ width: "100%", overflow: "hidden", marginTop: "0.5rem" }}>
-        <TableContainer sx={{ maxHeight: 540, minHeight: 480, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+        <TableContainer sx={{ minHeight: 480, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
           <Table stickyHeader aria-label="sticky table" size="small">
             <TableHead>
               <TableRow>
@@ -323,7 +321,7 @@ export default function LearnerManagementTable(props) {
                                 <strong>-</strong>
                               )
                             ) : column.id === "status" ? (
-                              row.deleted_at ? "Archive" : "Active"
+                              row.deleted_at ? "Archived" : "Active"
                             ) : (
                               value || "Active"
                             )}
@@ -343,22 +341,6 @@ export default function LearnerManagementTable(props) {
           handleChangePage={handleChangePage}
           items={meta_data?.items}
         />
-        {/* <div className="w-full flex justify-center py-4 mb-14">
-          <Stack
-            spacing={2}
-            className="flex justify-center items-center w-full mt-12 bg-white"
-          >
-            <Pagination
-              count={meta_data?.pages}
-              page={meta_data?.page}
-              variant="outlined"
-              onChange={handleChangePage}
-              shape="rounded"
-              siblingCount={1}
-              boundaryCount={1}
-            />
-          </Stack>
-        </div> */}
       </div >
       <AlertDialog
         open={Boolean(archiveId)}
@@ -409,14 +391,14 @@ export default function LearnerManagementTable(props) {
         open={open}
         onClose={handleClose}
       >
-        <MenuItem
+        {deletedAt === null && <MenuItem
           onClick={() => {
             editIcon();
             handleClose();
           }}
         >
           Edit
-        </MenuItem>
+        </MenuItem>}
         <MenuItem
           onClick={() => {
             handleClose();
@@ -431,15 +413,15 @@ export default function LearnerManagementTable(props) {
           {deletedAt === null ? "Archive" : "Unarchive"}
         </MenuItem>
 
-        <MenuItem
+        {deletedAt === null && <MenuItem
           onClick={() => {
             handleClose();
             setCourseDialog(true);
           }}
         >
           Course Allocation
-        </MenuItem>
-      </Menu>
+        </MenuItem>}
+      </Menu >
 
       <Dialog
         open={courseDialog}

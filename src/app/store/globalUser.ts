@@ -7,7 +7,10 @@ const initialState = {
     selectedUser: {},
     selected: false,
     dataFetchLoading: false,
-    dataUpdatingLoadding: false
+    dataUpdatingLoadding: false,
+    pagination: {
+        page_size: 10
+    }
 };
 
 const globalUserSlice = createSlice({
@@ -32,6 +35,9 @@ const globalUserSlice = createSlice({
             state.selectedUser = {}
             state.selected = false
         },
+        setPagination(state, action) {
+            state.pagination = action.payload
+        }
     },
 });
 

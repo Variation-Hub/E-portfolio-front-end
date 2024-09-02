@@ -15,17 +15,15 @@ import { createLearnerAPI, fetchLearnerAPI, getRoleAPI, selectLearnerManagement,
 import LearnerManagementTable from "src/app/component/Table/LearnerManagementTable";
 import { fetchCourseAPI, selectCourseManagement } from "app/store/courseManagement";
 import { getEmployerAPI, selectEmployer } from "app/store/employer";
-import { DownloadLearnerExcel } from "app/store/globalUser";
+import { DownloadLearnerExcel, selectGlobalUser } from "app/store/globalUser";
 import { FaFolderOpen } from "react-icons/fa";
-import { GiCheckMark } from "react-icons/gi";
-import { IoCloseSharp } from "react-icons/io5";
-import { IoLockClosedSharp } from "react-icons/io5";
 import { IconsData } from "src/utils/randomColor";
 import FuseLoading from "@fuse/core/FuseLoading";
 
 const Index = () => {
 
   const { data, dataFetchLoading, dataUpdatingLoadding, meta_data } = useSelector(selectLearnerManagement)
+  const { pagination } = useSelector(selectGlobalUser)
   const dispatch: any = useDispatch();
   const course = useSelector(selectCourseManagement)?.data
   const employer = useSelector(selectEmployer)?.data
@@ -232,12 +230,12 @@ const Index = () => {
         }
       }
     }
-    dispatch(fetchLearnerAPI({ page, page_size: 10 }, a, courseId, employerId, status))
+    dispatch(fetchLearnerAPI({ page, page_size: pagination.page_size }, a, courseId, employerId, status))
   }
 
   useEffect(() => {
     refetchLearner();
-  }, [checkedLabels, courseId, employerId])
+  }, [checkedLabels, courseId, employerId, pagination])
   return (
     <Grid >
       <Card className="m-12 rounded-6">
