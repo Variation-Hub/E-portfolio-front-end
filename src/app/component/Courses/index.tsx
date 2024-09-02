@@ -1,10 +1,8 @@
 import {
   Autocomplete,
   Box,
-  Card,
   FormControl,
   Grid,
-  InputLabel,
   MenuItem,
   Select,
   TextField,
@@ -17,8 +15,6 @@ import {
   SecondaryButton,
   SecondaryButtonOutlined,
 } from "../Buttons";
-import UnitManagementTable from "../Table/UnitManagementTable";
-import { courseManagementUnitColumn } from "src/app/contanst";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import {
@@ -67,6 +63,17 @@ const CourseBuilder = (props) => {
   const { preFillData } = useSelector(selectCourseManagement);
   const [loading, setLoading] = useState(false);
 
+  const courseType = [
+    'A2 Level', 'AS Level', 'Btec National', 'CORE', 'Core Skills - Communication',
+    'Core Skills - ICT', 'Core Skills - Numeracy', 'Core Skills - Problem Solving',
+    'Core Skills - Unknown', 'Core Skills - Working with others', 'ERR',
+    'FUNCTIONAL SKILLS', 'Functional Skills - ICT', 'Functional Skills - Maths',
+    'Functional Skills English', 'Gateway', 'GCSE', 'Key Skills - Communication',
+    'Key Skills - ICT', 'Key Skills - Improving own learning', 'Key Skills - Number',
+    'Key Skills - unknown', 'MAIN', 'NVQ', 'PLTS', 'SVQ', 'TECH', 'VCQ', 'VRQ'
+  ];
+
+
   const [courseData, setCourseData] = useState(() => {
     return {
       brand_guidelines: formatText(preFillData?.brand_guidelines) || "",
@@ -77,6 +84,7 @@ const CourseBuilder = (props) => {
       operational_start_date: preFillData?.operational_start_date || "",
       overall_grading_type: preFillData?.overall_grading_type || "",
       permitted_delivery_types: preFillData?.permitted_delivery_types || "",
+      course_type: preFillData?.course_type || "",
       qualification_status: preFillData?.qualification_status || "",
       qualification_type: preFillData?.qualification_type || "",
       recommended_minimum_age: preFillData?.recommended_minimum_age || "",
@@ -84,7 +92,6 @@ const CourseBuilder = (props) => {
       total_credits: preFillData?.total_credits || "",
     };
   });
-  console.log(preFillData?.operational_start_date);
 
   const formatDate = (date) => {
     if (!date) return ""; // Return empty string if date is empty
@@ -184,7 +191,6 @@ const CourseBuilder = (props) => {
       },
     });
   };
-  console.log(mandatoryUnit);
 
   const removeUnitHandler = (unitId) => {
     if (edit === "view") {
@@ -214,7 +220,6 @@ const CourseBuilder = (props) => {
         ),
       },
     }));
-    console.log(mandatoryUnit);
   };
 
   const removeSubUnitHandler = (unitId, subUnitId) => {
@@ -260,7 +265,6 @@ const CourseBuilder = (props) => {
       };
     });
 
-    console.log(mandatoryUnit);
   };
 
   const removeSubTopicHandler = (unitId, subUnitId, subTopicId) => {
@@ -501,7 +505,7 @@ const CourseBuilder = (props) => {
         </Box>
 
         <Box className="m-12 flex flex-col justify-between gap-12 sm:flex-row">
-          <div className="w-1/2">
+          <div className="w-1/3">
             <Typography
               sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}
               className={Style.name}
@@ -519,7 +523,7 @@ const CourseBuilder = (props) => {
               className={Style.last2_input_feald}
             />
           </div>
-          <div className="w-1/2">
+          <div className="w-1/3">
             <Typography
               sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}
               className={Style.name}
@@ -535,6 +539,30 @@ const CourseBuilder = (props) => {
               onChange={courseHandler}
               disabled={edit === "view"}
               className={Style.last2_input_feald}
+            />
+          </div>
+          <div className="w-1/3">
+            <Typography
+              sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}
+              className={Style.name}
+            >
+              Course Type
+            </Typography>
+            <Autocomplete
+              size="small"
+              value={courseData?.course_type}
+              onChange={(event, newValue) => {
+                if (edit !== "view") {
+                  setCourseData((prev) => ({
+                    ...prev,
+                    course_type: newValue || "",
+                  }));
+                }
+              }}
+              disabled={edit === "view"}
+              options={courseType}
+              className={Style.last2_input_feald}
+              renderInput={(params) => <TextField  {...params} placeholder="Course Type" />}
             />
           </div>
         </Box>

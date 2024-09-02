@@ -48,7 +48,7 @@ const courseManagementSlice = createSlice({
             const { course_id, ...rest } = action.payload;
             state.data = state.data.map((value) => {
                 if (value.course_id === course_id) {
-                    return rest;
+                    return action.payload;
                 }
                 return value;
             })
@@ -64,6 +64,9 @@ const courseManagementSlice = createSlice({
         },
         setLearnerOverView(state, action) {
             state.learnerOverView = action.payload
+        },
+        setSingleDataStatus(state, action) {
+            state.singleData = {...state.singleData, course_status :action.payload}
         }
     }
 });
@@ -166,6 +169,25 @@ export const updateCourseAPI = (id, data) => async (dispatch) => {
     };
 }
 
+//update user course
+export const updateUserCourse = (id, data) => async (dispatch) => {
+
+    try {
+        dispatch(slice.setUpdatingLoader());
+        console.log(initialState.singleData,"+++++++++");
+        
+        const response = await axios.patch(`${URL_BASE_LINK}/course/user/update/${id}`, data)
+        dispatch(slice.setSingleDataStatus(response.data.data.course_status))
+        // dispatch(showMessage({ message: "Skill scan updated", variant: "success" }))
+        return true;
+
+    } catch (err) {
+
+        dispatch(showMessage({ message: err.response.data.message, variant: "error" }))
+        dispatch(slice.setUpdatingLoader());
+        return false;
+    };
+}
 
 // Delete learner
 export const deleteCourseHandler = (id, meta_data, search_keyword = "", search_role = "") => async (dispatch) => {

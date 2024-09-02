@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -14,8 +13,6 @@ import {
   Menu,
   MenuItem,
 } from "@mui/material";
-import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
-import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import Style from "./style.module.css";
 import { useDispatch } from "react-redux";
 import { userTableMetaData } from "src/app/contanst/metaData";
@@ -29,11 +26,9 @@ import {
 import {
   deleteCourseHandler,
   fetchCourseAPI,
-  selectCourseManagement,
   slice,
 } from "app/store/courseManagement";
 import CourseBuilderComponent from "src/app/component/Courses";
-import RemoveRedEyeRoundedIcon from "@mui/icons-material/RemoveRedEyeRounded";
 import { Stack } from "@mui/system";
 import { getRandomColor } from "src/utils/randomColor";
 
@@ -73,14 +68,7 @@ export default function CourseManagementTable(props) {
     setUpdateData(openMenuDialog);
     setOpen(true);
     const data = rows.find((item) => item.course_id === openMenuDialog);
-    const units = data?.units.map((item) => ({
-      unit_ref: item.unit_ref,
-      title: item.title,
-      level: item.level,
-      glh: item.glh,
-      credit_value: item.credit_value,
-      status: item.status,
-    }));
+    console.log(data, '+++')
     const preFillData = {
       course_id: data?.course_id,
       assessment_language: data?.assessment_language || "",
@@ -96,6 +84,7 @@ export default function CourseManagementTable(props) {
       permitted_delivery_types: data?.permitted_delivery_types || "",
       qualification_status: data?.qualification_status || "",
       qualification_type: data?.qualification_type || "",
+      course_type: data?.course_type || "",
       recommended_minimum_age: data?.recommended_minimum_age || "",
       sector: data?.sector || "",
       total_credits: data?.total_credits || "",
