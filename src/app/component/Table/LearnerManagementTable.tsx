@@ -298,7 +298,7 @@ export default function LearnerManagementTable(props) {
                                     <>
                                       <Tooltip key={course.course.course_id} title={course.course.course_name}>
                                         {
-                                          false // Course Completed
+                                          course.course_status === "Completed" // Course Completed
                                             ?
                                             <Grid className="relative cursor-pointer">
                                               <FaFolderOpen className="text-3xl -rotate-12" style={{ color: IconsData[(IconsData.findIndex((item) => item.name === course.course.course_type))]?.color || "#1d61b5" }} />
@@ -306,14 +306,14 @@ export default function LearnerManagementTable(props) {
                                                 <GiCheckMark className="text-base absolute top-8 left-5" style={{ color: '#000000' }} />
                                               </Grid>
                                             </Grid> :
-                                            false ? // Early Leaver
+                                            course.course_status === "Early Leaver" ? // Early Leaver
                                               <Grid className="relative cursor-pointer">
                                                 <FaFolderOpen className="text-3xl -rotate-12" style={{ color: IconsData[(IconsData.findIndex((item) => item.name === course.course.course_type))]?.color || "#1d61b5" }} />
                                                 <Grid>
                                                   <IoCloseSharp className="text-base absolute top-8 left-5 font-600" style={{ color: '#CC1D17' }} />
                                                 </Grid>
                                               </Grid> :
-                                              false ? // Training Suspended
+                                              course.course_status === "Training Suspended" ? // Training Suspended
                                                 <Grid className="relative cursor-pointer">
                                                   <FaFolderOpen className="text-3xl -rotate-12" style={{ color: IconsData[(IconsData.findIndex((item) => item.name === course.course.course_type))]?.color || "#1d61b5" }} />
                                                   <Grid>
