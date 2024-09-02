@@ -133,7 +133,7 @@ export default function LearnerManagementTable(props) {
     setArchiveId("");
   };
 
-  
+
   const UnarchiveItem = (id) => {
     setUnArchiveId(id?.learner_id);
   };
@@ -288,21 +288,21 @@ export default function LearnerManagementTable(props) {
                                             <Grid className="relative cursor-pointer">
                                               <FaFolderOpen className="text-3xl -rotate-12" style={{ color: IconsData[(IconsData.findIndex((item) => item.name === course.course.course_type))]?.color || "#1d61b5" }} />
                                               <Grid>
-                                                <GiCheckMark className="text-base absolute top-8 left-5" style={{ color: '#000000' }} />
+                                                <img src="/assets/icons/guy_completed.gif" className="h-20 absolute top-2" />
                                               </Grid>
                                             </Grid> :
                                             course.course_status === "Early Leaver" ? // Early Leaver
                                               <Grid className="relative cursor-pointer">
                                                 <FaFolderOpen className="text-3xl -rotate-12" style={{ color: IconsData[(IconsData.findIndex((item) => item.name === course.course.course_type))]?.color || "#1d61b5" }} />
                                                 <Grid>
-                                                  <IoCloseSharp className="text-base absolute top-8 left-5 font-600" style={{ color: '#CC1D17' }} />
+                                                  <img src="/assets/icons/guy_archived.gif" className="h-20 absolute top-2" />
                                                 </Grid>
                                               </Grid> :
                                               course.course_status === "Training Suspended" ? // Training Suspended
                                                 <Grid className="relative cursor-pointer">
                                                   <FaFolderOpen className="text-3xl -rotate-12" style={{ color: IconsData[(IconsData.findIndex((item) => item.name === course.course.course_type))]?.color || "#1d61b5" }} />
                                                   <Grid>
-                                                    <IoLockClosedSharp className="text-base absolute top-8 left-5" style={{ color: '#D0AD45' }} />
+                                                    <img src="/assets/icons/guy_lock.gif" className="h-20 absolute top-2" />
                                                   </Grid>
                                                 </Grid> :
                                                 <Grid className="cursor-pointer">

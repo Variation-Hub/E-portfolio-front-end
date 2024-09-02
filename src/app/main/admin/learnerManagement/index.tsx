@@ -23,7 +23,6 @@ import { IoLockClosedSharp } from "react-icons/io5";
 import { IconsData } from "src/utils/randomColor";
 import FuseLoading from "@fuse/core/FuseLoading";
 
-
 const Index = () => {
 
   const { data, dataFetchLoading, dataUpdatingLoadding, meta_data } = useSelector(selectLearnerManagement)
@@ -221,8 +220,8 @@ const Index = () => {
   const handleChangePage = (event: unknown, newPage: number) => {
     refetchLearner(searchKeyword, newPage)
   };
-  
-  const refetchLearner = (a=searchKeyword, page=1) => {
+
+  const refetchLearner = (a = searchKeyword, page = 1) => {
     let status = '';
     for (const [label, value] of Object.entries(checkedLabels)) {
       if (value) {
@@ -235,7 +234,7 @@ const Index = () => {
     }
     dispatch(fetchLearnerAPI({ page, page_size: 10 }, a, courseId, employerId, status))
   }
-  
+
   useEffect(() => {
     refetchLearner();
   }, [checkedLabels, courseId, employerId])
@@ -436,7 +435,7 @@ const Index = () => {
               <Grid className="relative">
                 <FaFolderOpen className="text-3xl -rotate-12" style={{ color: '#9AA9A1' }} />
                 <Grid>
-                  <IoCloseSharp className="text-base absolute top-8 left-5 font-600" style={{ color: '#CC1D17' }} />
+                  <img src="/assets/icons/guy_archived.gif" className="h-20 absolute top-2" />
                 </Grid>
               </Grid>
               <span>Early Leaver</span>
@@ -445,7 +444,7 @@ const Index = () => {
               <Grid className="relative">
                 <FaFolderOpen className="text-3xl -rotate-12" style={{ color: '#9AA9A1' }} />
                 <Grid>
-                  <GiCheckMark className="text-base absolute top-8 left-5" style={{ color: '#000000' }} />
+                  <img src="/assets/icons/guy_completed.gif" className="h-20 absolute top-2" />
                 </Grid>
               </Grid>
               <span>Course Completed</span>
@@ -454,7 +453,7 @@ const Index = () => {
               <Grid className="relative">
                 <FaFolderOpen className="text-3xl -rotate-12" style={{ color: '#9AA9A1' }} />
                 <Grid>
-                  <IoLockClosedSharp className="text-base absolute top-8 left-5" style={{ color: '#D0AD45' }} />
+                  <img src="/assets/icons/guy_lock.gif" className="h-20 absolute top-2" />
                 </Grid>
               </Grid>
               <span>Training Suspended</span>
