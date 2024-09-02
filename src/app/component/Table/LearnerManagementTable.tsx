@@ -46,8 +46,7 @@ import { useNavigate } from "react-router-dom";
 import { slice } from 'app/store/reloadData'
 import { getRandomColor, IconsData } from "src/utils/randomColor";
 import { FaFolderOpen } from "react-icons/fa";
-import { GiCheckMark } from "react-icons/gi";
-import { IoCloseSharp, IoLockClosedSharp } from "react-icons/io5";
+import { slice as courseSlice } from "app/store/courseManagement";
 
 export default function LearnerManagementTable(props) {
   const {
@@ -200,6 +199,12 @@ export default function LearnerManagementTable(props) {
     navigate('/portfolio')
   }
 
+  const handleLearnerCourse = (id, user_id, course) => {
+    dispatch(slice.setLeanerId({ id, user_id }))
+    dispatch(courseSlice.setSingleData(course));
+    navigate("/portfolio/learnertodata")
+  }
+
   return (
     <>
       <div style={{ width: "100%", overflow: "hidden", marginTop: "0.5rem" }}>
@@ -281,7 +286,7 @@ export default function LearnerManagementTable(props) {
                                   }}>
                                   {row?.course.map((course) => (
                                     <>
-                                      <Tooltip key={course.course.course_id} title={course.course.course_name}>
+                                      <Tooltip key={course.course.course_id} title={course.course.course_name} onClick={() => handleLearnerCourse(row.learner_id, row.user_id, course)}>
                                         {
                                           course.course_status === "Completed" // Course Completed
                                             ?
