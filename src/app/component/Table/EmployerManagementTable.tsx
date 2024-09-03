@@ -39,6 +39,7 @@ import { Stack } from "@mui/system";
 import { getRandomColor } from "src/utils/randomColor";
 import { deleteEmployerHandler, getEmployerAPI } from "app/store/employer";
 import EmployerDetails from "src/app/main/admin/employerManagement/userDetails";
+import CustomPagination from "../Pagination/CustomPagination";
 
 export default function EmployerManagementTable(props) {
   const {
@@ -47,6 +48,7 @@ export default function EmployerManagementTable(props) {
     handleOpen = () => { },
     meta_data,
     dataUpdatingLoadding,
+    handleChangePage,
   } = props;
 
   const [deleteId, setDeleteId] = useState("");
@@ -104,12 +106,6 @@ export default function EmployerManagementTable(props) {
     setEditEmployer(false);
   };
 
-  const handleChangePage = (event: unknown, newPage: number) => {
-    dispatch(
-      getEmployerAPI({ page: newPage, page_size: userTableMetaData.page_size })
-    );
-  };
-
   const openMenu = (e, id) => {
     handleClick(e);
     setOpenMenuDialog(id);
@@ -140,7 +136,7 @@ export default function EmployerManagementTable(props) {
   return (
     <>
       <div style={{ width: "100%", overflow: "hidden", marginTop: "0.5rem" }}>
-        <TableContainer sx={{ maxHeight: 540, minHeight: 530, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+        <TableContainer sx={{ minHeight: 530, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
           <Table stickyHeader aria-label="sticky table" size="small">
             <TableHead>
               <TableRow>
@@ -217,20 +213,12 @@ export default function EmployerManagementTable(props) {
               })}
             </TableBody>
           </Table>
-          <Stack
-            spacing={2}
-            className="flex justify-center items-center w-full mb-14"
-          >
-            <Pagination
-              count={meta_data?.pages}
-              page={meta_data?.page}
-              variant="outlined"
-              onChange={handleChangePage}
-              shape="rounded"
-              siblingCount={1}
-              boundaryCount={1}
-            />
-          </Stack>
+          <CustomPagination
+            pages={meta_data?.pages}
+            page={meta_data?.page}
+            handleChangePage={handleChangePage}
+            items={meta_data?.items}
+          />
         </TableContainer>
       </div>
       <AlertDialog
