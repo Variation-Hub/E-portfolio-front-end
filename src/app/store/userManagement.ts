@@ -32,7 +32,7 @@ const initialState = {
         pages: 1
     },
     learnerData: [],
-    trainerData: []
+    trainerData: [],
 };
 
 const userManagementSlice = createSlice({
@@ -173,6 +173,22 @@ export const createUserAPI = (data) => async (dispatch) => {
         const response = await axios.post(`${URL_BASE_LINK}/user/create`, data)
         dispatch(showMessage({ message: response.data.message, variant: "success" }))
         dispatch(slice.updateUser(response.data.data));
+        dispatch(slice.setUpdatingLoader());
+        return true;
+    } catch (err) {
+        dispatch(showMessage({ message: err.response.data.message, variant: "error" }))
+        dispatch(slice.setUpdatingLoader());
+        return false;
+    }
+}
+
+
+// send mail
+export const sendMail = (data) => async (dispatch) => {
+    try {
+        dispatch(slice.setUpdatingLoader());
+        const response = await axios.post(`${URL_BASE_LINK}/user/mail`, data)
+        dispatch(showMessage({ message: response.data.message, variant: "success" }))
         dispatch(slice.setUpdatingLoader());
         return true;
     } catch (err) {

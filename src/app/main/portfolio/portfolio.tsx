@@ -1,5 +1,5 @@
 import FuseLoading from "@fuse/core/FuseLoading";
-import { Avatar, Dialog, Tooltip } from "@mui/material";
+import { Avatar, Box, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, TextField, Tooltip, Typography } from "@mui/material";
 import {
   getLearnerDetails,
   selectLearnerManagement,
@@ -21,14 +21,12 @@ import { selectUser } from "app/store/userSlice";
 import { slice } from "app/store/courseManagement";
 import { getRandomColor } from "src/utils/randomColor";
 import { slice as courseSlice } from "app/store/courseManagement";
+import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
+import { sendMail } from "app/store/userManagement";
 
 const Portfolio = () => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
-
-  const handleClose = () => {
-    setOpen(false);
-  }
 
   const { learner, dataUpdatingLoadding } = useSelector(
     selectLearnerManagement
@@ -39,6 +37,10 @@ const Portfolio = () => {
   const { singleData } = useSelector(selectLearnerManagement);
 
   const dispatch: any = useDispatch();
+
+  const handleClose = () => {
+    setOpen(false);
+  }
 
   useEffect(() => {
     if (data?.learner_id) dispatch(getLearnerDetails(data?.learner_id));
@@ -66,6 +68,52 @@ const Portfolio = () => {
   const handleClickSingleData = (row) => {
     dispatch(courseSlice.setSingleData(row));
   };
+
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const handleOpenEmail = () => {
+    setIsDialogOpen(true);
+  };
+
+  const handleCloseEmail = () => {
+    setIsDialogOpen(false);
+  };
+
+  const [emailData, setEmailData] = useState({
+    email: learner.email,
+    subject: '',
+    message: '',
+    adminName: user?.data?.displayName
+  });
+
+  useEffect(() => {
+    if (learner.email) {
+      setEmailData((prevEmail) => ({ ...prevEmail, email: learner.email }));
+    }
+  }, [learner.email])
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setEmailData((prevEmail) => ({ ...prevEmail, [name]: value }));
+  };
+
+  const handleSend = async () => {
+    try {
+      let response;
+      response = await dispatch(sendMail(emailData));
+    } catch (err) {
+      console.log(err);
+    } finally {
+      handleCloseEmail();
+      setEmailData({
+        email: learner.email,
+        subject: '',
+        message: '',
+        adminName: user?.data?.displayName
+      })
+    }
+  };
+
 
   return (
     <div>
@@ -127,6 +175,13 @@ const Portfolio = () => {
       )
       }
       <div className="flex justify-end mr-24">
+        {user.data.role !== "Learner" && (
+          <SecondaryButton
+            className="mr-12"
+            onClick={handleOpenEmail}
+            startIcon={<EmailOutlinedIcon className="ml-10 text-xl" />}
+          />
+        )}
         <SecondaryButtonOutlined name="Awaiting Signature" className="mr-12" />
         <SecondaryButton name="Calendar" className="mr-12" onClick={handleOpen} />
         <SecondaryButton name="Profile" className="mr-12" onClick={handleOpenProfile} />
@@ -148,6 +203,62 @@ const Portfolio = () => {
       >
         <Calendar />
       </Dialog>
+
+      <Dialog
+        open={isDialogOpen}
+        onClose={handleCloseEmail}
+        sx={{
+          ".MuiDialog-paper": {
+            borderRadius: "4px",
+            width: "100%",
+          },
+        }}
+      >
+        <DialogTitle>Email {learner.user_name}</DialogTitle>
+
+        <DialogContent>
+          <Box className="flex flex-col justify-between gap-12 p-0">
+            <div>
+              <Typography
+                sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}
+              >
+                Subject
+              </Typography>
+              <TextField
+                name="subject"
+                size="small"
+                placeholder="Subject"
+                fullWidth
+                value={emailData?.subject}
+                onChange={handleChange}
+              />
+            </div>
+            <div>
+              <Typography
+                sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}
+              >
+                Message
+              </Typography>
+              <TextField
+                name="message"
+                size="small"
+                placeholder="Message"
+                fullWidth
+                multiline
+                rows={6}
+                value={emailData?.message}
+                onChange={handleChange}
+              />
+            </div>
+          </Box>
+        </DialogContent>
+
+        <DialogActions>
+          <SecondaryButton name="Send" onClick={handleSend} />
+          <SecondaryButtonOutlined name="Close" onClick={handleClose} />
+        </DialogActions>
+      </Dialog>
+
     </div >
   );
 };
