@@ -80,6 +80,9 @@ const LearnerDetails = () => {
         expected_off_the_job_hours: learner?.expected_off_the_job_hours || "",
     })
 
+    console.log(employer.find(option => option.employer.employer_id === learnerData?.employer_id).employer.employer_name, "*****");
+
+
     const handleDataUpdate = (e) => {
         const { name, value } = e.target;
         setLearnerData((prevData) => ({
@@ -628,9 +631,10 @@ const LearnerDetails = () => {
                                                 />
                                             )}
                                             onChange={(event, value) => {
+
                                                 setLearnerData((prevData) => ({
                                                     ...prevData,
-                                                    employer_id: value?.employer?.employer_id,
+                                                    employer_id: value?.employer?.employer_id || null,
                                                 }));
                                             }}
                                             sx={{

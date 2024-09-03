@@ -37,6 +37,7 @@ import {
   passwordReg,
   usernameReg,
 } from "src/app/contanst/regValidation";
+import { selectGlobalUser } from "app/store/globalUser";
 
 const Index = () => {
   const { data, dataFetchLoading, dataUpdatingLoadding, meta_data } =
@@ -47,6 +48,7 @@ const Index = () => {
   const [updateData, setUpdateData] = useState("");
   const [searchKeyword, setSearchKeyword] = useState("");
   const [filterValue, setFilterValue] = useState("");
+  const { pagination } = useSelector(selectGlobalUser)
 
   useEffect(() => {
     dispatch(fetchUserAPI());
@@ -157,13 +159,10 @@ const Index = () => {
 
   const filterHandler = (e, value) => {
     setFilterValue(value);
-    dispatch(fetchUserAPI({ page: 1, page_size: 10 }, searchKeyword, value));
   };
 
   const searchAPIHandler = () => {
-    dispatch(
-      fetchUserAPI({ page: 1, page_size: 10 }, searchKeyword, filterValue)
-    );
+    refetchUser()
   };
 
   const validation = () => {
@@ -195,9 +194,24 @@ const Index = () => {
     return false;
   };
 
+
+
+  const handleChangePage = (event: unknown, newPage: number) => {
+    refetchUser(searchKeyword, newPage)
+
+  };
+
+  const refetchUser = (search = searchKeyword, page = 1) => {
+    dispatch(fetchUserAPI({ page, page_size: pagination.page_size }, search, filterValue))
+  }
+
+  useEffect(() => {
+    refetchUser();
+  }, [pagination, filterValue])
+
   return (
     <Card className="m-12 rounded-6 relative" style={{ height: "87.9vh" }}>
-      <div className="w-full h-full">
+      <div className="w-full h-full overflow-y-scroll">
         <Breadcrumb linkData={[AdminRedirect]} currPage="User" />
         <div className={Style.create_user}>
           <div className={Style.search_filed}>
@@ -288,6 +302,7 @@ const Index = () => {
             dataUpdatingLoadding={dataUpdatingLoadding}
             search_keyword={searchKeyword}
             search_role={filterValue}
+            handleChangePage={handleChangePage}
           />
         ) : (
           <div
