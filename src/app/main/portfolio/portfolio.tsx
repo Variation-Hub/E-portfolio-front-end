@@ -77,6 +77,12 @@ const Portfolio = () => {
 
   const handleCloseEmail = () => {
     setIsDialogOpen(false);
+    setEmailData({
+      email: learner.email,
+      subject: '',
+      message: '',
+      adminName: user?.data?.displayName
+    })
   };
 
   const [emailData, setEmailData] = useState({
@@ -105,12 +111,6 @@ const Portfolio = () => {
       console.log(err);
     } finally {
       handleCloseEmail();
-      setEmailData({
-        email: learner.email,
-        subject: '',
-        message: '',
-        adminName: user?.data?.displayName
-      })
     }
   };
 
@@ -254,8 +254,8 @@ const Portfolio = () => {
         </DialogContent>
 
         <DialogActions>
-          <SecondaryButton name="Send" onClick={handleSend} />
-          <SecondaryButtonOutlined name="Close" onClick={handleClose} />
+          <SecondaryButton name="Send" disable={!emailData?.subject || !emailData?.message} onClick={handleSend} />
+          <SecondaryButtonOutlined name="Close" onClick={handleCloseEmail} />
         </DialogActions>
       </Dialog>
 
