@@ -55,11 +55,18 @@ import { userTableMetaData } from "src/app/contanst/metaData";
 import { UserRole } from "src/enum";
 import { fetchUserAPI } from "app/store/userManagement";
 import Close from "@mui/icons-material/Close";
+import { selectGlobalUser } from "app/store/globalUser";
+import CustomPagination from "src/app/component/Pagination/CustomPagination";
 
 const FormBuilder = (props) => {
     const { data } = useSelector(selectUser);
     const { singleData, users, meta_data, dataUpdatingLoadding, dataFetchLoading } = useSelector(selectFormData);
-    console.log(users.data);
+
+    const dispatch: any = useDispatch();
+
+    const navigate = useNavigate();
+
+    const { pagination } = useSelector(selectGlobalUser)
 
     const [anchorEl, setAnchorEl] = useState(null);
     const [selectedRow, setSelectedRow] = useState<any>(null);
@@ -67,19 +74,24 @@ const FormBuilder = (props) => {
     const [deleteId, setDeleteId] = useState("");
     const [searchKeyword, setSearchKeyword] = useState("");
 
+
+    const fetchFormData = (a = searchKeyword, page = 1) => {
+        dispatch(getFormDataAPI({ page, page_size: pagination.page_size }, a));
+    }
+
+    useEffect(() => {
+        fetchFormData()
+    }, [dispatch, pagination]);
+
     const deleteIcon = (id) => {
         setDeleteId(selectedRow?.id);
     };
 
     const deleteConfromation = async () => {
         await dispatch(deleteFormHandler(deleteId));
-        dispatch(getFormDataAPI({ page: 1, page_size: 10 }, ""));
+        fetchFormData()
         setDeleteId("");
     };
-
-    const dispatch: any = useDispatch();
-
-    const navigate = useNavigate();
 
     const handleClickOpen = () => {
         navigate("/forms/create");
@@ -112,14 +124,8 @@ const FormBuilder = (props) => {
 
     const formdata = useSelector(selectFormData);
 
-    useEffect(() => {
-        dispatch(getFormDataAPI({ page: 1, page_size: 10 }, ""));
-    }, [dispatch]);
-
     const handleChangePage = (event: unknown, newPage: number) => {
-        dispatch(
-            getFormDataAPI({ page: newPage, page_size: userTableMetaData.page_size })
-        );
+        fetchFormData(searchKeyword, newPage)
     };
 
     const formatDate = (date) => {
@@ -154,7 +160,6 @@ const FormBuilder = (props) => {
     };
 
     const handleSubmit = async () => {
-        // Capture the form values here
         if (selectedValue === 'Individual') {
             await dispatch(AddUsersToForm(singleData.id, { user_ids: userData.user_ids }));
         } else {
@@ -177,7 +182,7 @@ const FormBuilder = (props) => {
 
     const searchAPIHandler = () => {
         dispatch(
-            getFormDataAPI({ page: 1, page_size: 10 }, searchKeyword)
+            getFormDataAPI({ page: 1, page_size: pagination.page_size }, searchKeyword)
         );
     };
 
@@ -208,9 +213,7 @@ const FormBuilder = (props) => {
                                                 <Close
                                                     onClick={() => {
                                                         setSearchKeyword("");
-                                                        dispatch(
-                                                            getFormDataAPI({ page: 1, page_size: 10 })
-                                                        );
+                                                        fetchFormData("")
                                                     }}
                                                     sx={{
                                                         color: "#5B718F",
@@ -244,7 +247,7 @@ const FormBuilder = (props) => {
                         </Grid>
                     </Box>}
                 <div>
-                    <TableContainer sx={{ maxHeight: 530 }} >
+                    <TableContainer sx={{ minHeight: 580, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
                         {dataFetchLoading ? (
                             <FuseLoading />
                         ) : formdata.data.length ? (
@@ -332,23 +335,13 @@ const FormBuilder = (props) => {
                                 </Typography>
                             </div>
                         )}
+                        <CustomPagination
+                            pages={meta_data?.pages}
+                            page={meta_data?.page}
+                            handleChangePage={handleChangePage}
+                            items={meta_data?.items}
+                        />
                     </TableContainer>
-                    <div className="fixed bottom-0 left-0 w-full flex justify-center py-4">
-                        <Stack
-                            spacing={2}
-                            className="flex justify-center items-center w-full my-12"
-                        >
-                            <Pagination
-                                count={meta_data?.pages}
-                                page={meta_data?.page}
-                                variant="outlined"
-                                onChange={handleChangePage}
-                                shape="rounded"
-                                siblingCount={1}
-                                boundaryCount={1}
-                            />
-                        </Stack>
-                    </div>
                 </div>
 
                 <AlertDialog

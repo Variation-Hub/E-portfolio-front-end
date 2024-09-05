@@ -11,6 +11,8 @@ import { useSelector } from 'react-redux';
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { Link } from 'react-router-dom';
 import { selectUser } from 'app/store/userSlice';
+import { selectGlobalUser } from 'app/store/globalUser';
+import CustomPagination from 'src/app/component/Pagination/CustomPagination';
 
 const Calendar = () => {
 
@@ -19,14 +21,16 @@ const Calendar = () => {
   const session = useSelector(selectSession);
   const { data } = useSelector(selectUser);
 
-  useEffect(() => {
-    dispatch(getSessionAPI({ page: 1, page_size: 10 }));
-  }, [dispatch]);
+  const { pagination } = useSelector(selectGlobalUser)
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedRow, setSelectedRow] = useState<any>(null);
   const [dialogType, setDialogType] = useState(false);
   const [deleteId, setDeleteId] = useState("");
+
+  const fetchSessionData = (page = 1) => {
+    dispatch(getSessionAPI({ page, page_size: pagination.page_size }));
+  }
 
   const handleClick = (event, row) => {
     dispatch(slice.setSingledata(row));
@@ -58,13 +62,18 @@ const Calendar = () => {
 
   const deleteConfromation = async () => {
     await dispatch(deleteSessionHandler(deleteId));
-    dispatch(getSessionAPI({ page: 1, page_size: 10 }));
+    fetchSessionData()
     setDeleteId("");
   };
 
   const handleChangePage = (event: unknown, newPage: number) => {
-    dispatch(getSessionAPI({ page: newPage, page_size: 10 }));
+    fetchSessionData(newPage)
   };
+
+
+  useEffect(() => {
+    fetchSessionData()
+  }, [dispatch, pagination]);
 
   const formatDate = (date) => {
     if (!date) return "";
@@ -83,7 +92,7 @@ const Calendar = () => {
 
       <Grid className="m-10">
         <div>
-          <TableContainer sx={{ maxHeight: 575 }}>
+          <TableContainer sx={{ minHeight: 575, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
             {session?.dataFetchLoading ? (
               <FuseLoading />
             ) : session?.data.length ? (
@@ -193,7 +202,7 @@ const Calendar = () => {
                           )}
                           onChange={async (e, value) => {
                             await dispatch(updateSessionAPI(row?.session_id, { Attended: value }))
-                            dispatch(getSessionAPI())
+                            fetchSessionData()
                           }}
                           sx={{
                             ".MuiAutocomplete-clearIndicator": {
@@ -240,21 +249,12 @@ const Calendar = () => {
                 </Typography>
               </div>
             )}
-            <div className="fixed bottom-0 left-0 w-full flex justify-center ">
-              <Stack
-                spacing={2}
-                className="flex justify-center items-center w-full my-12"
-              >
-                <Pagination
-                  count={session?.meta_data?.pages}
-                  page={session?.meta_data?.page}
-                  variant="outlined" shape="rounded"
-                  siblingCount={1}
-                  boundaryCount={1}
-                  onChange={handleChangePage}
-                />
-              </Stack>
-            </div>
+            <CustomPagination
+              pages={session?.meta_data?.pages}
+              page={session?.meta_data?.page}
+              handleChangePage={handleChangePage}
+              items={session?.meta_data?.items}
+            />
           </TableContainer>
         </div>
         <AlertDialog
