@@ -5,8 +5,6 @@ import {
   IconButton,
   Menu,
   MenuItem,
-  Pagination,
-  Paper,
   Table,
   TableBody,
   TableCell,
@@ -20,7 +18,6 @@ import {
   Avatar,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import { Stack } from "@mui/system";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import React, { useEffect, useRef, useState } from "react";
 import {
@@ -45,11 +42,12 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { selectUser } from "app/store/userSlice";
 import AlertDialog from "src/app/component/Dialogs/AlertDialog";
-import { Link } from "react-router-dom";
 import FuseLoading from "@fuse/core/FuseLoading";
 import DataNotFound from "src/app/component/Pages/dataNotFound";
 import Style from "./style.module.css"
 import { getRandomColor } from "src/utils/randomColor";
+import CustomPagination from "src/app/component/Pagination/CustomPagination";
+import { selectGlobalUser } from "app/store/globalUser";
 
 
 const timeAgo = (timestamp) => {
@@ -159,6 +157,8 @@ const ProposeYourInnovations = (props) => {
   const { data } = useSelector(selectUser);
   const { singleData, dataUpdatingLoadding, dataFetchLoading, meta_data } = useSelector(selectYourInnovation);
 
+  const { pagination } = useSelector(selectGlobalUser)
+
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedRow, setSelectedRow] = useState<any>(null);
   const [dialogType, setDialogType] = useState(null);
@@ -175,13 +175,12 @@ const ProposeYourInnovations = (props) => {
     status: "",
   });
 
-  const fetchInnovationsData = (newPage = 1) => {
-    dispatch(getYourInnovationAPI({ page: newPage, page_size: 10 }, data.user_id));
+  const fetchInnovationsData = (page = 1) => {
+    dispatch(getYourInnovationAPI({ page, page_size: pagination.page_size }, data.user_id));
   }
 
   const deleteIcon = (id) => {
     setDeleteId(selectedRow?.id);
-    console.log(selectedRow);
   };
 
   const deleteConfromation = async () => {
@@ -208,12 +207,12 @@ const ProposeYourInnovations = (props) => {
   const handleCloseDialog = () => {
     setDialogType(null);
     clearSingleData();
+    setDeleteId("");
   };
 
   const handleClick = (event, row) => {
     dispatch(slice.setSingleData(row));
     setSelectedRow(row);
-    console.log(row);
     setAnchorEl(event.currentTarget);
   };
 
@@ -250,7 +249,7 @@ const ProposeYourInnovations = (props) => {
 
   useEffect(() => {
     fetchInnovationsData();
-  }, [dispatch]);
+  }, [dispatch, pagination]);
 
   const handleSubmit = async () => {
     try {
@@ -368,7 +367,7 @@ const ProposeYourInnovations = (props) => {
               onClick={() => handleClickOpen("add")}
             />
           </Box>}
-        <TableContainer sx={{ maxHeight: 500 }}>
+        <TableContainer sx={{ minHeight: 550, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
           {dataFetchLoading ? (
             <FuseLoading />
           ) : innovation.data.length ? (
@@ -520,21 +519,13 @@ const ProposeYourInnovations = (props) => {
               </Typography>
             </div>
           )}
+          <CustomPagination
+            pages={meta_data?.pages}
+            page={meta_data?.page}
+            handleChangePage={handleChangePage}
+            items={meta_data?.items}
+          />
         </TableContainer>
-        <div className="fixed bottom-0 left-0 w-full flex justify-center py-4 mb-14">
-          <Stack
-            spacing={2}
-            className="flex justify-center items-center w-full my-12"
-          >
-            <Pagination
-              count={meta_data?.pages}
-              page={meta_data?.page} variant="outlined" shape="rounded"
-              siblingCount={1}
-              boundaryCount={1}
-              onChange={handleChangePage}
-            />
-          </Stack>
-        </div>
 
         <AlertDialog
           open={Boolean(deleteId)}
@@ -619,7 +610,7 @@ const ProposeYourInnovations = (props) => {
               <LoadingButton />
             ) : (
               <>
-                <SecondaryButtonOutlined onClick={handleClose} name="Cancel" />
+                <SecondaryButtonOutlined onClick={handleCloseDialog} name="Cancel" />
                 <SecondaryButton
                   name={Object.keys(singleData).length !== 0 ? "Edit" : "Save"}
                   onClick={

@@ -112,7 +112,7 @@ export default function LearnerManagementTable(props) {
       password,
       confrimpassword,
       mobile,
-      employer_id: employer_id.employer_id,
+      employer_id: employer_id?.employer_id,
       funding_body,
       national_ins_no,
     });
