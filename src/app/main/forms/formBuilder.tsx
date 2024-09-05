@@ -1,5 +1,4 @@
 import {
-    Autocomplete,
     Checkbox,
     Dialog,
     DialogActions,
@@ -13,8 +12,6 @@ import {
     ListItemText,
     Menu,
     MenuItem,
-    Pagination,
-    Paper,
     Radio,
     RadioGroup,
     Select,
@@ -27,7 +24,6 @@ import {
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
-import { Stack } from "@mui/system";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import NorthEastIcon from '@mui/icons-material/NorthEast';
 import React, { useEffect, useState } from "react";
@@ -39,21 +35,16 @@ import {
 } from "src/app/component/Buttons";
 import { TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import { tr } from "date-fns/locale";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { selectUser } from "app/store/userSlice";
 import AlertDialog from "src/app/component/Dialogs/AlertDialog";
 import FuseLoading from "@fuse/core/FuseLoading";
 import DataNotFound from "src/app/component/Pages/dataNotFound";
-import { FormBuilder as FormBuilderIo } from "react-formio";
-import "formiojs/dist/formio.full.css";
 import './style.css'
 import { useNavigate } from "react-router-dom";
-import { AddUsersToForm, deleteFormHandler, fetchUserAllAPI, getFormDataAPI, getUserFormDataAPI, selectFormData, slice } from "app/store/formData";
-import { userTableMetaData } from "src/app/contanst/metaData";
+import { AddUsersToForm, deleteFormHandler, fetchUserAllAPI, getFormDataAPI, selectFormData, slice } from "app/store/formData";
 import { UserRole } from "src/enum";
-import { fetchUserAPI } from "app/store/userManagement";
 import Close from "@mui/icons-material/Close";
 import { selectGlobalUser } from "app/store/globalUser";
 import CustomPagination from "src/app/component/Pagination/CustomPagination";

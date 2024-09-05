@@ -50,11 +50,13 @@ import { FormBuilder as FormBuilderIo } from "react-formio";
 import "formiojs/dist/formio.full.css";
 import './style.css'
 import { useNavigate } from "react-router-dom";
-import { AddUsersToForm, deleteFormHandler, fetchUserAllAPI, getFormDataAPI, getUserAllFormAPI, getUserFormDataAPI, selectFormData, slice } from "app/store/formData";
+import { AddUsersToForm, deleteFormHandler, fetchUserAllAPI, getUserAllFormAPI, getUserFormDataAPI, selectFormData, slice } from "app/store/formData";
 import { userTableMetaData } from "src/app/contanst/metaData";
 import { UserRole } from "src/enum";
 import { fetchUserAPI } from "app/store/userManagement";
 import Close from "@mui/icons-material/Close";
+import { selectGlobalUser } from "app/store/globalUser";
+import CustomPagination from "src/app/component/Pagination/CustomPagination";
 
 const SubmittedForms = (props) => {
     const { data } = useSelector(selectUser);
@@ -64,10 +66,16 @@ const SubmittedForms = (props) => {
     const [anchorEl, setAnchorEl] = useState(null);
     const [selectedRow, setSelectedRow] = useState<any>(null);
     const [searchKeyword, setSearchKeyword] = useState("");
+    const { pagination } = useSelector(selectGlobalUser)
 
     const dispatch: any = useDispatch();
 
     const navigate = useNavigate();
+
+
+    const fetchFormData = (a = searchKeyword, page = 1) => {
+        dispatch(getUserAllFormAPI({ page, page_size: pagination.page_size }, a));
+    }
 
     const handleClose = () => {
         setAnchorEl(null);
@@ -92,13 +100,11 @@ const SubmittedForms = (props) => {
     const formdata = useSelector(selectFormData);
 
     useEffect(() => {
-        dispatch(getUserAllFormAPI({ page: 1, page_size: 10 }, ""));
-    }, [dispatch]);
+        fetchFormData()
+    }, [dispatch, pagination]);
 
     const handleChangePage = (event: unknown, newPage: number) => {
-        dispatch(
-            getFormDataAPI({ page: newPage, page_size: userTableMetaData.page_size })
-        );
+        fetchFormData(searchKeyword, newPage)
     };
 
     const formatDate = (date) => {
@@ -119,7 +125,7 @@ const SubmittedForms = (props) => {
 
     const searchAPIHandler = () => {
         dispatch(
-            getUserAllFormAPI({ page: 1, page_size: 10 }, searchKeyword)
+            getUserAllFormAPI({ page: 1, page_size: pagination.page_size }, searchKeyword)
         );
     };
 
@@ -150,11 +156,7 @@ const SubmittedForms = (props) => {
                                                 <Close
                                                     onClick={() => {
                                                         setSearchKeyword("");
-                                                        dispatch(
-                                                            getUserAllFormAPI(
-                                                                { page: 1, page_size: 10 },
-                                                                "")
-                                                        );
+                                                        fetchFormData("")
                                                     }}
                                                     sx={{
                                                         color: "#5B718F",
@@ -180,7 +182,7 @@ const SubmittedForms = (props) => {
                         </Grid>
                     </Box>}
                 <div>
-                    <TableContainer sx={{ maxHeight: 530 }} >
+                    <TableContainer sx={{ minHeight: 580, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
                         {dataFetchLoading ? (
                             <FuseLoading />
                         ) : formdata.data.length ? (
@@ -264,23 +266,13 @@ const SubmittedForms = (props) => {
                                 </Typography>
                             </div>
                         )}
+                        <CustomPagination
+                            pages={meta_data?.pages}
+                            page={meta_data?.page}
+                            handleChangePage={handleChangePage}
+                            items={meta_data?.items}
+                        />
                     </TableContainer>
-                    <div className="fixed bottom-0 left-0 w-full flex justify-center py-4">
-                        <Stack
-                            spacing={2}
-                            className="flex justify-center items-center w-full my-12"
-                        >
-                            <Pagination
-                                count={meta_data?.pages}
-                                page={meta_data?.page}
-                                variant="outlined"
-                                onChange={handleChangePage}
-                                shape="rounded"
-                                siblingCount={1}
-                                boundaryCount={1}
-                            />
-                        </Stack>
-                    </div>
                 </div>
 
                 <Menu
