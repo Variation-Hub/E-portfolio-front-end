@@ -44,6 +44,8 @@ import { log } from "console";
 import FuseLoading from "@fuse/core/FuseLoading";
 import DataNotFound from "src/app/component/Pages/dataNotFound";
 import Style from "./style.module.css";
+import { selectGlobalUser } from "app/store/globalUser";
+import CustomPagination from "src/app/component/Pagination/CustomPagination";
 
 // function createData(title: string, description: string, status: string) {
 //   return {
@@ -133,6 +135,8 @@ const Support = (props) => {
   const { data } = useSelector(selectUser);
   const { singleData, dataUpdatingLoadding, dataFetchLoading, meta_data } = useSelector(selectSupportData);
 
+  const { pagination } = useSelector(selectGlobalUser)
+
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedRow, setSelectedRow] = useState<any>(null);
   const [dialogType, setDialogType] = useState(false);
@@ -151,11 +155,15 @@ const Support = (props) => {
 
   const deleteConfromation = async () => {
     await dispatch(deleteSupportHandler(deleteId));
-    dispatch(getSupportDataAPI({ page: 1, page_size: 10 }, data.user_id));
+    fetchSupportData()
     setDeleteId("");
   };
 
   const dispatch: any = useDispatch();
+
+  const fetchSupportData = (page = 1) => {
+    dispatch(getSupportDataAPI({ page, page_size: pagination.page_size }, data.user_id));
+  }
 
   const clearSingleData = () => {
     dispatch(slice.setSingleData({}));
@@ -194,14 +202,14 @@ const Support = (props) => {
   const support = useSelector(selectSupportData);
 
   useEffect(() => {
-    dispatch(getSupportDataAPI({ page: 1, page_size: 10 }, data.user_id));
-  }, [dispatch]);
+    fetchSupportData()
+  }, [dispatch, pagination]);
 
   const handleSubmit = async () => {
     try {
       let response;
       response = await dispatch(createSupportDataAPI(supportData));
-      dispatch(getSupportDataAPI({ page: 1, page_size: 10 }, data.user_id));
+      fetchSupportData()
     } catch (err) {
       console.log(err);
     } finally {
@@ -214,7 +222,7 @@ const Support = (props) => {
     try {
       let response;
       response = await dispatch(updateSupportDataAPI(supportData));
-      dispatch(getSupportDataAPI({ page: 1, page_size: 10 }, data.user_id));
+      fetchSupportData()
     } catch (err) {
       console.log(err);
     } finally {
@@ -232,9 +240,7 @@ const Support = (props) => {
   };
 
   const handleChangePage = (event: unknown, newPage: number) => {
-    dispatch(
-      getSupportDataAPI({ page: newPage, page_size: 10 }, data.user_id)
-    );
+    fetchSupportData(newPage)
   };
 
   const isSupport = Object.values(supportData).find(data => data === "") === undefined;
@@ -266,7 +272,7 @@ const Support = (props) => {
           />
         </Box>}
         <div>
-          <TableContainer sx={{ maxHeight: 500 }}>
+          <TableContainer sx={{ minHeight: 550, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
             {dataFetchLoading ? (
               <FuseLoading />
             ) : support.data.length ? (
@@ -413,22 +419,13 @@ const Support = (props) => {
                 </Typography>
               </div>
             )}
+            <CustomPagination
+              pages={meta_data?.pages}
+              page={meta_data?.page}
+              handleChangePage={handleChangePage}
+              items={meta_data?.items}
+            />
           </TableContainer>
-          <div className="fixed bottom-0 left-0 w-full flex justify-center py-4 mb-14">
-            <Stack
-              spacing={2}
-              className="flex justify-center items-center w-full my-12"
-            >
-              <Pagination
-                count={meta_data?.pages}
-                page={meta_data?.page}
-                variant="outlined" shape="rounded"
-                siblingCount={1}
-                boundaryCount={1}
-                onChange={handleChangePage}
-              />
-            </Stack>
-          </div>
         </div>
 
         <AlertDialog
