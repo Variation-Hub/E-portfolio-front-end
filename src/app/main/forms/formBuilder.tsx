@@ -102,8 +102,6 @@ const FormBuilder = (props) => {
     const handleEdit = (edit) => {
         dispatch(slice.setMode(edit));
         navigate("/forms/create");
-        // setSupportData(singleData);
-        // handleClickOpen();
     };
 
     const handleApply = (e, row, edit) => {
@@ -367,7 +365,6 @@ const FormBuilder = (props) => {
                 >
                     <MenuItem
                         onClick={() => {
-                            // handleUser("user");
                             handleOpen();
                             handleClose();
                         }}>
@@ -408,14 +405,13 @@ const FormBuilder = (props) => {
                     }}
                 >
                     <DialogContent >
-                        <Grid /* className="flex flex-col items-start" */>
+                        <Grid>
                             <FormControl component="fieldset">
                                 <FormLabel component="legend">Select Asign Users</FormLabel>
                                 <RadioGroup
                                     aria-label="options"
                                     defaultValue="outlined"
                                     name="radio-buttons-group"
-                                // orientation="vertical"
                                 >
                                     <FormControlLabel
                                         value="All"

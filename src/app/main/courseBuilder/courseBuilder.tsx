@@ -24,16 +24,22 @@ import {
 import FuseLoading from "@fuse/core/FuseLoading";
 import Close from "@mui/icons-material/Close";
 import Style from "./style.module.css";
+import { selectGlobalUser } from "app/store/globalUser";
 
 const CourseBuilder = () => {
   const { dataUpdatingLoadding, meta_data, data, dataFetchLoading } =
     useSelector(selectCourseManagement);
   const dispatch: any = useDispatch();
   const [searchKeyword, setSearchKeyword] = useState("");
+  const { pagination } = useSelector(selectGlobalUser)
+
+  const fetchCourse = (a = searchKeyword, page = 1) => {
+    dispatch(fetchCourseAPI({ page, page_size: pagination.page_size }, a));
+  }
 
   useEffect(() => {
-    dispatch(fetchCourseAPI());
-  }, []);
+    fetchCourse()
+  }, [dispatch, pagination]);
 
   const navigate = useNavigate();
 
@@ -50,7 +56,7 @@ const CourseBuilder = () => {
   };
 
   const searchAPIHandler = () => {
-    dispatch(fetchCourseAPI({ page: 1, page_size: 25 }, searchKeyword));
+    dispatch(fetchCourseAPI({ page: 1, page_size: pagination.page_size }, searchKeyword));
   };
 
   const searchByKeywordUser = (e) => {
@@ -66,9 +72,15 @@ const CourseBuilder = () => {
     }
   };
 
+
+  const handleChangePage = (event: unknown, newPage: number) => {
+    fetchCourse(searchKeyword, newPage)
+  };
+
+
   return (
     <>
-      <Card className="mx-10 rounded-6" style={{ height: "100%" }}>
+      <Card className="mx-10 rounded-6" style={{ height: "100%",overflowY:"scroll" }}>
         {data.length || searchKeyword ? (
           <div className={`m-12 flex items-center justify-between mt-10 ${Style.Search_container}`}>
             <TextField
@@ -86,9 +98,7 @@ const CourseBuilder = () => {
                       <Close
                         onClick={() => {
                           setSearchKeyword("");
-                          dispatch(
-                            fetchCourseAPI({ page: 1, page_size: 25 }, "")
-                          );
+                          fetchCourse("")
                         }}
                         sx={{
                           color: "#5B718F",
@@ -150,6 +160,7 @@ const CourseBuilder = () => {
             rows={data}
             meta_data={meta_data}
             dataUpdatingLoadding={dataUpdatingLoadding}
+            handleChangePage={handleChangePage}
           />
         ) : (
           <div
@@ -178,7 +189,7 @@ const CourseBuilder = () => {
                           className="w-6 h-6 mr-2 sm:w-8 sm:h-8 lg:w-10 lg:h-10"
                         />
                       }
-                      // onClick={handleOpen}
+                    // onClick={handleOpen}
                     />
                   </span>
                 </Tooltip>

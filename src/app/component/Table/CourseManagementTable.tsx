@@ -9,13 +9,11 @@ import {
   Avatar,
   Dialog,
   IconButton,
-  Pagination,
   Menu,
   MenuItem,
 } from "@mui/material";
 import Style from "./style.module.css";
 import { useDispatch } from "react-redux";
-import { userTableMetaData } from "src/app/contanst/metaData";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import AlertDialog from "../Dialogs/AlertDialog";
 import {
@@ -25,22 +23,22 @@ import {
 } from "../Buttons";
 import {
   deleteCourseHandler,
-  fetchCourseAPI,
   slice,
 } from "app/store/courseManagement";
 import CourseBuilderComponent from "src/app/component/Courses";
-import { Stack } from "@mui/system";
 import { getRandomColor } from "src/utils/randomColor";
+import CustomPagination from "../Pagination/CustomPagination";
 
 export default function CourseManagementTable(props) {
   const {
     columns,
     rows,
-    setUpdateData = () => {},
+    setUpdateData = () => { },
     meta_data,
     dataUpdatingLoadding,
     search_keyword = "",
     search_role = "",
+    handleChangePage
   } = props;
 
   const [deleteId, setDeleteId] = useState("");
@@ -50,12 +48,6 @@ export default function CourseManagementTable(props) {
   const [open, setOpen] = useState(false);
 
   const dispatch: any = useDispatch();
-
-  const handleChangePage = (event: unknown, newPage: number) => {
-    dispatch(
-      fetchCourseAPI({ page: newPage, page_size: userTableMetaData.page_size })
-    );
-  };
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const oopen = Boolean(anchorEl);
@@ -117,7 +109,7 @@ export default function CourseManagementTable(props) {
   return (
     <>
       <div style={{ width: "100%", overflow: "hidden", marginTop: "0.5rem" }}>
-        <TableContainer sx={{ maxHeight: 530, minHeight: 530 }}>
+        <TableContainer sx={{ minHeight: 550, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
           <Table stickyHeader aria-label="sticky table" size="small">
             <TableHead>
               <TableRow>
@@ -151,20 +143,6 @@ export default function CourseManagementTable(props) {
                             align={column.align}
                             sx={{ borderBottom: "2px solid #F8F8F8" }}
                           >
-                            {/* <IconButton
-                              size="small"
-                              sx={{ color: "#5B718F", marginRight: "4px" }}
-                              onClick={() => editIcon(row.course_id)}
-                            >
-                              <RemoveRedEyeRoundedIcon fontSize="small" />
-                            </IconButton>
-                            <IconButton
-                              size="small"
-                              sx={{ color: "maroon", marginLeft: "4px" }}
-                              onClick={() => deleteIcon(row.course_id)}
-                            >
-                              <DeleteOutlineOutlinedIcon fontSize="small" />
-                            </IconButton> */}
                             <IconButton
                               size="small"
                               sx={{ color: "#5B718F", marginRight: "4px" }}
@@ -208,21 +186,13 @@ export default function CourseManagementTable(props) {
               })}
             </TableBody>
           </Table>
-        </TableContainer>
-        <Stack
-          spacing={2}
-          className="flex justify-center items-center w-full"
-        >
-          <Pagination
-            count={meta_data?.pages}
+          <CustomPagination
+            pages={meta_data?.pages}
             page={meta_data?.page}
-            variant="outlined"
-            onChange={handleChangePage}
-            shape="rounded"
-            siblingCount={1}
-            boundaryCount={1}
+            handleChangePage={handleChangePage}
+            items={meta_data?.items}
           />
-        </Stack>
+        </TableContainer>
       </div>
       <AlertDialog
         open={Boolean(deleteId)}
