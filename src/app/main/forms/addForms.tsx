@@ -14,7 +14,6 @@ import {
   createFormDataAPI,
   createTemplateData,
   createUserFormDataAPI,
-  getFormDataAPI,
   getUserFormDataAPI,
   selectFormData,
   slice,
@@ -23,10 +22,8 @@ import {
 } from "app/store/formData";
 import { useSelector } from "react-redux";
 import "formiojs/dist/formio.full.css";
-import { display } from "@mui/system";
 import { UserRole } from "src/enum";
 import { selectUser } from "app/store/userSlice";
-import { User } from "@auth0/auth0-react";
 
 const AddForms = (props) => {
   const { data, formDataDetails, dataUpdatingLoadding, singleData, mode, singleFrom = null, modeTemaplate = '' } = useSelector(selectFormData);
