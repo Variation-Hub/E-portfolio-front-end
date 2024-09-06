@@ -84,7 +84,7 @@ const columns: readonly Column[] = [
   {
     id: "feedback",
     label:
-      "Describe any feedback you have had from someone who your learning has had an impact on ir those who have been able to observe your performance",
+      "Describe any feedback you have had from someone who your learning has had an impact on or those who have been able to observe your performance",
     minWidth: 10,
   },
   { id: "files", label: "Files", minWidth: 10 },

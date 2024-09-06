@@ -13,6 +13,8 @@ import { getEQAUserData, selectUserManagement } from "app/store/userManagement";
 import { useSelector } from "react-redux";
 import { selectUser } from "app/store/userSlice";
 import { getRandomColor } from "src/utils/randomColor";
+import CustomPagination from "src/app/component/Pagination/CustomPagination";
+import { selectGlobalUser } from "app/store/globalUser";
 
 function createData(
   avatarUrl: string,
@@ -94,17 +96,18 @@ const TableEQA1 = (props) => {
   const { data } = useSelector(selectUser);
   const { learnerData, learner_meta_data } = useSelector(selectUserManagement);
   const dispatch: any = useDispatch();
+  const { pagination } = useSelector(selectGlobalUser)
 
   useEffect(() => {
-    dispatch(getEQAUserData({ page: 1, page_size: 5 }, "learner_id", data.user_id));
-  }, [dispatch]);
+    dispatch(getEQAUserData({ page: 1, page_size: pagination.page_size }, "learner_id", data.user_id));
+  }, [dispatch, pagination]);
 
   console.log("Learner Data:", learnerData);
 
 
   const handleChangePage = (event: unknown, newPage: number) => {
     dispatch(
-      getEQAUserData({ page: newPage, page_size: 5 }, "learner_id", data.user_id)
+      getEQAUserData({ page: newPage, page_size: pagination.page_size }, "learner_id", data.user_id)
     );
   };
 
@@ -157,19 +160,12 @@ const TableEQA1 = (props) => {
               ))}
             </TableBody>
           </Table>
-          <Stack
-            spacing={2}
-            className="flex justify-center items-center w-full my-12"
-          >
-            <Pagination
-              count={learner_meta_data?.pages}
-              page={learner_meta_data?.page}
-              variant="outlined" shape="rounded"
-              siblingCount={1}
-              boundaryCount={1}
-              onChange={handleChangePage}
-            />
-          </Stack>
+          <CustomPagination
+            pages={learner_meta_data?.pages}
+            page={learner_meta_data?.page}
+            handleChangePage={handleChangePage}
+            items={learner_meta_data?.items}
+          />
         </TableContainer>
       </div>
     </>

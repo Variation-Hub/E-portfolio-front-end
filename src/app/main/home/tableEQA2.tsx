@@ -13,6 +13,8 @@ import { selectUser } from "app/store/userSlice";
 import { getEQAUserData, selectUserManagement } from "app/store/userManagement";
 import { useDispatch } from "react-redux";
 import { getRandomColor } from "src/utils/randomColor";
+import { selectGlobalUser } from "app/store/globalUser";
+import CustomPagination from "src/app/component/Pagination/CustomPagination";
 
 function createData(
   avatarUrl: string,
@@ -73,17 +75,18 @@ const TableEQA2 = () => {
   const { data } = useSelector(selectUser);
   const { trainerData, trainer_meta_data } = useSelector(selectUserManagement);
   const dispatch: any = useDispatch();
+  const { pagination } = useSelector(selectGlobalUser)
 
   useEffect(() => {
-    dispatch(getEQAUserData({ page: 1, page_size: 5 }, "trainer_id", data.user_id));
-  }, [dispatch]);
+    dispatch(getEQAUserData({ page: 1, page_size: pagination.page_size }, "trainer_id", data.user_id));
+  }, [dispatch, pagination]);
 
 
   console.log("Tranier Data:", trainerData);
 
-  const handleChangePage2 = (event: unknown, newPage: number) => {
+  const handleChangePage = (event: unknown, newPage: number) => {
     dispatch(
-      getEQAUserData({ page: newPage, page_size: 5 }, "trainer_id", data.user_id)
+      getEQAUserData({ page: newPage, page_size: pagination.page_size }, "trainer_id", data.user_id)
     );
   };
 
@@ -136,20 +139,12 @@ const TableEQA2 = () => {
               ))}
             </TableBody>
           </Table>
-          <Stack
-            spacing={2}
-            className="flex justify-center items-center w-full my-12 "
-          >
-            <Pagination
-              count={trainer_meta_data?.pages}
-              page={trainer_meta_data?.page}
-              variant="outlined"
-              shape="rounded"
-              siblingCount={1}
-              boundaryCount={1}
-              onChange={handleChangePage2}
-            />
-          </Stack>
+          <CustomPagination
+            pages={trainer_meta_data?.pages}
+            page={trainer_meta_data?.page}
+            handleChangePage={handleChangePage}
+            items={trainer_meta_data?.items}
+          />
         </TableContainer>
       </div>
     </>
