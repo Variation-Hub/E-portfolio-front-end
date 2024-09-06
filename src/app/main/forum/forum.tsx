@@ -157,7 +157,7 @@ const Forum = () => {
       {(screenSize > 600 || !selectedCourse) && <div className={`${screenSize > 600 ? 'w-[30%]' : "w-full"} p-4  rounded-0 shadow-2 overflow-hidden overflow-y-scroll`}>
         {/* <div className={`w-full md:w-1/3 p-1 rounded-lg shadow-lg overflow-hidden ${selectedCourse ? 'hidden max-[600px]:block' : ''}`}> */}
         <div className="flex flex-col space-y-4">
-          <div className="flex items-center justify-between p-2">
+          <div className="flex items-center justify-between p-2 sticky top-0 bg-white z-10">
             <input
               type="text"
               placeholder="Search contacts..."
@@ -173,22 +173,27 @@ const Forum = () => {
               className="flex items-center cursor-pointer bg-white rounded-md p-2 hover:bg-gray-100 m-10 gap-10"
               onClick={(e) => handleSendMessage(e, msg)}
             >
-              <Avatar className="mr-4" alt={msg.course_course_name?.toUpperCase().charAt(0)} src="../" sx={{ bgcolor: getRandomColor(msg.course_course_name?.toLowerCase().charAt(0)) }} />
-              <div className="flex flex-col w-10/12 ">
-                <div className="flex justify-between flex-row ml-0 m-5 ">
+              <Avatar
+                className="mr-4"
+                alt={msg.course_course_name?.toUpperCase().charAt(0)}
+                src="../"
+                sx={{ bgcolor: getRandomColor(msg.course_course_name?.toLowerCase().charAt(0)) }}
+              />
+              <div className="flex flex-col w-10/12">
+                <div className="flex justify-between flex-row ml-0 m-5">
                   <Tooltip title={msg.course_course_name}>
                     <div className="font-semibold overflow-hidden text-ellipsis whitespace-nowrap">{msg.course_course_name}</div>
                   </Tooltip>
                   <div className="text-xs flex justify-end text-gray-500 w-[42%] sm:w-[70%]">{timeAgo(msg.latest_forum_created_at)}</div>
                 </div>
                 <Tooltip title={msg.course_course_code}>
-                  <div className="text-sm text-justify overflow-hidden text-ellipsis whitespace-nowrap ">{msg.course_course_code}</div>
+                  <div className="text-sm text-justify overflow-hidden text-ellipsis whitespace-nowrap">{msg.course_course_code}</div>
                 </Tooltip>
               </div>
-
             </div>
           ))}
         </div>
+
       </div>}
 
       {(screenSize > 600 || !!selectedCourse) && ((forumData.message?.course_course_id !== null) ?
