@@ -5,7 +5,6 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
 import { useDispatch } from 'react-redux';
 import { deleteTemplate, fetchTemplateData, selectFormData, slice } from 'app/store/formData';
 import { useSelector } from 'react-redux';
@@ -16,11 +15,6 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { useNavigate } from 'react-router-dom';
 import DataNotFound from 'src/app/component/Pages/dataNotFound';
 import { SecondaryButton } from 'src/app/component/Buttons';
-
-function createData(name, calories, fat, carbs, protein) {
-    return { name, calories, fat, carbs, protein };
-}
-
 
 export default function Templates() {
 
