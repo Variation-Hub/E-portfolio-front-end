@@ -13,6 +13,7 @@ import AlertDialog from 'src/app/component/Dialogs/AlertDialog';
 import CalendarComponent from './calendar';
 import { getLearnerDetails, selectLearnerManagement } from 'app/store/learnerManagement';
 import { verify } from 'crypto';
+import CustomPagination from 'src/app/component/Pagination/CustomPagination';
 
 const TimeLog = (props) => {
 
@@ -20,6 +21,7 @@ const TimeLog = (props) => {
   const { currentUser, selectedUser, selected } = useSelector(selectGlobalUser);
   const timeLog = useSelector(selectTimeLog);
   const { learner } = useSelector(selectLearnerManagement);
+  const { pagination } = useSelector(selectGlobalUser)
 
   const [edit, setEdit] = useState("save");
   const [timeLogData, setTimeLogData] = useState({
@@ -45,10 +47,10 @@ const TimeLog = (props) => {
     }));
   };
 
-  const handleCheckboxChange = async(e, row) => {
+  const handleCheckboxChange = async (e, row) => {
     const { checked } = e.target;
     console.log(checked);
-    await dispatch(updateTimeLogAPI({id : row.id, verified: checked}));
+    await dispatch(updateTimeLogAPI({ id: row.id, verified: checked }));
   };
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -97,17 +99,23 @@ const TimeLog = (props) => {
 
   const deleteConfromation = async () => {
     await dispatch(deleteTimeLogHandler(deleteId));
-    dispatch(getTimeLogAPI({ page: 1, page_size: 10 }, selected ? selectedUser?.user_id : currentUser?.user_id, filterData?.courseId, filterData?.jobType, approvedFilter));
+    dispatch(getTimeLogAPI({ page: 1, page_size: pagination.page_size }, selected ? selectedUser?.user_id : currentUser?.user_id, filterData?.courseId, filterData?.jobType, approvedFilter));
     setDeleteId("");
   };
 
   useEffect(() => {
     dispatch(getLearnerDetails(selected ? selectedUser?.learner_id : currentUser?.learner_id))
-  }, [])
+  }, [dispatch])
 
   useEffect(() => {
     if (selectedUser?.user_id || currentUser?.user_id) {
-      dispatch(getTimeLogAPI({ page: 1, page_size: 10 }, selected ? selectedUser?.user_id : currentUser?.user_id, filterData?.courseId, filterData?.jobType));
+      dispatch(getTimeLogAPI({ page: 1, page_size: pagination.page_size }, selected ? selectedUser?.user_id : currentUser?.user_id, filterData?.courseId, filterData?.jobType));
+    }
+  }, [pagination]);
+
+  useEffect(() => {
+    if (selectedUser?.user_id || currentUser?.user_id) {
+      dispatch(getTimeLogAPI({ page: 1, page_size: pagination.page_size }, selected ? selectedUser?.user_id : currentUser?.user_id, filterData?.courseId, filterData?.jobType));
       dispatch(getTimeLogSliceData(selected ? selectedUser?.user_id : currentUser?.user_id, filterData?.courseId, filterData?.jobType));
       dispatch(getTimeLogSpendData(selected ? selectedUser?.user_id : currentUser?.user_id, filterData?.courseId, filterData?.jobType));
     }
@@ -115,7 +123,7 @@ const TimeLog = (props) => {
 
   useEffect(() => {
     if (approvedFilter !== "") {
-      dispatch(getTimeLogAPI({ page: 1, page_size: 10 }, selected ? selectedUser?.user_id : currentUser?.user_id, filterData?.courseId, filterData?.jobType, approvedFilter));
+      dispatch(getTimeLogAPI({ page: 1, page_size: pagination.page_size }, selected ? selectedUser?.user_id : currentUser?.user_id, filterData?.courseId, filterData?.jobType, approvedFilter));
     }
   }, [dispatch, approvedFilter]);
 
@@ -127,7 +135,7 @@ const TimeLog = (props) => {
 
   const handleChangePage = (event: unknown, newPage: number) => {
     dispatch(
-      getTimeLogAPI({ page: newPage, page_size: 10 }, selected ? selectedUser?.user_id : currentUser?.user_id, filterData?.courseId, filterData?.jobType, approvedFilter)
+      getTimeLogAPI({ page: newPage, page_size: pagination.page_size }, selected ? selectedUser?.user_id : currentUser?.user_id, filterData?.courseId, filterData?.jobType, approvedFilter)
     );
   };
 
@@ -509,23 +517,23 @@ const TimeLog = (props) => {
                         align="left"
                         sx={{ borderBottom: "1px solid #ddd", width: "20rem" }}
                       >
-                      {(row?.trainer_id?.user_id === currentUser.user_id && currentUser.role === "Trainer") ?
-                        <>
-                          <Checkbox
-                            checked={row?.verified}
-                            onChange={(e) => handleCheckboxChange(e, row)}
-                            name="declaration"
-                            // color="primary"
-                            sx={{
-                              color: row?.verified ? "green" : "default", // Change color when checked
-                              '&.Mui-checked': {
-                                color: "green",
-                              }
-                            }}
-                          /> Assessor
-                        </>:
-                        row?.verified ? "Approved" : "Not Approved"
-                      }
+                        {(row?.trainer_id?.user_id === currentUser.user_id && currentUser.role === "Trainer") ?
+                          <>
+                            <Checkbox
+                              checked={row?.verified}
+                              onChange={(e) => handleCheckboxChange(e, row)}
+                              name="declaration"
+                              // color="primary"
+                              sx={{
+                                color: row?.verified ? "green" : "default", // Change color when checked
+                                '&.Mui-checked': {
+                                  color: "green",
+                                }
+                              }}
+                            /> Assessor
+                          </> :
+                          row?.verified ? "Approved" : "Not Approved"
+                        }
                       </TableCell>
                       <TableCell
                         align="left"
@@ -568,21 +576,14 @@ const TimeLog = (props) => {
                 </Typography>
               </div>
             )}
+            <CustomPagination
+              pages={timeLog?.meta_data?.pages}
+              page={timeLog?.meta_data?.page}
+              handleChangePage={handleChangePage}
+              items={timeLog?.meta_data?.items}
+            />
           </TableContainer>
         </Grid>
-        <Stack
-          spacing={2}
-          className="flex justify-center items-center w-full"
-        >
-          <Pagination
-            count={timeLog?.meta_data?.pages}
-            page={timeLog?.meta_data?.page}
-            variant="outlined" shape="rounded"
-            siblingCount={1}
-            boundaryCount={1}
-            onChange={handleChangePage}
-          />
-        </Stack>
       </>
       )}
 
