@@ -53,6 +53,8 @@ import { showMessage } from "app/store/fuse/messageSlice";
 import FuseLoading from "@fuse/core/FuseLoading";
 import DataNotFound from "src/app/component/Pages/dataNotFound";
 import Style from "./style.module.css";
+import CustomPagination from "src/app/component/Pagination/CustomPagination";
+import { selectGlobalUser } from "app/store/globalUser";
 
 interface Column {
   id:
@@ -378,7 +380,9 @@ const AddNewEvaluationDialogContent = (props) => {
 
 const Evaluation = (props) => {
   const [page, setPage] = useState(1);
-  const rowsPerPage = 7;
+  const { pagination } = useSelector(selectGlobalUser)
+
+  const rowsPerPage = pagination.page_size;
 
   const {
     setUpdateData = () => { },
@@ -426,8 +430,6 @@ const Evaluation = (props) => {
   useEffect(() => {
     dispatch(getCpdPlanningAPI(learnerId || data.user_id, "evaluations"));
   }, [dispatch]);
-
-  // console.log(cpdPlanningData.data.map(item => item.activities));
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const oopen = Boolean(anchorEl);
@@ -518,6 +520,12 @@ const Evaluation = (props) => {
       files: [],
     });
   };
+
+
+  useEffect(() => {
+    setPage(1);
+  }, [rowsPerPage]);
+
   const handlePageChange = (event, value) => {
     setPage(value);
   };
@@ -534,7 +542,7 @@ const Evaluation = (props) => {
   return (
     <>
       <div>
-        <TableContainer sx={{ maxHeight: 500 }} className="-m-12">
+        <TableContainer sx={{ minHeight: 580, display: "flex", flexDirection: "column", justifyContent: "space-between" }} className="-m-12">
           {dataFetchLoading ? (
             <FuseLoading />
           ) : paginatedData.length ? (
@@ -562,7 +570,6 @@ const Evaluation = (props) => {
                       hover
                       role="checkbox"
                       tabIndex={-1}
-                    //   key={row.whosupportyou}
                     >
                       {columns.map((column) => {
                         const value = row[column.id];
@@ -637,20 +644,13 @@ const Evaluation = (props) => {
               </div>
             </div>
           )}
+          <CustomPagination
+            pages={pageCount}
+            page={page}
+            handleChangePage={handlePageChange}
+            items={allEvaluations.length}
+          />
         </TableContainer>
-        <div className="fixed bottom-0 left-0 w-full flex justify-center py-4 mb-14">
-          <Stack spacing={2}>
-            <Pagination
-              count={pageCount}
-              variant="outlined"
-              shape="rounded"
-              page={page}
-              onChange={handlePageChange}
-              siblingCount={1}
-              boundaryCount={1}
-            />
-          </Stack>
-        </div>
       </div>
       <AlertDialog
         open={Boolean(deleteId)}

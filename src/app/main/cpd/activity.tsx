@@ -50,6 +50,8 @@ import { showMessage } from "app/store/fuse/messageSlice";
 import DataNotFound from "src/app/component/Pages/dataNotFound";
 import FuseLoading from "@fuse/core/FuseLoading";
 import Style from "./style.module.css";
+import CustomPagination from "src/app/component/Pagination/CustomPagination";
+import { selectGlobalUser } from "app/store/globalUser";
 
 interface Column {
   id:
@@ -509,9 +511,10 @@ const Activity = (props) => {
   const [openMenuDialog, setOpenMenuDialog] = useState<any>({});
   const [edit, setEdit] = useState("save");
   const [open, setOpen] = useState(false);
+  const { pagination } = useSelector(selectGlobalUser)
 
   const [page, setPage] = useState(1);
-  const rowsPerPage = 8;
+  const rowsPerPage = pagination.page_size;
 
   const dispatch: any = useDispatch();
   const { data } = useSelector(selectUser);
@@ -645,6 +648,10 @@ const Activity = (props) => {
     });
   };
 
+  useEffect(() => {
+    setPage(1);
+  }, [rowsPerPage]);
+
   const handlePageChange = (event, value) => {
     setPage(value);
   };
@@ -657,11 +664,14 @@ const Activity = (props) => {
     page * rowsPerPage
   );
   const pageCount = Math.ceil(allActivities.length / rowsPerPage);
+  console.log("page :", page);
+  console.log("pages :", pageCount);
+  console.log("items :", allActivities.length);
 
   return (
     <>
       <div>
-        <TableContainer sx={{ maxHeight: 500 }} className="-m-12">
+        <TableContainer sx={{ minHeight: 580, display: "flex", flexDirection: "column", justifyContent: "space-between" }} className="-m-12">
           {dataFetchLoading ? (
             <FuseLoading />
           ) : paginatedData.length ? (
@@ -763,20 +773,13 @@ const Activity = (props) => {
               </div>
             </div>
           )}
+          <CustomPagination
+            pages={pageCount}
+            page={page}
+            handleChangePage={handlePageChange}
+            items={allActivities.length}
+          />
         </TableContainer>
-        <div className="fixed bottom-0 left-0 w-full flex justify-center py-4 mb-14">
-          <Stack spacing={2}>
-            <Pagination
-              count={pageCount}
-              variant="outlined"
-              shape="rounded"
-              page={page}
-              onChange={handlePageChange}
-              siblingCount={1}
-              boundaryCount={1}
-            />
-          </Stack>
-        </div>
       </div>
       <AlertDialog
         open={Boolean(deleteId)}
