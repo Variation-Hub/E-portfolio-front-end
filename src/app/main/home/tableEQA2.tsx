@@ -130,7 +130,7 @@ const TableEQA2 = () => {
                     align="left"
                     sx={{ borderBottom: "2px solid #F8F8F8" }}
                   >
-                    {row.status}
+                    {row?.status}
                   </TableCell>
                 </TableRow>
               ))}
@@ -143,7 +143,7 @@ const TableEQA2 = () => {
             <Pagination
               count={trainer_meta_data?.pages}
               page={trainer_meta_data?.page}
-              variant="outlined" 
+              variant="outlined"
               shape="rounded"
               siblingCount={1}
               boundaryCount={1}

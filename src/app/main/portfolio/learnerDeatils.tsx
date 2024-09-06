@@ -619,16 +619,15 @@ const LearnerDetails = () => {
                                             size="small"
                                             options={employer}
                                             getOptionLabel={(option: any) => option.employer?.employer_name}
+                                            value={employer.find((emp) => emp.employer.employer_id === learnerData.employer_id) || null}
                                             renderInput={(params) => (
                                                 <TextField
                                                     {...params}
                                                     placeholder="Select Employer"
                                                     name="role"
-                                                    value={learnerData?.employer_id}
                                                 />
                                             )}
                                             onChange={(event, value) => {
-
                                                 setLearnerData((prevData) => ({
                                                     ...prevData,
                                                     employer_id: value?.employer?.employer_id || null,

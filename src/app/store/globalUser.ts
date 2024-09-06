@@ -10,6 +10,10 @@ const initialState = {
     dataUpdatingLoadding: false,
     pagination: {
         page_size: 10
+    },
+    learnerTab: {
+        learner_token: "",
+        tab: ""
     }
 };
 
@@ -37,6 +41,9 @@ const globalUserSlice = createSlice({
         },
         setPagination(state, action) {
             state.pagination = action.payload
+        },
+        setLearnerTab(state, action) {
+            state.learnerTab = action.payload
         }
     },
 });

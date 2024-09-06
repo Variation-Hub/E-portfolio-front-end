@@ -23,6 +23,7 @@ import { getRandomColor } from "src/utils/randomColor";
 import { slice as courseSlice } from "app/store/courseManagement";
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import { sendMail } from "app/store/userManagement";
+import { slice as globalSlice, selectGlobalUser } from "app/store/globalUser";
 
 const Portfolio = () => {
   const [open, setOpen] = useState(false);
@@ -35,6 +36,7 @@ const Portfolio = () => {
   const data = useSelector(selectstoreDataSlice);
   const user = useSelector(selectUser);
   const { singleData } = useSelector(selectLearnerManagement);
+  const { learnerTab } = useSelector(selectGlobalUser);
 
   const dispatch: any = useDispatch();
 
@@ -115,9 +117,20 @@ const Portfolio = () => {
   };
 
 
+  // const handleLearnerTab = () => {
+  //   if (learnerTab.tab && !learnerTab.tab.closed) {
+  //     learnerTab.tab.close();
+  //   }
+
+  //   const newTab = window.open(`/home`, '_blank');
+  //   dispatch(globalSlice.setLearnerTab({ ...learnerTab, tab: newTab }));
+  //   console.log(newTab, "++++");
+  // }
   return (
     <div>
       {/* {role === "Learner" && */}
+      {/* <SecondaryButtonOutlined name="Learner Dashboard" className="mr-12" onClick={handleLearnerTab} /> */}
+      {/* } */}
       <div className="m-10 flex flex-wrap justify-evenly gap-10 cursor-pointer">
         {portfolioCard?.map((value, index) => (
           <PortfolioCard data={value} index={index} key={value.id} />
@@ -185,9 +198,6 @@ const Portfolio = () => {
         <SecondaryButtonOutlined name="Awaiting Signature" className="mr-12" />
         <SecondaryButton name="Calendar" className="mr-12" onClick={handleOpen} />
         <SecondaryButton name="Profile" className="mr-12" onClick={handleOpenProfile} />
-        {/* <Link to="/portfolio/newsession">
-          <SecondaryButton name="New Session" />
-        </Link> */}
       </div>
       <Dialog
         open={open}
