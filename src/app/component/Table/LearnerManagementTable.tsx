@@ -45,6 +45,7 @@ import { slice } from 'app/store/reloadData'
 import { getRandomColor, IconsData } from "src/utils/randomColor";
 import { FaFolderOpen } from "react-icons/fa";
 import { slice as courseSlice } from "app/store/courseManagement";
+import { slice as globalSlice } from "app/store/globalUser";
 import CustomPagination from "../Pagination/CustomPagination";
 
 export default function LearnerManagementTable(props) {
@@ -193,8 +194,9 @@ export default function LearnerManagementTable(props) {
     setLoading(false);
   };
 
-  const redirection = (id, user_id) => {
-    dispatch(slice.setLeanerId({ id, user_id }))
+  const redirection = (row) => {
+    dispatch(slice.setLeanerId({ id: row.learner_id, user_id: row.user_id }))
+    dispatch(globalSlice.setSelectedUser(row))
     navigate('/portfolio')
   }
 
@@ -265,7 +267,7 @@ export default function LearnerManagementTable(props) {
                                     backgroundColor: getRandomColor(row?.user_name?.toLowerCase().charAt(0))
                                   }}
                                 />
-                                <div className="hover:text-[#2D6498] cursor-pointer " onClick={() => redirection(row.learner_id, row.user_id)}>
+                                <div className="hover:text-[#2D6498] cursor-pointer " onClick={() => redirection(row)}>
                                   {value} {row["last_name"]}
                                 </div>
                               </>

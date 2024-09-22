@@ -14,11 +14,12 @@ const initialState = {
         page_size: userTableMetaData.page_size,
         pages: 1
     },
-    singleData: {}
+    singleData: {},
+    users: {},
 };
 
-const supportDataSlice = createSlice({
-    name: 'supportData',
+const broadcastSlice = createSlice({
+    name: 'broadcast',
     initialState,
     reducers: {
         setLoader(state) {
@@ -27,10 +28,10 @@ const supportDataSlice = createSlice({
         setUpdatingLoader(state) {
             state.dataUpdatingLoadding = !state.dataUpdatingLoadding
         },
-        setSupportData(state, action) {
+        setBroadcastData(state, action) {
             state.data = action.payload
         },
-        setSupportMetadata(state, action) {
+        setBroadcastMetadata(state, action) {
             state.meta_data = action.payload
         },
         setSingleData(state, action) {
@@ -39,16 +40,16 @@ const supportDataSlice = createSlice({
     }
 });
 
-export const slice = supportDataSlice.actions;
-export const selectSupportData = ({ supportData }) => supportData;
+export const slice = broadcastSlice.actions;
+export const selectBroadcast = ({ broadcast }) => broadcast;
 
 const URL_BASE_LINK = jsonData.API_LOCAL_URL;
 
-// create support
-export const createSupportDataAPI = (data) => async (dispatch) => {
+// create Broadcast
+export const createBroadcastAPI = (data) => async (dispatch) => {
     try {
         dispatch(slice.setUpdatingLoader());
-        const response = await axios.post(`${URL_BASE_LINK}/support/create`, data)
+        const response = await axios.post(`${URL_BASE_LINK}/broadcast/create`, data)
         dispatch(showMessage({ message: response.data.message, variant: "success" }))
         dispatch(slice.setUpdatingLoader());
         return true;
@@ -59,12 +60,12 @@ export const createSupportDataAPI = (data) => async (dispatch) => {
     }
 }
 
-// update support
-export const updateSupportDataAPI = (data) => async (dispatch) => {
+// update Broadcast
+export const updateBroadcastAPI = (data) => async (dispatch) => {
     try {
         dispatch(slice.setUpdatingLoader());
-        const { ...payload } = data
-        const response = await axios.patch(`${URL_BASE_LINK}/support/update/${data.support_id}`, payload)
+        const { id, title, description } = data
+        const response = await axios.patch(`${URL_BASE_LINK}/broadcast/update/${id}`, { title, description })
         dispatch(showMessage({ message: response.data.message, variant: "success" }))
         dispatch(slice.setUpdatingLoader());
         return true;
@@ -75,11 +76,11 @@ export const updateSupportDataAPI = (data) => async (dispatch) => {
     };
 }
 
-// delete support
-export const deleteSupportHandler = (id) => async (dispatch) => {
+// delete Broadcast
+export const deleteBroadcastHandler = (id) => async (dispatch) => {
     try {
         dispatch(slice.setUpdatingLoader());
-        const response = await axios.delete(`${URL_BASE_LINK}/support/delete/${id}`)
+        const response = await axios.delete(`${URL_BASE_LINK}/broadcast/delete/${id}`)
         console.log(response);
         dispatch(showMessage({ message: response.data.message, variant: "success" }))
         dispatch(slice.setUpdatingLoader());
@@ -91,23 +92,18 @@ export const deleteSupportHandler = (id) => async (dispatch) => {
     }
 }
 
-export const getSupportDataAPI = (data = { page: 1, page_size: 10 }, id) => async (dispatch) => {
-
+export const getBroadcastDataAPI = (data = { page: 1, page_size: 10 }) => async (dispatch) => {
     try {
 
         dispatch(slice.setLoader());
 
         const { page = 1, page_size = 10 } = data;
 
-        let url = `${URL_BASE_LINK}/support/list?meta=true&page=${page}&limit=${page_size}`
+        let url = `${URL_BASE_LINK}/broadcast/list?meta=true&page=${page}&limit=${page_size}`
 
-        if (id) {
-            url = `${url}&request_id=${id}`
-        }
         const response = await axios.get(url);
-        // dispatch(showMessage({ message: response.data.message, variant: "success" }))
-        dispatch(slice.setSupportData(response.data.data))
-        dispatch(slice.setSupportMetadata(response.data.meta_data))
+        dispatch(slice.setBroadcastData(response.data.data))
+        dispatch(slice.setBroadcastMetadata(response.data.meta_data))
         dispatch(slice.setLoader());
         return true;
 
@@ -116,7 +112,22 @@ export const getSupportDataAPI = (data = { page: 1, page_size: 10 }, id) => asyn
         dispatch(slice.setLoader());
         return false
     };
-
 }
 
-export default supportDataSlice.reducer;
+export const BroadcastMessage = (data) => async (dispatch) => {
+    try {
+        dispatch(slice.setUpdatingLoader());
+        const { ...payload } = data
+        console.log(data, "data++")
+        const response = await axios.post(`${URL_BASE_LINK}/broadcast/message`, payload)
+        dispatch(showMessage({ message: response.data.message, variant: "success" }))
+        dispatch(slice.setUpdatingLoader());
+        return true;
+    } catch (err) {
+        dispatch(showMessage({ message: err.response?.data.message, variant: "error" }))
+        dispatch(slice.setUpdatingLoader());
+        return false;
+    };
+}
+
+export default broadcastSlice.reducer;

@@ -1,43 +1,27 @@
 import React, { useState } from "react";
-import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import { Avatar, IconButton, Pagination } from "@mui/material";
-import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
-import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import { Avatar, IconButton } from "@mui/material";
 import Style from "./style.module.css";
 import { useDispatch } from "react-redux";
-import { deleteUserHandler, fetchUserAPI } from "app/store/userManagement";
-import { userTableMetaData } from "src/app/contanst/metaData";
 import AlertDialog from "../Dialogs/AlertDialog";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import { useSelector } from "react-redux";
 import {
   Menu,
   MenuItem,
   Dialog,
-  Typography,
-  TextField,
-  Autocomplete,
-  Box,
 } from "@mui/material";
 import {
   DangerButton,
   LoadingButton,
-  SecondaryButton,
   SecondaryButtonOutlined,
 } from "../Buttons";
-import {
-  courseAllocationAPI,
-  selectCourseManagement,
-} from "app/store/courseManagement";
-import { Stack } from "@mui/system";
 import { getRandomColor } from "src/utils/randomColor";
-import { deleteEmployerHandler, getEmployerAPI } from "app/store/employer";
+import { deleteEmployerHandler } from "app/store/employer";
 import EmployerDetails from "src/app/main/admin/employerManagement/userDetails";
 import CustomPagination from "../Pagination/CustomPagination";
 
@@ -49,15 +33,14 @@ export default function EmployerManagementTable(props) {
     meta_data,
     dataUpdatingLoadding,
     handleChangePage,
+    refetchEmployer
   } = props;
 
   const [deleteId, setDeleteId] = useState("");
   const [openMenuDialog, setOpenMenuDialog] = useState();
   const [editEmployer, setEditEmployer] = useState(false);
-  const [loading, setLoading] = useState(false);
   const dispatch: any = useDispatch();
 
-  const { data } = useSelector(selectCourseManagement);
 
 
   const [employerData, setEmployerData] = useState({
@@ -267,14 +250,6 @@ export default function EmployerManagementTable(props) {
         >
           Delete
         </MenuItem>
-        {/* <MenuItem
-          onClick={() => {
-            handleClose();
-            setEditEmployer(true);
-          }}
-        >
-          Course Allocation
-        </MenuItem> */}
       </Menu>
       <Dialog
         open={editEmployer}
@@ -293,6 +268,7 @@ export default function EmployerManagementTable(props) {
           employerData={employerData}
           setEmployerData={setEmployerData}
           handleDataUpdate={handleDataUpdate}
+          refetchEmployer={refetchEmployer}
         />
       </Dialog>
     </>

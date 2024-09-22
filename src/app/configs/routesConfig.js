@@ -23,6 +23,7 @@ import ForgotConfig from "../main/forgotPassword/forgotConfig";
 import MyProfileConfig from "../main/myProfile/myProfileConfig";
 import NotificationConfig from "../main/notification/notificationConfig";
 import TimeLogConfig from "../main/timeLog/timeLogConfig";
+import BroadcastConfig from "../main/broadcast/broadcastConfig";
 
 const routeConfigs = [
     LandingConfig,
@@ -47,6 +48,7 @@ const routeConfigs = [
     MyProfileConfig,
     NotificationConfig,
     TimeLogConfig,
+    BroadcastConfig
 ];
 
 const routes = [

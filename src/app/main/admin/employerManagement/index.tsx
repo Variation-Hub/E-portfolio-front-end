@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Breadcrumb from "src/app/component/Breadcrumbs";
 import { SecondaryButton } from "src/app/component/Buttons";
 import DataNotFound from "src/app/component/Pages/dataNotFound";
@@ -32,10 +32,6 @@ const Index = () => {
 
   const [searchKeyword, setSearchKeyword] = useState("");
 
-  useEffect(() => {
-    dispatch(getEmployerAPI());
-  }, [dispatch]);
-
   const searchByKeywordUser = (e) => {
     if (e.key === "Enter") {
       searchAPIHandler();
@@ -61,7 +57,7 @@ const Index = () => {
 
   useEffect(() => {
     refetchEmployer();
-  }, [pagination])
+  }, [dispatch, pagination])
 
   return (
     <div className="overflow-y-scroll">
@@ -86,9 +82,7 @@ const Index = () => {
                         <Close
                           onClick={() => {
                             setSearchKeyword("");
-                            dispatch(
-                              getEmployerAPI()
-                            );
+                            refetchEmployer()
                           }}
                           sx={{
                             color: "#5B718F",
@@ -137,6 +131,7 @@ const Index = () => {
               dataUpdatingLoadding={dataUpdatingLoadding}
               search_keyword={searchKeyword}
               handleChangePage={handleChangePage}
+              refetchEmployer={refetchEmployer}
             />
           ) : (
             <div

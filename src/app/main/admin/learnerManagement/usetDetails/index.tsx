@@ -3,25 +3,17 @@ import {
   Box,
   IconButton,
   InputAdornment,
-  MenuItem,
   Paper,
   TextField,
   Tooltip,
   Typography,
 } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
-import { fundingBodyData, roles } from "src/app/contanst";
 import {
   LoadingButton,
   SecondaryButton,
   SecondaryButtonOutlined,
 } from "src/app/component/Buttons";
-import { timezones } from "src/app/contanst/timezoneData";
 import {
-  emailValidationMsg,
-  mobileValidationMsg,
-  nameValidationMsg,
-  passwordValidation,
   usernameValidationMsg,
 } from "src/app/contanst/regValidation";
 import HelpOutlinedIcon from "@mui/icons-material/HelpOutlined";
@@ -180,7 +172,7 @@ const UserDetails = (props) => {
             />
           </div>
         </Box>
-        <Box className="m-12 flex flex-col justify-between gap-12 sm:flex-row">
+        {!updateData && <Box className="m-12 flex flex-col justify-between gap-12 sm:flex-row">
           <div className="w-1/2">
             <Typography
               sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}
@@ -290,7 +282,7 @@ const UserDetails = (props) => {
               }}
             />
           </div>
-        </Box>
+        </Box>}
 
         <Box className="m-12 flex flex-col justify-between gap-12 sm:flex-row">
           <div className="w-1/2">

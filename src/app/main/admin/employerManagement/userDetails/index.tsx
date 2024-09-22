@@ -2,82 +2,47 @@ import {
   Box,
   Card,
   Grid,
-  IconButton,
   MenuItem,
-  Paper,
   Select,
   TextField,
-  Tooltip,
   Typography,
 } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
 import {
   AdminRedirect,
   EmployerRedirect,
-  fundingBodyData,
-  roles,
 } from "src/app/contanst";
 import {
   LoadingButton,
   SecondaryButton,
   SecondaryButtonOutlined,
 } from "src/app/component/Buttons";
-import { timezones } from "src/app/contanst/timezoneData";
-import {
-  emailValidationMsg,
-  mobileValidationMsg,
-  nameValidationMsg,
-  passwordValidation,
-  usernameValidationMsg,
-} from "src/app/contanst/regValidation";
-import HelpOutlinedIcon from "@mui/icons-material/HelpOutlined";
-import { DatePicker } from "@mui/x-date-pickers";
 import { FileUploader } from "react-drag-drop-files";
-import { useState } from "react";
 import Breadcrumb from "src/app/component/Breadcrumbs";
 import Style from "./style.module.css";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { createEmployerAPI, getEmployerAPI, updateEmployerAPI, uploadPDF } from "app/store/employer";
+import { updateEmployerAPI, uploadPDF } from "app/store/employer";
 
 const EmployerDetails = (props) => {
 
   const {
-    userData,
-    updateData,
-    dataUpdatingLoadding,
-    userDataError,
     setEditEmployer = () => { },
     setEmployerData = () => { },
     employerData,
     handleDataUpdate,
+    refetchEmployer
   } = props;
 
   const navigate = useNavigate();
   const dispatch: any = useDispatch();
 
-  // const [date, setDate] = useState({
-  //   assessment_date: "",
-  //   assessment_renewal_date: "",
-  //   insurance_renewal_date: "",
-  // });
-
-  // const handleDateUpdate = (e) => {
-  //   const { name, value } = e.target;
-  //   setDate((prevState) => ({
-  //     ...prevState,
-  //     [name]: value,
-  //   }));
-  // };
-
-  console.log(employerData)
   const createUser = Object.values(employerData).find((data) => data === "") === undefined;
 
   const updateUserHandler = async () => {
     try {
       let response;
       response = await dispatch(updateEmployerAPI(employerData));
-      dispatch(getEmployerAPI({ page: 1, page_size: 10 }));
+      refetchEmployer()
     } catch (err) {
       console.log(err);
     } finally {
@@ -721,7 +686,7 @@ const EmployerDetails = (props) => {
                           />
                         </div>
                         {employerData.file ? (
-                          <p className="text-center mb-4">{employerData.file.url }</p>
+                          <p className="text-center mb-4">{employerData.file.url}</p>
                         ) : (
                           <>
                             <p className="text-center mb-4">
@@ -744,7 +709,7 @@ const EmployerDetails = (props) => {
             </Box>
 
             <Box style={{ margin: "auto 1rem 1rem auto" }}>
-              {dataUpdatingLoadding ? (
+              {false ? (
                 <LoadingButton />
               ) : (
                 <>

@@ -1,10 +1,18 @@
 import {
+  Checkbox,
   Dialog,
   DialogActions,
   DialogContent,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  Grid,
   IconButton,
+  ListItemText,
   Menu,
   MenuItem,
+  Radio,
+  RadioGroup,
   Select,
   Table,
   TableBody,
@@ -24,14 +32,6 @@ import {
 } from "src/app/component/Buttons";
 import { TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import {
-  createSupportDataAPI,
-  deleteSupportHandler,
-  getSupportDataAPI,
-  selectSupportData,
-  slice,
-  updateSupportDataAPI,
-} from "app/store/supportData";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { selectUser } from "app/store/userSlice";
@@ -41,11 +41,11 @@ import DataNotFound from "src/app/component/Pages/dataNotFound";
 import Style from "./style.module.css";
 import { selectGlobalUser } from "app/store/globalUser";
 import CustomPagination from "src/app/component/Pagination/CustomPagination";
-import { UserRole } from "src/enum";
+import { createBroadcastAPI, deleteBroadcastHandler, getBroadcastDataAPI, selectBroadcast, updateBroadcastAPI, slice, BroadcastMessage } from "app/store/broadcast";
+import { fetchUserAllAPI, selectFormData } from "app/store/formData";
 
 const AddRequest = (props) => {
-  const { supportData = {}, handleChange = () => { } } = props;
-  const { data } = useSelector(selectUser);
+  const { broadcastData = {}, handleChange = () => { } } = props;
 
   return (
     <>
@@ -63,7 +63,7 @@ const AddRequest = (props) => {
             placeholder="Add your title"
             fullWidth
             multiline
-            value={supportData.title}
+            value={broadcastData.title}
             onChange={handleChange}
           />
         </div>
@@ -81,82 +81,49 @@ const AddRequest = (props) => {
             fullWidth
             multiline
             rows={6}
-            value={supportData.description}
+            value={broadcastData.description}
             onChange={handleChange}
           />
         </div>
-        {data.role === "Admin" &&
-          <div>
-            <Typography
-              sx={{
-                fontSize: "0.9vw",
-                marginBottom: "0.5rem",
-                fontWeight: "500",
-              }}
-              className="name"
-            >
-              Select Status
-            </Typography>
-            <Select
-              name="status"
-              value={supportData?.status}
-              size="small"
-              placeholder="Select Type"
-              required
-              fullWidth
-              onChange={handleChange}
-              // disabled={mode === "view"}
-              className="input"
-            >
-              <MenuItem value={"Pending"}>Pending</MenuItem>
-              <MenuItem value={"InProgress"}>InProgress</MenuItem>
-              <MenuItem value={"Reject"}>Reject</MenuItem>
-              <MenuItem value={"Resolve"}>Resolve</MenuItem>
-            </Select>
-          </div>}
       </Box>
     </>
   );
 };
 
-const Support = (props) => {
-  const { data } = useSelector(selectUser);
-  const { singleData, dataUpdatingLoadding, dataFetchLoading, meta_data } = useSelector(selectSupportData);
+const Broadcast = (props) => {
+  const { singleData, dataUpdatingLoadding, dataFetchLoading, meta_data } = useSelector(selectBroadcast);
+  const { users } = useSelector(selectFormData);
 
   const { pagination } = useSelector(selectGlobalUser)
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedRow, setSelectedRow] = useState<any>(null);
   const [dialogType, setDialogType] = useState(false);
-
   const [deleteId, setDeleteId] = useState("");
-
-  const [supportData, setSupportData] = useState({
-    request_id: data.user_id,
+  const [broadcastData, setBroadcastData] = useState({
     title: "",
     description: "",
   });
 
   const deleteIcon = (id) => {
-    setDeleteId(selectedRow?.support_id);
+    setDeleteId(selectedRow?.id);
   };
 
   const deleteConfromation = async () => {
-    await dispatch(deleteSupportHandler(deleteId));
-    fetchSupportData()
+    await dispatch(deleteBroadcastHandler(deleteId));
+    fetchBroadcastData()
     setDeleteId("");
   };
 
   const dispatch: any = useDispatch();
 
-  const fetchSupportData = (page = 1) => {
-    dispatch(getSupportDataAPI({ page, page_size: pagination.page_size }, data.role !== UserRole.Admin && data.user_id));
+  const fetchBroadcastData = (page = 1) => {
+    dispatch(getBroadcastDataAPI({ page, page_size: pagination.page_size }));
   }
 
   const clearSingleData = () => {
     dispatch(slice.setSingleData({}));
-    setSupportData({
-      request_id: data.user_id,
+    setBroadcastData({
       title: "",
       description: "",
     });
@@ -173,7 +140,6 @@ const Support = (props) => {
   const handleClick = (event, row) => {
     dispatch(slice.setSingleData(row));
     setSelectedRow(row);
-    console.log(row);
     setAnchorEl(event.currentTarget);
   };
 
@@ -183,21 +149,20 @@ const Support = (props) => {
   };
 
   const handleEdit = () => {
-    setSupportData(singleData);
+    setBroadcastData(singleData);
     handleClickOpen();
   };
 
-  const support = useSelector(selectSupportData);
-
+  const broadcast = useSelector(selectBroadcast);
+  console.log(broadcast, "+++");
   useEffect(() => {
-    fetchSupportData()
+    fetchBroadcastData()
   }, [dispatch, pagination]);
 
   const handleSubmit = async () => {
     try {
-      let response;
-      response = await dispatch(createSupportDataAPI(supportData));
-      fetchSupportData()
+      await dispatch(createBroadcastAPI(broadcastData));
+      fetchBroadcastData()
     } catch (err) {
       console.log(err);
     } finally {
@@ -209,8 +174,8 @@ const Support = (props) => {
   const handleUpdate = async () => {
     try {
       let response;
-      response = await dispatch(updateSupportDataAPI(supportData));
-      fetchSupportData()
+      response = await dispatch(updateBroadcastAPI(broadcastData));
+      fetchBroadcastData()
     } catch (err) {
       console.log(err);
     } finally {
@@ -221,17 +186,17 @@ const Support = (props) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setSupportData((prevState) => ({
+    setBroadcastData((prevState) => ({
       ...prevState,
       [name]: value,
     }));
   };
 
   const handleChangePage = (event: unknown, newPage: number) => {
-    fetchSupportData(newPage)
+    fetchBroadcastData(newPage)
   };
 
-  const isSupport = Object.values(supportData).find(data => data === "") === undefined;
+  const isBroadcast = Object.values(broadcastData).find(data => data === "") === undefined;
 
   const formatDate = (date) => {
     if (!date) return "";
@@ -239,10 +204,46 @@ const Support = (props) => {
     return formattedDate;
   };
 
+  const [selectedValue, setSelectedValue] = useState("");
+  const [openBroadcast, setOpenBroadcast] = useState(false);
+  const [userData, setuserData] = useState({ user_ids: [] });
+
+  const handleRadioChange = (event) => {
+    setSelectedValue(event.target.value);
+  };
+  const handleDataUpdate = (event) => {
+    setuserData({
+      ...userData,
+      user_ids: event.target.value,
+    });
+  };
+
+  const handleCloseBroadDialog = () => {
+    clearSingleData();
+    setSelectedValue("")
+    setOpenBroadcast(false)
+    setuserData({ user_ids: [] });
+  };
+
+  console.log(selectedRow, "osososoo", "data++")
+  const handleBroadcastSubmit = async () => {
+    if (selectedValue === 'Individual') {
+      await dispatch(BroadcastMessage({ user_ids: userData.user_ids, title: selectedRow.title, description: selectedRow.description }));
+    } else {
+      await dispatch(BroadcastMessage({ assign: selectedValue, title: selectedRow.title, description: selectedRow.description }));
+    }
+    handleCloseBroadDialog();
+  };
+
+  const handleBroadcastOpen = () => {
+    setOpenBroadcast(true);
+    dispatch(fetchUserAllAPI())
+  };
+
   return (
     <>
       <div className="m-10">
-        {data.role !== "Admin" && <Box
+        <Box
           className="flex justify-end mb-10"
           sx={{
             borderBottom: 1,
@@ -253,17 +254,17 @@ const Support = (props) => {
           }}
         >
           <SecondaryButton
-            name="Add Request"
+            name="Add Broadcast"
             className="py-6 px-12 mb-10"
             startIcon={<AddIcon sx={{ mx: -0.5 }} />}
             onClick={() => handleClickOpen()}
           />
-        </Box>}
+        </Box>
         <div>
           <TableContainer sx={{ minHeight: 550, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
             {dataFetchLoading ? (
               <FuseLoading />
-            ) : support.data.length ? (
+            ) : broadcast.data.length ? (
               <Table
                 sx={{ minWidth: 650, height: "100%" }}
                 size="small"
@@ -290,32 +291,26 @@ const Support = (props) => {
                       }}>
                       Description
                     </TableCell>
-                    {data.role === "Admin" &&
-                      <>
-                        <TableCell align="left"
-                          sx={{
-                            width: "15rem",
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                            whiteSpace: "nowrap",
-                          }}>
-                          Email
-                        </TableCell>
-                        <TableCell align="left" sx={{ width: "15rem" }}>
-                          User Name
-                        </TableCell>
-                      </>
-                    }
+                    <TableCell align="left"
+                      sx={{
+                        width: "15rem",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}>
+                      Email
+                    </TableCell>
+                    <TableCell align="left" sx={{ width: "15rem" }}>
+                      User Name
+                    </TableCell>
                     <TableCell align="left" sx={{ width: "15rem" }}>
                       Date
                     </TableCell>
-                    <TableCell align="left" sx={{ width: "15rem" }}>Status</TableCell>
-                    {data.role === "Admin" &&
-                      <TableCell align="left" sx={{ width: "15rem" }}>Action</TableCell>}
+                    <TableCell align="left" sx={{ width: "15rem" }}>Action</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {support.data?.map((row) => (
+                  {broadcast.data?.map((row) => (
                     <TableRow
                       key={row.title}
                       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -345,26 +340,22 @@ const Support = (props) => {
                       >
                         {row.description}
                       </TableCell>
-                      {data.role === "Admin" &&
-                        <>
-                          <TableCell
-                            align="left"
-                            sx={{
-                              width: "15rem",
-                              overflow: "hidden",
-                              textOverflow: "ellipsis",
-                              whiteSpace: "nowrap",
-                            }}>
-                            {row.request_id.email}
-                          </TableCell>
-                          <TableCell
-                            align="left"
-                            sx={{ borderBottom: "2px solid #F8F8F8", width: "15rem" }}
-                          >
-                            {row?.request_id?.user_name}
-                          </TableCell>
-                        </>
-                      }
+                      <TableCell
+                        align="left"
+                        sx={{
+                          width: "15rem",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                        }}>
+                        {row.user_id.email}
+                      </TableCell>
+                      <TableCell
+                        align="left"
+                        sx={{ borderBottom: "2px solid #F8F8F8", width: "15rem" }}
+                      >
+                        {row?.user_id?.user_name}
+                      </TableCell>
                       <TableCell
                         align="left"
                         sx={{ borderBottom: "2px solid #F8F8F8", width: "15rem" }}
@@ -375,21 +366,14 @@ const Support = (props) => {
                         align="left"
                         sx={{ borderBottom: "2px solid #F8F8F8", width: "15rem" }}
                       >
-                        {row.status}
-                      </TableCell>
-                      {data.role === "Admin" &&
-                        <TableCell
-                          align="left"
-                          sx={{ borderBottom: "2px solid #F8F8F8", width: "15rem" }}
+                        <IconButton
+                          size="small"
+                          sx={{ color: "#5B718F", marginRight: "4px" }}
+                          onClick={(e) => handleClick(e, row)}
                         >
-                          <IconButton
-                            size="small"
-                            sx={{ color: "#5B718F", marginRight: "4px" }}
-                            onClick={(e) => handleClick(e, row)}
-                          >
-                            <MoreHorizIcon fontSize="small" />
-                          </IconButton>
-                        </TableCell>}
+                          <MoreHorizIcon fontSize="small" />
+                        </IconButton>
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -419,8 +403,8 @@ const Support = (props) => {
         <AlertDialog
           open={Boolean(deleteId)}
           close={() => deleteIcon("")}
-          title="Delete Support?"
-          content="Deleting this support will also remove all associated data and relationships. Proceed with deletion?"
+          title="Delete Broadcast?"
+          content="Deleting this Broadcast will also remove all associated data and relationships. Proceed with deletion?"
           className="-224 "
           actionButton={
             dataUpdatingLoadding ? (
@@ -428,7 +412,7 @@ const Support = (props) => {
             ) : (
               <DangerButton
                 onClick={deleteConfromation}
-                name="Delete Support"
+                name="Delete Broadcast"
               />
             )
           }
@@ -448,10 +432,17 @@ const Support = (props) => {
         >
           <MenuItem
             onClick={() => {
+              handleBroadcastOpen()
+              setAnchorEl(null);
+            }}
+          >
+            Broadcast
+          </MenuItem>
+          <MenuItem
+            onClick={() => {
               handleEdit();
               handleClose();
             }}
-            disabled={data.role !== "Admin" && singleData.status === "Closed"}
           >
             Edit
           </MenuItem>
@@ -476,7 +467,7 @@ const Support = (props) => {
           }}
         >
           <DialogContent>
-            <AddRequest supportData={supportData} handleChange={handleChange} />
+            <AddRequest broadcastData={broadcastData} handleChange={handleChange} />
           </DialogContent>
           <DialogActions>
             {dataUpdatingLoadding ? (
@@ -494,15 +485,131 @@ const Support = (props) => {
                       ? handleUpdate
                       : handleSubmit
                   }
-                  disable={!isSupport}
+                  disable={!isBroadcast}
                 />
               </>
             )}
           </DialogActions>
+        </Dialog>
+
+        <Dialog
+          open={openBroadcast}
+          onClose={handleCloseBroadDialog}
+          sx={{
+            ".MuiDialog-paper": {
+              borderRadius: "4px",
+              width: "100%",
+            },
+          }}
+        >
+          <DialogContent >
+            <Grid>
+              <FormControl component="fieldset">
+                <FormLabel component="legend">Broadcast Message to users</FormLabel>
+                <RadioGroup
+                  aria-label="options"
+                  defaultValue="outlined"
+                  name="radio-buttons-group"
+                >
+                  <FormControlLabel
+                    value="All"
+                    control={<Radio />}
+                    label="All"
+                    onChange={handleRadioChange}
+                  />
+                  <FormControlLabel
+                    value="All Learner"
+                    control={<Radio />}
+                    label="All Learner"
+                    onChange={handleRadioChange}
+                  />
+                  <FormControlLabel
+                    value="All EQA"
+                    control={<Radio />}
+                    label="All EQA"
+                    onChange={handleRadioChange}
+                  />
+                  <FormControlLabel
+                    value="All Trainer"
+                    control={<Radio />}
+                    label="All Trainer"
+                    onChange={handleRadioChange}
+                  />
+                  <FormControlLabel
+                    value="All Employer"
+                    control={<Radio />}
+                    label="All Employer"
+                    onChange={handleRadioChange}
+                  />
+                  <FormControlLabel
+                    value="All IQA"
+                    control={<Radio />}
+                    label="All IQA"
+                    onChange={handleRadioChange}
+                  />
+                  <FormControlLabel
+                    value="All LIQA"
+                    control={<Radio />}
+                    label="All LIQA"
+                    onChange={handleRadioChange}
+                  />
+                  <FormControlLabel
+                    value="Individual"
+                    control={<Radio checked={selectedValue === 'Individual'} onChange={handleRadioChange} />}
+                    label="Individual"
+                    onChange={handleRadioChange}
+                  />
+                  {selectedValue === 'Individual' && (
+                    <Grid className="w-full">
+                      <Typography sx={{ fontSize: '0.9vw', marginBottom: '0.5rem', fontWeight: '500' }}>
+                        Select Users
+                      </Typography>
+                      <Select
+                        name="users"
+                        value={userData.user_ids}
+                        size="small"
+                        placeholder="Select users"
+                        required
+                        fullWidth
+                        multiple
+                        onChange={handleDataUpdate}
+                        renderValue={(selected) =>
+                          selected.map((id) => {
+                            const allusers = users.data.find((user) => user.user_id === id);
+                            return allusers ? allusers.user_name : '';
+                          }).join(', ')
+                        }
+                      >
+                        {users.data.map((data) => (
+                          <MenuItem key={data.user_id} value={data.user_id}>
+                            <Checkbox checked={userData.user_ids.includes(data.user_id)} />
+                            <ListItemText primary={data.user_name} />
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </Grid>
+                  )}
+                </RadioGroup>
+              </FormControl>
+            </Grid>
+          </DialogContent>
+
+          <Box className="flex items-center justify-end m-12 mt-24">
+            <DialogActions>
+              {dataUpdatingLoadding ?
+                <LoadingButton />
+                :
+                <>
+                  <SecondaryButtonOutlined name="Cancel" className=" w-1/12" onClick={handleCloseBroadDialog} />
+                  <SecondaryButton name="Broadcast" className=" ml-10" onClick={handleBroadcastSubmit} disable={!userData || !selectedValue} />
+                </>
+              }
+            </DialogActions>
+          </Box>
         </Dialog>
       </div>
     </>
   );
 };
 
-export default Support;
+export default Broadcast;

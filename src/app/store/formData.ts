@@ -189,7 +189,6 @@ export const fetchUserAllAPI = () => async (dispatch) => {
         let url = `${URL_BASE_LINK}/user/list`;
 
         const response = await axios.get(url);
-        // dispatch(showMessage({ message: response.data.message, variant: "success" }))
         dispatch(slice.setUsers(response.data));
         dispatch(slice.setLoader());
         return true;

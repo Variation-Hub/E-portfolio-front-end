@@ -32,6 +32,8 @@ import HelpOutlinedIcon from "@mui/icons-material/HelpOutlined";
 import { useState } from "react";
 import Style from "./style.module.css";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { countryCodes } from "src/utils/randomColor";
+import MobileNumberInput from "src/app/component/Input/MobileNumberInput";
 
 const UserDetails = (props) => {
   const {
@@ -76,7 +78,7 @@ const UserDetails = (props) => {
     <div className="h-full flex flex-col">
       <Box>
         <Box className="m-12 flex flex-col justify-between gap-12 sm:flex-row">
-          <div>
+          <div className="w-1/2">
             <Typography
               sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}
               className={Style.name}
@@ -109,7 +111,7 @@ const UserDetails = (props) => {
               }}
             />
           </div>
-          <div>
+          <div className="w-1/2">
             <Typography
               sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}
               className={Style.name}
@@ -143,7 +145,7 @@ const UserDetails = (props) => {
           </div>
         </Box>
         <Box className="m-12 flex flex-col justify-between gap-12 sm:flex-row">
-          <div>
+          <div className="w-1/2">
             <Typography
               sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}
               className={Style.name}
@@ -181,7 +183,7 @@ const UserDetails = (props) => {
             />
           </div>
 
-          <div>
+          <div className="w-1/2">
             <Typography
               sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}
               className={Style.name}
@@ -215,8 +217,8 @@ const UserDetails = (props) => {
             />
           </div>
         </Box>
-        <Box className="m-12 flex flex-col justify-between gap-12 sm:flex-row">
-          <div>
+        {!updateData && <Box className="m-12 flex flex-col justify-between gap-12 sm:flex-row">
+          <div className="w-1/2">
             <Typography
               sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}
               className={Style.name}
@@ -277,7 +279,7 @@ const UserDetails = (props) => {
             />
           </div>
 
-          <div>
+          <div className="w-1/2">
             <Typography
               sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}
               className={Style.name}
@@ -340,39 +342,69 @@ const UserDetails = (props) => {
               }}
             />
           </div>
-        </Box>
+        </Box>}
 
         <Box className="m-12 flex flex-col justify-between gap-12 sm:flex-row">
-          <div>
+          <div className="w-1/2">
             <Typography
               sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}
               className={Style.name}
             >
               Mobile<sup>*</sup>
             </Typography>
-            <TextField
-              name="mobile"
+            {/* <div className="flex">
+              <Autocomplete
+                size="small"
+                value={userData?.country_code}
+                options={countryCodes.map((option) => option)}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    placeholder="Select country code"
+                    name="country_code"
+                    sx={{ width: "60px" }}
+                  />
+                )}
+                onChange={(e, value) =>
+                  handleUpdate({ target: { name: "country_code", value: value } })
+                }
+                sx={{
+                  ".MuiAutocomplete-clearIndicator": {
+                    color: "#5B718F",
+                  },
+                }}
+                PaperComponent={({ children }) => (
+                  <Paper style={{ borderRadius: "4px" }}>{children}</Paper>
+                )}
+              />
+              <TextField
+                name="mobile"
+                value={userData?.mobile}
+                size="small"
+                placeholder="Enter mobile number"
+                required
+                fullWidth
+                onChange={handleUpdate}
+                error={userDataError?.mobile}
+                InputProps={{
+                  endAdornment: (
+                    <Tooltip title={mobileValidationMsg} placement="bottom" arrow>
+                      <HelpOutlinedIcon
+                        sx={{
+                          fontSize: "16px",
+                          color: "gray",
+                          marginLeft: "2px",
+                          cursor: "help",
+                        }}
+                      />
+                    </Tooltip>
+                  ),
+                }}
+              />
+            </div> */}
+            <MobileNumberInput
               value={userData?.mobile}
-              size="small"
-              placeholder="Enter mobile number"
-              required
-              fullWidth
-              onChange={handleUpdate}
-              error={userDataError?.mobile}
-              InputProps={{
-                endAdornment: (
-                  <Tooltip title={mobileValidationMsg} placement="bottom" arrow>
-                    <HelpOutlinedIcon
-                      sx={{
-                        fontSize: "16px",
-                        color: "gray",
-                        marginLeft: "2px",
-                        cursor: "help",
-                      }}
-                    />
-                  </Tooltip>
-                ),
-              }}
+              handleChange={handleUpdate}
             />
           </div>
           <div className="w-1/2">

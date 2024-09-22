@@ -2,43 +2,27 @@ import {
     Box,
     Card,
     Grid,
-    IconButton,
     MenuItem,
-    Paper,
     Select,
     TextField,
-    Tooltip,
     Typography,
 } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
 import {
     AdminRedirect,
     EmployerRedirect,
-    fundingBodyData,
-    roles,
 } from "src/app/contanst";
 import {
     LoadingButton,
     SecondaryButton,
     SecondaryButtonOutlined,
 } from "src/app/component/Buttons";
-import { timezones } from "src/app/contanst/timezoneData";
-import {
-    emailValidationMsg,
-    mobileValidationMsg,
-    nameValidationMsg,
-    passwordValidation,
-    usernameValidationMsg,
-} from "src/app/contanst/regValidation";
-import HelpOutlinedIcon from "@mui/icons-material/HelpOutlined";
-import { DatePicker } from "@mui/x-date-pickers";
 import { FileUploader } from "react-drag-drop-files";
 import { useState } from "react";
 import Breadcrumb from "src/app/component/Breadcrumbs";
 import Style from "./style.module.css";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { createEmployerAPI, getEmployerAPI, uploadPDF } from "app/store/employer";
+import { createEmployerAPI, uploadPDF } from "app/store/employer";
 
 const CreateEmployerDetails = (props) => {
 
@@ -88,29 +72,24 @@ const CreateEmployerDetails = (props) => {
         try {
             let response;
             response = await dispatch(createEmployerAPI(employerData));
-            dispatch(getEmployerAPI({ page: 1, page_size: 10 }));
         } catch (err) {
             console.log(err);
         } finally {
             handleClose();
         }
-
-        console.log("Employer Data: ", employerData);
-        console.log(createUser, "+++++++++++------------");
-
     };
 
     const fileTypes = ["PDF"];
     const handleChange = async (file) => {
         const fromData = new FormData();
         fromData.append("file", file);
-    
+
         const response = await dispatch(uploadPDF(fromData));
         setEmployerDataData(prevState => ({
-          ...prevState,
-          file: response.data[0]
+            ...prevState,
+            file: response.data[0]
         }));
-      };
+    };
 
     const handleClose = () => {
         navigate("/admin/employer");
