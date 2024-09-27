@@ -34,7 +34,7 @@ const CourseBuilder = () => {
   const { pagination } = useSelector(selectGlobalUser)
 
   const fetchCourse = (a = searchKeyword, page = 1) => {
-    dispatch(fetchCourseAPI({ page, page_size: pagination.page_size }, a));
+    dispatch(fetchCourseAPI({ page, page_size: pagination?.page_size }, a));
   }
 
   useEffect(() => {
@@ -56,7 +56,7 @@ const CourseBuilder = () => {
   };
 
   const searchAPIHandler = () => {
-    dispatch(fetchCourseAPI({ page: 1, page_size: pagination.page_size }, searchKeyword));
+    dispatch(fetchCourseAPI({ page: 1, page_size: pagination?.page_size }, searchKeyword));
   };
 
   const searchByKeywordUser = (e) => {

@@ -78,7 +78,7 @@ const TableEQA2 = () => {
   const { pagination } = useSelector(selectGlobalUser)
 
   useEffect(() => {
-    dispatch(getEQAUserData({ page: 1, page_size: pagination.page_size }, "trainer_id", data.user_id));
+    dispatch(getEQAUserData({ page: 1, page_size: pagination?.page_size }, "trainer_id", data.user_id));
   }, [dispatch, pagination]);
 
 
@@ -86,7 +86,7 @@ const TableEQA2 = () => {
 
   const handleChangePage = (event: unknown, newPage: number) => {
     dispatch(
-      getEQAUserData({ page: newPage, page_size: pagination.page_size }, "trainer_id", data.user_id)
+      getEQAUserData({ page: newPage, page_size: pagination?.page_size }, "trainer_id", data.user_id)
     );
   };
 

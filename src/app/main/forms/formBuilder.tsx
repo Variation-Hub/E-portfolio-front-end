@@ -67,7 +67,7 @@ const FormBuilder = (props) => {
 
 
     const fetchFormData = (a = searchKeyword, page = 1) => {
-        dispatch(getFormDataAPI({ page, page_size: pagination.page_size }, a));
+        dispatch(getFormDataAPI({ page, page_size: pagination?.page_size }, a));
     }
 
     useEffect(() => {
@@ -171,7 +171,7 @@ const FormBuilder = (props) => {
 
     const searchAPIHandler = () => {
         dispatch(
-            getFormDataAPI({ page: 1, page_size: pagination.page_size }, searchKeyword)
+            getFormDataAPI({ page: 1, page_size: pagination?.page_size }, searchKeyword)
         );
     };
 

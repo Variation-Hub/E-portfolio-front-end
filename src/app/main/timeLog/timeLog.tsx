@@ -99,7 +99,7 @@ const TimeLog = (props) => {
 
   const deleteConfromation = async () => {
     await dispatch(deleteTimeLogHandler(deleteId));
-    dispatch(getTimeLogAPI({ page: 1, page_size: pagination.page_size }, selected ? selectedUser?.user_id : currentUser?.user_id, filterData?.courseId, filterData?.jobType, approvedFilter));
+    dispatch(getTimeLogAPI({ page: 1, page_size: pagination?.page_size }, selected ? selectedUser?.user_id : currentUser?.user_id, filterData?.courseId, filterData?.jobType, approvedFilter));
     setDeleteId("");
   };
 
@@ -109,13 +109,13 @@ const TimeLog = (props) => {
 
   useEffect(() => {
     if (selectedUser?.user_id || currentUser?.user_id) {
-      dispatch(getTimeLogAPI({ page: 1, page_size: pagination.page_size }, selected ? selectedUser?.user_id : currentUser?.user_id, filterData?.courseId, filterData?.jobType));
+      dispatch(getTimeLogAPI({ page: 1, page_size: pagination?.page_size }, selected ? selectedUser?.user_id : currentUser?.user_id, filterData?.courseId, filterData?.jobType));
     }
   }, [pagination]);
 
   useEffect(() => {
     if (selectedUser?.user_id || currentUser?.user_id) {
-      dispatch(getTimeLogAPI({ page: 1, page_size: pagination.page_size }, selected ? selectedUser?.user_id : currentUser?.user_id, filterData?.courseId, filterData?.jobType));
+      dispatch(getTimeLogAPI({ page: 1, page_size: pagination?.page_size }, selected ? selectedUser?.user_id : currentUser?.user_id, filterData?.courseId, filterData?.jobType));
       dispatch(getTimeLogSliceData(selected ? selectedUser?.user_id : currentUser?.user_id, filterData?.courseId, filterData?.jobType));
       dispatch(getTimeLogSpendData(selected ? selectedUser?.user_id : currentUser?.user_id, filterData?.courseId, filterData?.jobType));
     }
@@ -123,7 +123,7 @@ const TimeLog = (props) => {
 
   useEffect(() => {
     if (approvedFilter !== "") {
-      dispatch(getTimeLogAPI({ page: 1, page_size: pagination.page_size }, selected ? selectedUser?.user_id : currentUser?.user_id, filterData?.courseId, filterData?.jobType, approvedFilter));
+      dispatch(getTimeLogAPI({ page: 1, page_size: pagination?.page_size }, selected ? selectedUser?.user_id : currentUser?.user_id, filterData?.courseId, filterData?.jobType, approvedFilter));
     }
   }, [dispatch, approvedFilter]);
 
@@ -135,7 +135,7 @@ const TimeLog = (props) => {
 
   const handleChangePage = (event: unknown, newPage: number) => {
     dispatch(
-      getTimeLogAPI({ page: newPage, page_size: pagination.page_size }, selected ? selectedUser?.user_id : currentUser?.user_id, filterData?.courseId, filterData?.jobType, approvedFilter)
+      getTimeLogAPI({ page: newPage, page_size: pagination?.page_size }, selected ? selectedUser?.user_id : currentUser?.user_id, filterData?.courseId, filterData?.jobType, approvedFilter)
     );
   };
 

@@ -1,27 +1,57 @@
-import FuseLoading from '@fuse/core/FuseLoading';
-import { Autocomplete, Dialog, DialogActions, DialogContent, Grid, IconButton, Menu, MenuItem, Pagination, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@mui/material'
-import React, { useEffect, useState } from 'react'
-import { DangerButton, LoadingButton, SecondaryButton, SecondaryButtonOutlined } from 'src/app/component/Buttons';
-import AlertDialog from 'src/app/component/Dialogs/AlertDialog';
-import DataNotFound from 'src/app/component/Pages/dataNotFound';
-import NewSession from '../portfolio/newsession';
-import { deleteSessionHandler, getSessionAPI, selectSession, slice, updateSessionAPI } from 'app/store/session';
-import { useDispatch } from 'react-redux';
-import { useSelector } from 'react-redux';
+import FuseLoading from "@fuse/core/FuseLoading";
+import {
+  Autocomplete,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  Grid,
+  IconButton,
+  Menu,
+  MenuItem,
+  Pagination,
+  Paper,
+  Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TextField,
+  Typography,
+} from "@mui/material";
+import React, { useEffect, useState } from "react";
+import {
+  DangerButton,
+  LoadingButton,
+  SecondaryButton,
+  SecondaryButtonOutlined,
+} from "src/app/component/Buttons";
+import AlertDialog from "src/app/component/Dialogs/AlertDialog";
+import DataNotFound from "src/app/component/Pages/dataNotFound";
+import NewSession from "../portfolio/newsession";
+import {
+  deleteSessionHandler,
+  getSessionAPI,
+  selectSession,
+  slice,
+  updateSessionAPI,
+} from "app/store/session";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import { Link } from 'react-router-dom';
-import { selectUser } from 'app/store/userSlice';
-import { selectGlobalUser } from 'app/store/globalUser';
-import CustomPagination from 'src/app/component/Pagination/CustomPagination';
+import { Link } from "react-router-dom";
+import { selectUser } from "app/store/userSlice";
+import { selectGlobalUser } from "app/store/globalUser";
+import CustomPagination from "src/app/component/Pagination/CustomPagination";
 
 const Calendar = () => {
-
   const dispatch: any = useDispatch();
 
   const session = useSelector(selectSession);
   const { data } = useSelector(selectUser);
 
-  const { pagination } = useSelector(selectGlobalUser)
+  const { pagination } = useSelector(selectGlobalUser);
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedRow, setSelectedRow] = useState<any>(null);
@@ -29,8 +59,8 @@ const Calendar = () => {
   const [deleteId, setDeleteId] = useState("");
 
   const fetchSessionData = (page = 1) => {
-    dispatch(getSessionAPI({ page, page_size: pagination.page_size }));
-  }
+    dispatch(getSessionAPI({ page, page_size: pagination?.page_size }));
+  };
 
   const handleClick = (event, row) => {
     dispatch(slice.setSingledata(row));
@@ -62,17 +92,16 @@ const Calendar = () => {
 
   const deleteConfromation = async () => {
     await dispatch(deleteSessionHandler(deleteId));
-    fetchSessionData()
+    fetchSessionData();
     setDeleteId("");
   };
 
   const handleChangePage = (event: unknown, newPage: number) => {
-    fetchSessionData(newPage)
+    fetchSessionData(newPage);
   };
 
-
   useEffect(() => {
-    fetchSessionData()
+    fetchSessionData();
   }, [dispatch, pagination]);
 
   const formatDate = (date) => {
@@ -82,8 +111,8 @@ const Calendar = () => {
   };
   return (
     <>
-      <div className='m-10 mb-0 text-right'>
-        {data?.role !== 'Learner' && (
+      <div className="m-10 mb-0 text-right">
+        {data?.role !== "Learner" && (
           <Link to="/newsession">
             <SecondaryButton name="New Session" />
           </Link>
@@ -92,7 +121,14 @@ const Calendar = () => {
 
       <Grid className="m-10">
         <div>
-          <TableContainer sx={{ minHeight: 575, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+          <TableContainer
+            sx={{
+              minHeight: 575,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+            }}
+          >
             {session?.dataFetchLoading ? (
               <FuseLoading />
             ) : session?.data.length ? (
@@ -110,23 +146,36 @@ const Calendar = () => {
                         overflow: "hidden",
                         textOverflow: "ellipsis",
                         whiteSpace: "nowrap",
-                      }}>
+                      }}
+                    >
                       Title
                     </TableCell>
-                    <TableCell align="left"
+                    <TableCell
+                      align="left"
                       sx={{
                         width: "15rem",
                         overflow: "hidden",
                         textOverflow: "ellipsis",
                         whiteSpace: "nowrap",
-                      }}>
+                      }}
+                    >
                       Location
                     </TableCell>
-                    <TableCell align="left" sx={{ width: "15rem" }}>Start Date</TableCell>
-                    <TableCell align="left" sx={{ width: "10rem" }}>Duration</TableCell>
-                    <TableCell align="center" sx={{ width: "20rem" }}>Attended</TableCell>
-                    <TableCell align="left" sx={{ width: "15rem" }}>Type</TableCell>
-                    <TableCell align="left" sx={{ width: "15rem" }}>Action</TableCell>
+                    <TableCell align="left" sx={{ width: "15rem" }}>
+                      Start Date
+                    </TableCell>
+                    <TableCell align="left" sx={{ width: "10rem" }}>
+                      Duration
+                    </TableCell>
+                    <TableCell align="center" sx={{ width: "20rem" }}>
+                      Attended
+                    </TableCell>
+                    <TableCell align="left" sx={{ width: "15rem" }}>
+                      Type
+                    </TableCell>
+                    <TableCell align="left" sx={{ width: "15rem" }}>
+                      Action
+                    </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -162,19 +211,28 @@ const Calendar = () => {
                       </TableCell>
                       <TableCell
                         align="left"
-                        sx={{ borderBottom: "2px solid #F8F8F8", width: "15rem" }}
+                        sx={{
+                          borderBottom: "2px solid #F8F8F8",
+                          width: "15rem",
+                        }}
                       >
                         {formatDate(row?.startDate)}
                       </TableCell>
                       <TableCell
                         align="left"
-                        sx={{ borderBottom: "2px solid #F8F8F8", width: "10rem" }}
+                        sx={{
+                          borderBottom: "2px solid #F8F8F8",
+                          width: "10rem",
+                        }}
                       >
                         {row?.Duration}
                       </TableCell>
                       <TableCell
                         align="left"
-                        sx={{ borderBottom: "2px solid #F8F8F8", width: "20rem" }}
+                        sx={{
+                          borderBottom: "2px solid #F8F8F8",
+                          width: "20rem",
+                        }}
                       >
                         <Autocomplete
                           disableClearable
@@ -182,27 +240,31 @@ const Calendar = () => {
                           size="small"
                           value={row?.Attended}
                           options={[
-                            'Not Set',
-                            'Attended',
-                            'Cancelled',
-                            'Cancelled by Assessor',
-                            'Cancelled by Learner',
-                            'Cancelled by Employer',
-                            'Learner Late',
-                            'Assessor Late',
-                            'Learner not Attended'
+                            "Not Set",
+                            "Attended",
+                            "Cancelled",
+                            "Cancelled by Assessor",
+                            "Cancelled by Learner",
+                            "Cancelled by Employer",
+                            "Learner Late",
+                            "Assessor Late",
+                            "Learner not Attended",
                           ].map((option) => option)}
                           renderInput={(params) => (
                             <TextField
                               {...params}
                               placeholder="Select funding body"
                               name="funding_body"
-                            // error={true || userDataError?.funding_body}
+                              // error={true || userDataError?.funding_body}
                             />
                           )}
                           onChange={async (e, value) => {
-                            await dispatch(updateSessionAPI(row?.session_id, { Attended: value }))
-                            fetchSessionData()
+                            await dispatch(
+                              updateSessionAPI(row?.session_id, {
+                                Attended: value,
+                              })
+                            );
+                            fetchSessionData();
                           }}
                           sx={{
                             ".MuiAutocomplete-clearIndicator": {
@@ -210,19 +272,27 @@ const Calendar = () => {
                             },
                           }}
                           PaperComponent={({ children }) => (
-                            <Paper style={{ borderRadius: "4px" }}>{children}</Paper>
+                            <Paper style={{ borderRadius: "4px" }}>
+                              {children}
+                            </Paper>
                           )}
                         />
                       </TableCell>
                       <TableCell
                         align="left"
-                        sx={{ borderBottom: "2px solid #F8F8F8", width: "15rem" }}
+                        sx={{
+                          borderBottom: "2px solid #F8F8F8",
+                          width: "15rem",
+                        }}
                       >
                         {row?.type}
                       </TableCell>
                       <TableCell
                         align="left"
-                        sx={{ borderBottom: "2px solid #F8F8F8", width: "15rem" }}
+                        sx={{
+                          borderBottom: "2px solid #F8F8F8",
+                          width: "15rem",
+                        }}
                       >
                         <IconButton
                           size="small"
@@ -292,7 +362,7 @@ const Calendar = () => {
               handleEdit();
               handleClose();
             }}
-          // disabled={data.role !== "Admin" && session?.singleData.status === "Closed"}
+            // disabled={data.role !== "Admin" && session?.singleData.status === "Closed"}
           >
             Edit
           </MenuItem>
@@ -318,7 +388,7 @@ const Calendar = () => {
             },
           }}
         >
-          <DialogContent className='p-0'>
+          <DialogContent className="p-0">
             <NewSession edit={true} handleCloseDialog={handleCloseDialog} />
           </DialogContent>
           {/* <DialogActions>
@@ -345,7 +415,7 @@ const Calendar = () => {
         </Dialog>
       </Grid>
     </>
-  )
-}
+  );
+};
 
-export default Calendar
+export default Calendar;

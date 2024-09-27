@@ -176,7 +176,7 @@ const ProposeYourInnovations = (props) => {
   });
 
   const fetchInnovationsData = (page = 1) => {
-    dispatch(getYourInnovationAPI({ page, page_size: pagination.page_size }, data.user_id));
+    dispatch(getYourInnovationAPI({ page, page_size: pagination?.page_size }, data.user_id));
   }
 
   const deleteIcon = (id) => {

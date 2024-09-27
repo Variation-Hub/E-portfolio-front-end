@@ -200,7 +200,7 @@ const Index = () => {
   };
 
   const refetchUser = (search = searchKeyword, page = 1) => {
-    dispatch(fetchUserAPI({ page, page_size: pagination.page_size }, search, filterValue))
+    dispatch(fetchUserAPI({ page, page_size: pagination?.page_size }, search, filterValue))
   }
 
   useEffect(() => {

@@ -99,7 +99,7 @@ const TableEQA1 = (props) => {
   const { pagination } = useSelector(selectGlobalUser)
 
   useEffect(() => {
-    dispatch(getEQAUserData({ page: 1, page_size: pagination.page_size }, "learner_id", data.user_id));
+    dispatch(getEQAUserData({ page: 1, page_size: pagination?.page_size }, "learner_id", data.user_id));
   }, [dispatch, pagination]);
 
   console.log("Learner Data:", learnerData);
@@ -107,7 +107,7 @@ const TableEQA1 = (props) => {
 
   const handleChangePage = (event: unknown, newPage: number) => {
     dispatch(
-      getEQAUserData({ page: newPage, page_size: pagination.page_size }, "learner_id", data.user_id)
+      getEQAUserData({ page: newPage, page_size: pagination?.page_size }, "learner_id", data.user_id)
     );
   };
 

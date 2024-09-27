@@ -52,7 +52,7 @@ const Index = () => {
   };
 
   const refetchEmployer = (search = searchKeyword, page = 1) => {
-    dispatch(getEmployerAPI({ page, page_size: pagination.page_size }, search))
+    dispatch(getEmployerAPI({ page, page_size: pagination?.page_size }, search))
   }
 
   useEffect(() => {

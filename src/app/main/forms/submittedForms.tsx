@@ -74,7 +74,7 @@ const SubmittedForms = (props) => {
 
 
     const fetchFormData = (a = searchKeyword, page = 1) => {
-        dispatch(getUserAllFormAPI({ page, page_size: pagination.page_size }, a));
+        dispatch(getUserAllFormAPI({ page, page_size: pagination?.page_size }, a));
     }
 
     const handleClose = () => {
@@ -125,7 +125,7 @@ const SubmittedForms = (props) => {
 
     const searchAPIHandler = () => {
         dispatch(
-            getUserAllFormAPI({ page: 1, page_size: pagination.page_size }, searchKeyword)
+            getUserAllFormAPI({ page: 1, page_size: pagination?.page_size }, searchKeyword)
         );
     };
 

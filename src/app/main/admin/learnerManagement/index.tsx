@@ -230,7 +230,7 @@ const Index = () => {
         }
       }
     }
-    dispatch(fetchLearnerAPI({ page, page_size: pagination.page_size }, a, courseId, employerId, status))
+    dispatch(fetchLearnerAPI({ page, page_size: pagination?.page_size }, a, courseId, employerId, status))
   }
 
   useEffect(() => {
