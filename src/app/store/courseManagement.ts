@@ -66,7 +66,7 @@ const courseManagementSlice = createSlice({
             state.learnerOverView = action.payload
         },
         setSingleDataStatus(state, action) {
-            state.singleData = {...state.singleData, course_status :action.payload}
+            state.singleData = { ...state.singleData, course_status: action.payload }
         }
     }
 });
@@ -105,7 +105,7 @@ export const fetchCourseById = (course_id) => async (dispatch) => {
         // dispatch(showMessage({ message: response.data.message, variant: "success" }))
         dispatch(slice.setUnitData(response.data.data.units));
         dispatch(slice.updateCourse(response.data));
-        
+
         dispatch(slice.setLoader(false));
         return true;
 
@@ -174,8 +174,8 @@ export const updateUserCourse = (id, data) => async (dispatch) => {
 
     try {
         dispatch(slice.setUpdatingLoader());
-        console.log(initialState.singleData,"+++++++++");
-        
+        console.log(initialState.singleData, "+++++++++");
+
         const response = await axios.patch(`${URL_BASE_LINK}/course/user/update/${id}`, data)
         dispatch(slice.setSingleDataStatus(response.data.data.course_status))
         // dispatch(showMessage({ message: "Skill scan updated", variant: "success" }))
@@ -216,9 +216,10 @@ export const jsonConverter = (data) => async (dispatch) => {
         dispatch(slice.setUpdatingLoader());
         const response = await axios.post(`${URL_BASE_LINK}/course/convert`, data);
         dispatch(slice.setUpdatingLoader());
-        dispatch(slice.updatePreFillData(response.data.data));
+        dispatch(slice.updatePreFillData(response.data));
         return true;
     } catch (err) {
+        dispatch(slice.setUpdatingLoader());
         dispatch(showMessage({ message: err.response.data.message, variant: "error" }))
         return false
     }

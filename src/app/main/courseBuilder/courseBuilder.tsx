@@ -124,9 +124,9 @@ const CourseBuilder = () => {
 
             <div className={`flex items-center space-x-4 ${Style.button}`}>
               <SecondaryButton
-                disable={true}
+                // disable={true}
                 className="py-6 mr-4"
-                name="Upload Files"
+                name="Upload File"
                 startIcon={
                   <img
                     src="assets/images/svgimage/uploadfileicon.svg"

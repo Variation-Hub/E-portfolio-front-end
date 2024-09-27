@@ -101,6 +101,7 @@ const CreateEmployerDetails = (props) => {
         return formattedDate;
     };
 
+    console.log(employerData)
     return (
         <div>
             <Breadcrumb
@@ -748,7 +749,7 @@ const CreateEmployerDetails = (props) => {
                                     <SecondaryButton
                                         name={"Save"}
                                         style={{ width: "10rem" }}
-                                        disable={!createUser}
+                                        // disable={!createUser}
                                         onClick={createUserHandler}
                                     />
                                     {/* <SecondaryButton name={updateData ? "Update" : "Save"} style={{ width: "10rem" }} onClick={updateData ? updateUserHandler : createUserHandler} /> */}

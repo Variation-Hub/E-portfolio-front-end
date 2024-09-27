@@ -111,6 +111,7 @@ const Broadcast = (props) => {
 
   const deleteConfromation = async () => {
     await dispatch(deleteBroadcastHandler(deleteId));
+    clearSingleData();
     fetchBroadcastData()
     setDeleteId("");
   };
@@ -391,12 +392,14 @@ const Broadcast = (props) => {
                 </Typography>
               </div>
             )}
-            <CustomPagination
-              pages={meta_data?.pages}
-              page={meta_data?.page}
-              handleChangePage={handleChangePage}
-              items={meta_data?.items}
-            />
+            {broadcast.data.length ?
+              <CustomPagination
+                pages={meta_data?.pages}
+                page={meta_data?.page}
+                handleChangePage={handleChangePage}
+                items={meta_data?.items}
+              />
+              : null}
           </TableContainer>
         </div>
 

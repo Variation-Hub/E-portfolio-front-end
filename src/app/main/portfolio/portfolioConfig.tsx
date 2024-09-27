@@ -1,12 +1,15 @@
 import { lazy } from "react";
-const PortfolioView = lazy(() => import("./portfolio"));
 import authRoles from "src/app/auth/authRoles";
-import UploadedEvidenceFile from "src/app/component/Cards/uploadedEvidenceFile";
-import NewSession from "./newsession";
-import NewAssignment from "src/app/component/Cards/newAssignment";
-import LearnerToData from "./learnerData/learnertodata";
-import ProgressMap from "../createAssignment/progressMap";
-import LearnerDetails from "./learnerDeatils";
+// const PortfolioView = lazy(() => import("./portfolio"));
+// import UploadedEvidenceFile from "src/app/component/Cards/uploadedEvidenceFile";
+// import NewSession from "./newsession";
+// import NewAssignment from "src/app/component/Cards/newAssignment";
+// import LearnerToData from "./learnerData/learnertodata";
+// import ProgressMap from "../createAssignment/progressMap";
+// import LearnerDetails from "./learnerDeatils";
+// import NewPortfolio from "./newPortfolio";
+const NewPortfolio = lazy(() => import("./newPortfolio"));
+
 
 const PortfolioConfig = {
   settings: {
@@ -34,32 +37,32 @@ const PortfolioConfig = {
   routes: [
     {
       path: "/portfolio",
-      element: <PortfolioView />,
+      element: <NewPortfolio />,
     },
-    {
-      path: "/portfolio/assingment",
-      element: <UploadedEvidenceFile />,
-    },
-    {
-      path: "/portfolio/newassignment",
-      element: <NewAssignment />,
-    },
-    {
-      path: "/newsession",
-      element: <NewSession />,
-    },
-    {
-      path: "/portfolio/learnertodata",
-      element: <LearnerToData />,
-    },
-    {
-      path: "/portfolio/progress",
-      element: <ProgressMap />,
-    },
-    {
-      path: "/portfolio/learner-details",
-      element: <LearnerDetails />,
-    },
+    // {
+    //   path: "/portfolio/assingment",
+    //   element: <UploadedEvidenceFile />,
+    // },
+    // {
+    //   path: "/portfolio/newassignment",
+    //   element: <NewAssignment />,
+    // },
+    // {
+    //   path: "/newsession",
+    //   element: <NewSession />,
+    // },
+    // {
+    //   path: "/portfolio/learnertodata",
+    //   element: <LearnerToData />,
+    // },
+    // {
+    //   path: "/portfolio/progress",
+    //   element: <ProgressMap />,
+    // },
+    // {
+    //   path: "/portfolio/learner-details",
+    //   element: <LearnerDetails />,
+    // },
   ],
 };
 

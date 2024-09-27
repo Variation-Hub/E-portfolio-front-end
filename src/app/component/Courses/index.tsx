@@ -28,17 +28,26 @@ import Style from "./style.module.css";
 
 const generateUnitObject = (unitDataArray = []) => {
   const unitObject = {};
-  unitDataArray.forEach((unitData, index) => {
-    unitObject[unitData?.id] = {
-      id: unitData?.id,
-      unit_ref: unitData.unit_ref || "",
-      title: unitData.title || "",
-      mandatory: unitData.mandatory,
-      subTitle: unitData.subTitle || "",
-      level: unitData.level || 0,
-      glh: unitData.glh || 0,
-      credit_value: unitData.credit_value || 0,
-      subUnit: unitData.subUnit || [],
+  unitDataArray.forEach((units, index) => {
+    const { course_details, unit_details } = units;
+    unitObject[course_details?.course_code] = {
+      id: course_details?.course_code,
+      unit_ref: course_details.course_code || "",
+      title: course_details.Title || "",
+      mandatory: course_details.mandatory,
+      // subTitle: course_details.subTitle || "",
+      level: course_details.Level || 0,
+      glh: course_details["Guided learning hours"] || 0,
+      credit_value: course_details?.Credit || 0,
+      subUnit: unit_details.map((value) => {
+        const [subTitle, units]: any = Object.values(value);
+        const subUnit = units?.map(({ text }) => ({ id: Math.random() * 100000, description: text }))
+        return ({
+          id: Math.random() * 100000,
+          subTitle,
+          subTopic: subUnit
+        })
+      }) || [],
     };
   });
   return unitObject;
@@ -100,7 +109,8 @@ const CourseBuilder = (props) => {
   };
 
   const [mandatoryUnit, setMandatoryUnit] = useState(
-    generateUnitObject(preFillData?.units)
+    edit == "view" ? preFillData?.units
+    : generateUnitObject(preFillData?.units)
   );
 
   const courseHandler = (event) => {
@@ -872,5 +882,7 @@ const CourseBuilder = (props) => {
     </Grid>
   );
 };
+
+
 
 export default CourseBuilder;

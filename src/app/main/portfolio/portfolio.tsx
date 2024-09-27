@@ -117,19 +117,19 @@ const Portfolio = () => {
   };
 
 
-  // const handleLearnerTab = () => {
-  //   if (learnerTab.tab && !learnerTab.tab.closed) {
-  //     learnerTab.tab.close();
-  //   }
+  const handleLearnerTab = () => {
+    if (learnerTab.tab && !learnerTab.tab.closed) {
+      learnerTab.tab.close();
+    }
 
-  //   const newTab = window.open(`/home`, '_blank');
-  //   dispatch(globalSlice.setLearnerTab({ ...learnerTab, tab: newTab }));
-  //   console.log(newTab, "++++");
-  // }
+    const newTab = window.open(`/portfolio`, '_blank');
+    // dispatch(globalSlice.setLearnerTab({ ...learnerTab, tab: newTab }));
+    // console.log(newTab, "++++");
+  }
   return (
     <div>
-      {/* {role === "Learner" && */}
-      {/* <SecondaryButtonOutlined name="Learner Dashboard" className="mr-12" onClick={handleLearnerTab} /> */}
+      {/* {user?.data?.role === "Learner" && */}
+        <SecondaryButtonOutlined name="Learner Dashboard" className="mr-12" onClick={handleLearnerTab} />
       {/* } */}
       <div className="m-10 flex flex-wrap justify-evenly gap-10 cursor-pointer">
         {portfolioCard?.map((value, index) => (
