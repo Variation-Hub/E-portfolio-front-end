@@ -184,7 +184,7 @@ const Index = () => {
       emailReg.test(userData?.email) &&
       passwordReg.test(userData?.password) &&
       userData?.password === userData?.confrimpassword &&
-      mobileReg.test(userData.mobile) &&
+      // mobileReg?.test(userData.mobile) &&
       userData?.role.length !== 0
     ) {
       return true;

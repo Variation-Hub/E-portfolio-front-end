@@ -11,6 +11,7 @@ const MobileNumberInput = ({ value, handleChange }) => {
     }
     return (
         <PhoneInput
+            international
             placeholder="Enter phone number"
             className="w-full"
             value={value}
