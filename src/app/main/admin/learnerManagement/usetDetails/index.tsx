@@ -22,6 +22,7 @@ import { useSelector } from "react-redux";
 import { selectEmployer } from "app/store/employer";
 import { useState } from "react";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import MobileNumberInput from "src/app/component/Input/MobileNumberInput";
 
 const UserDetails = (props) => {
   const { data } = useSelector(selectEmployer);
@@ -331,7 +332,7 @@ const UserDetails = (props) => {
             >
               Mobile
             </Typography>
-            <TextField
+            {/* <TextField
               name="mobile"
               value={userData?.mobile}
               size="small"
@@ -347,6 +348,11 @@ const UserDetails = (props) => {
             //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
             //         </Tooltip>
             // }}
+            /> */}
+            <MobileNumberInput
+              value={userData?.mobile}
+              handleChange={handleUpdate}
+              name={"mobile"}
             />
           </div>
         </Box>

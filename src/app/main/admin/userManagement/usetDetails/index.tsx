@@ -405,6 +405,7 @@ const UserDetails = (props) => {
             <MobileNumberInput
               value={userData?.mobile}
               handleChange={handleUpdate}
+              name={"mobile"}
             />
           </div>
           <div className="w-1/2">

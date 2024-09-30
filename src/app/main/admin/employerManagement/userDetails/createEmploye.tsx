@@ -23,6 +23,7 @@ import Style from "./style.module.css";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { createEmployerAPI, uploadPDF } from "app/store/employer";
+import MobileNumberInput from "src/app/component/Input/MobileNumberInput";
 
 const CreateEmployerDetails = (props) => {
 
@@ -476,7 +477,7 @@ const CreateEmployerDetails = (props) => {
                                     >
                                         Telephone
                                     </Typography>
-                                    <TextField
+                                    {/* <TextField
                                         name="telephone"
                                         type="number"
                                         placeholder="Phone Number"
@@ -485,6 +486,11 @@ const CreateEmployerDetails = (props) => {
                                         required
                                         fullWidth
                                         onChange={handleDataUpdate}
+                                    /> */}
+                                    <MobileNumberInput
+                                        value={employerData?.telephone}
+                                        handleChange={handleDataUpdate}
+                                        name={"telephone"}
                                     />
                                 </div>
 

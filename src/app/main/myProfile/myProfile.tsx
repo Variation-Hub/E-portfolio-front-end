@@ -23,6 +23,8 @@ import { useDispatch } from "react-redux";
 import { margin, padding } from "@mui/system";
 import { getRandomColor } from "src/utils/randomColor";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import 'react-phone-number-input/style.css';
+import PhoneInput from 'react-phone-number-input';
 
 const CustomInputField = ({ label, name, placeholder, value }) => {
   return (
@@ -260,12 +262,33 @@ const MyProfile: React.FC = () => {
             </Box>
 
             <Box className="m-12 flex flex-col justify-between gap-12 sm:flex-row">
-              <CustomInputField
+              {/* <CustomInputField
                 value={data?.mobile}
                 label="Mobile"
                 name="mobile"
                 placeholder="Enter mobile"
-              />
+              /> */}
+              <div className="w-1/2">
+                <Typography
+                  sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}
+                >
+                  Mobile
+                </Typography>
+                <PhoneInput
+                  international
+                  className="text-[#959ca9] opacity-100"
+                  placeholder="Enter phone number"
+                  // className="h-fit"
+                  value={data?.mobile}
+                  style={{
+                    border: '1px solid lightgray',
+                    padding: "9px",
+                    borderRadius: "4px"
+                  }}
+                  onChange={() => { }}
+                  disabled
+                />
+              </div>
               <CustomInputField
                 value={data?.time_zone}
                 label="Timezone"

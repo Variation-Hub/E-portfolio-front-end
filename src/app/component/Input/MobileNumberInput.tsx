@@ -2,12 +2,12 @@ import 'react-phone-number-input/style.css'
 import PhoneInput from 'react-phone-number-input'
 
 
-const MobileNumberInput = ({ value, handleChange }) => {
+const MobileNumberInput = ({ value, handleChange, name }) => {
     // const [value, setValue] = useState('');
 
     const handleChanges = (e) => {
         console.log(e, "e+++")
-        handleChange({ target: { value: e, name: "mobile" } })
+        handleChange({ target: { value: e, name: name } })
     }
     return (
         <PhoneInput
