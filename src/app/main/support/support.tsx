@@ -150,11 +150,7 @@ const Support = (props) => {
   const dispatch: any = useDispatch();
 
   const fetchSupportData = (page = 1) => {
-<<<<<<< Updated upstream
     dispatch(getSupportDataAPI({ page, page_size: pagination.page_size }, data.role !== UserRole.Admin && data.user_id));
-=======
-    dispatch(getSupportDataAPI({ page, page_size: pagination?.page_size }, data.user_id));
->>>>>>> Stashed changes
   }
 
   const clearSingleData = () => {
