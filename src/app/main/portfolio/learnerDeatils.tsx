@@ -227,6 +227,10 @@ const LearnerDetails = () => {
         }
     }
 
+    const handleCreateEmployer = async () => {
+        navigate('/admin/employer')
+    }
+
 
     return (
         <div>
@@ -237,9 +241,7 @@ const LearnerDetails = () => {
                         <div className='flex gap-5 items-center justify-end'>
                             <SecondaryButtonOutlined name="Create New Password" onClick={handleClickOpen} />
                             <SecondaryButtonOutlined name="Email Password Reset" onClick={handleEmailAlert} />
-                            <SecondaryButtonOutlined name="Create Employer" />
-                            <SecondaryButtonOutlined name="Add New Manager" />
-                            <SecondaryButtonOutlined name="Save" />
+                            <SecondaryButtonOutlined name="Create Employer" onClick={handleCreateEmployer} />
                         </div>
                         <Card className='rounded-6 items-center ' variant="outlined">
                             <Grid className='h-full flex flex-col'>
@@ -1151,7 +1153,6 @@ const LearnerDetails = () => {
                         </Card >
 
                         <div className="flex justify-end mr-24 mb-20">
-                            <SecondaryButtonOutlined name="Cancel" className="mr-12" onClick={handleClose} />
                             <SecondaryButton name="Save" onClick={handleSubmit} />
                         </div>
 
