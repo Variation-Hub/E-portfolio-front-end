@@ -29,7 +29,7 @@ const AddForms = (props) => {
   const { data, formDataDetails, dataUpdatingLoadding, singleData, mode, singleFrom = null, modeTemaplate = '' } = useSelector(selectFormData);
   console.log(formDataDetails);
 
-  const user = useSelector(selectUser)?.data;
+  const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
 
   const navigate = useNavigate();
   const dispatch: any = useDispatch();

@@ -1,11 +1,11 @@
 import { lazy } from "react";
 import authRoles from "src/app/auth/authRoles";
+import ProgressMap from "../createAssignment/progressMap";
 // const PortfolioView = lazy(() => import("./portfolio"));
 // import UploadedEvidenceFile from "src/app/component/Cards/uploadedEvidenceFile";
 // import NewSession from "./newsession";
 // import NewAssignment from "src/app/component/Cards/newAssignment";
 // import LearnerToData from "./learnerData/learnertodata";
-// import ProgressMap from "../createAssignment/progressMap";
 // import LearnerDetails from "./learnerDeatils";
 // import NewPortfolio from "./newPortfolio";
 const NewPortfolio = lazy(() => import("./newPortfolio"));
@@ -55,10 +55,10 @@ const PortfolioConfig = {
     //   path: "/portfolio/learnertodata",
     //   element: <LearnerToData />,
     // },
-    // {
-    //   path: "/portfolio/progress",
-    //   element: <ProgressMap />,
-    // },
+    {
+      path: "/portfolio/progress",
+      element: <ProgressMap />,
+    },
     // {
     //   path: "/portfolio/learner-details",
     //   element: <LearnerDetails />,

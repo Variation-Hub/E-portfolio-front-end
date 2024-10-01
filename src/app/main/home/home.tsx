@@ -9,8 +9,9 @@ import TableEQA2 from "./tableEQA2";
 import Portfolio from "../portfolio/portfolio";
 
 const Home = () => {
-  const user = useSelector(selectUser);
-  const role = user?.data?.role;
+  const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
+
+  const role = user?.role;
   if (role === "EQA") {
     return (
       <>

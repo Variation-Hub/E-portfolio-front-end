@@ -45,7 +45,8 @@ const SkillsScan = () => {
 
   const [value, setValue] = useState(0);
   const dispatch: any = useDispatch();
-  const { data } = useSelector(selectUser);
+  const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
+
 
   const handleTabChange = (event, newValue) => {
     setValue(newValue);
@@ -58,7 +59,7 @@ const SkillsScan = () => {
   return (
     <>
       <Grid className="m-10" sx={{ minHeight: 600 }}>
-        <Typography className='h1 pl-10'>{data?.displayName}</Typography>
+        <Typography className='h1 pl-10'>{user?.displayName}</Typography>
         <Box
           sx={{
             borderBottom: 1,

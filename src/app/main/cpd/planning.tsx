@@ -327,7 +327,8 @@ const Planning = (props) => {
   const [open, setOpen] = useState(false);
 
   const dispatch: any = useDispatch();
-  const { data } = useSelector(selectUser);
+  const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
+
   const cpdPlanningData = useSelector(selectCpdPlanning);
 
   const handleChange = (event) => {
@@ -342,7 +343,7 @@ const Planning = (props) => {
     Object.values(formData).find((data) => data === "") === undefined;
 
   const fetchPlanningData = () => {
-    dispatch(getCpdPlanningAPI(learnerId || data.user_id, ""));
+    dispatch(getCpdPlanningAPI(learnerId || user?.user_id, ""));
   }
 
   useEffect(() => {

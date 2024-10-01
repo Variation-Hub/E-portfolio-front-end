@@ -34,7 +34,7 @@ const emotionCacheOptions = {
 };
 
 function App() {
-  const user = useSelector(selectUser);
+  const user =  JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser).data;
   const langDirection = useSelector(selectCurrentLanguageDirection);
   const mainTheme = useSelector(selectMainTheme);
 
@@ -50,7 +50,7 @@ function App() {
         <AuthProvider>
           <BrowserRouter>
             <FuseAuthorization
-              userRole={user.data.role}
+              userRole={user?.role}
               loginRedirectUrl={settingsConfig.loginRedirectUrl}
             >
               <SnackbarProvider

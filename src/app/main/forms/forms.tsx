@@ -53,12 +53,13 @@ const Forms = (props) => {
     setValue(newValue);
   };
 
-  const { data } = useSelector(selectUser);
+  const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
+
 
   return (
     <>
       <Grid className="m-10" sx={{ minHeight: 600 }}>
-        {data.role === "Admin" &&
+        {user?.role === "Admin" &&
           <Box
             sx={{
               borderBottom: 1,

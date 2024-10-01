@@ -50,7 +50,8 @@ import { selectGlobalUser } from "app/store/globalUser";
 import CustomPagination from "src/app/component/Pagination/CustomPagination";
 
 const FormBuilder = (props) => {
-    const { data } = useSelector(selectUser);
+  const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
+
     const { singleData, users, meta_data, dataUpdatingLoadding, dataFetchLoading } = useSelector(selectFormData);
 
     const dispatch: any = useDispatch();
@@ -178,7 +179,7 @@ const FormBuilder = (props) => {
     return (
         <>
             <Grid className="m-10" sx={{ minHeight: 600 }}>
-                {data.role === "Admin" &&
+                {user?.role === "Admin" &&
                     <Box className="flex justify-between pb-10"
                         sx={{
                             borderBottom: 1,
@@ -289,7 +290,7 @@ const FormBuilder = (props) => {
                                                 align="left"
                                                 sx={{ borderBottom: "2px solid #F8F8F8" }}
                                             >
-                                                {data.role === UserRole.Admin ?
+                                                {user?.role === UserRole.Admin ?
                                                     <IconButton
                                                         size="small"
                                                         sx={{ color: "#5B718F", marginRight: "4px" }}

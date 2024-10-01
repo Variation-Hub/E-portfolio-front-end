@@ -11,7 +11,7 @@ import { selectstoreDataSlice } from 'app/store/reloadData';
 
 const ResourceData = () => {
   const dispatch: any = useDispatch();
-  const user = useSelector(selectUser).data;
+  const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
   const { singleData } = useSelector(selectCourseManagement);
   const resource = useSelector(selectResourceManagement);
   const { user_id } = useSelector(selectstoreDataSlice);

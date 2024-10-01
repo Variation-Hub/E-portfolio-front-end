@@ -54,6 +54,8 @@ const NewAssignment = (props) => {
 
   const dispatch: any = useDispatch();
   const { singleData, dataUpdatingLoadding } = useSelector(selectAssignment)
+  const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
+
   const navigate = useNavigate();
   const singleCouse = useSelector(selectCourseManagement);
 
@@ -120,8 +122,7 @@ const NewAssignment = (props) => {
   const handleClose = () => {
     navigate("/portfolio");
   };
-  const user = useSelector(selectUser);
-
+  
   const formatDate = (date) => {
     if (!date) return "";
     const dateStr = date instanceof Date ? date.toISOString() : String(date);
@@ -224,8 +225,8 @@ const NewAssignment = (props) => {
               rows={5}
               value={formData.trainer_feedback}
               onChange={handleChange}
-              disabled={user.data.role !== "Trainer"}
-              style={user.data.role !== "Trainer" ? { backgroundColor: "whitesmoke" } : {}}
+              disabled={user?.role !== "Trainer"}
+              style={user?.role !== "Trainer" ? { backgroundColor: "whitesmoke" } : {}}
             />
           </div>
 
@@ -256,7 +257,7 @@ const NewAssignment = (props) => {
               rows={5}
               value={formData.learner_comments}
               onChange={handleChange}
-              disabled={user.data.role !== "Learner"}
+              disabled={user?.role !== "Learner"}
             />
           </div>
           <div className="w-full">
@@ -272,8 +273,8 @@ const NewAssignment = (props) => {
               rows={5}
               value={formData?.points_for_improvement}
               onChange={handleChange}
-              disabled={user.data.role !== "Trainer"}
-              style={user.data.role !== "Trainer" ? { backgroundColor: "whitesmoke" } : {}}
+              disabled={user?.role !== "Trainer"}
+              style={user?.role !== "Trainer" ? { backgroundColor: "whitesmoke" } : {}}
             />
           </div>
 
@@ -289,8 +290,8 @@ const NewAssignment = (props) => {
                       checked={formData?.units?.find((unit) => unit.id === method.id)}
                       onChange={(e) => handleCheckboxUnits(e, method)}
                       name="units"
-                      disabled={user.data.role !== "Learner"}
-                      style={user.data.role !== "Learner" ? { backgroundColor: "whitesmoke" } : {}}
+                      disabled={user?.role !== "Learner"}
+                      style={user?.role !== "Learner" ? { backgroundColor: "whitesmoke" } : {}}
                     />
                   }
                   label={method.title}
@@ -324,7 +325,7 @@ const NewAssignment = (props) => {
                             <TableCell align="center"><Checkbox checked={row.learnerMap} onChange={() => learnerMapHandler(row)} /></TableCell>
                             <TableCell>{row?.subTitle}</TableCell>
                             <TableCell>
-                              {user.data.role === "Learner" ? row?.comment :
+                              {user?.role === "Learner" ? row?.comment :
                                 (
                                   <TextField size="small" value={row?.comment} onChange={(e) => commentHandler(e, row.id)} />
                                 )
@@ -334,7 +335,7 @@ const NewAssignment = (props) => {
                                 <div style={{ backgroundColor: (row.learnerMap && row.trainerMap) ? "green" : (row.learnerMap || row.trainerMap) ? "orange" : "maroon", width: "100%", height: "100%" }}></div>
                               </div>
                             </TableCell>
-                            <TableCell align="center"><Checkbox checked={row?.trainerMap} disabled={user.data.role === "Learner" || edit === "view"} onChange={() => trainerMapHandler(row)} /></TableCell>
+                            <TableCell align="center"><Checkbox checked={row?.trainerMap} disabled={user?.role === "Learner" || edit === "view"} onChange={() => trainerMapHandler(row)} /></TableCell>
                           </TableRow>
                         ))}
                       </TableBody>
@@ -359,7 +360,7 @@ const NewAssignment = (props) => {
                         checked={formData?.assessment_method?.includes(method.value) || false}
                         onChange={(e) => handleCheckbox(e, method.value)}
                         name="assessment_method"
-                        disabled={user.data.role !== "Trainer"}
+                        disabled={user?.role !== "Trainer"}
                       />
                     }
                     label={method.value}
@@ -387,14 +388,14 @@ const NewAssignment = (props) => {
                   required
                   fullWidth
                   onChange={handleChange}
-                  disabled={user.data.role !== "Trainer"}
-                  style={user.data.role !== "Trainer" ? { backgroundColor: "whitesmoke" } : {}}
+                  disabled={user?.role !== "Trainer"}
+                  style={user?.role !== "Trainer" ? { backgroundColor: "whitesmoke" } : {}}
                 />
               </Grid>
               <Grid className='w-full flex gap-10'>
                 <TextField
-                  disabled={user.data.role !== "Trainer"}
-                  style={user.data.role !== "Trainer" ? { backgroundColor: "whitesmoke" } : {}}
+                  disabled={user?.role !== "Trainer"}
+                  style={user?.role !== "Trainer" ? { backgroundColor: "whitesmoke" } : {}}
                   placeholder='Hours'
                   name="hours"
                   size="small"
@@ -416,8 +417,8 @@ const NewAssignment = (props) => {
                   }}
                 />
                 <TextField
-                  disabled={user.data.role !== "Trainer"}
-                  style={user.data.role !== "Trainer" ? { backgroundColor: "whitesmoke" } : {}}
+                  disabled={user?.role !== "Trainer"}
+                  style={user?.role !== "Trainer" ? { backgroundColor: "whitesmoke" } : {}}
                   placeholder='Minutes'
                   name="minutes"
                   required
@@ -453,8 +454,8 @@ const NewAssignment = (props) => {
               fullWidth
               value={formData.grade}
               onChange={handleChange}
-              disabled={user.data.role !== "Trainer"}
-              style={user.data.role !== "Trainer" ? { backgroundColor: "whitesmoke" } : {}}
+              disabled={user?.role !== "Trainer"}
+              style={user?.role !== "Trainer" ? { backgroundColor: "whitesmoke" } : {}}
             />
           </div>
         </Box>

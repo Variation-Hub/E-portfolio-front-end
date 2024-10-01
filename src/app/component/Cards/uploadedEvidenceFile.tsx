@@ -98,8 +98,7 @@ const UploadedEvidenceFile = (props) => {
     handleChange({ target: { name: 'units', value: updatedData } });
   };
 
-
-  const user = useSelector(selectUser);
+  const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
 
   const formatDate = (date) => {
     if (!date) return "";
@@ -159,8 +158,8 @@ const UploadedEvidenceFile = (props) => {
               fullWidth
               value={formData?.title}
               onChange={handleChange}
-              disabled={user.data.role !== "Learner" || edit === "view"}
-              style={user.data.role !== "Learner" ? { backgroundColor: "whitesmoke" } : {}}
+              disabled={user?.role !== "Learner" || edit === "view"}
+              style={user?.role !== "Learner" ? { backgroundColor: "whitesmoke" } : {}}
             />
           </div>
 
@@ -177,8 +176,8 @@ const UploadedEvidenceFile = (props) => {
               rows={5}
               value={formData?.description}
               onChange={handleChange}
-              disabled={user.data.role !== "Learner" || edit === "view"}
-              style={user.data.role !== "Learner" ? { backgroundColor: "whitesmoke" } : {}}
+              disabled={user?.role !== "Learner" || edit === "view"}
+              style={user?.role !== "Learner" ? { backgroundColor: "whitesmoke" } : {}}
             />
           </div>
 
@@ -195,8 +194,8 @@ const UploadedEvidenceFile = (props) => {
               rows={5}
               value={formData?.trainer_feedback}
               onChange={handleChange}
-              disabled={user.data.role !== "Trainer" || edit === "view"}
-              style={user.data.role !== "Trainer" ? { backgroundColor: "whitesmoke" } : {}}
+              disabled={user?.role !== "Trainer" || edit === "view"}
+              style={user?.role !== "Trainer" ? { backgroundColor: "whitesmoke" } : {}}
             />
           </div>
 
@@ -213,8 +212,8 @@ const UploadedEvidenceFile = (props) => {
               rows={5}
               value={formData?.learner_comments}
               onChange={handleChange}
-              disabled={user.data.role !== "Learner" || edit === "view"}
-              style={user.data.role !== "Learner" ? { backgroundColor: "whitesmoke" } : {}}
+              disabled={user?.role !== "Learner" || edit === "view"}
+              style={user?.role !== "Learner" ? { backgroundColor: "whitesmoke" } : {}}
             />
           </div>
           <div className="w-full">
@@ -230,8 +229,8 @@ const UploadedEvidenceFile = (props) => {
               rows={5}
               value={formData?.points_for_improvement}
               onChange={handleChange}
-              disabled={user.data.role !== "Trainer" || edit === "view"}
-              style={user.data.role !== "Trainer" ? { backgroundColor: "whitesmoke" } : {}}
+              disabled={user?.role !== "Trainer" || edit === "view"}
+              style={user?.role !== "Trainer" ? { backgroundColor: "whitesmoke" } : {}}
             />
           </div>
 
@@ -247,8 +246,8 @@ const UploadedEvidenceFile = (props) => {
                       checked={formData?.units?.find((unit) => unit.id === method.id)}
                       onChange={(e) => handleCheckboxUnits(e, method)}
                       name="units"
-                      disabled={user.data.role !== "Learner" || edit === "view"}
-                      style={user.data.role !== "Learner" ? { backgroundColor: "whitesmoke" } : {}}
+                      disabled={user?.role !== "Learner" || edit === "view"}
+                      style={user?.role !== "Learner" ? { backgroundColor: "whitesmoke" } : {}}
                     />
                   }
                   label={method.title}
@@ -282,7 +281,7 @@ const UploadedEvidenceFile = (props) => {
                             <TableCell align="center"><Checkbox checked={row.learnerMap} onChange={() => learnerMapHandler(row)} /></TableCell>
                             <TableCell>{row?.subTitle}</TableCell>
                             <TableCell>
-                              {user.data.role === "Learner" ? row?.comment :
+                              {user?.role === "Learner" ? row?.comment :
                                 (
                                   <TextField size="small" value={row?.comment} onChange={(e) => commentHandler(e, row.id)} />
                                 )
@@ -292,7 +291,7 @@ const UploadedEvidenceFile = (props) => {
                                 <div style={{ backgroundColor: (row.learnerMap && row.trainerMap) ? "green" : (row.learnerMap || row.trainerMap) ? "orange" : "maroon", width: "100%", height: "100%" }}></div>
                               </div>
                             </TableCell>
-                            <TableCell align="center"><Checkbox checked={row?.trainerMap} disabled={user.data.role === "Learner" || edit === "view"} onChange={() => trainerMapHandler(row)} /></TableCell>
+                            <TableCell align="center"><Checkbox checked={row?.trainerMap} disabled={user?.role === "Learner" || edit === "view"} onChange={() => trainerMapHandler(row)} /></TableCell>
                           </TableRow>
                         ))}
                       </TableBody>
@@ -318,7 +317,7 @@ const UploadedEvidenceFile = (props) => {
                         checked={formData?.assessment_method?.find(item => item === method.value)}
                         onChange={(e) => handleCheckbox(e, method.value)}
                         name="assessment_method"
-                        disabled={user.data.role !== "Trainer" || edit === "view"}
+                        disabled={user?.role !== "Trainer" || edit === "view"}
                       />
                     }
                     label={method.value}
@@ -351,15 +350,15 @@ const UploadedEvidenceFile = (props) => {
                       session: { ...prevState.session, date: e.target.value }
                     }));
                   }}
-                  disabled={user.data.role !== "Trainer" || edit === "view"}
-                  style={user.data.role !== "Trainer" ? { backgroundColor: "whitesmoke" } : {}}
+                  disabled={user?.role !== "Trainer" || edit === "view"}
+                  style={user?.role !== "Trainer" ? { backgroundColor: "whitesmoke" } : {}}
                 />
 
               </Grid>
               <Grid className='w-full flex gap-10'>
                 <TextField
-                  disabled={user.data.role !== "Trainer" || edit === "view"}
-                  style={user.data.role !== "Trainer" ? { backgroundColor: "whitesmoke" } : {}}
+                  disabled={user?.role !== "Trainer" || edit === "view"}
+                  style={user?.role !== "Trainer" ? { backgroundColor: "whitesmoke" } : {}}
                   placeholder='Hours'
                   name="hours"
                   size="small"
@@ -381,8 +380,8 @@ const UploadedEvidenceFile = (props) => {
                   }}
                 />
                 <TextField
-                  disabled={user.data.role !== "Trainer" || edit === "view"}
-                  style={user.data.role !== "Trainer" ? { backgroundColor: "whitesmoke" } : {}}
+                  disabled={user?.role !== "Trainer" || edit === "view"}
+                  style={user?.role !== "Trainer" ? { backgroundColor: "whitesmoke" } : {}}
                   placeholder='Minutes'
                   name="minutes"
                   required
@@ -418,8 +417,8 @@ const UploadedEvidenceFile = (props) => {
               fullWidth
               value={formData?.grade}
               onChange={handleChange}
-              disabled={user.data.role !== "Trainer" || edit === "view"}
-              style={user.data.role !== "Trainer" ? { backgroundColor: "whitesmoke" } : {}}
+              disabled={user?.role !== "Trainer" || edit === "view"}
+              style={user?.role !== "Trainer" ? { backgroundColor: "whitesmoke" } : {}}
             />
           </div>
         </Box>

@@ -78,7 +78,7 @@ const timeAgo = (timestamp) => {
 
 const AddInnocations = (props) => {
   const { yourInnovation = {}, handleChange = () => { } } = props;
-  const { data } = useSelector(selectUser);
+  const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
 
   return (
     <>
@@ -98,7 +98,7 @@ const AddInnocations = (props) => {
             multiline
             value={yourInnovation.topic}
             onChange={handleChange}
-            disabled={data.role === "Admin"}
+            disabled={user?.role === "Admin"}
           />
         </div>
         <div>
@@ -117,10 +117,10 @@ const AddInnocations = (props) => {
             rows={6}
             value={yourInnovation.description}
             onChange={handleChange}
-            disabled={data.role === "Admin"}
+            disabled={user?.role === "Admin"}
           />
         </div>
-        {data.role === "Admin" &&
+        {user?.role === "Admin" &&
           <div>
             <Typography
               sx={{
@@ -154,7 +154,8 @@ const AddInnocations = (props) => {
 
 const ProposeYourInnovations = (props) => {
   const chatEndRef = useRef(null);
-  const { data } = useSelector(selectUser);
+  const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
+
   const { singleData, dataUpdatingLoadding, dataFetchLoading, meta_data } = useSelector(selectYourInnovation);
 
   const { pagination } = useSelector(selectGlobalUser)
@@ -169,14 +170,14 @@ const ProposeYourInnovations = (props) => {
   const [deleteId, setDeleteId] = useState("");
 
   const [yourInnovation, setYourInnovation] = useState({
-    innovation_propose_by_id: data.user_id,
+    innovation_propose_by_id: user?.user_id,
     topic: "",
     description: "",
     status: "",
   });
 
   const fetchInnovationsData = (page = 1) => {
-    dispatch(getYourInnovationAPI({ page, page_size: pagination?.page_size }, data.user_id));
+    dispatch(getYourInnovationAPI({ page, page_size: pagination?.page_size }, user?.user_id));
   }
 
   const deleteIcon = (id) => {
@@ -194,7 +195,7 @@ const ProposeYourInnovations = (props) => {
   const clearSingleData = () => {
     dispatch(slice.setSingleData({}));
     setYourInnovation({
-      innovation_propose_by_id: data.user_id,
+      innovation_propose_by_id: user?.user_id,
       topic: "",
       description: "",
       status: ""
@@ -287,7 +288,7 @@ const ProposeYourInnovations = (props) => {
 
   const handleSendChatMessage = async () => {
     if (newMessage.trim() !== "") {
-      const isAdmin = data.roles.includes("Admin");
+      const isAdmin = user?.roles.includes("Admin");
       const messageType = isAdmin ? "Response" : "Reply";
 
       const newChatMessage = {
@@ -335,7 +336,7 @@ const ProposeYourInnovations = (props) => {
     scrollToBottom();
   }, [singleData.comment]);
 
-  const isAdmin = data.roles.includes('Admin');
+  const isAdmin = user?.roles.includes('Admin');
 
   const isInnovations =
     Object.values(yourInnovation).find((data) => data === "") === undefined;
@@ -349,7 +350,7 @@ const ProposeYourInnovations = (props) => {
   return (
     <>
       <div className="m-10">
-        {data.role !== "Admin" &&
+        {user?.role !== "Admin" &&
           <Box
             className="flex justify-end mb-10"
             sx={{
@@ -400,7 +401,7 @@ const ProposeYourInnovations = (props) => {
                   >
                     Description
                   </TableCell>
-                  {data.role === "Admin" &&
+                  {user?.role === "Admin" &&
                     <>
                       <TableCell align="left"
                         sx={{
@@ -458,7 +459,7 @@ const ProposeYourInnovations = (props) => {
                     >
                       {row?.description}
                     </TableCell>
-                    {data?.role === "Admin" &&
+                    {user?.role === "Admin" &&
                       <>
                         <TableCell
                           align="left"
@@ -575,7 +576,7 @@ const ProposeYourInnovations = (props) => {
               handleClose();
               handleEdit();
             }}
-            disabled={data.role !== "Admin" && singleData.status === "Closed"}
+            disabled={user?.role !== "Admin" && singleData.status === "Closed"}
           >
             Edit
           </MenuItem>
@@ -657,7 +658,7 @@ const ProposeYourInnovations = (props) => {
             <Box sx={{ flexGrow: 1, overflowY: "auto", p: 2 }}>
               {singleData.comment?.map((message) => (
                 <Box key={message.id} mb={2} >
-                  {singleData.innovation_propose_by_id?.user_id === data?.user_id ? (
+                  {singleData.innovation_propose_by_id?.user_id === user?.user_id ? (
                     message.type == "Response" ? (
 
                       <Grid className="w-[80%] flex text-justify justify-start pr-10">
@@ -666,7 +667,7 @@ const ProposeYourInnovations = (props) => {
                           <div style={{ overflowWrap: "anywhere" }} className="flex flex-col w-full">
                             <div className="flex justify-between flex-row m-5 pr-10">
                               <div className="font-semibold text-base">
-                                {singleData.innovation_propose_by_id?.user_id === data?.user_id ? "Admin" : singleData.innovation_propose_by_id?.user_name}
+                                {singleData.innovation_propose_by_id?.user_id === user?.user_id ? "Admin" : singleData.innovation_propose_by_id?.user_name}
                               </div>
                               <div className="text-xs text-gray-500">{timeAgo(message?.date)}</div>
                             </div>

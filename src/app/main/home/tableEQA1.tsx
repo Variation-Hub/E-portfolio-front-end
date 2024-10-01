@@ -93,13 +93,14 @@ const rows = [
 
 const TableEQA1 = (props) => {
 
-  const { data } = useSelector(selectUser);
+  const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
+
   const { learnerData, learner_meta_data } = useSelector(selectUserManagement);
   const dispatch: any = useDispatch();
   const { pagination } = useSelector(selectGlobalUser)
 
   useEffect(() => {
-    dispatch(getEQAUserData({ page: 1, page_size: pagination?.page_size }, "learner_id", data.user_id));
+    dispatch(getEQAUserData({ page: 1, page_size: pagination?.page_size }, "learner_id", user?.user_id));
   }, [dispatch, pagination]);
 
   console.log("Learner Data:", learnerData);
@@ -107,7 +108,7 @@ const TableEQA1 = (props) => {
 
   const handleChangePage = (event: unknown, newPage: number) => {
     dispatch(
-      getEQAUserData({ page: newPage, page_size: pagination?.page_size }, "learner_id", data.user_id)
+      getEQAUserData({ page: newPage, page_size: pagination?.page_size }, "learner_id", user?.user_id)
     );
   };
 

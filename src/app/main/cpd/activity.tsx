@@ -517,7 +517,8 @@ const Activity = (props) => {
   const rowsPerPage = pagination.page_size;
 
   const dispatch: any = useDispatch();
-  const { data } = useSelector(selectUser);
+  const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
+
   const cpdPlanningData = useSelector(selectCpdPlanning);
 
   const handleChange = () => {
@@ -532,7 +533,7 @@ const Activity = (props) => {
 
 
   const fetchActivityData = () => {
-    dispatch(getCpdPlanningAPI(learnerId || data.user_id, "activities"));
+    dispatch(getCpdPlanningAPI(learnerId || user?.user_id, "activities"));
   }
 
   useEffect(() => {

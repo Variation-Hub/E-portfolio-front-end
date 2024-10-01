@@ -34,7 +34,8 @@ const Portfolio = () => {
   );
 
   const data = useSelector(selectstoreDataSlice);
-  const user = useSelector(selectUser);
+  const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
+
   const { singleData } = useSelector(selectLearnerManagement);
   const { learnerTab } = useSelector(selectGlobalUser);
 
@@ -51,7 +52,7 @@ const Portfolio = () => {
   useEffect(() => {
     if (singleData?.learner_id)
       dispatch(getLearnerDetails(singleData?.learner_id));
-    else if (user.data?.learner_id) dispatch(getLearnerDetails(user.data?.learner_id));
+    else if (user?.learner_id) dispatch(getLearnerDetails(user?.learner_id));
   }, [singleData?.learner_id, user.data]);
 
   const handleOpen = () => {
@@ -83,7 +84,7 @@ const Portfolio = () => {
       email: learner.email,
       subject: '',
       message: '',
-      adminName: user?.data?.displayName
+      adminName: user?.displayName
     })
   };
 
@@ -91,7 +92,7 @@ const Portfolio = () => {
     email: learner.email,
     subject: '',
     message: '',
-    adminName: user?.data?.displayName
+    adminName: user?.displayName
   });
 
   useEffect(() => {
@@ -116,21 +117,8 @@ const Portfolio = () => {
     }
   };
 
-
-  const handleLearnerTab = () => {
-    if (learnerTab.tab && !learnerTab.tab.closed) {
-      learnerTab.tab.close();
-    }
-
-    const newTab = window.open(`/portfolio`, '_blank');
-    // dispatch(globalSlice.setLearnerTab({ ...learnerTab, tab: newTab }));
-    // console.log(newTab, "++++");
-  }
   return (
     <div>
-      {/* {user?.data?.role === "Learner" && */}
-        <SecondaryButtonOutlined name="Learner Dashboard" className="mr-12" onClick={handleLearnerTab} />
-      {/* } */}
       <div className="m-10 flex flex-wrap justify-evenly gap-10 cursor-pointer">
         {portfolioCard?.map((value, index) => (
           <PortfolioCard data={value} index={index} key={value.id} />
@@ -143,8 +131,8 @@ const Portfolio = () => {
           <div className="flex flex-col w-1/6 justify-center items-center border-r-1">
             <Avatar
               sx={{ width: 100, height: 100, backgroundColor: getRandomColor(learner?.first_name?.toLowerCase().charAt(0)) }}
-              src={data?.learner_id ? learner?.avatar : user.data.avatar?.url}
-              alt={data?.learner_id ? learner?.first_name?.toUpperCase()?.charAt(0) : user.data.displayName}
+              src={data?.learner_id ? learner?.avatar : user?.avatar?.url}
+              alt={data?.learner_id ? learner?.first_name?.toUpperCase()?.charAt(0) : user?.displayName}
             />
             <div className="mt-10">
               {learner?.first_name} {learner?.last_name}
@@ -188,7 +176,7 @@ const Portfolio = () => {
       )
       }
       <div className="flex justify-end mr-24">
-        {user.data.role !== "Learner" && (
+        {user?.role !== "Learner" && (
           <SecondaryButton
             className="mr-12"
             onClick={handleOpenEmail}

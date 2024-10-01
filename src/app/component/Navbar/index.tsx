@@ -12,15 +12,14 @@ import { selectUser } from "app/store/userSlice";
 
 const Index = () => {
   const navigate = useNavigate();
-  const { data } = useSelector(selectUser)
+
+  const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
 
   const [open, setOpen] = useState(false);
 
   const navigateLogin = () => {
     if (instance.getAccessToken()) {
-      if (data?.role === "Learner")
-        navigate("/portfolio");
-      else
+      if (user?.role === "Learner")
         navigate("/home");
     } else {
       navigate("/sign-in");

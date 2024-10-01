@@ -45,7 +45,7 @@ import { UserRole } from "src/enum";
 
 const AddRequest = (props) => {
   const { supportData = {}, handleChange = () => { } } = props;
-  const { data } = useSelector(selectUser);
+  const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
 
   return (
     <>
@@ -85,7 +85,7 @@ const AddRequest = (props) => {
             onChange={handleChange}
           />
         </div>
-        {data.role === "Admin" &&
+        {user?.role === "Admin" &&
           <div>
             <Typography
               sx={{
@@ -120,7 +120,8 @@ const AddRequest = (props) => {
 };
 
 const Support = (props) => {
-  const { data } = useSelector(selectUser);
+  const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
+
   const { singleData, dataUpdatingLoadding, dataFetchLoading, meta_data } = useSelector(selectSupportData);
 
   const { pagination } = useSelector(selectGlobalUser)
@@ -132,7 +133,7 @@ const Support = (props) => {
   const [deleteId, setDeleteId] = useState("");
 
   const [supportData, setSupportData] = useState({
-    request_id: data.user_id,
+    request_id: user?.user_id,
     title: "",
     description: "",
   });
@@ -150,13 +151,13 @@ const Support = (props) => {
   const dispatch: any = useDispatch();
 
   const fetchSupportData = (page = 1) => {
-    dispatch(getSupportDataAPI({ page, page_size: pagination.page_size }, data.role !== UserRole.Admin && data.user_id));
+    dispatch(getSupportDataAPI({ page, page_size: pagination.page_size }, user?.role !== UserRole.Admin && user?.user_id));
   }
 
   const clearSingleData = () => {
     dispatch(slice.setSingleData({}));
     setSupportData({
-      request_id: data.user_id,
+      request_id: user?.user_id,
       title: "",
       description: "",
     });
@@ -242,7 +243,7 @@ const Support = (props) => {
   return (
     <>
       <div className="m-10">
-        {data.role !== "Admin" && <Box
+        {user?.role !== "Admin" && <Box
           className="flex justify-end mb-10"
           sx={{
             borderBottom: 1,
@@ -290,7 +291,7 @@ const Support = (props) => {
                       }}>
                       Description
                     </TableCell>
-                    {data.role === "Admin" &&
+                    {user?.role === "Admin" &&
                       <>
                         <TableCell align="left"
                           sx={{
@@ -310,7 +311,7 @@ const Support = (props) => {
                       Date
                     </TableCell>
                     <TableCell align="left" sx={{ width: "15rem" }}>Status</TableCell>
-                    {data.role === "Admin" &&
+                    {user?.role === "Admin" &&
                       <TableCell align="left" sx={{ width: "15rem" }}>Action</TableCell>}
                   </TableRow>
                 </TableHead>
@@ -345,7 +346,7 @@ const Support = (props) => {
                       >
                         {row.description}
                       </TableCell>
-                      {data.role === "Admin" &&
+                      {user?.role === "Admin" &&
                         <>
                           <TableCell
                             align="left"
@@ -377,7 +378,7 @@ const Support = (props) => {
                       >
                         {row.status}
                       </TableCell>
-                      {data.role === "Admin" &&
+                      {user?.role === "Admin" &&
                         <TableCell
                           align="left"
                           sx={{ borderBottom: "2px solid #F8F8F8", width: "15rem" }}
@@ -451,7 +452,7 @@ const Support = (props) => {
               handleEdit();
               handleClose();
             }}
-            disabled={data.role !== "Admin" && singleData.status === "Closed"}
+            disabled={user?.role !== "Admin" && singleData.status === "Closed"}
           >
             Edit
           </MenuItem>

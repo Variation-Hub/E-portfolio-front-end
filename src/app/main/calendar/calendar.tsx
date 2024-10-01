@@ -49,7 +49,7 @@ const Calendar = () => {
   const dispatch: any = useDispatch();
 
   const session = useSelector(selectSession);
-  const { data } = useSelector(selectUser);
+  const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
 
   const { pagination } = useSelector(selectGlobalUser);
 
@@ -112,7 +112,7 @@ const Calendar = () => {
   return (
     <>
       <div className="m-10 mb-0 text-right">
-        {data?.role !== "Learner" && (
+        {user?.role !== "Learner" && (
           <Link to="/newsession">
             <SecondaryButton name="New Session" />
           </Link>

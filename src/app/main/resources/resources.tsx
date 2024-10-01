@@ -16,8 +16,6 @@ import { selectUser } from "app/store/userSlice";
 const Resources = () => {
 
   const { data, dataFetchLoading } = useSelector(selectResourceManagement)
-  const user = useSelector(selectUser);
-  console.log(user, "{{{{{{")
   const [open, setOpen] = useState(false);
   const dispatch: any = useDispatch();
 

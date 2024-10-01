@@ -43,7 +43,8 @@ export default function ResouresTable(props) {
   );
 
   const [open, setOpen] = useState(false);
-  const { data } = useSelector(selectUser)
+  const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
+
 
   const dispatch: any = useDispatch();
 
@@ -60,8 +61,8 @@ export default function ResouresTable(props) {
   const openMenu = (e, id) => {
     handleClick(e);
     setOpenMenuDialog(id);
-    if(data?.role === "Learner")
-      dispatch(resourceAccess(id?.resource_id, data?.user_id));
+    if(user?.role === "Learner")
+      dispatch(resourceAccess(id?.resource_id, user?.user_id));
   };
 
   const deleteConfromation = async () => {
@@ -78,8 +79,8 @@ export default function ResouresTable(props) {
   const downlaodFile = async (fileUrl, name, id) => {
     try {
       dispatch(DownloadFile(fileUrl, name))
-      if(data?.role === "Learner")
-        dispatch(resourceAccess(id?.resource_id, data?.user_id));
+      if(user?.role === "Learner")
+        dispatch(resourceAccess(id?.resource_id, user?.user_id));
     } catch (error) {
       console.error('Error downloading file:', error);
     }

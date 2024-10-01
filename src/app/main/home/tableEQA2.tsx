@@ -72,13 +72,14 @@ const rows = [
 
 const TableEQA2 = () => {
 
-  const { data } = useSelector(selectUser);
+  const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
+
   const { trainerData, trainer_meta_data } = useSelector(selectUserManagement);
   const dispatch: any = useDispatch();
   const { pagination } = useSelector(selectGlobalUser)
 
   useEffect(() => {
-    dispatch(getEQAUserData({ page: 1, page_size: pagination?.page_size }, "trainer_id", data.user_id));
+    dispatch(getEQAUserData({ page: 1, page_size: pagination?.page_size }, "trainer_id", user?.user_id));
   }, [dispatch, pagination]);
 
 
@@ -86,7 +87,7 @@ const TableEQA2 = () => {
 
   const handleChangePage = (event: unknown, newPage: number) => {
     dispatch(
-      getEQAUserData({ page: newPage, page_size: pagination?.page_size }, "trainer_id", data.user_id)
+      getEQAUserData({ page: newPage, page_size: pagination?.page_size }, "trainer_id", user?.user_id)
     );
   };
 

@@ -74,16 +74,17 @@ const Protfolio = ({ learner, handleClickData, handleClickSingleData }) => {
 
 const LearnerOverview = () => {
 
-  const { data } = useSelector(selectUser)
+  const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
+
   const { learnerOverView } = useSelector(selectCourseManagement)
 
   const dispatch: any = useDispatch()
 
   useEffect(() => {
-    if (data.user_id && data.role) {
-      dispatch(fetchAllLearnerByUserAPI(data.user_id, data.role))
+    if (user?.user_id && user?.role) {
+      dispatch(fetchAllLearnerByUserAPI(user?.user_id, user?.role))
     }
-  }, [data]);
+  }, [user]);
 
   const handleClickData = (id, user_id) => {
     dispatch(slice.setLeanerId({ id, user_id }))

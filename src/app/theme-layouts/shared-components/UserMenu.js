@@ -4,7 +4,7 @@ import ListItemText from '@mui/material/ListItemText';
 import MenuItem from '@mui/material/MenuItem';
 import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { selectUser } from 'app/store/userSlice';
@@ -15,7 +15,8 @@ import { style } from './Style';
 import { getRandomColor } from 'src/utils/randomColor';
 
 function UserMenu(props) {
-  const user = useSelector(selectUser);
+  const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
+
   const userAvarat = useSelector(selectUserManagement)
   const { isAuthenticated } = useAuth();
   const { logout } = jwtService;
@@ -63,18 +64,18 @@ function UserMenu(props) {
       >
         <div className="flex-col mx-4 items-end sm:!flex" style={{ display: "none" }}>
           <Typography component="span" className="font-semibold flex">
-            {user?.data?.displayName}
+            {user?.displayName}
           </Typography>
           <Typography className="text-11 font-medium capitalize" color="text.white">
-            {user?.data?.role?.toString()}
-            {(!user.data.role || (Array.isArray(user.data.role) && user.data.role.length === 0)) && 'Guest'}
+            {user?.role?.toString()}
+            {(!user?.role || (Array.isArray(user?.role) && user?.role.length === 0)) && 'Guest'}
           </Typography>
         </div>
 
-        {(user.data.avatar?.url || userAvarat?.avatar) ? (
-          <Avatar className="md:mx-4" alt="user photo" src={userAvarat?.avatar || user.data.avatar?.url} />
+        {(user?.avatar?.url || userAvarat?.avatar) ? (
+          <Avatar className="md:mx-4" alt="user photo" src={userAvarat?.avatar || user?.avatar?.url} />
         ) : (
-          <Avatar className="md:mx-4" sx={{ backgroundColor: getRandomColor(user?.data?.displayName?.toLowerCase().charAt(0)) }}>{user.data.displayName?.toUpperCase().charAt(0)}</Avatar>
+          <Avatar className="md:mx-4" sx={{ backgroundColor: getRandomColor(user?.displayName?.toLowerCase().charAt(0)) }}>{user?.displayNames?.toUpperCase().charAt(0)}</Avatar>
         )}
       </Button>
 
@@ -99,7 +100,7 @@ function UserMenu(props) {
             <MenuItem onClick={() => navigate('/profile')} >
               <ListItemText primary="My Profile" />
             </MenuItem>
-            {user?.data?.role !== 'Learner' && (
+            {user?.role !== 'Learner' && (
               <MenuItem onClick={handleClick}>
                 <ListItemText primary="Change Role" />
               </MenuItem>
@@ -126,7 +127,7 @@ function UserMenu(props) {
                 paper: 'py-8',
               }}
             >
-              {[...user.data.roles].reverse()?.map(value => {
+              {[...user?.roles]?.reverse()?.map(value => {
                 return (
                   <MenuItem key={value} onClick={() => changeRole(value)}>
                     <ListItemText primary={value} />

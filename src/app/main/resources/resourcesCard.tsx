@@ -15,8 +15,8 @@ import { UserRole } from "src/enum";
 const ResourcesCard = () => {
 
   const { data, dataFetchLoading } = useSelector(selectResourceManagement)
-  const user = useSelector(selectUser);
-  console.log(user, "{{{{{{")
+  const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
+
   const [open, setOpen] = useState(false);
   const dispatch: any = useDispatch();
 
@@ -52,7 +52,7 @@ const ResourcesCard = () => {
             <DataNotFound width="25%" />
             <Typography variant="h5">No data found</Typography>
             <Typography variant="body2" className="text-center">It is a long established fact that a reader will be <br />distracted by the readable content.</Typography>
-            {user.data.role !== UserRole.Learner && <div className="flex items-center space-x-4">
+            {user?.role !== UserRole.Learner && <div className="flex items-center space-x-4">
               <SecondaryButton
                 name="Create Resource"
                 startIcon={

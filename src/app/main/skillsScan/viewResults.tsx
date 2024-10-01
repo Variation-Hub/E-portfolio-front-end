@@ -75,7 +75,8 @@ const LineChart = forwardRef<any, LineChartProps>(({ data }, ref) => {
 
 const ViewResults = () => {
 
-    const { data } = useSelector(selectUser);
+    const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
+
     const { singleData } = useSelector(selectSkillsScan);
     const { courseData } = useSelector(selectLearnerManagement);
     const chartRef = useRef<any>(null);
@@ -164,8 +165,8 @@ const ViewResults = () => {
             <body class="bg-gray-100 flex justify-center items-center">
                 <div class="a4-container">
                     <div class="mb-6">
-                        <h2 class="text-lg font-semibold">${data?.displayName}</h2>
-                        <p class="text-base font-semibold">Results Chart for ${data?.displayName}</p>
+                        <h2 class="text-lg font-semibold">${user?.displayName}</h2>
+                        <p class="text-base font-semibold">Results Chart for ${user?.displayName}</p>
                         <p class="text-sm text-gray-600 mt-2">${subTitle}</p>
                     </div>
                     <div class="flex gap-8 w-full">
@@ -231,7 +232,7 @@ const ViewResults = () => {
     return (
         <Grid className=' m-10 px-10 pt-10'>
             <Grid >
-                <Typography className='h3'>Results chart for {data?.displayName}</Typography>
+                <Typography className='h3'>Results chart for {user?.displayName}</Typography>
             </Grid>
             <Grid className=' flex gap-28'>
                 <Grid className='w-1/2'>

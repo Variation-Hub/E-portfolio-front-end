@@ -384,7 +384,8 @@ const Reflection = (props) => {
   const [open, setOpen] = useState(false);
 
   const dispatch: any = useDispatch();
-  const { data } = useSelector(selectUser);
+  const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
+
   const cpdPlanningData = useSelector(selectCpdPlanning);
 
   const handleChange = () => {
@@ -400,7 +401,7 @@ const Reflection = (props) => {
   console.log(isFormValid);
 
   useEffect(() => {
-    dispatch(getCpdPlanningAPI(learnerId || data.user_id, "reflections"));
+    dispatch(getCpdPlanningAPI(learnerId || user?.user_id, "reflections"));
   }, [dispatch]);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);

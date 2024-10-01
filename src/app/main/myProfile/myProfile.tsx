@@ -48,7 +48,8 @@ const MyProfile: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<string>("personalDetails");
 
-  const { data } = useSelector(selectUser);
+  const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
+
   const { dataUpdatingLoadding } = useSelector(selectUserManagement);
   const fileInputRef: any = useRef();
 
@@ -166,9 +167,9 @@ const MyProfile: React.FC = () => {
             ) : (
               <>
                 <Avatar
-                  sx={{ width: "120px", height: "120px", bgcolor: getRandomColor(data?.displayName?.toLowerCase().charAt(0)) }}
-                  src={data?.avatar?.url}
-                  alt={data?.displayName}
+                  sx={{ width: "120px", height: "120px", bgcolor: getRandomColor(user?.displayName?.toLowerCase().charAt(0)) }}
+                  src={user?.avatar?.url}
+                  alt={user?.displayName}
                 />
                 <IconButton
                   onClick={handleButtonClick}
@@ -198,9 +199,9 @@ const MyProfile: React.FC = () => {
             )}
           </div>
           <Typography sx={{ fontWeight: "bold", textTransform: "capitalize" }}>
-            {data?.displayName}
+            {user?.displayName}
           </Typography>
-          <Typography>{data?.email}</Typography>
+          <Typography>{user?.email}</Typography>
         </Paper>
       </Box>
 
@@ -233,13 +234,13 @@ const MyProfile: React.FC = () => {
           <div>
             <Box className="m-12 flex flex-col justify-between gap-12 sm:flex-row">
               <CustomInputField
-                value={data?.first_name}
+                value={user?.first_name}
                 label="First Name"
                 name="first_name"
                 placeholder="Enter first name"
               />
               <CustomInputField
-                value={data?.last_name}
+                value={user?.last_name}
                 label="Last Name"
                 name="last_name"
                 placeholder="Enter last name"
@@ -248,13 +249,13 @@ const MyProfile: React.FC = () => {
 
             <Box className="m-12 flex flex-col justify-between gap-12 sm:flex-row">
               <CustomInputField
-                value={data?.user_name}
+                value={user?.user_name}
                 label="Username"
                 name="user_name"
                 placeholder="Enter username"
               />
               <CustomInputField
-                value={data?.email}
+                value={user?.email}
                 label="Email"
                 name="email"
                 placeholder="Enter email"
@@ -263,7 +264,7 @@ const MyProfile: React.FC = () => {
 
             <Box className="m-12 flex flex-col justify-between gap-12 sm:flex-row">
               {/* <CustomInputField
-                value={data?.mobile}
+                value={user?.mobile}
                 label="Mobile"
                 name="mobile"
                 placeholder="Enter mobile"
@@ -279,7 +280,7 @@ const MyProfile: React.FC = () => {
                   className="text-[#959ca9] opacity-100"
                   placeholder="Enter phone number"
                   // className="h-fit"
-                  value={data?.mobile}
+                  value={user?.mobile}
                   style={{
                     border: '1px solid lightgray',
                     padding: "9px",
@@ -290,7 +291,7 @@ const MyProfile: React.FC = () => {
                 />
               </div>
               <CustomInputField
-                value={data?.time_zone}
+                value={user?.time_zone}
                 label="Timezone"
                 name="timezone"
                 placeholder="Enter timezone"
@@ -306,7 +307,7 @@ const MyProfile: React.FC = () => {
                   name="roles"
                   size="small"
                   // placeholder="Enter your role"
-                  placeholder={data?.roles}
+                  placeholder={user?.roles}
                   fullWidth
                   multiline
                 // value={data?.roles}

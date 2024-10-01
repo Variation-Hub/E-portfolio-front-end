@@ -74,7 +74,7 @@ const AssignmentData = () => {
 
   const dispatch: any = useDispatch();
   const { user_id } = useSelector(selectstoreDataSlice);
-  const user = useSelector(selectUser).data;
+  const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
   const { singleData } = useSelector(selectCourseManagement)
   const assingmentSingleData = useSelector(selectAssignment)?.singleData
   const { singleAssignmentData } = useSelector(selectAssignment)

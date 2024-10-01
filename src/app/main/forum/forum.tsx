@@ -46,7 +46,8 @@ const Forum = () => {
 
   const chatEndRef = useRef(null);
   const forumData = useSelector(selectForumData);
-  const user = useSelector(selectUser);
+  const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
+
 
   const dispatch: any = useDispatch();
 
@@ -229,7 +230,7 @@ const Forum = () => {
             <Box className="flex overflow-y-scroll flex-col max-w-full gap-10 h-[85%]">
               {forumData.data?.map((message) => (
                 <>
-                  {user.data.user_id === message.sender.user_id ?
+                  {user?.user_id === message.sender.user_id ?
                     <Grid className="w-[80%] flex ml-auto text-justify justify-end pr-10 ">
                       <Typography sx={{ overflowWrap: "anywhere" }} className=" bg-[#5B718F] p-10 rounded-md text-base text-white ">
                         {message?.message && message?.file ?

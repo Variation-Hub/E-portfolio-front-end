@@ -66,7 +66,7 @@ export const PortfolioCard = ({ data, learner = undefined, handleClickData = (id
   const dispatch: any = useDispatch();
   const navigate = useNavigate();
   const learnerData = useSelector(selectstoreDataSlice);
-  const { role } = useSelector(selectUser)?.data
+  const { role } = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
 
   const { id = 0, name = "No title", color = "#FCA14E" } = data;
   const handleClick = (row = "") => {

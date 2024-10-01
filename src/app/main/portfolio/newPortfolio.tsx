@@ -10,6 +10,8 @@ import { useSelector } from 'react-redux';
 import { slice as globalSlice, selectGlobalUser, tokenGetFetch } from "app/store/globalUser";
 import { useDispatch } from 'react-redux';
 import ContractedWorkHours from './contractedWork';
+import { selectUser } from 'app/store/userSlice';
+import Portfolio from './portfolio';
 
 const CustomTab = styled(Tab)(({ theme }) => ({
     textTransform: 'none', // Disable uppercase
@@ -65,6 +67,9 @@ export default function NewPortfolio() {
     const [value, setValue] = React.useState(0);
     const { learnerTab, selectedUser } = useSelector(selectGlobalUser);
     const dispatch: any = useDispatch();
+    const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
+
+    const role = user?.role;
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -75,12 +80,11 @@ export default function NewPortfolio() {
             learnerTab.tab.close();
         }
 
+        const data = await dispatch(tokenGetFetch(selectedUser.email))
         const newTab = window.open('/portfolio', '_blank');
+        newTab.sessionStorage.setItem('learnerToken', JSON.stringify({ ...data, user: { ...data.user, displayName: data.user.first_name + " " + data.user.last_name } }));
         newTab.onload = async () => {
-            const data = await dispatch(tokenGetFetch(selectedUser.email))
             if (data) {
-                console.log(data);
-                newTab.sessionStorage.setItem('learnerToken', JSON.stringify(data));
                 newTab.focus();
             }
         };
@@ -89,7 +93,16 @@ export default function NewPortfolio() {
 
     }
 
+    if (role === "Learner") {
+        return (
+          <>
+            <Portfolio/>
+          </>
+        );
+      }
+
     return (
+        
         <div className='p-10 overflow-y-auto'>
             <div className='flex justify-between items-center'>
                 <h1>{selectedUser.first_name + " " + selectedUser.last_name}</h1>
