@@ -62,7 +62,7 @@ function a11yProps(index) {
 }
 
 export default function NewPortfolio() {
-    const [value, setValue] = React.useState(2);
+    const [value, setValue] = React.useState(0);
     const { learnerTab, selectedUser } = useSelector(selectGlobalUser);
     const dispatch: any = useDispatch();
 
