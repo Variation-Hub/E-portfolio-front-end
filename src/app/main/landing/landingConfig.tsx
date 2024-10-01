@@ -1,6 +1,7 @@
 import { lazy } from "react";
 const Landing = lazy(() => import("./landing"));
 import authRoles from 'src/app/auth/authRoles';
+import ResetPassword from "./resetPassword";
 
 const LandingConfig = {
   settings: {
@@ -29,6 +30,10 @@ const LandingConfig = {
     {
       path: "/",
       element: <Landing />
+    },
+    {
+      path: "/reset-password",
+      element: <ResetPassword />
     },
   ],
 };

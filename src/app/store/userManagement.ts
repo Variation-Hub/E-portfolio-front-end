@@ -179,6 +179,20 @@ export const updatePasswordHandler = (data) => async (dispatch) => {
     }
 }
 
+// reset password mail
+export const resetPasswordMail = (data) => async (dispatch) => {
+
+    try {
+        const response = await axios.post(`${URL_BASE_LINK}/user/password-mail`, data);
+        dispatch(showMessage({ message: response.data.message, variant: "success" }));
+
+    } catch (err) {
+        dispatch(showMessage({ message: err.response.data.message, variant: "error" }))
+        return false;
+
+    }
+}
+
 
 // create user
 export const createUserAPI = (data) => async (dispatch) => {

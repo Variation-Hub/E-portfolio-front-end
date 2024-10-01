@@ -8,7 +8,7 @@ import { LoadingButton, SecondaryButton, SecondaryButtonOutlined } from 'src/app
 import UploadPhoto from './uploadPhoto';
 import UpdatePassword from './updatePassword';
 import { passwordReg } from 'src/app/contanst/regValidation';
-import { updatePasswordHandler } from 'app/store/userManagement';
+import { resetPasswordMail, updatePasswordHandler } from 'app/store/userManagement';
 import { selectGlobalUser } from 'app/store/globalUser';
 
 const LearnerDetails = () => {
@@ -215,6 +215,19 @@ const LearnerDetails = () => {
         handleCloseDialog();
     };
 
+    const handleEmailAlert = async () => {
+        const confirmed = confirm(`Are you sure you wish to reset the password?\nAn email will be sent to ${globalUser.selectedUser.email} with reset instructions.`);
+
+        if (confirmed) {
+            try {
+                await dispatch(resetPasswordMail({ email: globalUser.selectedUser.email }));
+            } catch (error) {
+                console.error('Error sending reset email:', error);
+            }
+        }
+    }
+
+
     return (
         <div>
             <div className='flex border-2 p-5'>
@@ -223,7 +236,7 @@ const LearnerDetails = () => {
 
                         <div className='flex gap-5 items-center justify-end'>
                             <SecondaryButtonOutlined name="Create New Password" onClick={handleClickOpen} />
-                            <SecondaryButtonOutlined name="Email Password Reset" />
+                            <SecondaryButtonOutlined name="Email Password Reset" onClick={handleEmailAlert} />
                             <SecondaryButtonOutlined name="Create Employer" />
                             <SecondaryButtonOutlined name="Add New Manager" />
                             <SecondaryButtonOutlined name="Save" />
