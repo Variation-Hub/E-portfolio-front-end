@@ -76,10 +76,10 @@ export default function NewPortfolio() {
                         {/* Tabs with border */}
                         <CustomTab label="Profile" {...a11yProps(0)} />
                         <CustomTab label="Course" {...a11yProps(1)} />
-                        <CustomTab label="Action" {...a11yProps(2)} />
+                        {/* <CustomTab label="Action" {...a11yProps(2)} />
                         <CustomTab label="Test and Exams" {...a11yProps(3)} />
                         <CustomTab label="Contact Diary" {...a11yProps(4)} />
-                        <CustomTab label="ALS" {...a11yProps(5)} />
+                        <CustomTab label="ALS" {...a11yProps(5)} /> */}
                         <CustomTab label="Contracted Work Hours" {...a11yProps(6)} />
                     </CustomTabs>
                 </Box>
@@ -89,7 +89,7 @@ export default function NewPortfolio() {
                 <CustomTabPanel value={value} index={1}>
                     Course
                 </CustomTabPanel>
-                <CustomTabPanel value={value} index={2}>
+                {/*<CustomTabPanel value={value} index={2}>
                     Action
                 </CustomTabPanel>
                 <CustomTabPanel value={value} index={3}>
@@ -100,7 +100,7 @@ export default function NewPortfolio() {
                 </CustomTabPanel>
                 <CustomTabPanel value={value} index={5}>
                     ALS
-                </CustomTabPanel>
+                </CustomTabPanel> */}
                 <CustomTabPanel value={value} index={6}>
                     Contracted Work Hours
                 </CustomTabPanel>
