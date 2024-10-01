@@ -96,3 +96,18 @@ export const DownloadLearnerExcel = () => async (dispatch) => {
         console.log("Error in Download file:", err)
     }
 }
+
+export const tokenGetFetch = (email) => async (dispatch) => {
+    try {
+        const response: any = await axios.post(`${URL_BASE_LINK}/user/token`, { email });
+        if (response.data.status) {
+            const { accessToken, user } = response.data.data;
+            return { accessToken, user }
+        } else {
+            return null;
+        }
+    } catch (err) {
+        console.log(err)
+        return null;;
+    }
+}

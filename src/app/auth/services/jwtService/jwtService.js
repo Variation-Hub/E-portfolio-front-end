@@ -74,17 +74,6 @@ class JwtService extends FuseUtils.EventEmitter {
                 .then(async (response) => {
                     if (response.data.status) {
                         const decoded = jwtDecode(response.data.data.accessToken);
-                        // const res = await axios.post(
-                        //   `${URL_BASE_LINK}/notification/connect`,
-                        //   {},
-                        //   {
-                        //     headers: {
-                        //       Authorization: `Bearer ${response.data.data.accessToken}`,
-                        //     },
-                        //   }
-                        // );
-                        // if (res.data.status) {
-                            // }
                         connectToSocket(decoded.user_id, dispatch);
                         dispatch(slice.setCurrentUser(response.data.data.user))
                         if (response.data.data.password_changed) {

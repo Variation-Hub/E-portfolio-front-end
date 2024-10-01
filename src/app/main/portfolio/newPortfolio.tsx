@@ -6,6 +6,9 @@ import Box from '@mui/material/Box';
 import LearnerDetails from './learnerDeatils';
 import { Button } from '@mui/material';
 import styled from '@emotion/styled';
+import { useSelector } from 'react-redux';
+import { slice as globalSlice, selectGlobalUser, tokenGetFetch } from "app/store/globalUser";
+import { useDispatch } from 'react-redux';
 
 const CustomTab = styled(Tab)(({ theme }) => ({
     textTransform: 'none', // Disable uppercase
@@ -59,16 +62,37 @@ function a11yProps(index) {
 
 export default function NewPortfolio() {
     const [value, setValue] = React.useState(0);
+    const { learnerTab, selectedUser } = useSelector(selectGlobalUser);
+    const dispatch: any = useDispatch();
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
 
+    const handleLearnerTab = async () => {
+        if (learnerTab.tab && !learnerTab.tab.closed) {
+            learnerTab.tab.close();
+        }
+
+        const newTab = window.open('/portfolio', '_blank');
+        newTab.onload = async () => {
+            const data = await dispatch(tokenGetFetch(selectedUser.email))
+            if (data) {
+                console.log(data);
+                newTab.sessionStorage.setItem('learnerToken', JSON.stringify(data));
+                newTab.focus();
+            }
+        };
+
+        dispatch(globalSlice.setLearnerTab({ ...learnerTab, tab: newTab }));
+
+    }
+
     return (
         <div className='p-10'>
             <div className='flex justify-between items-center'>
                 <h1>Welcome, Dhruv Suhagiya</h1>
-                <Button>Learner Dashboard</Button>
+                <Button onClick={handleLearnerTab}>Learner Dashboard</Button>
             </div>
             <Box sx={{ width: '100%' }}>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>

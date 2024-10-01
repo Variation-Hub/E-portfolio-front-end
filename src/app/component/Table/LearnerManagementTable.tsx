@@ -198,11 +198,6 @@ export default function LearnerManagementTable(props) {
     dispatch(slice.setLeanerId({ id: row.learner_id, user_id: row.user_id }))
     dispatch(globalSlice.setSelectedUser(row))
     navigate('/portfolio')
-    
-    // localStorage.setItem('learnerData', JSON.stringify(row));
-    // // Open new tab
-    // const newTab = window.open('/portfolio', '_blank');
-    // newTab.focus();
   }
 
   const handleLearnerCourse = (id, user_id, course) => {
