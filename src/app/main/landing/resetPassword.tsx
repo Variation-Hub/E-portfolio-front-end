@@ -7,6 +7,7 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import jwtDecode from "jwt-decode";
 import { LoadingButton, SecondaryButton } from "src/app/component/Buttons";
 import { showMessage } from "app/store/fuse/messageSlice";
+import { useNavigate } from "react-router-dom";
 
 const ResetPassword = (props) => {
 
@@ -16,6 +17,7 @@ const ResetPassword = (props) => {
     const decoded: any = jwtDecode(token);
 
     const dispatch: any = useDispatch();
+    const navigate = useNavigate();
 
     const [newPassword, setNewPassword] = useState({
         password: "",
@@ -68,6 +70,7 @@ const ResetPassword = (props) => {
         } else {
             console.log('Token has expired');
         }
+        navigate("/")
         handleClose();
     };
 
