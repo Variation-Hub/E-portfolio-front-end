@@ -9,6 +9,7 @@ import styled from '@emotion/styled';
 import { useSelector } from 'react-redux';
 import { slice as globalSlice, selectGlobalUser, tokenGetFetch } from "app/store/globalUser";
 import { useDispatch } from 'react-redux';
+import ContractedWorkHours from './contractedWork';
 
 const CustomTab = styled(Tab)(({ theme }) => ({
     textTransform: 'none', // Disable uppercase
@@ -61,7 +62,7 @@ function a11yProps(index) {
 }
 
 export default function NewPortfolio() {
-    const [value, setValue] = React.useState(0);
+    const [value, setValue] = React.useState(2);
     const { learnerTab, selectedUser } = useSelector(selectGlobalUser);
     const dispatch: any = useDispatch();
 
@@ -104,7 +105,7 @@ export default function NewPortfolio() {
                         <CustomTab label="Test and Exams" {...a11yProps(3)} />
                         <CustomTab label="Contact Diary" {...a11yProps(4)} />
                         <CustomTab label="ALS" {...a11yProps(5)} /> */}
-                        <CustomTab label="Contracted Work Hours" {...a11yProps(6)} />
+                        <CustomTab label="Contracted Work Hours" {...a11yProps(2)} />
                     </CustomTabs>
                 </Box>
                 <CustomTabPanel value={value} index={0}>
@@ -112,6 +113,9 @@ export default function NewPortfolio() {
                 </CustomTabPanel>
                 <CustomTabPanel value={value} index={1}>
                     Course
+                </CustomTabPanel>
+                <CustomTabPanel value={value} index={2}>
+                    <ContractedWorkHours />
                 </CustomTabPanel>
                 {/*<CustomTabPanel value={value} index={2}>
                     Action
@@ -125,9 +129,6 @@ export default function NewPortfolio() {
                 <CustomTabPanel value={value} index={5}>
                     ALS
                 </CustomTabPanel> */}
-                <CustomTabPanel value={value} index={6}>
-                    Contracted Work Hours
-                </CustomTabPanel>
             </Box>
         </div>
 
