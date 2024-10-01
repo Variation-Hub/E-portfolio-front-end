@@ -239,9 +239,9 @@ const LearnerDetails = () => {
                     <Grid className='my-20 mx-20 flex flex-col gap-20'>
 
                         <div className='flex gap-5 items-center justify-end'>
-                            <SecondaryButtonOutlined name="Create New Password" onClick={handleClickOpen} />
-                            <SecondaryButtonOutlined name="Email Password Reset" onClick={handleEmailAlert} />
-                            <SecondaryButtonOutlined name="Create Employer" onClick={handleCreateEmployer} />
+                            <SecondaryButtonOutlined className="bg-[#7DAFC9] !text-white hover:bg-[#264d62]" name="Create New Password" onClick={handleClickOpen} />
+                            <SecondaryButtonOutlined className="bg-[#7DAFC9] !text-white hover:bg-[#264d62]" name="Email Password Reset" onClick={handleEmailAlert} />
+                            <SecondaryButtonOutlined className="bg-[#7DAFC9] !text-white hover:bg-[#264d62]" name="Create Employer" onClick={handleCreateEmployer} />
                         </div>
                         <Card className='rounded-6 items-center ' variant="outlined">
                             <Grid className='h-full flex flex-col'>
@@ -1153,7 +1153,7 @@ const LearnerDetails = () => {
                         </Card >
 
                         <div className="flex justify-end mr-24 mb-20">
-                            <SecondaryButton name="Save" onClick={handleSubmit} />
+                            <SecondaryButton className="bg-green-500 hover:bg-green-600" name="Save" onClick={handleSubmit} />
                         </div>
 
                     </Grid >

@@ -5,7 +5,7 @@ import { showMessage } from './fuse/messageSlice';
 import { userTableMetaData } from '../contanst/metaData';
 import JwtService from '../auth/services/jwtService';
 import instance from '../auth/services/jwtService/jwtService';
-import { slice as globalSlice } from './globalUser'
+import globalUser, { slice as globalSlice } from './globalUser'
 import { setUser } from './userSlice';
 
 const initialState = {
@@ -315,6 +315,20 @@ export const uploadAvatar = (file) => async (dispatch, getStore) => {
         return true;
     } catch (err) {
         dispatch(slice.setUpdatingLoader());
+        return false;
+    }
+}
+
+// Upload learner avatar by admin 
+export const uploadLearnerAvatar = (file) => async (dispatch, getStore) => {
+    try {
+        const formData = new FormData();
+        formData.append('avatar', file);
+        formData.append('user_id', getStore()?.globalUser?.selectedUser?.user_id)
+        const response: any = await axios.post(`${URL_BASE_LINK}/user/avatar`, formData);
+        dispatch(globalSlice.setSelectedUser({...getStore()?.globalUser?.selectedUser, avatar: response.data.avatar.url}))
+        return true;
+    } catch (err) {
         return false;
     }
 }

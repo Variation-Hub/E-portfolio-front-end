@@ -12,6 +12,7 @@ import { useDispatch } from 'react-redux';
 import ContractedWorkHours from './contractedWork';
 import { selectUser } from 'app/store/userSlice';
 import Portfolio from './portfolio';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const CustomTab = styled(Tab)(({ theme }) => ({
     textTransform: 'none', // Disable uppercase
@@ -25,6 +26,8 @@ const CustomTab = styled(Tab)(({ theme }) => ({
     '&:hover': {
         borderColor: 'var(--primaryColor)', // Hover state border color
     },
+    minHeight: "1rem",
+    padding: "1rem"
 }));
 
 
@@ -106,18 +109,16 @@ export default function NewPortfolio() {
         <div className='p-10 overflow-y-auto'>
             <div className='flex justify-between items-center'>
                 <h1>{selectedUser.first_name + " " + selectedUser.last_name}</h1>
-                <Button onClick={handleLearnerTab}>Learner Dashboard</Button>
+                <Button onClick={handleLearnerTab} className='bg-[#007E84] hover:bg-[#007E84] text-white rounded-4'><ArrowBackIcon className='text-xl mr-4' /> Learner Dashboard</Button>
             </div>
             <Box sx={{ width: '100%' }}>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                    <CustomTabs value={value} onChange={handleChange} aria-label="customized tabs example">
-                        {/* Tabs with border */}
+                    <CustomTabs value={value} onChange={handleChange} aria-label="customized tabs example"
+                        sx={{
+                            ".muiltr-heg063-MuiTabs-flexContainer": { gap: "0.5rem" }
+                        }}>
                         <CustomTab label="Profile" {...a11yProps(0)} />
                         <CustomTab label="Course" {...a11yProps(1)} />
-                        {/* <CustomTab label="Action" {...a11yProps(2)} />
-                        <CustomTab label="Test and Exams" {...a11yProps(3)} />
-                        <CustomTab label="Contact Diary" {...a11yProps(4)} />
-                        <CustomTab label="ALS" {...a11yProps(5)} /> */}
                         <CustomTab label="Contracted Work Hours" {...a11yProps(2)} />
                     </CustomTabs>
                 </Box>
