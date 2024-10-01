@@ -32,7 +32,6 @@ import HelpOutlinedIcon from "@mui/icons-material/HelpOutlined";
 import { useState } from "react";
 import Style from "./style.module.css";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { countryCodes } from "src/utils/randomColor";
 import MobileNumberInput from "src/app/component/Input/MobileNumberInput";
 
 const UserDetails = (props) => {

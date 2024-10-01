@@ -92,7 +92,7 @@ export default function NewPortfolio() {
     return (
         <div className='p-10 overflow-y-auto'>
             <div className='flex justify-between items-center'>
-                <h1>Welcome, Dhruv Suhagiya</h1>
+                <h1>{selectedUser.first_name + " " + selectedUser.last_name}</h1>
                 <Button onClick={handleLearnerTab}>Learner Dashboard</Button>
             </div>
             <Box sx={{ width: '100%' }}>
