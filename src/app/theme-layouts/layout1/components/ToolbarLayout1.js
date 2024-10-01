@@ -14,6 +14,7 @@ import UserMenu from '../../shared-components/UserMenu';
 import { Typography } from '@mui/material';
 import { selectGlobalUser } from 'app/store/globalUser';
 import { RoleShortForm } from 'src/utils/randomColor';
+import { UserRole } from 'src/enum';
 function ToolbarLayout1(props) {
   const config = useSelector(selectFuseCurrentLayoutConfig);
   const navbar = useSelector(selectFuseNavbar);
@@ -59,7 +60,7 @@ function ToolbarLayout1(props) {
 
         <Toolbar className="p-0 min-h-64 md:min-h-64" >
 
-          <Typography className='ml-12' variant='h6'>Welcome, {!selected ? "" : currentUser?.first_name + " " + currentUser?.last_name + " " + "(" + RoleShortForm[currentUser?.role] + ")"}</Typography>
+          <Typography className='ml-12' variant='h6'>Welcome, {role !== UserRole.Learner && currentUser?.first_name + " " + currentUser?.last_name + " " + "(" + RoleShortForm[currentUser?.role] + ")"}</Typography>
 
           <div className="flex flex-1 px-16">
             {config.navbar.display && config.navbar.position === 'left' && (
