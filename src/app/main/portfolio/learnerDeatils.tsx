@@ -1,20 +1,18 @@
-import { Autocomplete, Box, Button, Card, Checkbox, Dialog, DialogActions, DialogContent, FormControlLabel, Grid, ListSubheader, MenuItem, Paper, Select, TextField, Typography } from '@mui/material';
-import { fetchLearnerAPI, getLearnerDetails, selectLearnerManagement, updateLearnerAPI } from 'app/store/learnerManagement';
-import React, { useEffect, useState } from 'react'
+import { Autocomplete, Box, Card, Checkbox, Dialog, DialogActions, DialogContent, FormControlLabel, Grid, ListSubheader, MenuItem, Paper, Select, TextField, Typography } from '@mui/material';
+import { getLearnerDetails, selectLearnerManagement, updateLearnerAPI } from 'app/store/learnerManagement';
+import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, } from 'react-router-dom';
 import { LoadingButton, SecondaryButton, SecondaryButtonOutlined } from 'src/app/component/Buttons';
 import UploadPhoto from './uploadPhoto';
 import UpdatePassword from './updatePassword';
 import { passwordReg } from 'src/app/contanst/regValidation';
-import { resetPasswordHandler, updatePasswordHandler } from 'app/store/userManagement';
+import { updatePasswordHandler } from 'app/store/userManagement';
 import { selectGlobalUser } from 'app/store/globalUser';
 
 const LearnerDetails = () => {
-
-    const [searchParams] = useSearchParams();
-    const learnerId = searchParams.get("learner_id");
+    const { learner_id } = useSelector(selectGlobalUser).selectedUser;
 
     const [isChecked, setIsChecked] = useState(false);
     const dispatch: any = useDispatch();
@@ -28,8 +26,8 @@ const LearnerDetails = () => {
     };
 
     useEffect(() => {
-        dispatch(getLearnerDetails(learnerId));
-    }, [learnerId]);
+        dispatch(getLearnerDetails(learner_id));
+    }, [learner_id]);
 
     const [learnerData, setLearnerData] = useState({
         uln: learner?.uln || "",
@@ -87,6 +85,64 @@ const LearnerDetails = () => {
         expected_off_the_job_hours: learner?.expected_off_the_job_hours || "",
     })
 
+    useEffect(() => {
+        setLearnerData({
+            uln: learner?.uln || "",
+            mis_learner_id: learner?.mis_learner_id || "",
+            student_id: learner?.student_id || "",
+            first_name: learner?.first_name || "",
+            last_name: learner?.last_name || "",
+            user_name: learner?.user_name || "",
+            email: learner?.email || "",
+            telephone: learner?.telephone || "",
+            mobile: learner?.mobile || "",
+            dob: learner?.dob || "",
+            gender: learner?.gender || "",
+            national_ins_no: learner?.national_ins_no || "",
+            ethnicity: learner?.ethnicity || "",
+            learner_disability: learner?.learner_disability || "",
+            learner_difficulity: learner?.learner_difficulity || "",
+            Initial_Assessment_Numeracy: learner?.Initial_Assessment_Numeracy || "",
+            Initial_Assessment_Literacy: learner?.Initial_Assessment_Literacy || "",
+            Initial_Assessment_ICT: learner?.Initial_Assessment_ICT || "",
+            functional_skills: learner?.functional_skills || "",
+            technical_certificate: learner?.technical_certificate || "",
+            err: learner?.err || "",
+            street: learner?.street || "",
+            suburb: learner?.suburb || "",
+            town: learner?.town || "",
+            country: learner?.country || "",
+            home_postcode: learner?.home_postcode || "",
+            country_of_domicile: learner?.country_of_domicile || "",
+            external_data_code: learner?.external_data_code || "",
+            employer_id: learner?.employer_id || null,
+            cost_centre: learner?.cost_centre || "",
+            job_title: learner?.job_title || "",
+            location: learner?.location || "",
+            manager_name: learner?.manager_name || "",
+            manager_job_title: learner?.manager_job_title || "",
+            mentor: learner?.mentor || "",
+            funding_contractor: learner?.funding_contractor || "",
+            partner: learner?.partner || "",
+            area: learner?.area || "",
+            sub_area: learner?.sub_area || "",
+            shift: learner?.shift || "",
+            cohort: learner?.cohort || "",
+            lsf: learner?.lsf || "",
+            curriculum_area: learner?.curriculum_area || "",
+            ssa1: learner?.ssa1 || "",
+            ssa2: learner?.ssa2 || "",
+            director_of_curriculum: learner?.director_of_curriculum || "",
+            wage: learner?.wage || "",
+            wage_type: learner?.wage_type || "",
+            allow_archived_access: learner?.allow_archived_access || "",
+            branding_type: learner?.branding_type || "",
+            learner_type: learner?.learner_type || "",
+            funding_body: learner?.funding_body || "",
+            expected_off_the_job_hours: learner?.expected_off_the_job_hours || "",
+        })
+    }, [learner])
+
     const handleDataUpdate = (e) => {
         const { name, value } = e.target;
         setLearnerData((prevData) => ({
@@ -98,7 +154,7 @@ const LearnerDetails = () => {
     const handleSubmit = async () => {
         try {
             let response;
-            response = await dispatch(updateLearnerAPI(learnerId, learnerData));
+            response = await dispatch(updateLearnerAPI(learner_id, learnerData));
 
             if (response) {
                 navigate("/portfolio")
@@ -108,10 +164,6 @@ const LearnerDetails = () => {
         }
         console.log(learnerData);
     }
-
-    useEffect(() => {
-        dispatch(fetchLearnerAPI())
-    }, [dispatch])
 
     const handleClose = () => {
         navigate("/portfolio");
