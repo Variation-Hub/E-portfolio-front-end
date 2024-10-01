@@ -80,7 +80,7 @@ const CourseBuilder = () => {
 
   return (
     <>
-      <Card className="mx-10 rounded-6" style={{ height: "100%",overflowY:"scroll" }}>
+      <Card className="mx-10 rounded-6" style={{ height: "100%", overflowY: "scroll" }}>
         {data.length || searchKeyword ? (
           <div className={`m-12 flex items-center justify-between mt-10 ${Style.Search_container}`}>
             <TextField
@@ -176,23 +176,20 @@ const CourseBuilder = () => {
 
             {!searchKeyword && (
               <div className="flex items-center space-x-4">
-                <Tooltip title="Coming Soon...!">
-                  <span>
-                    <SecondaryButton
-                      disable={true}
-                      disableRipple
-                      name="Upload Files"
-                      startIcon={
-                        <img
-                          src="assets/images/svgimage/uploadfileicon.svg"
-                          alt="Create File"
-                          className="w-6 h-6 mr-2 sm:w-8 sm:h-8 lg:w-10 lg:h-10"
-                        />
-                      }
-                    // onClick={handleOpen}
-                    />
-                  </span>
-                </Tooltip>
+                <span>
+                  <SecondaryButton
+                    disableRipple
+                    name="Upload Files"
+                    startIcon={
+                      <img
+                        src="assets/images/svgimage/uploadfileicon.svg"
+                        alt="Create File"
+                        className="w-6 h-6 mr-2 sm:w-8 sm:h-8 lg:w-10 lg:h-10"
+                      />
+                    }
+                    onClick={handleOpen}
+                  />
+                </span>
                 <div className="w-48 text-center">OR</div>
                 <SecondaryButton
                   name="Create Course"

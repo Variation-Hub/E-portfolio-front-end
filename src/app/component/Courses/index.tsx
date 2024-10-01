@@ -25,6 +25,7 @@ import {
 import { useSelector } from "react-redux";
 import CloseIcon from "@mui/icons-material/Close";
 import Style from "./style.module.css";
+import { FixedSizeList as List } from 'react-window';
 
 const generateUnitObject = (unitDataArray = []) => {
   const unitObject = {};
@@ -39,12 +40,12 @@ const generateUnitObject = (unitDataArray = []) => {
       level: course_details.Level || 0,
       glh: course_details["Guided learning hours"] || 0,
       credit_value: course_details?.Credit || 0,
-      subUnit: unit_details.map((value) => {
+      subUnit: unit_details.map((value, index) => {
         const [subTitle, units]: any = Object.values(value);
-        const subUnit = units?.map(({ text }) => ({ id: Math.random() * 100000, description: text }))
+        const subUnit = units?.map((value, idx) => ({ id: Math.random() * 100000, description: `${index + 1}.${idx + 1} ${value.text}` }))
         return ({
           id: Math.random() * 100000,
-          subTitle,
+          subTitle: `${index + 1}. ${subTitle}`,
           subTopic: subUnit
         })
       }) || [],
@@ -63,6 +64,226 @@ const inputStyle = {
   // borderBottom: '1px solid lightgray',
   padding: "1rem",
 };
+
+const row = (mandatoryUnit, setUnitData, edit, removeUnitHandler, addSubUnitHandler, setSubUnitData, removeSubUnitHandler, setSubTopicData, removeSubTopicHandler, addTopicHandler): any => {
+  console.log(mandatoryUnit)
+  return Object.values(mandatoryUnit)?.map((item: any) => {
+    return (
+      <div>
+        <div className="w-full flex gap-24 items-center ">
+          <TextField
+            size="small"
+            type="text"
+            value={item?.unit_ref}
+            name="unit_ref"
+            placeholder={`Enter a Unint Ref`}
+            onChange={(e) => setUnitData(item?.id, e.target)}
+            className=" w-1/3"
+            style={inputStyle}
+            disabled={edit === "view"}
+          />
+          <TextField
+            size="small"
+            type="text"
+            value={item?.title}
+            name="title"
+            placeholder={`Enter a title`}
+            onChange={(e) => setUnitData(item?.id, e.target)}
+            className="w-2/3"
+            style={inputStyle}
+            disabled={edit === "view"}
+          />
+
+          {/* <Autocomplete
+                                    // disableClearable
+                                    renderInput={(params) => <TextField variant="standard" {...params}
+                                        value={item?.mandatory}
+                                        name="mandatory" />}
+                                    className='w-1/5'
+                                    options={[{ value: true, name: "Mandatory Unit" }, { value: false, name: "Optional Unit" }]}
+                                    getOptionLabel={(option) => option.name}
+                                    onChange={(e, value) => setUnitData(item?.id, { name: "mandatory", value: value.value })}
+                                /> */}
+          <FormControl variant="standard" className="w-1/5">
+            <Select
+              labelId={`select-label-${item?.id}`}
+              value={item?.mandatory}
+              onChange={(e) =>
+                setUnitData(item?.id, {
+                  name: "mandatory",
+                  value: e.target.value,
+                })
+              }
+              disabled={edit === "view"}
+            >
+              <MenuItem value={"true"}>Mandatory Unit</MenuItem>
+              <MenuItem value={"false"}>Optional Unit</MenuItem>
+            </Select>
+          </FormControl>
+          <Box className="flex items-center justify-between">
+            {edit !== "view" && (
+              <Tooltip title="Remove unit">
+                <CloseIcon
+                  className="cursor-pointer"
+                  onClick={() => removeUnitHandler(item?.id)}
+                />
+              </Tooltip>
+            )}
+          </Box>
+        </div>
+        <div className="w-full flex gap-24 items-center ">
+          <TextField
+            size="small"
+            type="number"
+            className="w-1/3"
+            value={item?.level}
+            name="level"
+            placeholder={`Enter a Level`}
+            onChange={(e) => setUnitData(item?.id, e.target)}
+            style={inputStyle}
+            disabled={edit === "view"}
+          />
+
+          <TextField
+            size="small"
+            type="number"
+            className="w-1/3"
+            value={item?.credit_value}
+            name="credit_value"
+            placeholder={`Enter a credit value`}
+            onChange={(e) => setUnitData(item?.id, e.target)}
+            style={inputStyle}
+            disabled={edit === "view"}
+          />
+
+          <TextField
+            size="small"
+            type="number"
+            className="w-1/3"
+            value={item?.glh}
+            name="glh"
+            placeholder={`Enter a GLH`}
+            onChange={(e) => setUnitData(item?.id, e.target)}
+            style={inputStyle}
+            disabled={edit === "view"}
+          />
+
+          <Box className="flex items-center justify-between">
+            {edit !== "view" && (
+              <SecondaryButton
+                name="Add Sub Unit"
+                className="min-w-112"
+                onClick={() => addSubUnitHandler(item?.id)}
+              />
+            )}
+          </Box>
+        </div>
+        {item?.subUnit?.length > 0 &&
+          item?.subUnit.map((subItem) => {
+            return (
+              <>
+                <div className="w-full flex gap-24 ">
+                  <div className="w-full">
+                    <TextField
+                      size="small"
+                      type="text"
+                      className="w-full"
+                      name="subTitle"
+                      placeholder={`Enter a sub-title`}
+                      value={subItem?.subTitle}
+                      onChange={(e) =>
+                        setSubUnitData(item?.id, subItem?.id, e.target)
+                      }
+                      style={inputStyle}
+                      disabled={edit === "view"}
+                    />
+                  </div>
+                  <Box className="flex justify-between pt-10 mr-auto">
+                    {edit !== "view" && (
+                      <>
+                        <Tooltip title="Remove sub unit">
+                          <CloseIcon
+                            className="cursor-pointer"
+                            onClick={() =>
+                              removeSubUnitHandler(
+                                item?.id,
+                                subItem?.id
+                              )
+                            }
+                          />
+                        </Tooltip>
+                      </>
+                    )}
+                  </Box>
+                  <div className="w-full flex flex-col">
+                    {subItem?.subTopic?.length > 0 &&
+                      subItem?.subTopic?.map((topicItem, index) => {
+                        return (
+                          <>
+                            <div className="w-full flex flex-row gap-24 items-center ">
+                              <TextField
+                                size="small"
+                                type="text"
+                                className="w-full"
+                                name="description"
+                                placeholder={`Enter a description`}
+                                value={topicItem?.description}
+                                onChange={(e) =>
+                                  setSubTopicData(
+                                    item?.id,
+                                    subItem?.id,
+                                    topicItem?.id,
+                                    e.target
+                                  )
+                                }
+                                style={inputStyle}
+                                disabled={edit === "view"}
+                              />
+                              <div className="min-w-160">
+                                <Box className="w-full flex items-center justify-between gap-24">
+                                  {edit !== "view" && (
+                                    <>
+                                      <Tooltip title="Remove sub topic">
+                                        <CloseIcon
+                                          className="cursor-pointer "
+                                          onClick={() =>
+                                            removeSubTopicHandler(
+                                              item?.id,
+                                              subItem?.id,
+                                              topicItem?.id
+                                            )
+                                          }
+                                        />
+                                      </Tooltip>
+                                      {index === 0 && (
+                                        <SecondaryButton
+                                          name="Add Topic"
+                                          className="w-full"
+                                          onClick={() =>
+                                            addTopicHandler(
+                                              item?.id,
+                                              subItem?.id
+                                            )
+                                          }
+                                        />
+                                      )}
+                                    </>
+                                  )}
+                                </Box>
+                              </div>
+                            </div>
+                          </>
+                        );
+                      })}
+                  </div>
+                </div>
+              </>
+            );
+          })}
+      </div>
+    );
+  })
+}
 
 const CourseBuilder = (props) => {
   const { edit = "create", handleClose = () => { } } = props;
@@ -110,7 +331,7 @@ const CourseBuilder = (props) => {
 
   const [mandatoryUnit, setMandatoryUnit] = useState(
     edit == "view" ? preFillData?.units
-    : generateUnitObject(preFillData?.units)
+      : generateUnitObject(preFillData?.units)
   );
 
   const courseHandler = (event) => {
@@ -611,229 +832,28 @@ const CourseBuilder = (props) => {
             )}
           </Box>
         </Box>
+
+
         {Object.values(mandatoryUnit).length ? (
-          Object.values(mandatoryUnit)?.map((item: any) => {
-            return (
-              <div>
-                <div className="w-full flex gap-24 items-center ">
-                  <TextField
-                    size="small"
-                    type="text"
-                    value={item.unit_ref}
-                    name="unit_ref"
-                    placeholder={`Enter a Unint Ref`}
-                    onChange={(e) => setUnitData(item.id, e.target)}
-                    className=" w-1/3"
-                    style={inputStyle}
-                    disabled={edit === "view"}
-                  />
-                  <TextField
-                    size="small"
-                    type="text"
-                    value={item.title}
-                    name="title"
-                    placeholder={`Enter a title`}
-                    onChange={(e) => setUnitData(item.id, e.target)}
-                    className="w-2/3"
-                    style={inputStyle}
-                    disabled={edit === "view"}
-                  />
-
-                  {/* <Autocomplete
-                                            // disableClearable
-                                            renderInput={(params) => <TextField variant="standard" {...params}
-                                                value={item.mandatory}
-                                                name="mandatory" />}
-                                            className='w-1/5'
-                                            options={[{ value: true, name: "Mandatory Unit" }, { value: false, name: "Optional Unit" }]}
-                                            getOptionLabel={(option) => option.name}
-                                            onChange={(e, value) => setUnitData(item.id, { name: "mandatory", value: value.value })}
-                                        /> */}
-                  <FormControl variant="standard" className="w-1/5">
-                    <Select
-                      labelId={`select-label-${item.id}`}
-                      value={item.mandatory}
-                      onChange={(e) =>
-                        setUnitData(item.id, {
-                          name: "mandatory",
-                          value: e.target.value,
-                        })
-                      }
-                      disabled={edit === "view"}
-                    >
-                      <MenuItem value={"true"}>Mandatory Unit</MenuItem>
-                      <MenuItem value={"false"}>Optional Unit</MenuItem>
-                    </Select>
-                  </FormControl>
-                  <Box className="flex items-center justify-between">
-                    {edit !== "view" && (
-                      <Tooltip title="Remove unit">
-                        <CloseIcon
-                          className="cursor-pointer"
-                          onClick={() => removeUnitHandler(item.id)}
-                        />
-                      </Tooltip>
-                    )}
-                  </Box>
-                </div>
-                <div className="w-full flex gap-24 items-center ">
-                  <TextField
-                    size="small"
-                    type="number"
-                    className="w-1/3"
-                    value={item.level}
-                    name="level"
-                    placeholder={`Enter a Level`}
-                    onChange={(e) => setUnitData(item.id, e.target)}
-                    style={inputStyle}
-                    disabled={edit === "view"}
-                  />
-
-                  <TextField
-                    size="small"
-                    type="number"
-                    className="w-1/3"
-                    value={item.credit_value}
-                    name="credit_value"
-                    placeholder={`Enter a credit value`}
-                    onChange={(e) => setUnitData(item.id, e.target)}
-                    style={inputStyle}
-                    disabled={edit === "view"}
-                  />
-
-                  <TextField
-                    size="small"
-                    type="number"
-                    className="w-1/3"
-                    value={item.glh}
-                    name="glh"
-                    placeholder={`Enter a GLH`}
-                    onChange={(e) => setUnitData(item.id, e.target)}
-                    style={inputStyle}
-                    disabled={edit === "view"}
-                  />
-
-                  <Box className="flex items-center justify-between">
-                    {edit !== "view" && (
-                      <SecondaryButton
-                        name="Add Sub Unit"
-                        className="min-w-112"
-                        onClick={() => addSubUnitHandler(item.id)}
-                      />
-                    )}
-                  </Box>
-                </div>
-                {item.subUnit?.length > 0 &&
-                  item.subUnit.map((subItem) => {
-                    return (
-                      <>
-                        <div className="w-full flex gap-24 ">
-                          <div className="w-full">
-                            <TextField
-                              size="small"
-                              type="text"
-                              className="w-full"
-                              name="subTitle"
-                              placeholder={`Enter a sub-title`}
-                              value={subItem.subTitle}
-                              onChange={(e) =>
-                                setSubUnitData(item.id, subItem?.id, e.target)
-                              }
-                              style={inputStyle}
-                              disabled={edit === "view"}
-                            />
-                          </div>
-                          <Box className="flex justify-between pt-10 mr-auto">
-                            {edit !== "view" && (
-                              <>
-                                <Tooltip title="Remove sub unit">
-                                  <CloseIcon
-                                    className="cursor-pointer"
-                                    onClick={() =>
-                                      removeSubUnitHandler(
-                                        item.id,
-                                        subItem?.id
-                                      )
-                                    }
-                                  />
-                                </Tooltip>
-                              </>
-                            )}
-                          </Box>
-                          <div className="w-full flex flex-col">
-                            {subItem.subTopic?.length > 0 &&
-                              subItem.subTopic?.map((topicItem, index) => {
-                                return (
-                                  <>
-                                    <div className="w-full flex flex-row gap-24 items-center ">
-                                      <TextField
-                                        size="small"
-                                        type="text"
-                                        className="w-full"
-                                        name="description"
-                                        placeholder={`Enter a description`}
-                                        value={topicItem.description}
-                                        onChange={(e) =>
-                                          setSubTopicData(
-                                            item.id,
-                                            subItem?.id,
-                                            topicItem?.id,
-                                            e.target
-                                          )
-                                        }
-                                        style={inputStyle}
-                                        disabled={edit === "view"}
-                                      />
-                                      <div className="min-w-160">
-                                        <Box className="w-full flex items-center justify-between gap-24">
-                                          {edit !== "view" && (
-                                            <>
-                                              <Tooltip title="Remove sub topic">
-                                                <CloseIcon
-                                                  className="cursor-pointer "
-                                                  onClick={() =>
-                                                    removeSubTopicHandler(
-                                                      item.id,
-                                                      subItem?.id,
-                                                      topicItem?.id
-                                                    )
-                                                  }
-                                                />
-                                              </Tooltip>
-                                              {index === 0 && (
-                                                <SecondaryButton
-                                                  name="Add Topic"
-                                                  className="w-full"
-                                                  onClick={() =>
-                                                    addTopicHandler(
-                                                      item.id,
-                                                      subItem?.id
-                                                    )
-                                                  }
-                                                />
-                                              )}
-                                            </>
-                                          )}
-                                        </Box>
-                                      </div>
-                                    </div>
-                                  </>
-                                );
-                              })}
-                          </div>
-                        </div>
-                      </>
-                    );
-                  })}
-              </div>
-            );
-          })
+                row(
+                  mandatoryUnit, // Render the item at the current index
+                  setUnitData,
+                  edit,
+                  removeUnitHandler,
+                  addSubUnitHandler,
+                  setSubUnitData,
+                  removeSubUnitHandler,
+                  setSubTopicData,
+                  removeSubTopicHandler,
+                  addTopicHandler
+                )
         ) : (
-          // <UnitManagementTable columns={courseManagementUnitColumn} edit={edit} setUnitData={setUnitData} removeUnitHandler={removeUnitHandler} rows={Object.values(mandatoryUnit)} />
-          <div className=" text-center opacity-50 mt-10 mb-10">
+          <div className="text-center opacity-50 mt-10 mb-10">
             Units have not been included.
           </div>
         )}
+
+
 
         {/* <Box className="m-12">
                 <Box className="flex items-center justify-between">
