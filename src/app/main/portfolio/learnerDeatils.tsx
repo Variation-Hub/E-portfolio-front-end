@@ -1,11 +1,15 @@
-import { Autocomplete, Box, Button, Card, Checkbox, FormControlLabel, Grid, ListSubheader, MenuItem, Paper, Select, TextField, Typography } from '@mui/material';
+import { Autocomplete, Box, Button, Card, Checkbox, Dialog, DialogActions, DialogContent, FormControlLabel, Grid, ListSubheader, MenuItem, Paper, Select, TextField, Typography } from '@mui/material';
 import { fetchLearnerAPI, getLearnerDetails, selectLearnerManagement, updateLearnerAPI } from 'app/store/learnerManagement';
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { SecondaryButton, SecondaryButtonOutlined } from 'src/app/component/Buttons';
+import { LoadingButton, SecondaryButton, SecondaryButtonOutlined } from 'src/app/component/Buttons';
 import UploadPhoto from './uploadPhoto';
+import UpdatePassword from './updatePassword';
+import { passwordReg } from 'src/app/contanst/regValidation';
+import { resetPasswordHandler, updatePasswordHandler } from 'app/store/userManagement';
+import { selectGlobalUser } from 'app/store/globalUser';
 
 const LearnerDetails = () => {
 
@@ -15,6 +19,8 @@ const LearnerDetails = () => {
     const [isChecked, setIsChecked] = useState(false);
     const dispatch: any = useDispatch();
     const { employer, learner } = useSelector(selectLearnerManagement);
+    const globalUser = useSelector(selectGlobalUser);
+
     const navigate = useNavigate();
 
     const handleCheckboxChange = (event) => {
@@ -117,6 +123,46 @@ const LearnerDetails = () => {
         return formattedDate;
     };
 
+    const [dialogType, setDialogType] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [newPassword, setNewPassword] = useState({
+        password: "",
+        confirmPassword: "",
+    });
+
+    const handleClickOpen = () => {
+        setDialogType(true);
+    };
+
+    const handleCloseDialog = () => {
+        setDialogType(false);
+        setNewPassword({
+            password: "",
+            confirmPassword: "",
+        })
+    };
+
+    const passwordHandler = (e) => {
+        setNewPassword((prev) => ({
+            ...prev,
+            [e.target.name]: e.target.value,
+        }));
+    };
+
+    const resetHandler = async () => {
+        if (
+            newPassword.password === newPassword.confirmPassword &&
+            passwordReg.test(newPassword.password)
+        ) {
+            setLoading(true);
+            await dispatch(
+                updatePasswordHandler({ email: globalUser.selectedUser.email, password: newPassword.password })
+            );
+            setLoading(false);
+        }
+        handleCloseDialog();
+    };
+
     return (
         <div>
             <div className='flex border-2 p-5'>
@@ -124,7 +170,7 @@ const LearnerDetails = () => {
                     <Grid className='my-20 mx-20 flex flex-col gap-20'>
 
                         <div className='flex gap-5 items-center justify-end'>
-                            <SecondaryButtonOutlined name="Create New Password" />
+                            <SecondaryButtonOutlined name="Create New Password" onClick={handleClickOpen} />
                             <SecondaryButtonOutlined name="Email Password Reset" />
                             <SecondaryButtonOutlined name="Create Employer" />
                             <SecondaryButtonOutlined name="Add New Manager" />
@@ -1051,7 +1097,43 @@ const LearnerDetails = () => {
                     <UploadPhoto />
                 </div>
             </div>
-        </div>
+
+            <Dialog
+                open={dialogType}
+                onClose={handleCloseDialog}
+                sx={{
+                    ".MuiDialog-paper": {
+                        borderRadius: "4px",
+                        width: "100%",
+                    },
+                }}
+            >
+                <DialogContent className='p-0'>
+                    <UpdatePassword passwordHandler={passwordHandler} newPassword={newPassword} />
+                </DialogContent>
+                <DialogActions className='mb-4 mr-6'>
+                    {loading ? (
+                        <LoadingButton />
+                    ) : (
+                        <>
+                            <SecondaryButtonOutlined
+                                onClick={handleCloseDialog}
+                                name="Cancel"
+                            />
+                            <SecondaryButton
+                                name="Reset"
+                                onClick={resetHandler}
+                                disable={
+                                    newPassword.password !== newPassword.confirmPassword ||
+                                    !passwordReg.test(newPassword.password)
+                                }
+                            />
+                        </>
+                    )}
+                </DialogActions>
+            </Dialog>
+
+        </div >
     )
 }
 export default LearnerDetails

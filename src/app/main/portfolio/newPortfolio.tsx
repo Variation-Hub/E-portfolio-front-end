@@ -89,7 +89,7 @@ export default function NewPortfolio() {
     }
 
     return (
-        <div className='p-10'>
+        <div className='p-10 overflow-y-auto'>
             <div className='flex justify-between items-center'>
                 <h1>Welcome, Dhruv Suhagiya</h1>
                 <Button onClick={handleLearnerTab}>Learner Dashboard</Button>
