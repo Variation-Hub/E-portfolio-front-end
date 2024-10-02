@@ -114,8 +114,8 @@ function Notification(props) {
             </>
           ) : (
             <>
-              <List className='px-10 pt-3 pb-0 w-320'>
-                {notification?.slice(0, 5)?.map((notification) => (
+              <List className='px-10 pt-3 pb-0 w-320 overflow-y-auto'>
+                {notification?.slice(0, 4)?.map((notification) => (
                   <ListItem key={notification.notification_id
                   } className='flex px-0 py-2 gap-7' divider>
                     <Grid className='px-5 '>

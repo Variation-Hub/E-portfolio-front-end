@@ -574,19 +574,20 @@ const Broadcast = (props) => {
                         placeholder="Select users"
                         required
                         fullWidth
+                        className="max-w-200 min-w-200"
                         multiple
                         onChange={handleDataUpdate}
                         renderValue={(selected) =>
                           selected.map((id) => {
-                            const allusers = users.data.find((user) => user.user_id === id);
-                            return allusers ? allusers.user_name : '';
+                            const allusers = users?.data?.find((user) => user?.user_id === id);
+                            return allusers ? allusers?.user_name : '';
                           }).join(', ')
                         }
                       >
-                        {users.data.map((data) => (
-                          <MenuItem key={data.user_id} value={data.user_id}>
-                            <Checkbox checked={userData.user_ids.includes(data.user_id)} />
-                            <ListItemText primary={data.user_name} />
+                        {users?.data?.map((data) => (
+                          <MenuItem key={data?.user_id} value={data?.user_id}>
+                            <Checkbox checked={userData?.user_ids?.includes(data?.user_id)} />
+                            <ListItemText primary={data?.user_name} />
                           </MenuItem>
                         ))}
                       </Select>

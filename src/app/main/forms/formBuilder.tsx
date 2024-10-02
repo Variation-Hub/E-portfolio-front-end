@@ -50,7 +50,7 @@ import { selectGlobalUser } from "app/store/globalUser";
 import CustomPagination from "src/app/component/Pagination/CustomPagination";
 
 const FormBuilder = (props) => {
-  const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
+    const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
 
     const { singleData, users, meta_data, dataUpdatingLoadding, dataFetchLoading } = useSelector(selectFormData);
 
@@ -474,6 +474,7 @@ const FormBuilder = (props) => {
                                                 placeholder="Select users"
                                                 required
                                                 fullWidth
+                                                className="max-w-200 min-w-200"
                                                 multiple
                                                 onChange={handleDataUpdate}
                                                 renderValue={(selected) =>
