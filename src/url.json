@@ -1,6 +1,6 @@
 {
     "API_LOCAL_URL": "https://testigndomain.online/api/v1",
-    "SOCKER_LINK": "wss://testigndomain.online/",
+    "SOCKER_LINK": "wss://testigndomain.online",
     "API_LOCAL_URL_": "http://localhost:3005/api/v1",
     "SOCKER_LINK_": "ws://localhost:3005"
 }
