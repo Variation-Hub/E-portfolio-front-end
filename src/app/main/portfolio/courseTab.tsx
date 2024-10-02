@@ -31,49 +31,12 @@ const CourseTab = () => {
                 <h1 className='font-semibold'>Learner Course Management</h1>
             </div>
 
-            <Grid className='w-full flex flex-row gap-20 mt-32 mb-24 justify-center'>
-                <Grid className='w-[80%] flex flex-col justify-start gap-10'>
-                    <Grid >
-                        <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "600" }}>Select Course</Typography>
-                        <Autocomplete
-                            disableClearable
-                            fullWidth
-                            size="small"
-                            options={courseList}
-                            getOptionLabel={(option: any) => option?.course_name}
-                            // value={employer.find((emp) => emp.employer.employer_id === learnerData.employer_id) || null}
-                            renderInput={(params) => (
-                                <TextField
-                                    {...params}
-                                    placeholder="Select Course"
-                                    name="course"
-                                />
-                            )}
-                            // onChange={(event, value) => {
-                            //     setLearnerData((prevData) => ({
-                            //         ...prevData,
-                            //         employer_id: value?.employer?.employer_id || null,
-                            //     }));
-                            // }}
-                            sx={{
-                                ".MuiAutocomplete-clearIndicator": {
-                                    color: "#5B718F",
-                                },
-                            }}
-                            PaperComponent={({ children }) => (
-                                <Paper style={{ borderRadius: "4px" }}>{children}</Paper>
-                            )}
-                        />
-                    </Grid>
-
-                    <Grid>
-                        <SecondaryButton
-                            className="py-6"
-                            name="Add Course"
-                            onClick={handleCreateCourse}
-                        />
-                    </Grid>
-                </Grid>
+            <Grid className='w-full flex flex-row gap-20 mt-32 mb-24 justify-end'>
+                <SecondaryButton
+                    className="py-6"
+                    name="Add Course"
+                    onClick={handleCreateCourse}
+                />
             </Grid>
 
             <TableContainer sx={{ minHeight: 550, display: "flex", flexDirection: "column", justifyContent: "space-between", overflowX: "auto !important" }}>
