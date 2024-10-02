@@ -9,7 +9,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   LoadingButton,
   SecondaryButton,
@@ -25,7 +25,6 @@ import {
 import { useSelector } from "react-redux";
 import CloseIcon from "@mui/icons-material/Close";
 import Style from "./style.module.css";
-import { FixedSizeList as List } from 'react-window';
 
 const generateUnitObject = (unitDataArray = []) => {
   const unitObject = {};
@@ -33,14 +32,14 @@ const generateUnitObject = (unitDataArray = []) => {
     const { course_details, unit_details } = units;
     unitObject[course_details?.course_code] = {
       id: course_details?.course_code,
-      unit_ref: course_details.course_code || "",
-      title: course_details.Title || "",
-      mandatory: course_details.mandatory,
+      unit_ref: course_details?.course_code || "",
+      title: course_details?.Title || "",
+      mandatory: course_details?.mandatory,
       // subTitle: course_details.subTitle || "",
-      level: course_details.Level || 0,
-      glh: course_details["Guided learning hours"] || 0,
+      level: course_details?.Level || 0,
+      glh: course_details?.["Guided learning hours"] ?? 0,
       credit_value: course_details?.Credit || 0,
-      subUnit: unit_details.map((value, index) => {
+      subUnit: unit_details?.map((value, index) => {
         const [subTitle, units]: any = Object.values(value);
         const subUnit = units?.map((value, idx) => ({ id: Math.random() * 100000, description: `${index + 1}.${idx + 1} ${value.text}` }))
         return ({
@@ -590,7 +589,7 @@ const CourseBuilder = (props) => {
               placeholder="Enter Course Code"
               required
               fullWidth
-              value={courseData.course_code}
+              value={courseData?.course_code}
               onChange={courseHandler}
               disabled={edit === "view"}
               className={Style.input_feald}
@@ -835,18 +834,18 @@ const CourseBuilder = (props) => {
 
 
         {Object.values(mandatoryUnit).length ? (
-                row(
-                  mandatoryUnit, // Render the item at the current index
-                  setUnitData,
-                  edit,
-                  removeUnitHandler,
-                  addSubUnitHandler,
-                  setSubUnitData,
-                  removeSubUnitHandler,
-                  setSubTopicData,
-                  removeSubTopicHandler,
-                  addTopicHandler
-                )
+          row(
+            mandatoryUnit, // Render the item at the current index
+            setUnitData,
+            edit,
+            removeUnitHandler,
+            addSubUnitHandler,
+            setSubUnitData,
+            removeSubUnitHandler,
+            setSubTopicData,
+            removeSubTopicHandler,
+            addTopicHandler
+          )
         ) : (
           <div className="text-center opacity-50 mt-10 mb-10">
             Units have not been included.
