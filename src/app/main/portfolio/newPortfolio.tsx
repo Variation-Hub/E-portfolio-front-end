@@ -13,6 +13,7 @@ import ContractedWorkHours from './contractedWork';
 import { selectUser } from 'app/store/userSlice';
 import Portfolio from './portfolio';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import CourseTab from './courseTab';
 
 const CustomTab = styled(Tab)(({ theme }) => ({
     textTransform: 'none', // Disable uppercase
@@ -67,7 +68,7 @@ function a11yProps(index) {
 }
 
 export default function NewPortfolio() {
-    const [value, setValue] = React.useState(0);
+    const [value, setValue] = React.useState(1);
     const { learnerTab, selectedUser } = useSelector(selectGlobalUser);
     const dispatch: any = useDispatch();
     const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
@@ -126,7 +127,7 @@ export default function NewPortfolio() {
                     <LearnerDetails />
                 </CustomTabPanel>
                 <CustomTabPanel value={value} index={1}>
-                    Course
+                    <CourseTab/>
                 </CustomTabPanel>
                 <CustomTabPanel value={value} index={2}>
                     <ContractedWorkHours />
