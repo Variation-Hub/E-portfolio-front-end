@@ -14,6 +14,7 @@ import { selectUser } from 'app/store/userSlice';
 import Portfolio from './portfolio';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import CourseTab from './courseTab';
+import LearnerPortfolio from './learnerPortfolio';
 
 const CustomTab = styled(Tab)(({ theme }) => ({
     textTransform: 'none', // Disable uppercase
@@ -100,7 +101,8 @@ export default function NewPortfolio() {
     if (role === "Learner") {
         return (
           <>
-            <Portfolio/>
+            {/* <Portfolio/> */}
+            <LearnerPortfolio/>
           </>
         );
       }

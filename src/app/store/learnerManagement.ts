@@ -182,6 +182,15 @@ export const getLearnerDetails = (data = "") => async (dispatch, getStore) => {
     }
 }
 
+export const getLearnerDetailsReturn = (id = "") => async () => {
+    try {
+        const response = await axios.get(`${URL_BASE_LINK}/learner/get/${id}`,)
+        return response.data.data;
+    } catch (err) {
+        return null;
+    }
+}
+
 export const getLearnerCourseDetails = (data) => async (dispatch) => {
     const response = await axios.get(`${URL_BASE_LINK}/course/user/get?learner_id=${data.learner_id}&course_id=${data.course_id}`,)
     dispatch(slice.setCourseData(response.data.data))
