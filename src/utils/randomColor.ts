@@ -25,6 +25,26 @@ const darkColors = [
   '#2F4F4F',   // DarkSlateGray
   '#556B2F',   // DarkOliveGreen
 ]
+
+const lightColors = [
+  '#4A90E2',  // Medium Blue
+  '#50E3C2',  // Medium Aqua
+  '#F5A623',  // Medium Orange
+  '#B3B3B3',  // Medium Gray
+  '#F2F2F2',  // Light Gray
+  '#FF6F61',  // Coral
+  '#50B4E0',  // Light Blue
+  '#D9E8E0',  // Light Mint
+  '#F8E71C',  // Lemon Yellow
+  '#7ED321',  // Bright Green
+  '#C5C6D0',  // Soft Gray
+  '#A9A9A9',  // Dark Gray
+  '#FFB100',  // Gold
+  '#E3E3E3',  // Very Light Gray
+  '#9B59B6',  // Medium Purple
+  '#34495E',  // Dark Blue Gray
+];
+
 const atoz = "abcdefghijklmnopqrstuvwxyz";
 
 export const IconsData = [
@@ -45,6 +65,11 @@ export const IconsData = [
 export const getRandomColor = (latter) => {
   const color = darkColors[atoz.indexOf(latter)]
   return color;
+};
+
+export const getLightRandomColor = (latter) => {
+  const lightColor = lightColors[atoz.indexOf(latter)]
+  return lightColor;
 };
 
 export const SocketDomain = {
