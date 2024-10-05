@@ -108,7 +108,7 @@ export default function NewPortfolio() {
     }
 
     return (<>
-        <Portfolio />
+        {/* <Portfolio /> */}
         <div className='p-10 overflow-y-auto'>
             <div className='flex justify-between items-center'>
                 <h1>{selectedUser.first_name + " " + selectedUser.last_name}</h1>
