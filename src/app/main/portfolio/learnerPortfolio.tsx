@@ -123,6 +123,10 @@ function LearnerPortfolio() {
         }
     };
 
+    const handleClosePortfolio = () => {
+        window.close();
+      };
+
     const dispatch: any = useDispatch();
     useEffect(() => {
         async function fetchLearner() {
@@ -154,27 +158,32 @@ function LearnerPortfolio() {
 
     console.log("Single Course", singleCourse)
     const HeaderTabs = () => (
-        <div className="flex">
-            <button
-                className={`text-white relative top-16 p-14 rounded-t-lg ${value === 0 ? 'transform translate-y-[-6px] ' : ''}`}
-                style={{ backgroundColor: getLightRandomColor("Overview"?.toLowerCase().charAt(0)) }}
-                onClick={() => handleChange(0)}
-            >
-                Overview
-            </button>
-            {course.map((item) => (
+        <div className="flex justify-between items-center">
+            <div className='flex'>
                 <button
-                    className={`text-white relative top-16 p-16 rounded-t-lg ${value === item?.course?.course_id ? 'transform translate-y-[-6px] ' : ''}`}
-                    style={{ backgroundColor: getLightRandomColor(item?.course?.course_name?.toLowerCase().charAt(0)) }}
-                    key={item?.course?.course_id}
-                    onClick={(e) => {
-                        handleClickSingleData(item)
-                        handleChange(item?.course?.course_id)
-                    }}
+                    className={`text-white relative top-16 p-14 rounded-t-lg ${value === 0 ? 'transform translate-y-[-6px] ' : ''}`}
+                    style={{ backgroundColor: getLightRandomColor("Overview"?.toLowerCase().charAt(0)) }}
+                    onClick={() => handleChange(0)}
                 >
-                    {item?.course?.course_name}
+                    Overview
                 </button>
-            ))}
+                {course.map((item) => (
+                    <button
+                        className={`text-white relative top-16 p-16 rounded-t-lg ${value === item?.course?.course_id ? 'transform translate-y-[-6px] ' : ''}`}
+                        style={{ backgroundColor: getLightRandomColor(item?.course?.course_name?.toLowerCase().charAt(0)) }}
+                        key={item?.course?.course_id}
+                        onClick={(e) => {
+                            handleClickSingleData(item)
+                            handleChange(item?.course?.course_id)
+                        }}
+                    >
+                        {item?.course?.course_name}
+                    </button>
+                ))}
+            </div>
+            <div>
+                <SecondaryButtonOutlined name="Close Portfolio" onClick={handleClosePortfolio}/>
+            </div>
         </div>
 
     );
