@@ -7,6 +7,9 @@ import NewSession from "./newsession";
 import NewAssignment from "src/app/component/Cards/newAssignment";
 import LearnerToData from "./learnerData/learnertodata";
 import LearnerDetails from "./learnerDeatils";
+import Portfolio from "./portfolio";
+import ResourceData from "./learnerData/resourse";
+import ProgressWidget from "./learnerData/progressWidget";
 const NewPortfolio = lazy(() => import("./newPortfolio"));
 
 
@@ -35,6 +38,10 @@ const PortfolioConfig = {
   auth: [authRoles.Admin, authRoles.Learner, authRoles.Trainer, authRoles.Employer, authRoles.LIQA, authRoles.IQA, authRoles.EQA],
   routes: [
     {
+      path: "/old-portfolio",
+      element: <Portfolio />,
+    },
+    {
       path: "/portfolio",
       element: <NewPortfolio />,
     },
@@ -49,6 +56,14 @@ const PortfolioConfig = {
     {
       path: "/newsession",
       element: <NewSession />,
+    },
+    {
+      path: "/portfolio/resourceData",
+      element: <ResourceData />,
+    },
+    {
+      path: "/portfolio/progressWidget",
+      element: <ProgressWidget />,
     },
     {
       path: "/portfolio/learnertodata",

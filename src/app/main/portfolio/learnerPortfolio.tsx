@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Tabs, Tab, Avatar, Typography, Card, CardContent, Container, LinearProgress, Box, Stack, Grid, Button } from '@mui/material';
+import { Tabs, Tab, Avatar, Typography, Card, CardContent, Container, LinearProgress, Box, Stack, Grid, Button, Dialog } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { getLearnerDetailsReturn } from 'app/store/learnerManagement';
 import { FaFolderOpen } from 'react-icons/fa';
 import { getLightRandomColor } from 'src/utils/randomColor';
+import UploadWorkDialog from 'src/app/component/Cards/uploadWorkDialog';
+import ResourseData from './learnerData/resourse';
+import { slice as courseSlice } from "app/store/courseManagement";
+import { useNavigate } from 'react-router-dom';
+import Calendar from './calendar';
 
 function LinearProgressWithLabel(props) {
     const { color, value } = props;
@@ -22,14 +27,44 @@ function LinearProgressWithLabel(props) {
 }
 
 function LearnerPortfolio() {
+    const navigate = useNavigate();
+    const [open, setOpen] = useState(false);
+    const [openCalender, setOpenCalender] = useState(false);
     const [value, setValue] = useState<number>(0);
     const [course, setCourse] = useState([]);
     const [singleCourse, setSingleCourse] = useState(null);
     const [learnerDetails, setLearnerDetails] = useState(undefined)
 
+    const handleClickSingleData = (row) => {
+        dispatch(courseSlice.setSingleData(row));
+    };
+
+    const handleOpenResource = () => {
+        navigate("/portfolio/resourceData");
+    };
+
+    const handleOpenProgressWidget = () => {
+        navigate("/portfolio/progressWidget");
+    };
+
+    const handleOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
+    const handleOpenCalender = () => {
+        setOpenCalender(true);
+    };
+
+    const handleCloseCalender = () => {
+        setOpenCalender(false);
+    };
+
     const dispatch: any = useDispatch();
     useEffect(() => {
-        // Fetch learner details from API
         async function fetchLearner() {
             const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user;
             if (user) {
@@ -47,7 +82,6 @@ function LearnerPortfolio() {
         console.log(newValue);
         setValue(newValue);
         setSingleCourse(course.find((item) => item.course?.course_id === newValue));
-
     };
 
     console.log("123", course, learnerDetails)
@@ -66,7 +100,10 @@ function LearnerPortfolio() {
                     className={`text-white relative top-16 p-16 rounded-t-lg ${value === item?.course?.course_id ? 'transform translate-y-[-6px] ' : ''}`}
                     style={{ backgroundColor: getLightRandomColor(item?.course?.course_name?.toLowerCase().charAt(0)) }}
                     key={item?.course?.course_id}
-                    onClick={() => handleChange(item?.course?.course_id)}
+                    onClick={(e) => {
+                        handleClickSingleData(item)
+                        handleChange(item?.course?.course_id)
+                    }}
                 >
                     {item?.course?.course_name}
                 </button>
@@ -176,7 +213,7 @@ function LearnerPortfolio() {
                                     </div>
                                     <strong className='absolute top-8 right-8 text-white border-2 border-white rounded-full w-10 h-16 p-14 flex items-center justify-center'>1</strong>
                                 </Card>
-                                <Card className='h-160 cursor-pointer rounded-4 bg-[#ED008C]'>
+                                <Card className='h-160 cursor-pointer rounded-4 bg-[#ED008C]' onClick={handleOpenCalender}>
                                     <div className='flex flex-col justify-around items-center h-full p-8'>
                                         <img src='./assets/icons/ic-calender.png' className='w-112 h-112' />
                                         <strong className="text-white text-xl">
@@ -207,7 +244,7 @@ function LearnerPortfolio() {
                     <CourseSection>
                         <Grid className='w-full p-10 bg-grey-300 h-full'>
                             <Grid className='grid grid-cols-4 gap-20'>
-                                <Card className='h-160 cursor-pointer rounded-4 bg-[#B3B3B3]'>
+                                <Card className='h-160 cursor-pointer rounded-4 bg-[#B3B3B3]' onClick={handleOpenProgressWidget} >
                                     <div className='flex flex-col justify-around items-start h-full p-8'>
                                         <div className='w-full'>
                                             <LinearProgressWithLabel value={28} color="darkred" />
@@ -219,7 +256,7 @@ function LearnerPortfolio() {
                                         </strong>
                                     </div>
                                 </Card>
-                                <Card className='h-160 cursor-pointer rounded-4 bg-[#04A4A4]'>
+                                <Card className='h-160 cursor-pointer rounded-4 bg-[#04A4A4]' onClick={handleOpen}>
                                     <div className='flex flex-col justify-between items-start h-full p-8'>
                                         <div className='w-full max-h-128 overflow-y-auto'>
                                             <Typography className='text-white text-sm'>No files found.</Typography>
@@ -259,7 +296,7 @@ function LearnerPortfolio() {
                                         </strong>
                                     </div>
                                 </Card>
-                                <Card className='relative cursor-pointer h-160 rounded-4 bg-[#F7941D]'>
+                                <Card className='relative cursor-pointer h-160 rounded-4 bg-[#F7941D]' onClick={handleOpenResource}>
                                     <div className='flex flex-col justify-around items-center h-full p-8'>
                                         <img src='./assets/icons/Recources.png' className='w-92' />
                                         <strong className="text-white text-base">
@@ -274,7 +311,7 @@ function LearnerPortfolio() {
                                             <Typography className='text-white text-sm'>No files found.</Typography>
                                         </div>
                                         <strong className="text-white text-xl bg-[#ED008C]">
-                                            Upload Work
+                                            Files From Course
                                         </strong>
                                     </div>
                                 </Card>
@@ -297,6 +334,33 @@ function LearnerPortfolio() {
                     </CourseSection>
                 )}
             </div>
+            <Dialog
+                open={open}
+                onClose={handleClose}
+                sx={{
+                    ".MuiDialog-paper": {
+                        borderRadius: "4px",
+                        padding: "1rem",
+                    },
+                }}
+            >
+                <UploadWorkDialog dialogFn={{ handleClose }} />
+            </Dialog>
+
+            <Dialog
+                open={openCalender}
+                onClose={handleCloseCalender}
+                sx={{
+                    ".MuiDialog-paper": {
+                        borderRadius: "4px",
+                        padding: "1rem",
+                        width: "90%",
+                        maxWidth: "lg",
+                    },
+                }}
+            >
+                <Calendar />
+            </Dialog>
         </Container>
     );
 }

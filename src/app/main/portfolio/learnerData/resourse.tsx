@@ -20,7 +20,7 @@ const ResourceData = () => {
     if (singleData?.course?.course_id && user?.user_id) {
       dispatch(fetchResourceByCourseAPI(singleData.course.course_id, user_id || user.user_id));
     }
-  }, [dispatch, singleData, user]);
+  }, [dispatch]);
 
   const handleOpenInNewTab = async (url, id) => {
     if (user?.role === "Learner") {
