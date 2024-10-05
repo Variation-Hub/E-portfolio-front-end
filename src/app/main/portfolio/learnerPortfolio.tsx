@@ -28,7 +28,7 @@ function LinearProgressWithLabel(props) {
 
 function LearnerPortfolio() {
     const navigate = useNavigate();
-    const [open, setOpen] = useState(false);
+    const [openUploadWork, setOpenUploadWork] = useState(false);
     const [openCalender, setOpenCalender] = useState(false);
     const [value, setValue] = useState<number>(0);
     const [course, setCourse] = useState([]);
@@ -47,19 +47,18 @@ function LearnerPortfolio() {
         navigate("/portfolio/progressWidget");
     };
 
-    const handleOpen = () => {
-        setOpen(true);
+    const handleOpenProgressMap = () => {
+        navigate("/portfolio/courseProgressMap");
+    };
+
+    const handleOpenUploadWork = () => {
+        navigate("/portfolio/assignmentData");
+        // setOpen(true);
     };
 
     const handleClose = () => {
-        setOpen(false);
-    };
-
-    const handleOpenCalender = () => {
+        setOpenUploadWork(false);
         setOpenCalender(true);
-    };
-
-    const handleCloseCalender = () => {
         setOpenCalender(false);
     };
 
@@ -213,7 +212,7 @@ function LearnerPortfolio() {
                                     </div>
                                     <strong className='absolute top-8 right-8 text-white border-2 border-white rounded-full w-10 h-16 p-14 flex items-center justify-center'>1</strong>
                                 </Card>
-                                <Card className='h-160 cursor-pointer rounded-4 bg-[#ED008C]' onClick={handleOpenCalender}>
+                                <Card className='h-160 cursor-pointer rounded-4 bg-[#ED008C]' onClick={handleClose}>
                                     <div className='flex flex-col justify-around items-center h-full p-8'>
                                         <img src='./assets/icons/ic-calender.png' className='w-112 h-112' />
                                         <strong className="text-white text-xl">
@@ -256,7 +255,7 @@ function LearnerPortfolio() {
                                         </strong>
                                     </div>
                                 </Card>
-                                <Card className='h-160 cursor-pointer rounded-4 bg-[#04A4A4]' onClick={handleOpen}>
+                                <Card className='h-160 cursor-pointer rounded-4 bg-[#04A4A4]' onClick={handleOpenUploadWork}>
                                     <div className='flex flex-col justify-between items-start h-full p-8'>
                                         <div className='w-full max-h-128 overflow-y-auto'>
                                             <Typography className='text-white text-sm'>No files found.</Typography>
@@ -323,7 +322,7 @@ function LearnerPortfolio() {
                                 </Card>
                                 <Card className='h-160 rounded-4 bg-[#5AC400]'>
                                     <div className='flex flex-col justify-around items-center h-full p-8'>
-                                        <img src='./assets/icons/Process-Map.png' className='w-68' />
+                                        <img src='./assets/icons/Process-Map.png' className='w-68' onClick={handleOpenProgressMap} />
                                         <strong className="text-white text-xl">
                                             Progress Map
                                         </strong>
@@ -334,8 +333,8 @@ function LearnerPortfolio() {
                     </CourseSection>
                 )}
             </div>
-            <Dialog
-                open={open}
+            {/* <Dialog
+                open={openUploadWork}
                 onClose={handleClose}
                 sx={{
                     ".MuiDialog-paper": {
@@ -345,11 +344,11 @@ function LearnerPortfolio() {
                 }}
             >
                 <UploadWorkDialog dialogFn={{ handleClose }} />
-            </Dialog>
+            </Dialog> */}
 
             <Dialog
                 open={openCalender}
-                onClose={handleCloseCalender}
+                onClose={handleClose}
                 sx={{
                     ".MuiDialog-paper": {
                         borderRadius: "4px",

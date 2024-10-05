@@ -10,6 +10,8 @@ import LearnerDetails from "./learnerDeatils";
 import Portfolio from "./portfolio";
 import ResourceData from "./learnerData/resourse";
 import ProgressWidget from "./learnerData/progressWidget";
+import AssignmentData from "./learnerData/assignmentData";
+import CourseProgressMap from "./learnerData/courseProgressMap";
 const NewPortfolio = lazy(() => import("./newPortfolio"));
 
 
@@ -62,8 +64,16 @@ const PortfolioConfig = {
       element: <ResourceData />,
     },
     {
+      path: "/portfolio/assignmentData",
+      element: <AssignmentData />,
+    },
+    {
       path: "/portfolio/progressWidget",
       element: <ProgressWidget />,
+    },
+    {
+      path: "/portfolio/courseProgressMap",
+      element: <CourseProgressMap />,
     },
     {
       path: "/portfolio/learnertodata",
