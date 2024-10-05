@@ -83,8 +83,8 @@ const CourseProgressMap = () => {
         <Typography className='font-semibold'>05/10/2024</Typography>
       </div>
 
-      <div className='m-14 flex gap-2 items-center justify-between'>
-        <div className='flex gap-2 w-1/5 items-center '>
+      <div className='m-14 w-2/5 flex gap-2 items-center justify-between'>
+        <div className='flex gap-2 w-1/2 items-center '>
           <Typography className='min-w-60' sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "600" }}>Filter :</Typography>
           {/* <Autocomplete
             disableClearable
