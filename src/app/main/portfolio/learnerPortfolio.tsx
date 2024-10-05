@@ -13,6 +13,7 @@ import { SecondaryButton, SecondaryButtonOutlined } from 'src/app/component/Butt
 import { useSelector } from 'react-redux';
 import { selectUser } from 'app/store/userSlice';
 import { sendMail } from 'app/store/userManagement';
+import NewSession from './newsession';
 
 function LinearProgressWithLabel(props) {
     const { color, value } = props;
@@ -40,6 +41,7 @@ function LearnerPortfolio() {
 
     const navigate = useNavigate();
     const [openUploadWork, setOpenUploadWork] = useState(false);
+    const [openSession, setOpenSession] = useState(false);
     const [openCalender, setOpenCalender] = useState(false);
     const [value, setValue] = useState<number>(0);
     const [course, setCourse] = useState([]);
@@ -73,14 +75,22 @@ function LearnerPortfolio() {
         // setOpen(true);
     };
 
+    const handleOpenCalender = () => {
+        setOpenCalender(true);
+    };
+
+    const handleOpenSession = () => {
+        setOpenSession(true);
+    };
+
     const handleActivities = () => {
         navigate('/cpd');
     };
 
     const handleClose = () => {
         setOpenUploadWork(false);
-        setOpenCalender(true);
         setOpenCalender(false);
+        setOpenSession(false);
     };
 
 
@@ -125,7 +135,7 @@ function LearnerPortfolio() {
 
     const handleClosePortfolio = () => {
         window.close();
-      };
+    };
 
     const dispatch: any = useDispatch();
     useEffect(() => {
@@ -182,7 +192,7 @@ function LearnerPortfolio() {
                 ))}
             </div>
             <div>
-                <SecondaryButtonOutlined name="Close Portfolio" onClick={handleClosePortfolio}/>
+                <SecondaryButtonOutlined name="Close Portfolio" onClick={handleClosePortfolio} />
             </div>
         </div>
 
@@ -194,11 +204,11 @@ function LearnerPortfolio() {
                 <Typography variant="h5" className='capitalize mb-24'>Welcome<br /> {learnerDetails?.displayName}</Typography>
                 <div className='flex justify-between' style={{ height: 120 }}>
                     <img src={learnerDetails?.avatar?.url} alt="" className='w-full h-full' style={{ width: 120 }} />
-                    <Card className='rounded-4 bg-[#D32B4F]'>
+                    <Card className='cursor-pointer rounded-4 bg-[#D32B4F]' onClick={handleOpenSession}>
                         <div className='flex flex-col justify-around items-center h-full p-8' style={{ width: 120 }}>
                             <img src='./assets/icons/Smart-Session.png' className='w-80 p-10' />
                             <strong className="text-white text-base">
-                                Smart Session
+                                Session
                             </strong>
                         </div>
                     </Card>
@@ -295,7 +305,7 @@ function LearnerPortfolio() {
                                     </div>
                                     {/* <strong className='absolute top-8 right-8 text-white border-2 border-white rounded-full w-10 h-16 p-14 flex items-center justify-center'>1</strong> */}
                                 </Card>
-                                <Card className='h-160 cursor-pointer rounded-4 bg-[#ED008C]' onClick={handleClose}>
+                                <Card className='h-160 cursor-pointer rounded-4 bg-[#ED008C]' onClick={handleOpenCalender}>
                                     <div className='flex flex-col justify-around items-center h-full p-8'>
                                         <img src='./assets/icons/ic-calender.png' className='w-112 h-112' />
                                         <strong className="text-white text-xl">
@@ -507,6 +517,21 @@ function LearnerPortfolio() {
                 </DialogActions>
             </Dialog>
 
+            <Dialog
+                open={openSession}
+                onClose={handleClose}
+                fullWidth
+                sx={{
+                    ".MuiDialog-paper": {
+                        borderRadius: "4px",
+                        width: "100%",
+                    },
+                }}
+            >
+                <DialogContent className="p-0">
+                    <NewSession edit={true} handleCloseDialog={handleClose} />
+                </DialogContent>
+            </Dialog>
 
         </Container>
     );

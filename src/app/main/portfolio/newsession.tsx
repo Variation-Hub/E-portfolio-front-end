@@ -87,6 +87,8 @@ const NewSession = (props) => {
         return formattedDate;
     };
 
+    const sessionDataFromStorage = JSON.parse(sessionStorage.getItem('learnerToken'))?.user;
+    const selectedLearnerId = sessionDataFromStorage?.learner_id || null;
 
     return (
         <Grid>
@@ -118,19 +120,21 @@ const NewSession = (props) => {
                                         ))}
                                     </Select>
                                 </Grid>
-
                                 <Grid className='w-full'>
-                                    <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Select Learner</Typography>
+                                    <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>
+                                        Select Learner
+                                    </Typography>
                                     <Select
                                         name="learners"
-                                        value={sessionData.learners}
+                                        value={selectedLearnerId ? [selectedLearnerId] : sessionData.learners}
                                         size="small"
                                         placeholder="Select learner"
                                         required
                                         fullWidth
                                         multiple
+                                        disabled={!!selectedLearnerId}
                                         onChange={handleDataUpdate}
-                                        renderValue={(selected) =>
+                                        renderValue={(selected: any) =>
                                             selected.map((id) => {
                                                 const learner = session.learner.find((learner) => learner.learner_id === id);
                                                 return learner ? learner.user_name : '';
@@ -139,7 +143,7 @@ const NewSession = (props) => {
                                     >
                                         {session.learner.map((data) => (
                                             <MenuItem key={data.learner_id} value={data.learner_id}>
-                                                <Checkbox checked={sessionData.learners.includes(data.learner_id)} />
+                                                <Checkbox checked={sessionData.learners.includes(data.learner_id) || (selectedLearnerId === data.learner_id)} />
                                                 <ListItemText primary={data.user_name} />
                                             </MenuItem>
                                         ))}
