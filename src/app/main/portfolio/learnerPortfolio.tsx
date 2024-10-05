@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { Tabs, Tab, Avatar, Typography, Card, CardContent, Container, LinearProgress, Box, Stack, Grid, Button, Dialog } from '@mui/material';
+import { Tabs, Tab, Avatar, Typography, Card, CardContent, Container, LinearProgress, Box, Stack, Grid, Button, Dialog, DialogTitle, DialogContent, TextField, DialogActions } from '@mui/material';
 import { useDispatch } from 'react-redux';
-import { getLearnerDetailsReturn } from 'app/store/learnerManagement';
+import { getLearnerDetailsReturn, selectLearnerManagement } from 'app/store/learnerManagement';
 import { FaFolderOpen } from 'react-icons/fa';
 import { getLightRandomColor } from 'src/utils/randomColor';
 import UploadWorkDialog from 'src/app/component/Cards/uploadWorkDialog';
-import ResourseData from './learnerData/resourse';
+import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import { slice as courseSlice } from "app/store/courseManagement";
 import { useNavigate } from 'react-router-dom';
 import Calendar from './calendar';
+import { SecondaryButton, SecondaryButtonOutlined } from 'src/app/component/Buttons';
+import { useSelector } from 'react-redux';
+import { selectUser } from 'app/store/userSlice';
+import { sendMail } from 'app/store/userManagement';
 
 function LinearProgressWithLabel(props) {
     const { color, value } = props;
@@ -27,6 +31,13 @@ function LinearProgressWithLabel(props) {
 }
 
 function LearnerPortfolio() {
+
+    const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
+
+    const { learner } = useSelector(
+        selectLearnerManagement
+    );
+
     const navigate = useNavigate();
     const [openUploadWork, setOpenUploadWork] = useState(false);
     const [openCalender, setOpenCalender] = useState(false);
@@ -62,10 +73,54 @@ function LearnerPortfolio() {
         // setOpen(true);
     };
 
+    const handleActivities = () => {
+        navigate('/cpd');
+    };
+
     const handleClose = () => {
         setOpenUploadWork(false);
         setOpenCalender(true);
         setOpenCalender(false);
+    };
+
+
+    const [emailData, setEmailData] = useState({
+        email: learner.email,
+        subject: '',
+        message: '',
+        adminName: user?.displayName
+    });
+
+    const handleChangeEmail = (e) => {
+        const { name, value } = e.target;
+        setEmailData((prevEmail) => ({ ...prevEmail, [name]: value }));
+    };
+
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+    const handleOpenEmail = () => {
+        setIsDialogOpen(true);
+    };
+
+    const handleCloseEmail = () => {
+        setIsDialogOpen(false);
+        setEmailData({
+            email: learner.email,
+            subject: '',
+            message: '',
+            adminName: user?.displayName
+        })
+    };
+
+    const handleSend = async () => {
+        try {
+            let response;
+            response = await dispatch(sendMail(emailData));
+        } catch (err) {
+            console.log(err);
+        } finally {
+            handleCloseEmail();
+        }
     };
 
     const dispatch: any = useDispatch();
@@ -167,7 +222,14 @@ function LearnerPortfolio() {
                 </div>
                 <div className="mt-24">
                     <Typography variant="body2"><strong>{singleCourse?.course?.course_name}</strong></Typography>
-                    <Typography variant="body2"><strong>Trainer: {singleCourse?.trainer_id?.first_name + " " + singleCourse?.trainer_id?.last_name} </strong></Typography>
+                    <div className='flex gap-8 items-center'>
+                        <Typography variant="body2"><strong>Trainer: {singleCourse?.trainer_id?.first_name + " " + singleCourse?.trainer_id?.last_name} </strong></Typography>
+                        <SecondaryButton
+                            className="min-w-0"
+                            onClick={handleOpenEmail}
+                            startIcon={<EmailOutlinedIcon className="text-xl ml-10" />}
+                        />
+                    </div>
                     <Typography variant="body2"><strong>IQA: </strong>{singleCourse?.IQA_id?.first_name + " " + singleCourse?.trainer_id?.last_name}</Typography>
                     <Typography variant="body2"><strong>Course  </strong>In Training</Typography>
                     <Typography variant="body2"><strong>Status: </strong> </Typography>
@@ -204,7 +266,7 @@ function LearnerPortfolio() {
                                             New Docs to Sign
                                         </strong>
                                     </div>
-                                    <strong className='absolute top-8 right-8 text-white border-2 border-white rounded-full w-10 h-16 p-14 flex items-center justify-center'>1</strong>
+                                    {/* <strong className='absolute top-8 right-8 text-white border-2 border-white rounded-full w-10 h-16 p-14 flex items-center justify-center'>1</strong> */}
                                 </Card>
                                 <Card className='relative cursor-pointer h-160 rounded-4 bg-[#676767]'>
                                     <div className='flex flex-col justify-around items-center h-full p-8'>
@@ -213,16 +275,16 @@ function LearnerPortfolio() {
                                             EILP
                                         </strong>
                                     </div>
-                                    <strong className='absolute top-8 right-8 text-white border-2 border-white rounded-full w-10 h-16 p-14 flex items-center justify-center'>1</strong>
+                                    {/* <strong className='absolute top-8 right-8 text-white border-2 border-white rounded-full w-10 h-16 p-14 flex items-center justify-center'>1</strong> */}
                                 </Card>
-                                <Card className='relative cursor-pointer h-160 rounded-4 bg-[#F7941D]'>
+                                <Card className='relative cursor-pointer h-160 rounded-4 bg-[#F7941D]' onClick={handleActivities}>
                                     <div className='flex flex-col justify-around items-center h-full p-4'>
                                         <img src='./assets/icons/Actions-Activities.png' className='w-112 h-112' />
                                         <strong className="text-white text-xl">
                                             Actions & Activities
                                         </strong>
                                     </div>
-                                    <strong className='absolute top-8 right-8 text-white border-2 border-white rounded-full w-10 h-16 p-14 flex items-center justify-center'>1</strong>
+                                    {/* <strong className='absolute top-8 right-8 text-white border-2 border-white rounded-full w-10 h-16 p-14 flex items-center justify-center'>1</strong> */}
                                 </Card>
                                 <Card className='h-160 cursor-pointer rounded-4 bg-[#ED008C]' onClick={handleClose}>
                                     <div className='flex flex-col justify-around items-center h-full p-8'>
@@ -246,7 +308,7 @@ function LearnerPortfolio() {
                                             </strong>
                                         </div>
                                     </div>
-                                    <strong className='absolute top-8 right-8 text-white border-2 border-white rounded-full w-10 h-16 p-14 flex items-center justify-center'>1</strong>
+                                    {/* <strong className='absolute top-8 right-8 text-white border-2 border-white rounded-full w-10 h-16 p-14 flex items-center justify-center'>1</strong> */}
                                 </Card>
                             </Grid>
                         </Grid>
@@ -321,7 +383,7 @@ function LearnerPortfolio() {
                                             Resources
                                         </strong>
                                     </div>
-                                    <strong className='absolute top-8 right-8 text-white border-2 border-white rounded-full w-10 h-16 p-14 flex items-center justify-center'>1</strong>
+                                    {/* <strong className='absolute top-8 right-8 text-white border-2 border-white rounded-full w-10 h-16 p-14 flex items-center justify-center'>1</strong> */}
                                 </Card>
                                 <Card className='h-160 cursor-pointer rounded-4 bg-[#ED008C]'>
                                     <div className='flex flex-col justify-between items-start h-full p-8'>
@@ -337,7 +399,7 @@ function LearnerPortfolio() {
                                     <div className='w-full h-full'>
                                         <img src="./assets/icons/smart-vle-counter-btn.png" alt="svle" className='w-full h-full' />
                                     </div>
-                                    <strong className='absolute top-8 right-8 text-[#5680C1] border-2 !border-[#5680C1] rounded-full w-10 h-16 p-14 flex items-center justify-center'>1</strong>
+                                    {/* <strong className='absolute top-8 right-8 text-[#5680C1] border-2 !border-[#5680C1] rounded-full w-10 h-16 p-14 flex items-center justify-center'>1</strong> */}
                                 </Card>
                                 <Card className='h-160 cursor-pointer rounded-4 bg-[#5AC400]'>
                                     <div className='flex flex-col justify-around items-center h-full p-8'>
@@ -379,6 +441,64 @@ function LearnerPortfolio() {
             >
                 <Calendar />
             </Dialog>
+
+
+            <Dialog
+                open={isDialogOpen}
+                onClose={handleCloseEmail}
+                sx={{
+                    ".MuiDialog-paper": {
+                        borderRadius: "4px",
+                        width: "100%",
+                    },
+                }}
+            >
+                <DialogTitle>Email {learner.user_name}</DialogTitle>
+
+                <DialogContent>
+                    <Box className="flex flex-col justify-between gap-12 p-0">
+                        <div>
+                            <Typography
+                                sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}
+                            >
+                                Subject
+                            </Typography>
+                            <TextField
+                                name="subject"
+                                size="small"
+                                placeholder="Subject"
+                                fullWidth
+                                value={emailData?.subject}
+                                onChange={handleChangeEmail}
+                            />
+                        </div>
+                        <div>
+                            <Typography
+                                sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}
+                            >
+                                Message
+                            </Typography>
+                            <TextField
+                                name="message"
+                                size="small"
+                                placeholder="Message"
+                                fullWidth
+                                multiline
+                                rows={6}
+                                value={emailData?.message}
+                                onChange={handleChangeEmail}
+                            />
+                        </div>
+                    </Box>
+                </DialogContent>
+
+                <DialogActions>
+                    <SecondaryButton name="Send" disable={!emailData?.subject || !emailData?.message} onClick={handleSend} />
+                    <SecondaryButtonOutlined name="Close" onClick={handleCloseEmail} />
+                </DialogActions>
+            </Dialog>
+
+
         </Container>
     );
 }

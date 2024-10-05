@@ -40,10 +40,6 @@ const PortfolioConfig = {
   auth: [authRoles.Admin, authRoles.Learner, authRoles.Trainer, authRoles.Employer, authRoles.LIQA, authRoles.IQA, authRoles.EQA],
   routes: [
     {
-      path: "/old-portfolio",
-      element: <Portfolio />,
-    },
-    {
       path: "/portfolio",
       element: <NewPortfolio />,
     },
