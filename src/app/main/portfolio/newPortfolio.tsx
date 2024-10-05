@@ -100,15 +100,15 @@ export default function NewPortfolio() {
 
     if (role === "Learner") {
         return (
-          <>
-            {/* <Portfolio/> */}
-            <LearnerPortfolio/>
-          </>
+            <>
+                <Portfolio />
+                <LearnerPortfolio />
+            </>
         );
-      }
+    }
 
-    return (
-        
+    return (<>
+        <Portfolio />
         <div className='p-10 overflow-y-auto'>
             <div className='flex justify-between items-center'>
                 <h1>{selectedUser.first_name + " " + selectedUser.last_name}</h1>
@@ -129,7 +129,7 @@ export default function NewPortfolio() {
                     <LearnerDetails />
                 </CustomTabPanel>
                 <CustomTabPanel value={value} index={1}>
-                    <CourseTab/>
+                    <CourseTab />
                 </CustomTabPanel>
                 <CustomTabPanel value={value} index={2}>
                     <ContractedWorkHours />
@@ -148,6 +148,7 @@ export default function NewPortfolio() {
                 </CustomTabPanel> */}
             </Box>
         </div>
+    </>
 
     );
 }

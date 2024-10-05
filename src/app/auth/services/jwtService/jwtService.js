@@ -73,15 +73,19 @@ class JwtService extends FuseUtils.EventEmitter {
                 .post(`${URL_BASE_LINK}/user/login`, payload)
                 .then(async (response) => {
                     if (response.data.status) {
-                        const decoded = jwtDecode(response.data.data.accessToken);
+                        const data = response.data.data;
+                        const decoded = jwtDecode(data.accessToken);
+                        if (decoded.role === 'Learner') {
+                            sessionStorage.setItem('learnerToken', JSON.stringify({ ...data, user: { ...data.user, displayName: data.user.first_name + " " + data.user.last_name } }));
+                        }
                         connectToSocket(decoded.user_id, dispatch);
-                        dispatch(slice.setCurrentUser(response.data.data.user))
-                        if (response.data.data.password_changed) {
-                            this.setSession(response.data.data.accessToken);
+                        dispatch(slice.setCurrentUser(data.user))
+                        if (data.password_changed) {
+                            this.setSession(data.accessToken);
                             this.emit('onLogin', decoded);
                         } else {
                             sessionStorage.setItem('email', decoded?.email);
-                            resolve({ token: response.data.data.accessToken, decoded });
+                            resolve({ token: data.accessToken, decoded });
                         }
                     } else {
                         reject(response.data.error);
@@ -100,7 +104,9 @@ class JwtService extends FuseUtils.EventEmitter {
     signInWithToken = (dispatch) => {
         return new Promise(async (resolve, reject) => {
             const decoded = jwtDecode(this.getAccessToken());
-            console.log(decoded);
+            if (decoded.role === 'Learner') {
+                sessionStorage.setItem('learnerToken', JSON.stringify({ accessToken: this.getAccessToken(), user: { ...decoded, displayName: decoded?.first_name + " " + decoded?.last_name } }));
+            }
             connectToSocket(decoded.user_id, dispatch);
             resolve(decoded);
         });
@@ -118,6 +124,8 @@ class JwtService extends FuseUtils.EventEmitter {
 
     logout = () => {
         this.setSession(null);
+        sessionStorage.clear();
+        localStorage.clear();
         this.emit('onLogout', 'Logged out');
     };
 

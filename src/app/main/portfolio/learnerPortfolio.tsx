@@ -34,6 +34,12 @@ function LearnerPortfolio() {
     const [course, setCourse] = useState([]);
     const [singleCourse, setSingleCourse] = useState(null);
     const [learnerDetails, setLearnerDetails] = useState(undefined)
+    const [overView, setOverView] = useState({
+        fullyCompleted: 0,
+        notStarted: 0,
+        partiallyCompleted: 0,
+        totalSubUnits: 0
+    })
 
     const handleClickSingleData = (row) => {
         dispatch(courseSlice.setSingleData(row));
@@ -71,6 +77,14 @@ function LearnerPortfolio() {
                 const data = await dispatch(getLearnerDetailsReturn(user?.learner_id))
                 if (data) {
                     setCourse(data?.course)
+                    setOverView(data.course?.reduce((acc, curr) => {
+                        return {
+                            fullyCompleted: acc.fullyCompleted + curr.fullyCompleted,
+                            notStarted: acc.notStarted + curr.notStarted,
+                            partiallyCompleted: acc.partiallyCompleted + curr.partiallyCompleted,
+                            totalSubUnits: acc.totalSubUnits + curr.totalSubUnits
+                        }
+                    }, overView))
                 }
             }
         }
@@ -83,8 +97,7 @@ function LearnerPortfolio() {
         setSingleCourse(course.find((item) => item.course?.course_id === newValue));
     };
 
-    console.log("123", course, learnerDetails)
-
+    console.log("Single Course", singleCourse)
     const HeaderTabs = () => (
         <div className="flex">
             <button
@@ -133,9 +146,9 @@ function LearnerPortfolio() {
 
                 <div className="">
                     <p>Overall Status</p>
-                    <LinearProgressWithLabel value={28} color="darkred" />
-                    <LinearProgressWithLabel value={85} color="coral" />
-                    <LinearProgressWithLabel value={42} color="green" />
+                    <LinearProgressWithLabel value={(overView?.notStarted / overView?.totalSubUnits) * 100} color="darkred" />
+                    <LinearProgressWithLabel value={(overView?.partiallyCompleted / overView?.totalSubUnits) * 100} color="coral" />
+                    <LinearProgressWithLabel value={(overView?.fullyCompleted / overView?.totalSubUnits) * 100} color="green" />
                 </div>
             </div>
             <div className='w-3/5 border-2'>
@@ -151,12 +164,11 @@ function LearnerPortfolio() {
                 <Typography variant="h5" className='capitalize mb-24'>Welcome<br /> {learnerDetails?.displayName}</Typography>
                 <div style={{ height: 120 }}>
                     <img src={learnerDetails?.avatar?.url} alt="" className='w-full h-full' style={{ width: 120 }} />
-                    <Typography>CIPD</Typography>
                 </div>
                 <div className="mt-24">
-                    <Typography variant="body2"><strong>TQUK Level 5 Diploma for Operations and Departmental Managers (RQF) - 60335932</strong></Typography>
-                    <Typography variant="body2"><strong>Assessor: Michelle Parris </strong></Typography>
-                    <Typography variant="body2"><strong>IQA: </strong>Kam Hirani</Typography>
+                    <Typography variant="body2"><strong>{singleCourse?.course?.course_name}</strong></Typography>
+                    <Typography variant="body2"><strong>Trainer: {singleCourse?.trainer_id?.first_name + " " + singleCourse?.trainer_id?.last_name} </strong></Typography>
+                    <Typography variant="body2"><strong>IQA: </strong>{singleCourse?.IQA_id?.first_name + " " + singleCourse?.trainer_id?.last_name}</Typography>
                     <Typography variant="body2"><strong>Course  </strong>In Training</Typography>
                     <Typography variant="body2"><strong>Status: </strong> </Typography>
                 </div>
@@ -246,9 +258,9 @@ function LearnerPortfolio() {
                                 <Card className='h-160 cursor-pointer rounded-4 bg-[#B3B3B3]' onClick={handleOpenProgressWidget} >
                                     <div className='flex flex-col justify-around items-start h-full p-8'>
                                         <div className='w-full'>
-                                            <LinearProgressWithLabel value={28} color="darkred" />
-                                            <LinearProgressWithLabel value={85} color="coral" />
-                                            <LinearProgressWithLabel value={42} color="green" />
+                                            <LinearProgressWithLabel value={(singleCourse?.notStarted / singleCourse?.totalSubUnits) * 100} color="darkred" />
+                                            <LinearProgressWithLabel value={(singleCourse?.partiallyCompleted / singleCourse?.totalSubUnits) * 100} color="coral" />
+                                            <LinearProgressWithLabel value={(singleCourse?.fullyCompleted / singleCourse?.totalSubUnits) * 100} color="green" />
                                         </div>
                                         <strong className="text-white text-xl">
                                             Progress Widget
@@ -268,9 +280,16 @@ function LearnerPortfolio() {
                                 <Card className='h-160 cursor-pointer rounded-4 bg-[#7473AF]'>
                                     <div className='flex flex-col justify-between items-start h-full p-8'>
                                         <div className='w-full max-h-128 overflow-y-auto'>
-                                            <div className='flex gap-2 p-4'>
-                                                <FaFolderOpen className='text-white text-xl overflow-visible' />
-                                                <Typography className='text-white text-sm'>Unit 1</Typography>
+                                            <div className='flex gap-4 p-4 flex-col'>
+                                                {singleCourse?.course?.units?.map(item => {
+                                                    return (
+                                                        <div key={item.id} className='flex items-center gap-2'>
+                                                            <FaFolderOpen className='text-white text-xl overflow-visible' />
+                                                            <Typography
+                                                                className='text-white text-sm whitespace-nowrap overflow-hidden text-ellipsis'>{item?.title}</Typography>
+                                                        </div>
+                                                    )
+                                                })}
                                             </div>
                                         </div>
                                         <strong className="text-white text-xl bg-[#7473AF]">
