@@ -339,7 +339,7 @@ function LearnerPortfolio() {
                                     </div>
                                     <strong className='absolute top-8 right-8 text-[#5680C1] border-2 !border-[#5680C1] rounded-full w-10 h-16 p-14 flex items-center justify-center'>1</strong>
                                 </Card>
-                                <Card className='h-160 rounded-4 bg-[#5AC400]'>
+                                <Card className='h-160 cursor-pointer rounded-4 bg-[#5AC400]'>
                                     <div className='flex flex-col justify-around items-center h-full p-8'>
                                         <img src='./assets/icons/Process-Map.png' className='w-68' onClick={handleOpenProgressMap} />
                                         <strong className="text-white text-xl">
