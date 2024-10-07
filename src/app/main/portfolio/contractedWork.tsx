@@ -191,8 +191,8 @@ const ContractedWorkHours = () => {
                                         </div>
 
                                         <div>
-                                            <EditIcon className='mr-5 w-16 h-16 cursor-pointer' onClick={() => openEditDialog(row)} />
-                                            <DeleteIcon className='w-16 h-16 cursor-pointer' onClick={() => setDeleteId(row?.id)} />
+                                            <EditIcon className='mr-5 w-16 h-16 cursor-pointer text-yellow-800' onClick={() => openEditDialog(row)} />
+                                            <DeleteIcon className='w-16 h-16 cursor-pointer text-red-500' onClick={() => setDeleteId(row?.id)} />
                                         </div>
                                     </div>
                                 </TableCell>
@@ -312,11 +312,15 @@ const ContractedWorkHours = () => {
                                     ".muiltr-1okx3q8-MuiButtonBase-root-MuiIconButton-root-MuiAutocomplete-popupIndicator": { color: "black" },
                                 }}
                                 options={[
-                                    "Show all criteria",
-                                    "Show Non Completed criteria",
-                                    "Show In Progress Criteria",
-                                    "Show completed criteria",
-                                    "Show non started criteria",
+                                    "TEST TO DELETE",
+                                    "Phoenix4Training LLP",
+                                    "Postcode ME17 3DN",
+                                    "Postcode SE28 8NZ",
+                                    "Sams Home Services Ltd",
+                                    "Secure Care Ltd.",
+                                    "St. Christopher Homes Ltd.",
+                                    "Staplehurst Transits Ltd.",
+                                    "Taylis Homes Ltd.",
                                 ]}
                                 value={hoursData?.company}
                                 onChange={(e, value) => setHoursData({ ...hoursData, company: value })}
@@ -369,12 +373,7 @@ const ContractedWorkHours = () => {
                                 placeholder="0"
                                 required
                                 fullWidth
-                                onChange={(e) => {
-                                    const value = e.target.value;
-                                    if ((parseInt(value, 10) >= 0 && parseInt(value, 10) <= 23) || value === "") {
-                                        setHoursData({ ...hoursData, contracted_work_hours_per_week: value });
-                                    }
-                                }}
+                                onChange={handleInputChange}
                             />
                         </div>
                     </Box>
@@ -391,12 +390,7 @@ const ContractedWorkHours = () => {
                                 placeholder="0"
                                 required
                                 fullWidth
-                                onChange={(e) => {
-                                    const value = e.target.value;
-                                    if ((parseInt(value, 10) >= 0 && parseInt(value, 10) <= 23) || value === "") {
-                                        setHoursData({ ...hoursData, yearly_holiday_entitlement_in_hours: value });
-                                    }
-                                }}
+                                onChange={handleInputChange}
                             />
                         </div>
                     </Box>
