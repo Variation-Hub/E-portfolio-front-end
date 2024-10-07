@@ -47,6 +47,7 @@ function LearnerPortfolio() {
     const [course, setCourse] = useState([]);
     const [singleCourse, setSingleCourse] = useState(null);
     const [learnerDetails, setLearnerDetails] = useState(undefined)
+    const [fullLearnerDetails, setFullLearnerDetails] = useState(undefined)
     const [overView, setOverView] = useState({
         fullyCompleted: 0,
         notStarted: 0,
@@ -58,6 +59,9 @@ function LearnerPortfolio() {
         dispatch(courseSlice.setSingleData(row));
     };
 
+    const handleOTJHours = () => {
+        navigate("/timeLog");
+    };
     const handleOpenResource = () => {
         navigate("/portfolio/resourceData");
     };
@@ -145,6 +149,7 @@ function LearnerPortfolio() {
                 setLearnerDetails(user)
                 const data = await dispatch(getLearnerDetailsReturn(user?.learner_id))
                 if (data) {
+                    setFullLearnerDetails(data)
                     setCourse(data?.course)
                     setOverView(data.course?.reduce((acc, curr) => {
                         return {
@@ -169,7 +174,7 @@ function LearnerPortfolio() {
     console.log("Single Course", singleCourse)
     const HeaderTabs = () => (
         <div className="flex justify-between items-center">
-            <div className='flex'>
+            <div className='flex gap-4'>
                 <button
                     className={`text-white relative top-16 p-14 rounded-t-lg ${value === 0 ? 'transform translate-y-[-6px] ' : ''}`}
                     style={{ backgroundColor: getLightRandomColor("Overview"?.toLowerCase().charAt(0)) }}
@@ -274,8 +279,29 @@ function LearnerPortfolio() {
                                         <img src="./assets/icons/BKSB.jpg" alt="BKSD" className='w-full h-full' />
                                     </div>
                                 </Card>
-                                <Card className='h-160 cursor-pointer rounded-4'>
-                                    <div className='w-full h-full'>
+                                <Card className='h-160 cursor-pointer rounded-4' onClick={handleOTJHours}>
+                                    <div className='w-full h-full p-8'>
+                                        <div className='w-full p-3'>
+                                            <div>
+                                                <Typography className='flex flex-col text-sm'><strong className='text-base'>{fullLearnerDetails?.otjTimeSpend - fullLearnerDetails?.otjTimeSpendRequired}</strong>Hours differential</Typography>
+                                            </div>
+
+                                            <div className='py-8'>
+                                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                                    <Stack sx={{ width: '100%', mr: 1, color: "#D4D4D4", backgroundColor: 'white', border: "1px solid #d3d3d3", borderRadius: "6px" }}>
+                                                        <LinearProgress variant="determinate" value={(fullLearnerDetails?.otjTimeSpend / fullLearnerDetails?.otjTimeSpendRequired) * 100} sx={{ height: '2.2rem', backgroundColor: 'white', borderRadius: "6px", '& .MuiLinearProgress-bar': { backgroundColor: "#D4D4D4", borderRadius: "5px" } }} />
+                                                    </Stack>
+                                                </Box>
+                                            </div>
+
+                                            <div>
+                                                <Typography className='text-sm'><strong>{fullLearnerDetails?.otjTimeSpend}</strong>Actual hrs completed</Typography>
+                                                <Typography className='text-sm'><strong>{fullLearnerDetails?.otjTimeSpendRequired}</strong>Expected hrs to date</Typography>
+                                            </div>
+                                        </div>
+                                        <strong className="text-black text-xl">
+                                            OTJ Hours
+                                        </strong>
                                     </div>
                                 </Card>
                                 <Card className='relative cursor-pointer h-160 rounded-4 bg-[#7473AF]'>
