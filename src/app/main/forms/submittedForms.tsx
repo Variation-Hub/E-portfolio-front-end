@@ -1,23 +1,9 @@
 import {
-    Autocomplete,
-    Checkbox,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    FormControl,
-    FormControlLabel,
-    FormLabel,
     Grid,
     IconButton,
     InputAdornment,
-    ListItemText,
     Menu,
     MenuItem,
-    Pagination,
-    Paper,
-    Radio,
-    RadioGroup,
-    Select,
     Table,
     TableBody,
     TableCell,
@@ -26,34 +12,19 @@ import {
     TableRow,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import AddIcon from "@mui/icons-material/Add";
-import { Stack } from "@mui/system";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import NorthEastIcon from '@mui/icons-material/NorthEast';
-import React, { useEffect, useState } from "react";
-import {
-    DangerButton,
-    LoadingButton,
-    SecondaryButton,
-    SecondaryButtonOutlined,
-} from "src/app/component/Buttons";
+import { useEffect, useState } from "react";
 import { TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import { tr } from "date-fns/locale";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { selectUser } from "app/store/userSlice";
-import AlertDialog from "src/app/component/Dialogs/AlertDialog";
 import FuseLoading from "@fuse/core/FuseLoading";
 import DataNotFound from "src/app/component/Pages/dataNotFound";
-import { FormBuilder as FormBuilderIo } from "react-formio";
 import "formiojs/dist/formio.full.css";
 import './style.css'
 import { useNavigate } from "react-router-dom";
-import { AddUsersToForm, deleteFormHandler, fetchUserAllAPI, getUserAllFormAPI, getUserFormDataAPI, selectFormData, slice } from "app/store/formData";
-import { userTableMetaData } from "src/app/contanst/metaData";
-import { UserRole } from "src/enum";
-import { fetchUserAPI } from "app/store/userManagement";
+import { getUserAllFormAPI, selectFormData, slice } from "app/store/formData";
 import Close from "@mui/icons-material/Close";
 import { selectGlobalUser } from "app/store/globalUser";
 import CustomPagination from "src/app/component/Pagination/CustomPagination";
@@ -66,7 +37,6 @@ const SubmittedForms = (props) => {
     console.log(users.data);
 
     const [anchorEl, setAnchorEl] = useState(null);
-    const [selectedRow, setSelectedRow] = useState<any>(null);
     const [searchKeyword, setSearchKeyword] = useState("");
     const { pagination } = useSelector(selectGlobalUser)
 
@@ -74,14 +44,12 @@ const SubmittedForms = (props) => {
 
     const navigate = useNavigate();
 
-
     const fetchFormData = (a = searchKeyword, page = 1) => {
         dispatch(getUserAllFormAPI({ page, page_size: pagination?.page_size }, a));
     }
 
     const handleClose = () => {
         setAnchorEl(null);
-        setSelectedRow(null);
     };
 
     const handleEdit = (edit) => {
@@ -94,7 +62,6 @@ const SubmittedForms = (props) => {
     const handleApply = (e, row, edit) => {
         dispatch(slice.setSingleData(row.form));
         dispatch(slice.setFormDataDetails(row.form_data));
-        setSelectedRow(row);
         dispatch(slice.setMode(edit));
         navigate("/forms/create");
     }

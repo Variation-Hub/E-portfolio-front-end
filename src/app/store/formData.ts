@@ -114,7 +114,7 @@ export const deleteFormHandler = (id) => async (dispatch) => {
     }
 }
 
-export const getFormDataAPI = (data = { page: 1, page_size: 10 }, search_keyword = "") => async (dispatch) => {
+export const getFormDataAPI = (data = { page: 1, page_size: 10 }, search_keyword = "", user_id = "") => async (dispatch) => {
 
     try {
 
@@ -126,6 +126,9 @@ export const getFormDataAPI = (data = { page: 1, page_size: 10 }, search_keyword
 
         if (search_keyword) {
             url = `${url}&keyword=${search_keyword}`
+        }
+        if (user_id) {
+            url = `${url}&user_id=${user_id}`
         }
 
         const response = await axios.get(url);
@@ -158,13 +161,16 @@ export const createUserFormDataAPI = (data) => async (dispatch) => {
 }
 
 // get User form
-export const getUserFormDataAPI = (form_id) => async (dispatch) => {
+export const getUserFormDataAPI = (form_id, user_id) => async (dispatch) => {
 
     try {
 
         dispatch(slice.setLoader());
 
         let url = `${URL_BASE_LINK}/form/user/${form_id}`;
+        if (user_id) {
+            url = `${url}?user_id=${user_id}`
+        }
 
         const response = await axios.get(url);
         // dispatch(showMessage({ message: response.data.message, variant: "success" }))

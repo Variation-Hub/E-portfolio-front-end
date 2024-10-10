@@ -24,12 +24,14 @@ import { useSelector } from "react-redux";
 import "formiojs/dist/formio.full.css";
 import { UserRole } from "src/enum";
 import { selectUser } from "app/store/userSlice";
+import { selectGlobalUser } from "app/store/globalUser";
 
 const AddForms = (props) => {
   const { data, formDataDetails, dataUpdatingLoadding, singleData, mode, singleFrom = null, modeTemaplate = '' } = useSelector(selectFormData);
   console.log(formDataDetails);
 
   const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
+  const currentUser = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectGlobalUser)?.currentUser;
 
   const navigate = useNavigate();
   const dispatch: any = useDispatch();
@@ -78,7 +80,9 @@ const AddForms = (props) => {
 
   const handleCloseForm = () => {
     navigate("/forms");
-    dispatch(slice.setSingleData({}));
+    dispatch(slice.setSingleData({
+      form_data: []
+    }));
     dispatch(slice.setMode(""));
     setFormData({
       id: null,
@@ -103,8 +107,10 @@ const AddForms = (props) => {
   };
 
   useEffect(() => {
-    if (user.role !== UserRole.Admin)
-      dispatch(getUserFormDataAPI(singleData.id));
+    if (user.role !== UserRole.Admin) {
+      const userId = currentUser.role !== UserRole.Admin ? currentUser.user_id : undefined;
+      dispatch(getUserFormDataAPI(singleData.id, userId));
+    }
   }, [dispatch]);
 
   const handleSubmitForm = async (data) => {
@@ -112,12 +118,13 @@ const AddForms = (props) => {
       let response;
       if (user.role !== UserRole.Admin) {
         response = await dispatch(
-          createUserFormDataAPI({ form_id: singleData.id, form_data: data })
+          createUserFormDataAPI({ form_id: singleData.id, form_data: data, user_id: currentUser.user_id })
         );
-        navigate("/forms");
       }
     } catch (err) {
       console.log(err);
+    } finally {
+      handleCloseForm()
     }
   };
 

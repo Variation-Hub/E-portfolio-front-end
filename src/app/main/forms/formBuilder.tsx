@@ -51,6 +51,7 @@ import CustomPagination from "src/app/component/Pagination/CustomPagination";
 
 const FormBuilder = (props) => {
     const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
+    const currentUser = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectGlobalUser)?.currentUser;
 
     const { singleData, users, meta_data, dataUpdatingLoadding, dataFetchLoading } = useSelector(selectFormData);
 
@@ -68,7 +69,9 @@ const FormBuilder = (props) => {
 
 
     const fetchFormData = (a = searchKeyword, page = 1) => {
-        dispatch(getFormDataAPI({ page, page_size: pagination?.page_size }, a));
+        const userId = currentUser.role !== UserRole.Admin ? currentUser.user_id : undefined;
+
+        dispatch(getFormDataAPI({ page, page_size: pagination?.page_size }, a, userId));
     }
 
     useEffect(() => {
@@ -171,8 +174,10 @@ const FormBuilder = (props) => {
     };
 
     const searchAPIHandler = () => {
+        const userId = currentUser.role !== UserRole.Admin ? currentUser.user_id : undefined;
+
         dispatch(
-            getFormDataAPI({ page: 1, page_size: pagination?.page_size }, searchKeyword)
+            getFormDataAPI({ page: 1, page_size: pagination?.page_size }, searchKeyword, userId)
         );
     };
 
