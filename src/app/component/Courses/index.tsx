@@ -25,6 +25,7 @@ import {
 import { useSelector } from "react-redux";
 import CloseIcon from "@mui/icons-material/Close";
 import Style from "./style.module.css";
+import { Virtuoso } from 'react-virtuoso';
 
 const generateUnitObject = (unitDataArray = []) => {
   const unitObject = {};
@@ -66,9 +67,23 @@ const inputStyle = {
 
 const row = (mandatoryUnit, setUnitData, edit, removeUnitHandler, addSubUnitHandler, setSubUnitData, removeSubUnitHandler, setSubTopicData, removeSubTopicHandler, addTopicHandler): any => {
   console.log(mandatoryUnit)
-  return Object.values(mandatoryUnit)?.map((item: any) => {
-    return (
-      <div>
+  const Units = Object.keys(mandatoryUnit).map((key) => {
+    return {
+      ...mandatoryUnit[key],
+    };
+  });
+
+  console.log(Units)
+  return <Virtuoso
+    style={{
+      minHeight: '3000px',
+      // background: '#f8f8f8'
+      // border: "1px solid red"
+    }}
+    totalCount={Units?.length}
+    itemContent={index => {
+      const item = Units[index];
+      return <div>
         <div className="w-full flex gap-24 items-center ">
           <TextField
             size="small"
@@ -92,17 +107,6 @@ const row = (mandatoryUnit, setUnitData, edit, removeUnitHandler, addSubUnitHand
             style={inputStyle}
             disabled={edit === "view"}
           />
-
-          {/* <Autocomplete
-                                    // disableClearable
-                                    renderInput={(params) => <TextField variant="standard" {...params}
-                                        value={item?.mandatory}
-                                        name="mandatory" />}
-                                    className='w-1/5'
-                                    options={[{ value: true, name: "Mandatory Unit" }, { value: false, name: "Optional Unit" }]}
-                                    getOptionLabel={(option) => option.name}
-                                    onChange={(e, value) => setUnitData(item?.id, { name: "mandatory", value: value.value })}
-                                /> */}
           <FormControl variant="standard" className="w-1/5">
             <Select
               labelId={`select-label-${item?.id}`}
@@ -280,8 +284,8 @@ const row = (mandatoryUnit, setUnitData, edit, removeUnitHandler, addSubUnitHand
             );
           })}
       </div>
-    );
-  })
+    }}
+  />
 }
 
 const CourseBuilder = (props) => {
@@ -302,7 +306,7 @@ const CourseBuilder = (props) => {
     'Key Skills - unknown', 'MAIN', 'NVQ', 'PLTS', 'SVQ', 'TECH', 'VCQ', 'VRQ'
   ];
 
-
+  console.log(true, "++++")
   const [courseData, setCourseData] = useState(() => {
     return {
       brand_guidelines: formatText(preFillData?.brand_guidelines) || "",
@@ -833,7 +837,7 @@ const CourseBuilder = (props) => {
         </Box>
 
 
-        {Object.values(mandatoryUnit).length ? (
+        {Object.values(mandatoryUnit)?.length ? (
           row(
             mandatoryUnit, // Render the item at the current index
             setUnitData,
@@ -861,7 +865,7 @@ const CourseBuilder = (props) => {
                         <SecondaryButton name="Add New" onClick={() => addUnitHandler()} />
                     }
                 </Box>
-                {Object.values(optionalUnit).length ?
+                {Object.values(optionalUnit)?.length ?
                     <UnitManagementTable columns={courseManagementUnitColumn} edit={edit} setUnitData={setUnitData} removeUnitHandler={removeUnitHandler} rows={Object.values(optionalUnit)} />
                     :
                     <div className=' text-center opacity-50 mt-10 mb-10'>
