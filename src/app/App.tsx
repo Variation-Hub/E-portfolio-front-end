@@ -34,15 +34,15 @@ const emotionCacheOptions = {
 };
 
 function App() {
-  const user =  JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser).data;
   const langDirection = useSelector(selectCurrentLanguageDirection);
   const mainTheme = useSelector(selectMainTheme);
+  let user = useSelector(selectUser)?.data;
 
   useEffect(() => {
     return () => {
       disconnectFromSocket()
     }
-  },[])
+  }, [])
 
   return (
     <CacheProvider value={createCache(emotionCacheOptions[langDirection])}>

@@ -72,23 +72,23 @@ class JwtService extends FuseUtils.EventEmitter {
             axios
                 .post(`${URL_BASE_LINK}/user/login`, payload)
                 .then(async (response) => {
-                    if (response.data.status) {
-                        const data = response.data.data;
-                        const decoded = jwtDecode(data.accessToken);
-                        if (decoded.role === 'Learner') {
+                    if (response?.data?.status) {
+                        const data = response?.data?.data;
+                        const decoded = jwtDecode(data?.accessToken);
+                        if (decoded?.role === 'Learner') {
                             sessionStorage.setItem('learnerToken', JSON.stringify({ ...data, user: { ...data.user, displayName: data.user.first_name + " " + data.user.last_name } }));
                         }
-                        connectToSocket(decoded.user_id, dispatch);
+                        connectToSocket(decoded?.user_id, dispatch);
                         dispatch(slice.setCurrentUser(data.user))
                         if (data.password_changed) {
                             this.setSession(data.accessToken);
                             this.emit('onLogin', decoded);
                         } else {
                             sessionStorage.setItem('email', decoded?.email);
-                            resolve({ token: data.accessToken, decoded });
+                            resolve({ token: data?.accessToken, decoded });
                         }
                     } else {
-                        reject(response.data.error);
+                        reject(response?.data.error);
                     }
                 })
                 .catch((err) => reject(err));
