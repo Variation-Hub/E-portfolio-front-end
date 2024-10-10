@@ -10,7 +10,7 @@ const TNAUnits = (props) => {
 
     const { handleTabChange } = props
     const { learner, courseData, dataFetchLoading } = useSelector(selectLearnerManagement);
-  const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
+    const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
 
 
     const dispatch: any = useDispatch();

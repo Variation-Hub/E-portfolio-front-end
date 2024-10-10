@@ -13,7 +13,7 @@
             ret = p in div.style;
         if (!ret) {
             p = p.charAt(0).toUpperCase() + p.substr(1);
-            for (i = 0; i < prefixes.length; i += 1) {
+            for (i = 0; i < prefixes?.length; i += 1) {
                 ret = prefixes[i] + p in div.style;
                 if (ret) {
                     break;
@@ -72,7 +72,7 @@
             'none': '&#xe92c;',
             'celsius': '&#xe92d;',
             'fahrenheit': '&#xe92e;',
-          '0': 0
+            '0': 0
         };
         delete icons['0'];
         window.icomoonLiga = function (els) {
@@ -82,7 +82,7 @@
                 innerHTML,
                 key;
             els = els || document.getElementsByTagName('*');
-            if (!els.length) {
+            if (!els?.length) {
                 els = [els];
             }
             for (i = 0; ; i += 1) {
@@ -93,7 +93,7 @@
                 classes = el.className;
                 if (/icomoon-liga/.test(classes)) {
                     innerHTML = el.innerHTML;
-                    if (innerHTML && innerHTML.length > 1) {
+                    if (innerHTML && innerHTML?.length > 1) {
                         for (key in icons) {
                             if (icons.hasOwnProperty(key)) {
                                 innerHTML = innerHTML.replace(new RegExp(key, 'g'), icons[key]);

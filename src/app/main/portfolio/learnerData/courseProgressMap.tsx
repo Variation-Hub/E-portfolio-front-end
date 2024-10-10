@@ -70,7 +70,7 @@ const CourseProgressMap = () => {
 
   const toggleAllCourses = () => {
     setExpandedCourses(prev =>
-      prev.length === courseList.length ? [] : courseList.map(course => course.course_id)
+      prev?.length === courseList?.length ? [] : courseList.map(course => course.course_id)
     )
   }
 
@@ -155,10 +155,10 @@ const CourseProgressMap = () => {
           <SecondaryButtonOutlined
             className="flex items-center justify-center min-w-20 max-h-20 text-xl p-0"
             onClick={toggleAllCourses}
-            name={expandedCourses.length === courseList.length ? '-' : '+'}
+            name={expandedCourses?.length === courseList?.length ? '-' : '+'}
           />
           Open all units/Close all units
-          {/* {expandedCourses.length === courseList.length ? 'Close all units' : 'Open all units'} */}
+          {/* {expandedCourses?.length === courseList?.length ? 'Close all units' : 'Open all units'} */}
         </div>
         <div className='m-14'>
           <Typography className='py-8 capitalize text-2xl font-normal'>Overall Progress</Typography>

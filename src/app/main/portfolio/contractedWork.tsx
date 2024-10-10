@@ -139,7 +139,7 @@ const ContractedWorkHours = () => {
             <TableContainer sx={{ minHeight: 550, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
                 {/* {dataFetchLoading ? (
                     <FuseLoading />
-                ) : innovation.data.length ? ( */}
+                ) : innovation.data?.length ? ( */}
                 <Table
                     sx={{ minWidth: 650, height: "100%" }}
                     size="small"

@@ -34,7 +34,7 @@ export const setUser = (user) => async (dispatch) => {
   dispatch(userSlice.actions.setUserDetails(userData))
 
   const data = window.location.href.split("/");
-  if (data[data.length - 1] === "sign-in" || data[data.length - 1] === "forgot" || data[data.length - 1] === "reset") {
+  if (data[data?.length - 1] === "sign-in" || data[data?.length - 1] === "forgot" || data[data?.length - 1] === "reset") {
     if (user?.role === "Learner") {
       history.push("/portfolio");
     } else {

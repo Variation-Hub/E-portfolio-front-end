@@ -123,7 +123,7 @@ const Index = () => {
           </div>
           {dataFetchLoading ? (
             <FuseLoading />
-          ) : data.length ? (
+          ) : data?.length ? (
             <EmployerManagementTable
               columns={employerManagementTableColumn}
               rows={data}

@@ -371,7 +371,7 @@ const ProposeYourInnovations = (props) => {
         <TableContainer sx={{ minHeight: 550, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
           {dataFetchLoading ? (
             <FuseLoading />
-          ) : innovation.data.length ? (
+          ) : innovation.data?.length ? (
             <Table
               sx={{ minWidth: 650, height: "100%" }}
               size="small"
@@ -613,9 +613,9 @@ const ProposeYourInnovations = (props) => {
               <>
                 <SecondaryButtonOutlined onClick={handleCloseDialog} name="Cancel" />
                 <SecondaryButton
-                  name={Object.keys(singleData).length !== 0 ? "Edit" : "Save"}
+                  name={Object.keys(singleData)?.length !== 0 ? "Edit" : "Save"}
                   onClick={
-                    Object.keys(singleData).length !== 0
+                    Object.keys(singleData)?.length !== 0
                       ? handleUpdate
                       : handleSubmit
                   }

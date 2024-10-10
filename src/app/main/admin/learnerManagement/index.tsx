@@ -361,7 +361,7 @@ const Index = () => {
           {dataFetchLoading ? (
             <FuseLoading />
           ) :
-            data.length ?
+            data?.length ?
               <LearnerManagementTable
                 columns={learnerManagementTableColumn}
                 rows={data}

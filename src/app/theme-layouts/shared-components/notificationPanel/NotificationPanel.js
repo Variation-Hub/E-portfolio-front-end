@@ -44,8 +44,8 @@ function NotificationPanel(props) {
 
   useEffect(() => {
     /*
-		Get Notifications from db
-		 */
+    Get Notifications from db
+     */
     dispatch(getNotifications());
   }, [dispatch]);
 
@@ -54,7 +54,7 @@ function NotificationPanel(props) {
       dispatch(closeNotificationPanel());
     }
     // eslint-disable-next-line
-	}, [location, dispatch]);
+  }, [location, dispatch]);
 
   function handleClose() {
     dispatch(closeNotificationPanel());
@@ -90,14 +90,14 @@ function NotificationPanel(props) {
     <StyledSwipeableDrawer
       open={state}
       anchor="right"
-      onOpen={(ev) => {}}
+      onOpen={(ev) => { }}
       onClose={(ev) => dispatch(toggleNotificationPanel())}
       disableSwipeToOpen
     >
       <IconButton className="m-4 absolute top-0 right-0 z-999" onClick={handleClose} size="large">
         <FuseSvgIcon color="action">heroicons-outline:x</FuseSvgIcon>
       </IconButton>
-      {notifications.length > 0 ? (
+      {notifications?.length > 0 ? (
         <FuseScrollbars className="p-16">
           <div className="flex flex-col">
             <div className="flex justify-between items-end pt-136 mb-36">

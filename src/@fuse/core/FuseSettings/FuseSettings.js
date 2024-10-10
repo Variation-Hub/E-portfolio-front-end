@@ -214,7 +214,7 @@ function FuseSettings(props) {
                       {...field}
                       aria-label={formControl.title}
                       className="FuseSettings-group"
-                      row={formControl.options.length < 4}
+                      row={formControl.options?.length < 4}
                     >
                       {formControl.options.map((opt) => (
                         <FormControlLabel

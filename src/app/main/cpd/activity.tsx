@@ -137,7 +137,7 @@ const AddNewDialogContent = (props) => {
   const dispatch: any = useDispatch();
 
   const handleUploadButtonClick = async () => {
-    if (files.length > 5) {
+    if (files?.length > 5) {
       dispatch(
         showMessage({
           message: "You can only upload up to 5 files.",
@@ -406,7 +406,7 @@ const AddNewDialogContent = (props) => {
                         className="w-64 pb-8"
                       />
                     </div>
-                    {files.length > 0 ? (
+                    {files?.length > 0 ? (
                       files.map((file, index) => (
                         <p className="text-center mb-4" key={index}>
                           {file.name}
@@ -466,7 +466,7 @@ const AddNewDialogContent = (props) => {
               variant="contained"
               color="primary"
               onClick={handleUploadButtonClick}
-              disabled={files.length === 0}
+              disabled={files?.length === 0}
             >
               Upload
             </Button>
@@ -664,10 +664,10 @@ const Activity = (props) => {
     (page - 1) * rowsPerPage,
     page * rowsPerPage
   );
-  const pageCount = Math.ceil(allActivities.length / rowsPerPage);
+  const pageCount = Math.ceil(allActivities?.length / rowsPerPage);
   console.log("page :", page);
   console.log("pages :", pageCount);
-  console.log("items :", allActivities.length);
+  console.log("items :", allActivities?.length);
 
   return (
     <>
@@ -675,7 +675,7 @@ const Activity = (props) => {
         <TableContainer sx={{ minHeight: 580, display: "flex", flexDirection: "column", justifyContent: "space-between" }} className="-m-12">
           {dataFetchLoading ? (
             <FuseLoading />
-          ) : paginatedData.length ? (
+          ) : paginatedData?.length ? (
             <Table
               sx={{ minWidth: 650, height: "100%" }}
               size="small"
@@ -778,7 +778,7 @@ const Activity = (props) => {
             pages={pageCount}
             page={page}
             handleChangePage={handlePageChange}
-            items={allActivities.length}
+            items={allActivities?.length}
           />
         </TableContainer>
       </div>

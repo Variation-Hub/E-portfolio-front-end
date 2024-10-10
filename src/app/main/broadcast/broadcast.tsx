@@ -265,7 +265,7 @@ const Broadcast = (props) => {
           <TableContainer sx={{ minHeight: 550, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
             {dataFetchLoading ? (
               <FuseLoading />
-            ) : broadcast.data.length ? (
+            ) : broadcast.data?.length ? (
               <Table
                 sx={{ minWidth: 650, height: "100%" }}
                 size="small"
@@ -392,7 +392,7 @@ const Broadcast = (props) => {
                 </Typography>
               </div>
             )}
-            {broadcast.data.length ?
+            {broadcast.data?.length ?
               <CustomPagination
                 pages={meta_data?.pages}
                 page={meta_data?.page}
@@ -482,9 +482,9 @@ const Broadcast = (props) => {
                   name="Cancel"
                 />
                 <SecondaryButton
-                  name={Object.keys(singleData).length !== 0 ? "Edit" : "Save"}
+                  name={Object.keys(singleData)?.length !== 0 ? "Edit" : "Save"}
                   onClick={
-                    Object.keys(singleData).length !== 0
+                    Object.keys(singleData)?.length !== 0
                       ? handleUpdate
                       : handleSubmit
                   }

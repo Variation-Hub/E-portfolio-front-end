@@ -33,7 +33,7 @@ const ResourcesCard = () => {
 
   return (
     <>
-      {data.length ?
+      {data?.length ?
         <div className="m-4 flex items-center justify-between">
           <div className="w-2/4 flex gap-12">
           </div>
@@ -41,7 +41,7 @@ const ResourcesCard = () => {
         : null}
 
       {dataFetchLoading ? <FuseLoading /> :
-        data.length ?
+        data?.length ?
           <ResouresTable
             columns={resourceManagementTableColumn}
             rows={data}

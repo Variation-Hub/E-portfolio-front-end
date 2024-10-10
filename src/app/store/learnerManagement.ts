@@ -167,13 +167,13 @@ export const getRoleAPI = (role) => async (dispatch) => {
         return false
     };
 }
-export const getLearnerDetails = (data = "") => async (dispatch, getStore) => {
+export const getLearnerDetails = (learner_id = "") => async (dispatch, getStore) => {
     try {
         dispatch(slice.setUpdatingLoader(true));
-        const id = data || getStore()?.user?.data?.id
+        const id = learner_id || getStore()?.user?.data?.id
         const response = await axios.get(`${URL_BASE_LINK}/learner/get/${id}`,)
         dispatch(slice.learnerDetails(response.data.data));
-        return true;
+        return response.data.data;
     } catch (err) {
         dispatch(showMessage({ message: err.response.data.message, variant: "error" }))
         return false;

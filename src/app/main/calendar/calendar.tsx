@@ -131,7 +131,7 @@ const Calendar = () => {
           >
             {session?.dataFetchLoading ? (
               <FuseLoading />
-            ) : session?.data.length ? (
+            ) : session?.data?.length ? (
               <Table
                 sx={{ minWidth: 650, height: "100%" }}
                 size="small"
@@ -255,7 +255,7 @@ const Calendar = () => {
                               {...params}
                               placeholder="Select funding body"
                               name="funding_body"
-                              // error={true || userDataError?.funding_body}
+                            // error={true || userDataError?.funding_body}
                             />
                           )}
                           onChange={async (e, value) => {
@@ -362,7 +362,7 @@ const Calendar = () => {
               handleEdit();
               handleClose();
             }}
-            // disabled={data.role !== "Admin" && session?.singleData.status === "Closed"}
+          // disabled={data.role !== "Admin" && session?.singleData.status === "Closed"}
           >
             Edit
           </MenuItem>
@@ -401,9 +401,9 @@ const Calendar = () => {
                 name="Cancel"
               />
               <SecondaryButton
-                name={Object.keys(session?.singleData).length !== 0 ? "Edit" : "Save"}
+                name={Object.keys(session?.singleData)?.length !== 0 ? "Edit" : "Save"}
               // onClick={
-              //   Object.keys(session?.singleData).length !== 0
+              //   Object.keys(session?.singleData)?.length !== 0
               //     ? handleUpdate
               //     : handleSubmit
               // }

@@ -5,7 +5,7 @@ import deepEqual from 'lodash/isEqual';
  * https://github.com/kentcdodds/use-deep-compare-effect
  */
 function checkDeps(deps) {
-  if (!deps || !deps.length) {
+  if (!deps || !deps?.length) {
     throw new Error(
       'useDeepCompareEffect should not be used with no dependencies. Use React.useEffect instead.'
     );
@@ -36,12 +36,12 @@ function useDeepCompareEffect(callback, dependencies) {
     checkDeps(dependencies);
   }
   // eslint-disable-next-line
-	useEffect(callback, useDeepCompareMemoize(dependencies));
+  useEffect(callback, useDeepCompareMemoize(dependencies));
 }
 
 export function useDeepCompareEffectNoCheck(callback, dependencies) {
   // eslint-disable-next-line
-	useEffect(callback, useDeepCompareMemoize(dependencies));
+  useEffect(callback, useDeepCompareMemoize(dependencies));
 }
 
 export default useDeepCompareEffect;

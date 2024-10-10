@@ -20,7 +20,7 @@ function NotificationPanelToggleButton(props) {
       size="large"
       sx={style}
     >
-      <Badge color="error" variant="dot" invisible={notifications.length === 0}>
+      <Badge color="error" variant="dot" invisible={notifications?.length === 0}>
         {props.children}
       </Badge>
     </IconButton>

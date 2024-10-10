@@ -441,7 +441,7 @@ const Planning = (props) => {
       <TableContainer sx={{ maxHeight: 440 }} className="-m-12">
         {dataFetchLoading ? (
           <FuseLoading />
-        ) : cpdPlanningData.data.length ? (
+        ) : cpdPlanningData.data?.length ? (
           <Table stickyHeader aria-label="sticky table" size="small">
             <TableHead>
               <TableRow>
@@ -520,7 +520,7 @@ const Planning = (props) => {
         <TablePagination
           rowsPerPageOptions={[10, 25, 100]}
           component="div"
-          count={rows.length}
+          count={rows?.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}

@@ -14,25 +14,13 @@ import {
   SecondaryButton,
 } from "src/app/component/Buttons";
 import {
-  createActivityAPI,
-  createCpdPlanningAPI,
-  createEvaluationAPI,
-  createReflectionAPI,
   selectCpdPlanning,
-  updateActivityAPI,
-  updateCpdPlanningAPI,
-  updateEvaluationAPI,
-  updateReflectionsAPI,
 } from "app/store/cpdPlanning";
-import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import Style from "./style.module.css"
 import { selectstoreDataSlice } from "app/store/reloadData";
-
-// Separate components for dialog content
-
-const ExportPdfDialogContent = () => <div>Hello PDF In Evaluation</div>;
+import { selectGlobalUser } from "app/store/globalUser";
+import { UserRole } from "src/enum";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -72,6 +60,7 @@ const Cpd = () => {
   const [value, setValue] = useState(0);
   const [dialogType, setDialogType] = useState<string | null>(data.dialogType);
   const { user_id } = useSelector(selectstoreDataSlice)
+  const { currentUser } = useSelector(selectGlobalUser);
 
   const handleTabChange = (event, newValue) => {
     setValue(newValue);
@@ -169,7 +158,7 @@ const Cpd = () => {
           </Tabs>
 
           <div className={`flex space-x-4 mr-12 ${Style.addplan_btn}`}>
-            {(value === 0 && user_id === null) && (
+            {(value === 0 && user_id === null && currentUser?.role === UserRole.Learner) && (
               <SecondaryButton
                 className="p-12"
                 name="Add Plan"
@@ -177,7 +166,7 @@ const Cpd = () => {
                 onClick={() => handleClickOpen("addPlan")}
               />
             )}
-            {(value === 1 && user_id === null) && (
+            {(value === 1 && user_id === null && currentUser?.role === UserRole.Learner) && (
               <SecondaryButton
                 className="p-12"
                 name="Add New"
@@ -193,15 +182,15 @@ const Cpd = () => {
                   startIcon={<AddIcon sx={{ mx: -0.5 }} />}
                   onClick={() => handleClickOpen("exportPdf")}
                 />
-                <SecondaryButton
+                {currentUser?.role === UserRole.Learner && <SecondaryButton
                   className="p-12"
                   name="Add New"
                   startIcon={<AddIcon sx={{ mx: -0.5 }} />}
                   onClick={() => handleClickOpen("addNewEvaluation")}
-                />
+                />}
               </>
             )}
-            {(value === 3 && user_id === null) && (
+            {(value === 3 && user_id === null && currentUser?.role === UserRole.Learner) && (
               <SecondaryButton
                 className="p-12"
                 name="Add Reflection"

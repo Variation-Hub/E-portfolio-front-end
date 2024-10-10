@@ -81,7 +81,7 @@ const CourseBuilder = () => {
   return (
     <>
       <Card className="mx-10 rounded-6" style={{ height: "100%", overflowY: "scroll" }}>
-        {data.length || searchKeyword ? (
+        {data?.length || searchKeyword ? (
           <div className={`m-12 flex items-center justify-between mt-10 ${Style.Search_container}`}>
             <TextField
               label="Search by keyword"
@@ -154,7 +154,7 @@ const CourseBuilder = () => {
 
         {dataFetchLoading ? (
           <FuseLoading />
-        ) : data.length ? (
+        ) : data?.length ? (
           <CourseManagementTable
             columns={courseManagementTableColumn}
             rows={data}

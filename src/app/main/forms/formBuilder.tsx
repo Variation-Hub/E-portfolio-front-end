@@ -240,7 +240,7 @@ const FormBuilder = (props) => {
                     <TableContainer sx={{ minHeight: 580, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
                         {dataFetchLoading ? (
                             <FuseLoading />
-                        ) : formdata.data.length ? (
+                        ) : formdata.data?.length ? (
                             <Table
                                 sx={{ minWidth: 650, heighFaddt: "100%" }}
                                 size="small"

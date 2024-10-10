@@ -129,7 +129,7 @@ const AddNewEvaluationDialogContent = (props) => {
 
   const handleUploadButtonClick = async () => {
     setUploadedFiles(files);
-    if (files.length > 5) {
+    if (files?.length > 5) {
       dispatch(
         showMessage({
           message: "You can only upload up to 5 files.",
@@ -307,7 +307,7 @@ const AddNewEvaluationDialogContent = (props) => {
                         className="w-64 pb-8"
                       />
                     </div>
-                    {files.length > 0 ? (
+                    {files?.length > 0 ? (
                       files.map((file, index) => (
                         <p className="text-center mb-4" key={index}>
                           {file.name}
@@ -367,7 +367,7 @@ const AddNewEvaluationDialogContent = (props) => {
               variant="contained"
               color="primary"
               onClick={handleUploadButtonClick}
-              disabled={files.length === 0}
+              disabled={files?.length === 0}
             >
               Upload
             </Button>
@@ -538,7 +538,7 @@ const Evaluation = (props) => {
     (page - 1) * rowsPerPage,
     page * rowsPerPage
   );
-  const pageCount = Math.ceil(allEvaluations.length / rowsPerPage);
+  const pageCount = Math.ceil(allEvaluations?.length / rowsPerPage);
 
   return (
     <>
@@ -546,7 +546,7 @@ const Evaluation = (props) => {
         <TableContainer sx={{ minHeight: 580, display: "flex", flexDirection: "column", justifyContent: "space-between" }} className="-m-12">
           {dataFetchLoading ? (
             <FuseLoading />
-          ) : paginatedData.length ? (
+          ) : paginatedData?.length ? (
             <Table stickyHeader aria-label="sticky table" size="small">
               <TableHead>
                 <TableRow>
@@ -649,7 +649,7 @@ const Evaluation = (props) => {
             pages={pageCount}
             page={page}
             handleChangePage={handlePageChange}
-            items={allEvaluations.length}
+            items={allEvaluations?.length}
           />
         </TableContainer>
       </div>

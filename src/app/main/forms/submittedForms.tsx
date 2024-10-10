@@ -60,7 +60,7 @@ import CustomPagination from "src/app/component/Pagination/CustomPagination";
 
 const SubmittedForms = (props) => {
 
-  const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
+    const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
 
     const { singleData, users, meta_data, dataUpdatingLoadding, dataFetchLoading } = useSelector(selectFormData);
     console.log(users.data);
@@ -187,7 +187,7 @@ const SubmittedForms = (props) => {
                     <TableContainer sx={{ minHeight: 580, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
                         {dataFetchLoading ? (
                             <FuseLoading />
-                        ) : formdata.data.length ? (
+                        ) : formdata.data?.length ? (
                             <Table
                                 sx={{ minWidth: 650, heighFaddt: "100%" }}
                                 size="small"

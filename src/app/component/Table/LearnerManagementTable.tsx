@@ -272,7 +272,7 @@ export default function LearnerManagementTable(props) {
                                 </div>
                               </>
                             ) : column.id === "course" ? (
-                              row?.course && row.course.length > 0 ? (
+                              row?.course && row.course?.length > 0 ? (
                                 <AvatarGroup
                                   max={4}
                                   className="items-center gap-8"

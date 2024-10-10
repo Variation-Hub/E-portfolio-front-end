@@ -10,11 +10,11 @@ const ProgressMap = () => {
   const { learner } = useSelector(selectLearnerManagement);
 
   const [selectedCourse, setSelectedCourse] = useState(
-    (learner?.course && learner.course.length > 0) ? learner.course[0] : {}
+    (learner?.course && learner.course?.length > 0) ? learner.course[0] : {}
   );
 
   const [selectedUnit, setSelectedUnit] = useState(
-    (learner?.course && learner.course.length > 0 && learner.course[0]?.units && learner.course[0].units.length > 0)
+    (learner?.course && learner.course?.length > 0 && learner.course[0]?.units && learner.course[0].units?.length > 0)
       ? learner.course[0].units[0]
       : {}
   );
@@ -24,9 +24,9 @@ const ProgressMap = () => {
   const dispatch: any = useDispatch();
 
   useEffect(() => {
-    if (learner?.course && learner.course.length > 0) {
+    if (learner?.course && learner.course?.length > 0) {
       setSelectedCourse(learner.course[0]);
-      if (learner.course[0]?.units && learner.course[0].units.length > 0) {
+      if (learner.course[0]?.units && learner.course[0].units?.length > 0) {
         setSelectedUnit(learner.course[0].units[0]);
       } else {
         setSelectedUnit({}); // Fallback if no units are available
@@ -36,21 +36,21 @@ const ProgressMap = () => {
       setSelectedUnit({}); // Fallback if no course is available
     }
   }, [learner?.course]);
-  
+
   useEffect(() => {
     if (learnerData?.learner_id) {
       dispatch(getLearnerDetails(learnerData.learner_id));
     }
   }, [learnerData?.learner_id]);
-  
+
   useEffect(() => {
-    if (selectedCourse?.units && selectedCourse.units.length > 0) {
+    if (selectedCourse?.units && selectedCourse.units?.length > 0) {
       setSelectedUnit(selectedCourse.units[0]);
     } else {
       setSelectedUnit({}); // Fallback if no units are available
     }
   }, [selectedCourse]);
-  
+
 
   return (
     <div style={{ padding: 16, width: '100%' }}>
@@ -93,7 +93,7 @@ const ProgressMap = () => {
                 setSelectedUnit(newValue);
               }}
               options={selectedCourse?.course?.units}
-              getOptionLabel={(option:any) => option?.title}
+              getOptionLabel={(option: any) => option?.title}
               renderInput={(params) => <TextField {...params} label="Select Unit" variant="outlined" />}
             />
           )}

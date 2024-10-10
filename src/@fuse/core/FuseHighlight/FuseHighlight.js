@@ -35,7 +35,7 @@ function FuseHighlight(props) {
         sourceLines.shift();
       }
 
-      if (!sourceLines[sourceLines.length - 1].trim()) {
+      if (!sourceLines[sourceLines?.length - 1].trim()) {
         sourceLines.pop();
       }
 
@@ -50,10 +50,10 @@ function FuseHighlight(props) {
       sourceLines.forEach((line, index) => {
         // Trim the beginning white space depending on the index
         // and concat the source code
-        sourceRaw += line.substr(indexOfFirstChar, line.length);
+        sourceRaw += line.substr(indexOfFirstChar, line?.length);
 
         // If it's not the last line...
-        if (index !== sourceLines.length - 1) {
+        if (index !== sourceLines?.length - 1) {
           // Add a line break at the end
           sourceRaw = `${sourceRaw}\n`;
         }

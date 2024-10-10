@@ -233,7 +233,6 @@ export const courseAllocationAPI = (data) => async (dispatch) => {
         return true;
 
     } catch (err) {
-
         dispatch(showMessage({ message: err.response.data.message, variant: "error" }))
         return false;
     };

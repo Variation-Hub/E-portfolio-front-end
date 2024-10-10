@@ -1,37 +1,26 @@
 import React, { useEffect, useState } from "react";
-import Breadcrumb from "src/app/component/Breadcrumbs";
 import { DangerButton, LoadingButton, SecondaryButton, SecondaryButtonOutlined } from "src/app/component/Buttons";
 import DataNotFound from "src/app/component/Pages/dataNotFound";
-import { AdminRedirect, AssignmentRedirect, roles } from "src/app/contanst";
 import Style from "./style.module.css";
 import { useSelector } from "react-redux";
 import {
-  Autocomplete,
   Avatar,
   AvatarGroup,
   Card,
   Dialog,
-  Drawer,
   IconButton,
-  InputAdornment,
   Menu,
   MenuItem,
-  Pagination,
-  Paper,
-  Stack,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  TextField,
   Typography,
 } from "@mui/material";
 import { useDispatch } from "react-redux";
 import FuseLoading from "@fuse/core/FuseLoading";
-import Close from "@mui/icons-material/Close";
-import SearchIcon from "@mui/icons-material/Search";
 import { Link, useNavigate } from "react-router-dom";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import FileCopyIcon from '@mui/icons-material/FileCopy';
@@ -41,6 +30,8 @@ import { deleteAssignmentHandler, getAssignmentAPI, selectAssignment, slice } fr
 import { selectUser } from "app/store/userSlice";
 import Uploading from "src/app/component/Cards/uploading";
 import UploadWorkDialog from "src/app/component/Cards/uploadWorkDialog";
+import { UserRole } from "src/enum";
+import { selectGlobalUser } from "app/store/globalUser";
 
 
 interface Column {
@@ -72,17 +63,14 @@ const CreateAssignment = (props) => {
   const { data, dataFetchLoading, dataUpdatingLoadding, singleData } = useSelector(selectAssignment);
 
   const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
+  const { currentUser } = useSelector(selectGlobalUser);
 
   const dispatch: any = useDispatch();
-  const navigate = useNavigate();
 
   const [deleteId, setDeleteId] = useState("");
   const [open, setOpen] = useState(false);
   const [openForm, setOpenForm] = useState(false);
   const [openFile, setOpenFile] = useState(false);
-  const [updateData, setUpdateData] = useState("");
-  const [searchKeyword, setSearchKeyword] = useState("");
-  const [filterValue, setFilterValue] = useState("");
   const [openMenuDialog, setOpenMenuDialog] = useState<any>({});
   const [edit, setEdit] = useState("Save");
 
@@ -146,7 +134,6 @@ const CreateAssignment = (props) => {
 
   const handleClose = () => {
     setEdit("save");
-    setUpdateData("");
     setAnchorEl(null);
     setOpen(false);
     setOpenForm(false);
@@ -158,10 +145,6 @@ const CreateAssignment = (props) => {
   //     searchAPIHandler();
   //   }
   // };
-
-  const searchHandler = (e) => {
-    setSearchKeyword(e.target.value);
-  };
 
   // const filterHandler = (e, value) => {
   //   setFilterValue(value);
@@ -199,13 +182,13 @@ const CreateAssignment = (props) => {
 
   let allActivities = data?.flatMap(item => item?.activities ? item.activities : []);
   const paginatedData = allActivities.slice((page - 1) * rowsPerPage, page * rowsPerPage);
-  const pageCount = Math.ceil(allActivities.length / rowsPerPage);
+  const pageCount = Math.ceil(allActivities?.length / rowsPerPage);
 
   return (
     <Card className="m-12 rounded-6" style={{ height: "87.3vh" }}>
       <div className="w-full h-full py-20">
         {/* <Breadcrumb linkData={[AssignmentRedirect]} currPage="User" /> */}
-        {/* {data.length ? ( */}
+        {/* {data?.length ? ( */}
         <div className={Style.create_user}>
           <div className={Style.search_filed}>
             {/* <TextField
@@ -270,7 +253,7 @@ const CreateAssignment = (props) => {
               )}
             /> */}
           </div>
-          <SecondaryButton
+          {(currentUser.role === UserRole.Learner) && <SecondaryButton
             name="Upload Files"
             className="py-6 px-12 mb-10"
             startIcon={
@@ -281,16 +264,16 @@ const CreateAssignment = (props) => {
               />
             }
             onClick={handleOpen}
-          />
+          />}
         </div>
         {/* ) : null} */}
         <div>
-          <TableContainer sx={{ maxHeight: 550 ,paddingBottom:"2rem"}}>
+          <TableContainer sx={{ maxHeight: 550, paddingBottom: "2rem" }}>
             {dataFetchLoading ? (
               <FuseLoading />
-            ) : data.length ? (
+            ) : data?.length ? (
               <Table
-              stickyHeader 
+                stickyHeader
                 sx={{ minWidth: 650, height: "100%" }}
                 size="small"
                 aria-label="simple table"

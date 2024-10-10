@@ -36,7 +36,7 @@ function Notification(props) {
   // }, [notification])
 
   React.useEffect(() => {
-    setDot(notification.filter(n => !n.read).length > 0);
+    setDot(notification.filter(n => !n.read)?.length > 0);
   }, [notification])
 
   const handleClick = (event) => {
@@ -95,7 +95,7 @@ function Notification(props) {
         }}
       >
         <Grid className='flex flex-col items-center h-360 w-320 '>
-          {notification.length === 0 ? (
+          {notification?.length === 0 ? (
             <>
               <div className='flex flex-col items-center justify-center pt-44'>
                 <div>
@@ -126,11 +126,11 @@ function Notification(props) {
 
                     <ListItemText>
                       <Typography style={{ fontWeight: notification.read ? 'normal' : 'bold' }}>
-                        {notification.title.slice(0, 20) + (notification.title.length > 20 ? '...' : '')}
+                        {notification.title.slice(0, 20) + (notification.title?.length > 20 ? '...' : '')}
                       </Typography>
                       <Tooltip title={notification.message}>
                         <Typography style={{ fontWeight: notification.read ? 'normal' : 'bold' }}>
-                          {notification.message.slice(0, 25) + (notification.message.length > 25 ? '...' : '')}
+                          {notification.message.slice(0, 25) + (notification.message?.length > 25 ? '...' : '')}
                         </Typography>
                       </Tooltip>
                     </ListItemText>

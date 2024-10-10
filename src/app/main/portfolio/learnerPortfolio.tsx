@@ -14,6 +14,8 @@ import { useSelector } from 'react-redux';
 import { selectUser } from 'app/store/userSlice';
 import { sendMail } from 'app/store/userManagement';
 import NewSession from './newsession';
+import { UserRole } from 'src/enum';
+import { selectGlobalUser } from 'app/store/globalUser';
 
 function LinearProgressWithLabel(props) {
     const { color, value } = props;
@@ -34,13 +36,12 @@ function LinearProgressWithLabel(props) {
 function LearnerPortfolio() {
 
     const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
-
+    const { currentUser } = useSelector(selectGlobalUser);
     const { learner } = useSelector(
         selectLearnerManagement
     );
 
     const navigate = useNavigate();
-    const [openUploadWork, setOpenUploadWork] = useState(false);
     const [openSession, setOpenSession] = useState(false);
     const [openCalender, setOpenCalender] = useState(false);
     const [value, setValue] = useState<number>(0);
@@ -92,7 +93,6 @@ function LearnerPortfolio() {
     };
 
     const handleClose = () => {
-        setOpenUploadWork(false);
         setOpenCalender(false);
         setOpenSession(false);
     };
@@ -197,7 +197,7 @@ function LearnerPortfolio() {
                 ))}
             </div>
             <div>
-                <SecondaryButtonOutlined name="Close Portfolio" onClick={handleClosePortfolio} />
+                {currentUser?.role !== UserRole.Learner && <SecondaryButtonOutlined name="Close Portfolio" onClick={handleClosePortfolio} />}
             </div>
         </div>
 

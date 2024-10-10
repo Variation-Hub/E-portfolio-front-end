@@ -7,7 +7,6 @@ import NewSession from "./newsession";
 import NewAssignment from "src/app/component/Cards/newAssignment";
 import LearnerToData from "./learnerData/learnertodata";
 import LearnerDetails from "./learnerDeatils";
-import Portfolio from "./portfolio";
 import ResourceData from "./learnerData/resourse";
 import ProgressWidget from "./learnerData/progressWidget";
 import AssignmentData from "./learnerData/assignmentData";

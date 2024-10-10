@@ -11,7 +11,6 @@ import { slice as globalSlice, selectGlobalUser, tokenGetFetch } from "app/store
 import { useDispatch } from 'react-redux';
 import ContractedWorkHours from './contractedWork';
 import { selectUser } from 'app/store/userSlice';
-import Portfolio from './portfolio';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import CourseTab from './courseTab';
 import LearnerPortfolio from './learnerPortfolio';

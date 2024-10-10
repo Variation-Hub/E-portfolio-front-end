@@ -60,7 +60,7 @@ class FuseUtils {
 
     const propArray = Object.keys(itemObj);
 
-    for (let i = 0; i < propArray.length; i += 1) {
+    for (let i = 0; i < propArray?.length; i += 1) {
       const prop = propArray[i];
       const value = itemObj[prop];
 
@@ -140,7 +140,7 @@ class FuseUtils {
     if (config.auth) {
       config = {
         ...config,
-        auth : config.auth.flat()
+        auth: config.auth.flat()
       }
     }
     // config = Array.isArray(config.auth) ? [...config.auth] : null
@@ -176,7 +176,7 @@ class FuseUtils {
       return obj;
     }
 
-    for (i = 0; i < Object.keys(obj).length; i += 1) {
+    for (i = 0; i < Object.keys(obj)?.length; i += 1) {
       childObj = obj[Object.keys(obj)[i]];
 
       if (typeof childObj === 'object') {
@@ -190,7 +190,7 @@ class FuseUtils {
   }
 
   static getFlatNavigation(navigationItems, flatNavigation = []) {
-    for (let i = 0; i < navigationItems.length; i += 1) {
+    for (let i = 0; i < navigationItems?.length; i += 1) {
       const navItem = navigationItems[i];
 
       if (navItem.type === 'item') {
@@ -233,7 +233,7 @@ class FuseUtils {
       'orange',
       'deepOrange',
     ];
-    const randomColor = mainColors[Math.floor(Math.random() * mainColors.length)];
+    const randomColor = mainColors[Math.floor(Math.random() * mainColors?.length)];
     return colors[randomColor][hue];
   }
 
@@ -341,13 +341,13 @@ class FuseUtils {
       // console.info("auth is null || undefined:", authArr);
       return true;
     }
-    if (authArr.length === 0) {
+    if (authArr?.length === 0) {
       /**
        * if auth array is empty means,
        * allow only user role is guest (null or empty[])
        */
       // console.info("auth is empty[]:", authArr);
-      return !userRole || userRole.length === 0;
+      return !userRole || userRole?.length === 0;
     }
     /**
      * Check if user has grants
@@ -379,7 +379,7 @@ class FuseUtils {
         if (entry.children != null) {
           // if the object has childrens, filter the list of children
           const children = this.filterRecursive(entry.children, predicate);
-          if (children.length > 0) {
+          if (children?.length > 0) {
             // if any of the children matches, clone the parent object, overwrite
             // the children list with the filtered list
             clone = { ...entry, children };

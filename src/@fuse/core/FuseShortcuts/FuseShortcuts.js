@@ -38,7 +38,7 @@ function FuseShortcuts(props) {
 
     setSearchText(newSearchText);
 
-    if (newSearchText.length !== 0 && navigation) {
+    if (newSearchText?.length !== 0 && navigation) {
       setSearchResults(
         navigation.filter((item) => item.title.toLowerCase().includes(newSearchText.toLowerCase()))
       );
@@ -194,7 +194,7 @@ function FuseShortcuts(props) {
 
         <Divider />
 
-        {searchText.length !== 0 &&
+        {searchText?.length !== 0 &&
           searchResults &&
           searchResults.map((_item) => (
             <ShortcutMenuItem
@@ -204,13 +204,13 @@ function FuseShortcuts(props) {
             />
           ))}
 
-        {searchText.length !== 0 && searchResults.length === 0 && (
+        {searchText?.length !== 0 && searchResults?.length === 0 && (
           <Typography color="text.secondary" className="p-16 pb-8">
             No results..
           </Typography>
         )}
 
-        {searchText.length === 0 &&
+        {searchText?.length === 0 &&
           shortcutItems.map(
             (_item) =>
               _item && (

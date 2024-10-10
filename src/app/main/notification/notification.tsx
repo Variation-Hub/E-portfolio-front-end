@@ -78,11 +78,11 @@ const Activity = () => {
                     {columns.map((column) => {
                       const value = row[column.notification_id];
                       return (
-                        <Tooltip placement="bottom-start" title={value.length > 125 ? value : ""}>
+                        <Tooltip placement="bottom-start" title={value?.length > 125 ? value : ""}>
                           <TableCell key={column.notification_id} align={column.align}>
                             {column.format && typeof value === "number"
                               ? column.format(value)
-                              : value.length > 125 ? value.slice(0, 125) + '...' : value}
+                              : value?.length > 125 ? value.slice(0, 125) + '...' : value}
                           </TableCell>
                         </Tooltip>
                       );

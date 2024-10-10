@@ -23,7 +23,7 @@ const Home = () => {
   if (role === "Learner") {
     return (
       <>
-        <Portfolio/>
+        <Portfolio />
       </>
     );
   }

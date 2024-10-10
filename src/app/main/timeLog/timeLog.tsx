@@ -274,7 +274,7 @@ const TimeLog = (props) => {
           <TableContainer sx={{ maxHeight: "auto" }} >
             {/* {dataFetchLoading ? (
                             <FuseLoading />
-                        ) : formdata.data.length ? ( */}
+                        ) : formdata.data?.length ? ( */}
             <Table
               sx={{ minWidth: 650, heighFaddt: "100%" }}
               size="small"

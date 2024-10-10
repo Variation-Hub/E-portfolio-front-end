@@ -187,7 +187,7 @@ const AssignmentData = () => {
       <Card className="m-12 rounded-6" style={{ height: "87.3vh" }}>
         <div className="w-full h-full py-20">
           {/* <Breadcrumb linkData={[AssignmentRedirect]} currPage="User" /> */}
-          {/* {data.length ? ( */}
+          {/* {data?.length ? ( */}
           <div className={Style.create_user}>
             <div className={Style.search_filed}>
               {/* <TextField
@@ -272,7 +272,7 @@ const AssignmentData = () => {
             <TableContainer sx={{ maxHeight: 500 }}>
               {dataFetchLoading ? (
                 <FuseLoading />
-              ) : singleAssignmentData.length ? (
+              ) : singleAssignmentData?.length ? (
                 <Table
                   sx={{ minWidth: 650, height: "100%" }}
                   size="small"

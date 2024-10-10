@@ -26,7 +26,7 @@ function OtpValidation({ numberOfDigits, setOtpError, setOtp }) {
   }
 
   useEffect(() => {
-    if (otp.join("").length === 6) {
+    if (otp.join("")?.length === 6) {
       setOtpError(true);
     } else {
       setOtpError(false);

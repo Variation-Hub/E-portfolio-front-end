@@ -31,7 +31,6 @@ import { selectUser } from "app/store/userSlice";
 import { useNavigate } from "react-router-dom";
 import { createAssignmentAPI, selectAssignment, updateAssignmentAPI } from "app/store/assignment";
 import { useDispatch } from "react-redux";
-import CreateAssignment from "src/app/main/createAssignment/createAssignment";
 import { fetchCourseById, selectCourseManagement } from "app/store/courseManagement";
 import styles from './style.module.css';
 
@@ -122,7 +121,7 @@ const NewAssignment = (props) => {
   const handleClose = () => {
     navigate("/portfolio");
   };
-  
+
   const formatDate = (date) => {
     if (!date) return "";
     const dateStr = date instanceof Date ? date.toISOString() : String(date);

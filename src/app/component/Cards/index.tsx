@@ -54,7 +54,7 @@ export const Card = (props) => {
       )}
       <Tooltip title={title} arrow>
         <Typography>
-          {title.length > 20 && !isMobile ? `${title.slice(0, 17)}...` : title}
+          {title?.length > 20 && !isMobile ? `${title.slice(0, 17)}...` : title}
         </Typography>
       </Tooltip>
     </div>

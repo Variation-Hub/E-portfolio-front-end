@@ -174,7 +174,7 @@ const Index = () => {
         userData?.password !== userData?.confrimpassword ||
         !passwordReg.test(userData?.password),
       mobile: !mobileReg.test(userData.mobile),
-      role: userData?.role.length !== 0,
+      role: userData?.role?.length !== 0,
     });
 
     if (
@@ -185,7 +185,7 @@ const Index = () => {
       passwordReg.test(userData?.password) &&
       userData?.password === userData?.confrimpassword &&
       // mobileReg?.test(userData.mobile) &&
-      userData?.role.length !== 0
+      userData?.role?.length !== 0
     ) {
       return true;
     }
@@ -290,7 +290,7 @@ const Index = () => {
           </div>
           {dataFetchLoading ? (
             <FuseLoading />
-          ) : data.length ? (
+          ) : data?.length ? (
             <UserManagementTable
               columns={userManagementTableColumn}
               rows={data}

@@ -67,7 +67,7 @@ function FuseNavigation(props) {
     'firstLevel',
     'selectedId',
   ]);
-  if (props.navigation.length > 0) {
+  if (props.navigation?.length > 0) {
     return (
       <>
         {inputGlobalStyles}

@@ -28,7 +28,7 @@ export default function Templates() {
     }, [])
 
     return (
-        formTemplate.length ?
+        formTemplate?.length ?
             <TableContainer>
                 <Table aria-label="simple table">
                     <TableHead>

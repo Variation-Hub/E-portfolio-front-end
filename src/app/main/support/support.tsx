@@ -264,7 +264,7 @@ const Support = (props) => {
           <TableContainer sx={{ minHeight: 550, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
             {dataFetchLoading ? (
               <FuseLoading />
-            ) : support.data.length ? (
+            ) : support.data?.length ? (
               <Table
                 sx={{ minWidth: 650, height: "100%" }}
                 size="small"
@@ -489,9 +489,9 @@ const Support = (props) => {
                   name="Cancel"
                 />
                 <SecondaryButton
-                  name={Object.keys(singleData).length !== 0 ? "Edit" : "Save"}
+                  name={Object.keys(singleData)?.length !== 0 ? "Edit" : "Save"}
                   onClick={
-                    Object.keys(singleData).length !== 0
+                    Object.keys(singleData)?.length !== 0
                       ? handleUpdate
                       : handleSubmit
                   }

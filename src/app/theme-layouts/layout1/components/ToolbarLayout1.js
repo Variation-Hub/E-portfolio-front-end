@@ -60,7 +60,7 @@ function ToolbarLayout1(props) {
 
         <Toolbar className="p-0 min-h-64 md:min-h-64" >
 
-          <Typography className='ml-12' variant='h6'>Welcome, {currentUser?.role !== UserRole.Learner && currentUser?.first_name + " " + currentUser?.last_name + " " + "(" + RoleShortForm[currentUser?.role] + ")"}</Typography>
+          <Typography className='ml-12' variant='h6'>Welcome{currentUser?.role !== UserRole.Learner && ", " + currentUser?.first_name + " " + currentUser?.last_name + " " + "(" + RoleShortForm[currentUser?.role] + ")"}</Typography>
 
           <div className="flex flex-1 px-16">
             {config.navbar.display && config.navbar.position === 'left' && (

@@ -2,14 +2,14 @@ import FuseLoading from '@fuse/core/FuseLoading';
 import { Autocomplete, Box, Dialog, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@mui/material';
 import { courseAllocationAPI, selectCourseManagement } from 'app/store/courseManagement';
 import { selectGlobalUser } from 'app/store/globalUser';
-import { selectLearnerManagement } from 'app/store/learnerManagement';
-import React, { useState } from 'react'
+import { getLearnerDetails, getLearnerDetailsReturn, selectLearnerManagement } from 'app/store/learnerManagement';
+import { useState } from 'react'
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import { LoadingButton, SecondaryButton, SecondaryButtonOutlined } from 'src/app/component/Buttons';
 import DataNotFound from 'src/app/component/Pages/dataNotFound';
-import CustomPagination from 'src/app/component/Pagination/CustomPagination';
+import { slice as globalSlice } from "app/store/globalUser";
+import { selectUser } from 'app/store/userSlice';
 
 const CourseTab = () => {
 
@@ -17,6 +17,7 @@ const CourseTab = () => {
 
     const { data } = useSelector(selectCourseManagement);
     const { LIQA, IQA, trainer, employer, EQA, learner } = useSelector(selectLearnerManagement);
+    const learnerUser = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectGlobalUser)?.selectedUser;
 
     const [courseDialog, setCourseDialog] = useState(false);
     const [courseAllocationData, setCourseAllocationData] = useState({
@@ -42,6 +43,14 @@ const CourseTab = () => {
     const closeCourseDialog = () => {
         setCourseDialog(false);
     };
+    console.log(learnerUser, "user")
+
+    const handleLearnerRefetch = async () => {
+        const data = await dispatch(getLearnerDetails(learnerUser?.learner_id))
+        if (data) {
+            dispatch(globalSlice.setSelectedUser(data))
+        }
+    }
 
     const courseAllocation = async () => {
         setLoading(true);
@@ -62,10 +71,11 @@ const CourseTab = () => {
             });
         }
         setLoading(false);
+        setCourseDialog(false);
+        handleLearnerRefetch()
     };
 
     const { selectedUser, dataFetchLoading } = useSelector(selectGlobalUser);
-    const navigate = useNavigate();
 
     const handleCreateCourse = () => {
         setCourseDialog(true);

@@ -53,7 +53,7 @@ const SkillsScan = () => {
   };
 
   useEffect(() => {
-    dispatch(getLearnerDetails())
+    dispatch(getLearnerDetails(user.learner_id))
   }, [])
 
   return (
