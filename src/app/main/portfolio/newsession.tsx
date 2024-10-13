@@ -34,11 +34,7 @@ const NewSession = (props) => {
         type: '',
     });
 
-    useEffect(() => {
-        if (session.update) {
-            setSessionData({ ...session.singleData, trainer_id: session.singleData?.trainer_id?.user_id, learners: session.singleData?.learners.map((learner) => learner.learner_id), startDate: new Date(session.singleData?.startDate) })
-        }
-    }, [])
+    console.log(sessionData, "+++++", "++++")
 
     const handleDataUpdate = (e) => {
         const { name, value } = e.target;
@@ -58,6 +54,8 @@ const NewSession = (props) => {
             if (session?.update) {
                 response = await dispatch(updateSessionAPI(session?.singleData?.session_id, sessionData));
             } else {
+
+                console.log(sessionData, "+++++")
                 response = await dispatch(createSessionAPI({ ...sessionData }));
             }
             dispatch(getSessionAPI({ page: 1, page_size: 10 }));
@@ -89,6 +87,18 @@ const NewSession = (props) => {
 
     const sessionDataFromStorage = JSON.parse(sessionStorage.getItem('learnerToken'))?.user;
     const selectedLearnerId = sessionDataFromStorage?.learner_id || null;
+
+    useEffect(() => {
+        if (session.update) {
+            setSessionData({ ...session.singleData, trainer_id: session.singleData?.trainer_id?.user_id, learners: session.singleData?.learners.map((learner) => learner.learner_id), startDate: new Date(session.singleData?.startDate) })
+        }
+        if (selectedLearnerId) {
+            setSessionData(prevState => ({
+                ...prevState,
+                learners: [selectedLearnerId]
+            }));
+        }
+    }, [])
 
     return (
         <Grid>

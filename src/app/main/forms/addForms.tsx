@@ -28,7 +28,6 @@ import { selectGlobalUser } from "app/store/globalUser";
 
 const AddForms = (props) => {
   const { data, formDataDetails, dataUpdatingLoadding, singleData, mode, singleFrom = null, modeTemaplate = '' } = useSelector(selectFormData);
-  console.log(formDataDetails);
 
   const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
   const currentUser = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectGlobalUser)?.currentUser;
@@ -47,7 +46,6 @@ const AddForms = (props) => {
     type: "",
   });
 
-  console.log(formData)
   useEffect(() => {
     if ((mode === "view" || mode === "edit") && singleData) {
       setFormData({
@@ -115,9 +113,8 @@ const AddForms = (props) => {
 
   const handleSubmitForm = async (data) => {
     try {
-      let response;
       if (user.role !== UserRole.Admin) {
-        response = await dispatch(
+        await dispatch(
           createUserFormDataAPI({ form_id: singleData.id, form_data: data, user_id: currentUser.user_id })
         );
       }

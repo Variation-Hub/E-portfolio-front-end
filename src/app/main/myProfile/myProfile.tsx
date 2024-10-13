@@ -20,7 +20,6 @@ import {
 import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
 import { changePassword, selectUserManagement, uploadAvatar } from "app/store/userManagement";
 import { useDispatch } from "react-redux";
-import { margin, padding } from "@mui/system";
 import { getRandomColor } from "src/utils/randomColor";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import 'react-phone-number-input/style.css';
@@ -49,6 +48,7 @@ const MyProfile: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>("personalDetails");
 
   const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
+  const isLearnerTabOpen = !(!JSON.parse(sessionStorage.getItem('learnerToken'))?.user?.user_id || JSON.parse(sessionStorage.getItem('learnerToken'))?.user.user_id === useSelector(selectUser)?.data?.user_id)
 
   const { dataUpdatingLoadding } = useSelector(selectUserManagement);
   const fileInputRef: any = useRef();
@@ -92,7 +92,7 @@ const MyProfile: React.FC = () => {
 
   const handleChangePassword = async () => {
     try {
-      await dispatch(changePassword(passwordData));
+      await dispatch(changePassword({ ...passwordData, user_id: user.user_id }));
     } catch (err) {
       console.log(err);
     } finally {
@@ -171,7 +171,7 @@ const MyProfile: React.FC = () => {
                   src={user?.avatar?.url}
                   alt={user?.displayName}
                 />
-                <IconButton
+                {!isLearnerTabOpen && <IconButton
                   onClick={handleButtonClick}
                   sx={{
                     position: "absolute",
@@ -187,7 +187,7 @@ const MyProfile: React.FC = () => {
                   }}
                 >
                   <ModeEditOutlineOutlinedIcon sx={{ fontSize: "16px" }} />
-                </IconButton>
+                </IconButton>}
                 <input
                   type="file"
                   accept="image/*"
@@ -322,7 +322,7 @@ const MyProfile: React.FC = () => {
                 /> */}
               </div>
             </Box>
-            <Box
+            {/* <Box
               style={{
                 display: "flex",
                 justifyContent: "flex-end",
@@ -336,7 +336,7 @@ const MyProfile: React.FC = () => {
                 className="py-8"
                 onClick={handleopen}
               />
-            </Box>
+            </Box> */}
             <Dialog
               open={open}
               onClose={handleClose}

@@ -171,7 +171,6 @@ function LearnerPortfolio() {
         setSingleCourse(course.find((item) => item.course?.course_id === newValue));
     };
 
-    console.log("Single Course", singleCourse)
     const HeaderTabs = () => (
         <div className="flex justify-between items-center">
             <div className='flex gap-4'>
@@ -182,7 +181,7 @@ function LearnerPortfolio() {
                 >
                     Overview
                 </button>
-                {course.map((item) => (
+                {course?.map((item) => (
                     <button
                         className={`text-white relative top-16 p-16 rounded-t-lg ${value === item?.course?.course_id ? 'transform translate-y-[-6px] ' : ''}`}
                         style={{ backgroundColor: getLightRandomColor(item?.course?.course_name?.toLowerCase().charAt(0)) }}
