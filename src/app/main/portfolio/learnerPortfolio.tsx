@@ -3,7 +3,7 @@ import { Tabs, Tab, Avatar, Typography, Card, CardContent, Container, LinearProg
 import { useDispatch } from 'react-redux';
 import { getLearnerDetailsReturn, selectLearnerManagement } from 'app/store/learnerManagement';
 import { FaFolderOpen } from 'react-icons/fa';
-import { getLightRandomColor } from 'src/utils/randomColor';
+import { getLightRandomColor, getRandomColor } from 'src/utils/randomColor';
 import UploadWorkDialog from 'src/app/component/Cards/uploadWorkDialog';
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import { slice as courseSlice } from "app/store/courseManagement";
@@ -207,7 +207,13 @@ function LearnerPortfolio() {
             <div className="flex flex-col gap-5 p-12 bg-white rounded-md shadow-md w-2/5 border-2">
                 <Typography variant="h5" className='capitalize mb-24'>Welcome<br /> {learnerDetails?.displayName}</Typography>
                 <div className='flex justify-between' style={{ height: 120 }}>
-                    <img src={learnerDetails?.avatar?.url} alt="" className='w-full h-full' style={{ width: 120 }} />
+                    {/* <img src={learnerDetails?.avatar?.url} alt="" className='w-full h-full' style={{ width: 120 }} /> */}
+                    <Avatar
+                        alt="avatar"
+                        src={learnerDetails?.avatar?.url}
+                        sx={{ width: 120, height: 120, mb: 2, border: '1px solid #ccc', borderRadius: 0, backgroundColor: getRandomColor(learnerDetails?.user_name?.toLowerCase().charAt(0)) }}
+                    >
+                    </Avatar>
                     <Card className='cursor-pointer rounded-4 bg-[#D32B4F]' onClick={handleOpenSession}>
                         <div className='flex flex-col justify-around items-center h-full p-8' style={{ width: 120 }}>
                             <img src='./assets/icons/Smart-Session.png' className='w-80 p-10' />

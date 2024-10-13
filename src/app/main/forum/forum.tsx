@@ -15,6 +15,8 @@ import FileCopyIcon from '@mui/icons-material/FileCopy';
 import { Link } from "react-router-dom";
 import ClearIcon from '@mui/icons-material/Clear';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import { selectGlobalUser } from "app/store/globalUser";
+import { UserRole } from "src/enum";
 
 const timeAgo = (timestamp) => {
   if (!timestamp) return '';
@@ -47,6 +49,7 @@ const Forum = () => {
   const chatEndRef = useRef(null);
   const forumData = useSelector(selectForumData);
   const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
+  const currentUser = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectGlobalUser)?.currentUser;
 
 
   const dispatch: any = useDispatch();
@@ -92,6 +95,7 @@ const Forum = () => {
       }
       const formData = new FormData();
       formData.append('course_id', sendMessage.course_id);
+      formData.append('sender_id', currentUser.user_id);
       formData.append('message', sendMessage.message);
       formData.append('file', sendMessage.file);
 
@@ -145,7 +149,7 @@ const Forum = () => {
   }, [forumData]);
 
   useEffect(() => {
-    dispatch(getChatListAPI());
+    dispatch(getChatListAPI(currentUser.role !== UserRole.Admin && currentUser.user_id));
   }, [dispatch]);
 
   const filteredCourseData = forumData.courseData.filter(row =>
