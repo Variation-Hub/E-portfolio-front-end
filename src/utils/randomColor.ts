@@ -27,22 +27,32 @@ const darkColors = [
 ]
 
 const lightColors = [
-  '#4A90E2',  // Medium Blue
-  '#50E3C2',  // Medium Aqua
-  '#F5A623',  // Medium Orange
-  '#B3B3B3',  // Medium Gray
-  '#F2F2F2',  // Light Gray
-  '#FF6F61',  // Coral
-  '#50B4E0',  // Light Blue
-  '#D9E8E0',  // Light Mint
-  '#F8E71C',  // Lemon Yellow
-  '#7ED321',  // Bright Green
-  '#C5C6D0',  // Soft Gray
   '#A9A9A9',  // Dark Gray
-  '#FFB100',  // Gold
-  '#E3E3E3',  // Very Light Gray
-  '#9B59B6',  // Medium Purple
   '#34495E',  // Dark Blue Gray
+  '#2C3E50',  // Dark Blue
+  '#1F618D',  // Navy Blue
+  '#27AE60',  // Dark Green
+  '#8E44AD',  // Dark Purple
+  '#D35400',  // Dark Orange
+  '#C0392B',  // Dark Red
+  '#2D3436',  // Charcoal Black
+  '#5D6D7E',  // Steel Blue
+  '#283747',  // Midnight Blue
+  '#641E16',  // Deep Red
+  '#512E5F',  // Plum Purple
+  '#154360',  // Deep Navy
+  '#145A32',  // Forest Green
+  '#4A235A',  // Grape Purple
+  '#78281F',  // Dark Terracotta
+  '#1B4F72',  // Deep Blue
+  '#7B241C',  // Dark Crimson
+  '#1C2833',  // Dark Charcoal
+  '#4D5656',  // Slate Gray
+  '#76448A',  // Violet
+  '#5B2C6F',  // Dark Lavender
+  '#1C1C1C',  // Jet Black
+  '#6E2C00',  // Burnt Orange
+  '#0E6251',  // Dark Teal
 ];
 
 const atoz = "abcdefghijklmnopqrstuvwxyz";

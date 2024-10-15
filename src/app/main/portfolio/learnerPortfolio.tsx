@@ -203,8 +203,8 @@ function LearnerPortfolio() {
     );
 
     const WelcomeSection = ({ children }) => (
-        <div className='flex w-full border-2'>
-            <div className="flex flex-col gap-5 p-12 bg-white rounded-md shadow-md w-2/5 border-2">
+        <div className='flex w-full'>
+            <div className="flex flex-col gap-5 p-12 bg-white shadow-md w-2/5">
                 <Typography variant="h5" className='capitalize mb-24'>Welcome<br /> {learnerDetails?.displayName}</Typography>
                 <div className='flex justify-between' style={{ height: 120 }}>
                     {/* <img src={learnerDetails?.avatar?.url} alt="" className='w-full h-full' style={{ width: 120 }} /> */}
@@ -235,7 +235,7 @@ function LearnerPortfolio() {
                     <LinearProgressWithLabel value={(overView?.fullyCompleted / overView?.totalSubUnits) * 100} color="green" />
                 </div>
             </div>
-            <div className='w-3/5 border-2'>
+            <div className='w-3/5'>
                 {children}
             </div>
         </div>
@@ -243,8 +243,8 @@ function LearnerPortfolio() {
 
 
     const CourseSection = ({ children }) => (
-        <div className='flex w-full border-2'>
-            <div className="flex flex-col gap-5 p-12 bg-white rounded-md shadow-md w-2/5 border-2">
+        <div className='flex w-full'>
+            <div className="flex flex-col gap-5 p-12 bg-white shadow-md w-2/5">
                 <Typography variant="h5" className='capitalize mb-24'>Welcome<br /> {learnerDetails?.displayName}</Typography>
                 <div style={{ height: 120 }}>
                     <img src={learnerDetails?.avatar?.url} alt="" className='w-full h-full' style={{ width: 120 }} />
@@ -264,7 +264,7 @@ function LearnerPortfolio() {
                     <Typography variant="body2"><strong>Status: </strong> </Typography>
                 </div>
             </div>
-            <div className='w-3/5 border-2'>
+            <div className='w-3/5'>
                 {children}
             </div>
         </div>
@@ -274,7 +274,7 @@ function LearnerPortfolio() {
     return (
         <Container className='max-w-full p-40'>
             <HeaderTabs />
-            <div className="mt-4 relative z-10">
+            <div className="mt-4 relative z-10 border-2">
                 {value === 0 ? (
                     <WelcomeSection>
                         <Grid className='w-full p-10 bg-grey-300 h-full'>
