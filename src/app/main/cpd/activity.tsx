@@ -86,20 +86,11 @@ const AddNewDialogContent = (props) => {
   const {
     edit = "Save",
     formData,
+    cpdData,
     setActivityData,
     activityData = {},
     handleChangeYear,
   } = props;
-
-  console.log(activityData);
-
-  const currentYear = new Date().getFullYear();
-
-  const years = [
-    `${currentYear - 1}-${currentYear.toString().slice(-2)}`,
-    `${currentYear}-${(currentYear + 1).toString().slice(-2)}`,
-    `${currentYear + 1}-${(currentYear + 2).toString().slice(-2)}`,
-  ];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -183,11 +174,15 @@ const AddNewDialogContent = (props) => {
                   onChange={handleChangeYear}
                   disabled={edit === "view" || edit === "edit"}
                 >
-                  {years?.map((year) => (
-                    <MenuItem key={year} value={year}>
-                      {year}
-                    </MenuItem>
-                  ))}
+                  {cpdData?.length ? (
+                    cpdData.map((yearItem) => (
+                      <MenuItem key={yearItem.year} value={yearItem.year}>
+                        {yearItem.year}
+                      </MenuItem>
+                    ))
+                  ) : (
+                    <MenuItem disabled>Cpd Data not found.</MenuItem>
+                  )}
                 </Select>
               </FormControl>
             </div>
@@ -479,6 +474,7 @@ const AddNewDialogContent = (props) => {
 
 const Activity = (props) => {
   const {
+    cpdData,
     dialogType,
     dataFetchLoading,
     setDialogType,
@@ -583,15 +579,14 @@ const Activity = (props) => {
     }));
 
     if (name == "year") {
-      setcpdId(cpdPlanningData.data?.find((item) => item.year === value).id);
+      setcpdId(cpdPlanningData?.data?.find((item) => item?.year === value)?.id);
     }
-    console.log(cpdPlanningData.data?.find((item) => item.year === value).id);
   };
 
   const handleSubmit = async () => {
     try {
       let response;
-      let id = singleData.id;
+      let id = singleData?.id;
       if (dialogType === "addNew")
         response = await dispatch(
           createActivityAPI({ ...activityData, cpd_id: cpdId })
@@ -606,7 +601,7 @@ const Activity = (props) => {
   };
 
   const deleteIcon = (id) => {
-    setDeleteId(id.id);
+    setDeleteId(id?.id);
   };
 
   const openMenu = (e, id) => {
@@ -684,30 +679,30 @@ const Activity = (props) => {
               {" "}
               <TableHead>
                 <TableRow>
-                  {columns.map((column) => (
+                  {columns?.map((column) => (
                     <TableCell
-                      key={column.id}
+                      key={column?.id}
                       align={column.align}
                       style={{
                         minWidth: column.minWidth,
                         backgroundColor: "#F8F8F8",
                       }}
                     >
-                      {column.label}
+                      {column?.label}
                     </TableCell>
                   ))}
                 </TableRow>
               </TableHead>
               <TableBody>
-                {paginatedData.map((row) => (
+                {paginatedData?.map((row) => (
                   <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
-                    {columns.map((column) => {
-                      const value = row[column.id];
+                    {columns?.map((column) => {
+                      const value = row[column?.id];
                       return (
-                        <TableCell key={column.id} align={column.align}>
+                        <TableCell key={column?.id} align={column.align}>
                           {column.format && typeof value === "number" ? (
                             column.format(value)
-                          ) : column.id === "action" ? (
+                          ) : column?.id === "action" ? (
                             <IconButton
                               size="small"
                               sx={{ color: "#5B718F", marginRight: "4px" }}
@@ -715,7 +710,7 @@ const Activity = (props) => {
                             >
                               <MoreHorizIcon fontSize="small" />
                             </IconButton>
-                          ) : column.id === "files" ? (
+                          ) : column?.id === "files" ? (
                             <div style={{ display: "flex" }}>
                               <AvatarGroup
                                 max={4}
@@ -747,7 +742,7 @@ const Activity = (props) => {
                                 ))}
                               </AvatarGroup>
                             </div>
-                          ) : column.id === "date" ? (
+                          ) : column?.id === "date" ? (
                             formatDate(value)
                           ) : (
                             value
@@ -850,6 +845,7 @@ const Activity = (props) => {
       >
         <DialogContent>
           <AddNewDialogContent
+            cpdData={cpdData}
             edit={edit}
             setActivityData={setActivityData}
             activityData={activityData}

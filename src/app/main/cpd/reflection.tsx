@@ -91,18 +91,11 @@ const AddReflectionDialogContent = (props) => {
   const {
     edit = "Save",
     formData,
+    cpdData,
     setReflectionData,
     reflectionData = {},
     handleChangeYear,
   } = props;
-
-  const currentYear = new Date().getFullYear();
-
-  const years = [
-    `${currentYear - 1}-${currentYear.toString().slice(-2)}`,
-    `${currentYear}-${(currentYear + 1).toString().slice(-2)}`,
-    `${currentYear + 1}-${(currentYear + 2).toString().slice(-2)}`,
-  ];
 
   const handleReflectionChange = (e) => {
     const { name, value } = e.target;
@@ -175,178 +168,182 @@ const AddReflectionDialogContent = (props) => {
                   onChange={handleChangeYear}
                   disabled={edit === "view" || edit === "edit"}
                 >
-                  {years?.map((year) => (
-                    <MenuItem key={year} value={year}>
-                      {year}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </div>
-            <div className="w-full">
-              <Typography
-                sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}
-                className={Style.name}
-              >
-                Learning Objective
-              </Typography>
-              <TextField
-                name="learning_objective"
-                size="small"
-                placeholder="lorent's learning"
-                fullWidth
-                value={reflectionData.learning_objective}
-                onChange={handleReflectionChange}
-                disabled={edit === "view"}
-              />
-            </div>
+                  {cpdData?.length ? (
+                    cpdData.map((yearItem) => (
+                      <MenuItem key={yearItem.year} value={yearItem.year}>
+                        {yearItem.year}
+                      </MenuItem>
+                    ))
+                  ) : (
+                    <MenuItem disabled>Cpd Data not found.</MenuItem>
+                  )}
+              </Select>
+            </FormControl>
           </div>
           <div className="w-full">
             <Typography
               sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}
               className={Style.name}
             >
-              What Went Well
+              Learning Objective
             </Typography>
             <TextField
-              name="what_went_well"
-              value={reflectionData.what_went_well}
-              onChange={handleReflectionChange}
-              fullWidth
+              name="learning_objective"
               size="small"
-              placeholder="What Went Well"
-              disabled={edit === "view"}
-            ></TextField>
-          </div>
-          <div className="w-full">
-            <Typography
-              sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}
-              className={Style.name}
-            >
-              What would you do differently next time
-            </Typography>
-            <TextField
-              name="differently_next_time"
-              size="small"
-              placeholder="Lorem ipsum is just dummy context....."
+              placeholder="lorent's learning"
               fullWidth
-              multiline
-              rows={3}
-              value={reflectionData.differently_next_time}
+              value={reflectionData.learning_objective}
               onChange={handleReflectionChange}
               disabled={edit === "view"}
             />
           </div>
-          <div className="w-full">
-            <Typography
-              sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}
-              className={Style.name}
-            >
-              How could you share this learning
-            </Typography>
-            <TextField
-              name="feedback"
-              size="small"
-              placeholder="Lorem ipsum dolor sit..."
-              fullWidth
-              value={reflectionData.feedback}
-              onChange={handleReflectionChange}
-              disabled={edit === "view"}
-            />
-          </div>
-          <Box className="flex justify-between gap-12 sm:flex-row">
-            <div className="w-full">
-              <Typography
-                sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}
-                className={Style.name}
-              >
-                Choose resource for reflection
-              </Typography>
-
-              <FileUploader
-                multiple={true}
-                children={
-                  <div
-                    style={{
-                      border: "1px dotted lightgray",
-                      padding: "1rem",
-                      cursor: "pointer",
-                    }}
-                  >
-                    <div className="flex justify-center mt-8">
-                      <img
-                        src="assets/images/svgImage/uploadimage.svg"
-                        alt="Upload"
-                        className="w-64 pb-8"
-                      />
-                    </div>
-                    {files?.length > 0 ? (
-                      files.map((file, index) => (
-                        <p className="text-center mb-4" key={index}>
-                          {file.name}
-                        </p>
-                      ))
-                    ) : (
-                      <>
-                        <p className="text-center mb-4">
-                          Drag and drop your files here or{" "}
-                          <a className="text-blue-500 font-500 ">Browse</a>
-                        </p>
-                        <p className="text-center mb-4">
-                          Max 10MB files are allowed
-                        </p>
-                      </>
-                    )}
-                  </div>
-                }
-                handleChange={handleFileChange}
-                name="file"
-                types={fileTypes}
-                disabled={edit === "view"}
-              />
-            </div>
-          </Box>
-          <div style={{ marginTop: "16px" }}>
-            {reflectionData.files.map((file, index) => (
-              <Chip
-                key={index}
-                icon={
-                  <Link
-                    to={file.url}
-                    target="_blank"
-                    rel="noopener"
-                    style={{ border: "0px", backgroundColor: "unset" }}
-                  >
-                    <FileCopyIcon />
-                  </Link>
-                }
-                label={
-                  <Link
-                    to={file.url}
-                    target="_blank"
-                    rel="noopener"
-                    style={{ border: "0px", backgroundColor: "unset" }}
-                  >
-                    {file.key}
-                  </Link>
-                }
-                onDelete={edit !== "view" ? handleDelete(file) : undefined}
-                style={{ margin: "4px" }}
-              />
-            ))}
-          </div>
-          <div className="w-full mt-4">
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleUploadButtonClick}
-              disabled={files?.length === 0}
-            >
-              Upload
-            </Button>
-          </div>
-        </Box>
       </div>
+      <div className="w-full">
+        <Typography
+          sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}
+          className={Style.name}
+        >
+          What Went Well
+        </Typography>
+        <TextField
+          name="what_went_well"
+          value={reflectionData.what_went_well}
+          onChange={handleReflectionChange}
+          fullWidth
+          size="small"
+          placeholder="What Went Well"
+          disabled={edit === "view"}
+        ></TextField>
+      </div>
+      <div className="w-full">
+        <Typography
+          sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}
+          className={Style.name}
+        >
+          What would you do differently next time
+        </Typography>
+        <TextField
+          name="differently_next_time"
+          size="small"
+          placeholder="Lorem ipsum is just dummy context....."
+          fullWidth
+          multiline
+          rows={3}
+          value={reflectionData.differently_next_time}
+          onChange={handleReflectionChange}
+          disabled={edit === "view"}
+        />
+      </div>
+      <div className="w-full">
+        <Typography
+          sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}
+          className={Style.name}
+        >
+          How could you share this learning
+        </Typography>
+        <TextField
+          name="feedback"
+          size="small"
+          placeholder="Lorem ipsum dolor sit..."
+          fullWidth
+          value={reflectionData.feedback}
+          onChange={handleReflectionChange}
+          disabled={edit === "view"}
+        />
+      </div>
+      <Box className="flex justify-between gap-12 sm:flex-row">
+        <div className="w-full">
+          <Typography
+            sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}
+            className={Style.name}
+          >
+            Choose resource for reflection
+          </Typography>
+
+          <FileUploader
+            multiple={true}
+            children={
+              <div
+                style={{
+                  border: "1px dotted lightgray",
+                  padding: "1rem",
+                  cursor: "pointer",
+                }}
+              >
+                <div className="flex justify-center mt-8">
+                  <img
+                    src="assets/images/svgImage/uploadimage.svg"
+                    alt="Upload"
+                    className="w-64 pb-8"
+                  />
+                </div>
+                {files?.length > 0 ? (
+                  files.map((file, index) => (
+                    <p className="text-center mb-4" key={index}>
+                      {file.name}
+                    </p>
+                  ))
+                ) : (
+                  <>
+                    <p className="text-center mb-4">
+                      Drag and drop your files here or{" "}
+                      <a className="text-blue-500 font-500 ">Browse</a>
+                    </p>
+                    <p className="text-center mb-4">
+                      Max 10MB files are allowed
+                    </p>
+                  </>
+                )}
+              </div>
+            }
+            handleChange={handleFileChange}
+            name="file"
+            types={fileTypes}
+            disabled={edit === "view"}
+          />
+        </div>
+      </Box>
+      <div style={{ marginTop: "16px" }}>
+        {reflectionData.files.map((file, index) => (
+          <Chip
+            key={index}
+            icon={
+              <Link
+                to={file.url}
+                target="_blank"
+                rel="noopener"
+                style={{ border: "0px", backgroundColor: "unset" }}
+              >
+                <FileCopyIcon />
+              </Link>
+            }
+            label={
+              <Link
+                to={file.url}
+                target="_blank"
+                rel="noopener"
+                style={{ border: "0px", backgroundColor: "unset" }}
+              >
+                {file.key}
+              </Link>
+            }
+            onDelete={edit !== "view" ? handleDelete(file) : undefined}
+            style={{ margin: "4px" }}
+          />
+        ))}
+      </div>
+      <div className="w-full mt-4">
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleUploadButtonClick}
+          disabled={files?.length === 0}
+        >
+          Upload
+        </Button>
+      </div>
+    </Box >
+      </div >
     </>
   );
 };
@@ -358,6 +355,7 @@ const Reflection = (props) => {
   const rowsPerPage = pagination.page_size;
 
   const {
+    cpdData,
     setUpdateData = () => { },
     dataUpdatingLoadding,
     dataFetchLoading,
@@ -440,14 +438,14 @@ const Reflection = (props) => {
     }));
 
     if (name == "year") {
-      setcpdId(cpdPlanningData.data?.find((item) => item.year === value).id);
+      setcpdId(cpdPlanningData?.data?.find((item) => item?.year === value)?.id);
     }
   };
 
   const handleSubmit = async () => {
     try {
       let response;
-      let id = singleData.id;
+      let id = singleData?.id;
       if (dialogType === "addReflection")
         response = await dispatch(
           createReflectionAPI({ ...reflectionData, cpd_id: cpdId })
@@ -462,7 +460,7 @@ const Reflection = (props) => {
   };
 
   const deleteIcon = (id) => {
-    setDeleteId(id.id);
+    setDeleteId(id?.id);
   };
 
   const openMenu = (e, id) => {
@@ -520,7 +518,7 @@ const Reflection = (props) => {
                 <TableRow>
                   {columns.map((column) => (
                     <TableCell
-                      key={column.id}
+                      key={column?.id}
                       align={column.align}
                       style={{
                         minWidth: column.minWidth,
@@ -542,10 +540,10 @@ const Reflection = (props) => {
                     //   key={row.whosupportyou}
                     >
                       {columns.map((column) => {
-                        const value = row[column.id];
+                        const value = row[column?.id];
                         return (
                           <TableCell
-                            key={column.id}
+                            key={column?.id}
                             align={column.align}
                             style={{
                               minWidth: column.minWidth,
@@ -553,7 +551,7 @@ const Reflection = (props) => {
                           >
                             {column.format && typeof value === "number" ? (
                               column.format(value)
-                            ) : column.id === "action" ? (
+                            ) : column?.id === "action" ? (
                               <IconButton
                                 size="small"
                                 sx={{ color: "#5B718F", marginRight: "4px" }}
@@ -699,6 +697,7 @@ const Reflection = (props) => {
       >
         <DialogContent>
           <AddReflectionDialogContent
+            cpdData={cpdData}
             edit={edit}
             setReflectionData={setReflectionData}
             reflectionData={reflectionData}

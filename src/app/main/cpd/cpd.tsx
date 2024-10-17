@@ -213,6 +213,7 @@ const Cpd = () => {
 
         <CustomTabPanel value={value} index={1}>
           <Activity
+            cpdData={data}
             dialogType={dialogType}
             setDialogType={setDialogType}
             dataFetchLoading={dataFetchLoading}
@@ -223,6 +224,7 @@ const Cpd = () => {
 
         <CustomTabPanel value={value} index={2}>
           <Evaluation
+            cpdData={data}
             dialogType={dialogType}
             setDialogType={setDialogType}
             dataFetchLoading={dataFetchLoading}
@@ -233,6 +235,7 @@ const Cpd = () => {
 
         <CustomTabPanel value={value} index={3}>
           <Reflection
+            cpdData={data}
             dialogType={dialogType}
             setDialogType={setDialogType}
             dataFetchLoading={dataFetchLoading}

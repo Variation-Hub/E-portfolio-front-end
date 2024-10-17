@@ -94,6 +94,7 @@ const columns: readonly Column[] = [
 
 const AddNewEvaluationDialogContent = (props) => {
   const {
+    cpdData,
     edit = "Save",
     formData,
     setEvaluationData,
@@ -101,13 +102,6 @@ const AddNewEvaluationDialogContent = (props) => {
     handleChangeYear,
   } = props;
 
-  const currentYear = new Date().getFullYear();
-
-  const years = [
-    `${currentYear - 1}-${currentYear.toString().slice(-2)}`,
-    `${currentYear}-${(currentYear + 1).toString().slice(-2)}`,
-    `${currentYear + 1}-${(currentYear + 2).toString().slice(-2)}`,
-  ];
 
   const handleEvaluationChange = (e) => {
     const { name, value } = e.target;
@@ -177,11 +171,15 @@ const AddNewEvaluationDialogContent = (props) => {
                   onChange={handleChangeYear}
                   disabled={edit === "view" || edit === "edit"}
                 >
-                  {years?.map((year) => (
-                    <MenuItem key={year} value={year}>
-                      {year}
-                    </MenuItem>
-                  ))}
+                 {cpdData?.length ? (
+                    cpdData.map((yearItem) => (
+                      <MenuItem key={yearItem.year} value={yearItem.year}>
+                        {yearItem.year}
+                      </MenuItem>
+                    ))
+                  ) : (
+                    <MenuItem disabled>Cpd Data not found.</MenuItem>
+                  )}
                 </Select>
               </FormControl>
             </div>
@@ -385,6 +383,7 @@ const Evaluation = (props) => {
   const rowsPerPage = pagination.page_size;
 
   const {
+    cpdData,
     setUpdateData = () => { },
     dataUpdatingLoadding,
     dataFetchLoading,
@@ -470,14 +469,14 @@ const Evaluation = (props) => {
     }));
 
     if (name == "year") {
-      setcpdId(cpdPlanningData.data?.find((item) => item.year === value).id);
+      setcpdId(cpdPlanningData?.data?.find((item) => item?.year === value)?.id);
     }
   };
 
   const handleSubmit = async () => {
     try {
       let response;
-      let id = singleData.id;
+      let id = singleData?.id;
       if (dialogType === "addNewEvaluation")
         response = await dispatch(
           createEvaluationAPI({ ...evaluationData, cpd_id: cpdId })
@@ -492,7 +491,7 @@ const Evaluation = (props) => {
   };
 
   const deleteIcon = (id) => {
-    setDeleteId(id.id);
+    setDeleteId(id?.id);
   };
 
   const openMenu = (e, id) => {
@@ -550,35 +549,35 @@ const Evaluation = (props) => {
             <Table stickyHeader aria-label="sticky table" size="small">
               <TableHead>
                 <TableRow>
-                  {columns.map((column) => (
+                  {columns?.map((column) => (
                     <TableCell
-                      key={column.id}
+                      key={column?.id}
                       align={column.align}
                       style={{
                         minWidth: column.minWidth,
                         backgroundColor: "#F8F8F8",
                       }}
                     >
-                      {column.label}
+                      {column?.label}
                     </TableCell>
                   ))}
                 </TableRow>
               </TableHead>
               <TableBody>
-                {paginatedData.map((row) => {
+                {paginatedData?.map((row) => {
                   return (
                     <TableRow
                       hover
                       role="checkbox"
                       tabIndex={-1}
                     >
-                      {columns.map((column) => {
-                        const value = row[column.id];
+                      {columns?.map((column) => {
+                        const value = row[column?.id];
                         return (
-                          <TableCell key={column.id} align={column.align}>
+                          <TableCell key={column?.id} align={column.align}>
                             {column.format && typeof value === "number" ? (
                               column.format(value)
-                            ) : column.id === "action" ? (
+                            ) : column?.id === "action" ? (
                               <IconButton
                                 size="small"
                                 sx={{ color: "#5B718F", marginRight: "4px" }}
@@ -586,7 +585,7 @@ const Evaluation = (props) => {
                               >
                                 <MoreHorizIcon fontSize="small" />
                               </IconButton>
-                            ) : column.id === "files" ? (
+                            ) : column?.id === "files" ? (
                               <div style={{ display: "flex" }}>
                                 <AvatarGroup
                                   max={4}
@@ -725,6 +724,7 @@ const Evaluation = (props) => {
       >
         <DialogContent>
           <AddNewEvaluationDialogContent
+            cpdData={cpdData}
             edit={edit}
             setEvaluationData={setEvaluationData}
             evaluationData={evaluationData}

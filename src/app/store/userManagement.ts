@@ -151,7 +151,10 @@ export const resetPasswordHandler = (data) => async (dispatch) => {
             await JwtService.emit('onLogin', data.decoded);
             sessionStorage.removeItem("reset");
             sessionStorage.removeItem("email");
-            return "/home"
+            if (data.decoded?.role === "Learner")
+                return "/portfolio";
+              else
+                return "/home";
         }
         sessionStorage.removeItem("email");
         return "/sign-in";
