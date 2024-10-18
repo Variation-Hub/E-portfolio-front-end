@@ -189,10 +189,13 @@ export const getLearnerDetails = (learner_id = "") => async (dispatch, getStore)
 
 export const getLearnerDetailsReturn = (id = "") => async (dispatch) => {
     try {
+        dispatch(slice.setLoader(true));
         const response = await axios.get(`${URL_BASE_LINK}/learner/get/${id}`,)
         dispatch(slice.setLearnerDetail(response.data.data));
+        dispatch(slice.setLoader(false));
         return response.data.data;
     } catch (err) {
+        dispatch(slice.setLoader(true));
         return null;
     }
 }
