@@ -6,8 +6,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Typography, IconButton } from '@mui/material';
 import { OpenInNew } from '@mui/icons-material';
 import axiosInstance from 'src/utils/axios';
-import { roles } from 'src/app/contanst';
+import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import { selectstoreDataSlice } from 'app/store/reloadData';
+import { Link } from 'react-router-dom';
 
 const ResourceData = () => {
   const dispatch: any = useDispatch();
@@ -31,9 +32,15 @@ const ResourceData = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <Typography variant="h3" className="text-center font-bold mb-8 text-blue-700">
-        Course Resources
-      </Typography>
+      <div className='flex justify-between items-center mx-20'>
+        <div></div>
+        <Typography variant="h3" className="text-center font-bold mb-8 text-blue-700">
+          Course Resources
+        </Typography>
+        <Link to="/portfolio" className='!no-underline'>
+          <KeyboardBackspaceIcon />Back
+        </Link>
+      </div>
 
       <TableContainer component={Paper} style={{ borderRadius: 8, overflow: 'hidden' }}>
         <Table aria-label="resource table">

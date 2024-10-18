@@ -1,10 +1,12 @@
-import { Autocomplete, Box, Button, Card, LinearProgress, Paper, Stack, TextField, Typography } from '@mui/material';
+import { Autocomplete, Box, Button, Card, Grid, LinearProgress, Paper, Stack, TextField, Typography } from '@mui/material';
 import { selectGlobalUser } from 'app/store/globalUser';
 import { getLearnerDetailsReturn } from 'app/store/learnerManagement';
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { SecondaryButtonOutlined } from 'src/app/component/Buttons';
+import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 
 
 function LinearProgressWithLabel(props) {
@@ -76,6 +78,13 @@ const CourseProgressMap = () => {
 
   return (
     <div>
+      <div className='flex justify-between items-center p-10 border-b-1 !border-grey-400'>
+        <Typography className='capitalize text-lg font-semibold'>Welcome,  {learnerDetails?.displayName}</Typography>
+        <Link to="/portfolio" className='!no-underline'>
+          <KeyboardBackspaceIcon />Back
+        </Link>
+      </div>
+
       <div className='m-14'>
         <Typography className='font-semibold'>Progress Map:</Typography>
         <Typography className='font-semibold'>{learnerDetails?.displayName} - TQUK Level 5 Diploma for Operations and Departmental Managers (RQF) - 60335932</Typography>

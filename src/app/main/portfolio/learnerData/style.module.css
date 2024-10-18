@@ -1,6 +1,8 @@
 .create_user {
     display: flex;
-    justify-content: space-between;
+    justify-items: end;
+    align-items: center;
+    gap: 2rem;
     padding: 0 0.8rem;
     padding-bottom: 5px;
 }

@@ -12,8 +12,9 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import AlertDialog from 'src/app/component/Dialogs/AlertDialog';
 import CalendarComponent from './calendar';
 import { getLearnerDetails, selectLearnerManagement } from 'app/store/learnerManagement';
-import { verify } from 'crypto';
+import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import CustomPagination from 'src/app/component/Pagination/CustomPagination';
+import { Link } from 'react-router-dom';
 
 const TimeLog = (props) => {
 
@@ -172,8 +173,11 @@ const TimeLog = (props) => {
   };
   return (
     <Grid className="flex flex-col m-10 p-10 gap-20" sx={{ minHeight: 600 }}>
-      <Grid>
+      <Grid className='flex justify-between items-center'>
         <Typography className='h3 font-500 '>Welcome, {selected ? selectedUser?.user_name : currentUser?.user_name}</Typography>
+        <Link to="/portfolio" className='!no-underline'>
+          <KeyboardBackspaceIcon />Back
+        </Link>
       </Grid>
 
       <hr style={{ borderBottom: "1px solid #ddd" }} />

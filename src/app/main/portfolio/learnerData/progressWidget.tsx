@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { SecondaryButtonOutlined } from 'src/app/component/Buttons';
+import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 
 function LinearProgressWithLabel(props) {
   const { color, value } = props;
@@ -45,10 +46,12 @@ const ProgressWidget = () => {
   console.log(course.map((course) => (course)));
 
   return (
-    <div>
-      <div>
-        <div className='p-10 border-b-1 !border-grey-400'>
+      <div className='p-10'>
+        <div className='flex justify-between items-center p-10 border-b-1 !border-grey-400'>
           <Typography className='capitalize text-lg font-semibold'>Welcome,  {learnerDetails?.displayName}</Typography>
+            <Link to="/portfolio" className='!no-underline'>
+              <KeyboardBackspaceIcon />Back
+            </Link>
         </div>
 
         <div className='m-14'>
@@ -80,30 +83,30 @@ const ProgressWidget = () => {
         <div className='m-14 '>
           {course.map((course) => (
             <>
-          <Typography className='py-8 capitalize text-2xl font-normal'>{course.course.course_name}</Typography>
-          <div className='flex w-4/5 gap-8 justify-start items-center 0 bg-grey-100 border-b-3 !border-grey-300'>
-            <Card className='bg-grey-100 w-full p-14 rounded-0 flex flex-col gap-8'>
-              <div>
-                <Typography className='pb-6 text-sm'>Actual Course Progress 0 % (<span className='text-green'>Green</span>) / 80 % Criteria with evidence attached (<span className=' text-[coral] '>Orange</span>)</Typography>
-                <LinearProgressWithLabel color="green" value={0} />
-              </div>
-              <div>
-                <LinearProgressWithLabel color="coral" value={80} />
-              </div>
-              <div>
-                <Typography className='pb-6 text-sm'>Course duration 08/08/2024 to 09/02/2026</Typography>
-                <LinearProgressWithLabel color="dodgerblue" value={30} />
-              </div>
+              <Typography className='py-8 capitalize text-2xl font-normal'>{course.course.course_name}</Typography>
+              <div className='flex w-4/5 gap-8 justify-start items-center 0 bg-grey-100 border-b-3 !border-grey-300'>
+                <Card className='bg-grey-100 w-full p-14 rounded-0 flex flex-col gap-8'>
+                  <div>
+                    <Typography className='pb-6 text-sm'>Actual Course Progress 0 % (<span className='text-green'>Green</span>) / 80 % Criteria with evidence attached (<span className=' text-[coral] '>Orange</span>)</Typography>
+                    <LinearProgressWithLabel color="green" value={0} />
+                  </div>
+                  <div>
+                    <LinearProgressWithLabel color="coral" value={80} />
+                  </div>
+                  <div>
+                    <Typography className='pb-6 text-sm'>Course duration 08/08/2024 to 09/02/2026</Typography>
+                    <LinearProgressWithLabel color="dodgerblue" value={30} />
+                  </div>
 
-            </Card>
-            <div className='w-1/4 flex flex-col justify-center items-center gap-6 '>
-              <Link to="/portfolio">
-                <SecondaryButtonOutlined name="Go to dashboard" />
-              </Link>
-              <Typography className='text-sm'>Assessor: Michelle Parris</Typography>
-            </div>
-          </div>
-          </>
+                </Card>
+                <div className='w-1/4 flex flex-col justify-center items-center gap-6 '>
+                  <Link to="/portfolio">
+                    <SecondaryButtonOutlined name="Go to dashboard" />
+                  </Link>
+                  <Typography className='text-sm'>Assessor: Michelle Parris</Typography>
+                </div>
+              </div>
+            </>
           ))}
         </div>
 
@@ -147,7 +150,6 @@ const ProgressWidget = () => {
           </Card>
         </div>
       </div>
-    </div>
   )
 }
 

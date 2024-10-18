@@ -43,6 +43,7 @@ import Uploading from "src/app/component/Cards/uploading";
 import UploadWorkDialog from "src/app/component/Cards/uploadWorkDialog";
 import { selectstoreDataSlice } from "app/store/reloadData";
 import { fetchCourseById, selectCourseManagement } from "app/store/courseManagement";
+import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 
 interface Column {
   id:
@@ -186,72 +187,10 @@ const AssignmentData = () => {
     <>
       <Card className="m-12 rounded-6" style={{ height: "87.3vh" }}>
         <div className="w-full h-full py-20">
-          {/* <Breadcrumb linkData={[AssignmentRedirect]} currPage="User" /> */}
-          {/* {data?.length ? ( */}
-          <div className={Style.create_user}>
-            <div className={Style.search_filed}>
-              {/* <TextField
-              label="Search by keyword"
-              fullWidth
-              size="small"
-              // onKeyDown={searchByKeywordUser}
-              onChange={searchHandler}
-              value={searchKeyword}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    {searchKeyword ? (
-                      <Close
-                        // onClick={() => {
-                        //   setSearchKeyword("");
-                        //   dispatch(
-                        //     fetchUserAPI(
-                        //       { page: 1, page_size: 25 },
-                        //       "",
-                        //       filterValue
-                        //     )
-                        //   );
-                        // }}
-                        sx={{
-                          color: "#5B718F",
-                          fontSize: 18,
-                          cursor: "pointer",
-                        }}
-                      />
-                    ) : (
-                      <IconButton
-                        id="dashboard-search-events-btn"
-                        disableRipple
-                        sx={{ color: "#5B718F" }}
-                        // onClick={() => searchAPIHandler()}
-                        size="small"
-                      >
-                        <SearchIcon fontSize="small" />
-                      </IconButton>
-                    )}
-                  </InputAdornment>
-                ),
-              }}
-            />
-            <Autocomplete
-              fullWidth
-              size="small"
-              value={filterValue}
-              options={roles.map((option) => option.label)}
-              renderInput={(params) => (
-                <TextField {...params} label="Search by role" />
-              )}
-              // onChange={filterHandler}
-              sx={{
-                ".MuiAutocomplete-clearIndicator": {
-                  color: "#5B718F",
-                },
-              }}
-              PaperComponent={({ children }) => (
-                <Paper style={{ borderRadius: "4px" }}>{children}</Paper>
-              )}
-            /> */}
-            </div>
+          <div className={`${Style.create_user} flex justify-end`}>
+            <Link to="/portfolio" className=' mb-10 !no-underline'>
+              <KeyboardBackspaceIcon />Back
+            </Link>
             {!user_id &&
               <SecondaryButton
                 name="Upload Files"
