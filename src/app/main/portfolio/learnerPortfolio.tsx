@@ -26,9 +26,25 @@ function calculateCompletionPercentage(startDate, endDate) {
 
     const current = today > end ? end : today;
     const totalDuration = end - start;
+    const totalDays = Math.ceil((end - current) / (1000 * 60 * 60 * 24));
     const elapsedDuration = current - start;
     const percentageCompleted = (elapsedDuration / totalDuration) * 100;
-    return percentageCompleted > 100 ? 100 : percentageCompleted.toFixed(0);
+    return {
+        dayPending: percentageCompleted > 100 ? 100 : percentageCompleted.toFixed(0),
+        totalDays
+    }
+}
+
+function formatDateAndTime(dateString) {
+    const date = new Date(dateString);
+    const formattedDate = date.toLocaleDateString('en-GB'); // en-GB gives DD/MM/YYYY format
+    const formattedTime = date.toLocaleTimeString('en-GB', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false  // 24-hour format
+    });
+
+    return `${formattedDate} ${formattedTime}`;
 }
 
 function LinearProgressWithLabel(props) {
@@ -72,7 +88,8 @@ function LearnerPortfolio() {
         notStarted: 0,
         partiallyCompleted: 0,
         totalSubUnits: 0,
-        dayPending: 0
+        dayPending: 0,
+        totalDays: 0
     })
 
     console.log(singleAssignmentData, "/////////////");
@@ -178,7 +195,8 @@ function LearnerPortfolio() {
                             notStarted: acc.notStarted + curr.notStarted,
                             partiallyCompleted: acc.partiallyCompleted + curr.partiallyCompleted,
                             totalSubUnits: acc.totalSubUnits + curr.totalSubUnits,
-                            dayPending: acc.dayPending + Number(calculateCompletionPercentage(curr.start_date, curr.end_date)) ? Number(calculateCompletionPercentage(curr.start_date, curr.end_date)) : 0
+                            dayPending: acc.dayPending + Number(calculateCompletionPercentage(curr.start_date, curr.end_date)?.dayPending) ? Number(calculateCompletionPercentage(curr.start_date, curr.end_date)?.dayPending) : 0,
+                            totalDays: Math.max(acc.totalDays, Number(calculateCompletionPercentage(curr.start_date, curr.end_date)?.totalDays))
                         }
                     }, overView))
                 }
@@ -245,8 +263,8 @@ function LearnerPortfolio() {
                     </Card>
                 </div>
                 <div className="">
-                    <Typography variant="body2">Last Login Date: 23/09/2024 11:18</Typography>
-                    <Typography variant="body2">Days Until Course Completion: 645</Typography>
+                    <Typography variant="body2">Last Login Date: {formatDateAndTime(fullLearnerDetails?.last_login)}</Typography>
+                    <Typography variant="body2">Days Until Course Completion: {overView?.totalDays}</Typography>
                 </div>
 
                 <div className="">
