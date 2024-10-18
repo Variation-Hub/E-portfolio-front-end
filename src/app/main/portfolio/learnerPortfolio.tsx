@@ -18,6 +18,19 @@ import { selectGlobalUser } from 'app/store/globalUser';
 import { selectstoreDataSlice } from 'app/store/reloadData';
 import { getAssignmentByCourseAPI, selectAssignment } from 'app/store/assignment';
 
+
+function calculateCompletionPercentage(startDate, endDate) {
+    const start: any = new Date(startDate);
+    const end: any = new Date(endDate);
+    const today = new Date();
+
+    const current = today > end ? end : today;
+    const totalDuration = end - start;
+    const elapsedDuration = current - start;
+    const percentageCompleted = (elapsedDuration / totalDuration) * 100;
+    return percentageCompleted > 100 ? 100 : percentageCompleted.toFixed(0);
+}
+
 function LinearProgressWithLabel(props) {
     const { color, value } = props;
     return (
@@ -58,7 +71,8 @@ function LearnerPortfolio() {
         fullyCompleted: 0,
         notStarted: 0,
         partiallyCompleted: 0,
-        totalSubUnits: 0
+        totalSubUnits: 0,
+        dayPending: 0
     })
 
     console.log(singleAssignmentData, "/////////////");
@@ -163,7 +177,8 @@ function LearnerPortfolio() {
                             fullyCompleted: acc.fullyCompleted + curr.fullyCompleted,
                             notStarted: acc.notStarted + curr.notStarted,
                             partiallyCompleted: acc.partiallyCompleted + curr.partiallyCompleted,
-                            totalSubUnits: acc.totalSubUnits + curr.totalSubUnits
+                            totalSubUnits: acc.totalSubUnits + curr.totalSubUnits,
+                            dayPending: acc.dayPending + Number(calculateCompletionPercentage(curr.start_date, curr.end_date)) ? Number(calculateCompletionPercentage(curr.start_date, curr.end_date)) : 0
                         }
                     }, overView))
                 }
@@ -236,9 +251,9 @@ function LearnerPortfolio() {
 
                 <div className="">
                     <p>Overall Status</p>
-                    <LinearProgressWithLabel value={(overView?.notStarted / overView?.totalSubUnits) * 100} color="darkred" />
                     <LinearProgressWithLabel value={(overView?.partiallyCompleted / overView?.totalSubUnits) * 100} color="coral" />
                     <LinearProgressWithLabel value={(overView?.fullyCompleted / overView?.totalSubUnits) * 100} color="green" />
+                    <LinearProgressWithLabel value={overView?.dayPending / course?.length} color="skyblue" />
                 </div>
             </div>
             <div className='w-3/5'>
@@ -376,9 +391,9 @@ function LearnerPortfolio() {
                                 <Card className='h-160 cursor-pointer rounded-4 bg-[#B3B3B3]' onClick={handleOpenProgressWidget} >
                                     <div className='flex flex-col justify-around items-start h-full p-8'>
                                         <div className='w-full'>
-                                            <LinearProgressWithLabel value={(singleCourse?.notStarted / singleCourse?.totalSubUnits) * 100} color="darkred" />
                                             <LinearProgressWithLabel value={(singleCourse?.partiallyCompleted / singleCourse?.totalSubUnits) * 100} color="coral" />
                                             <LinearProgressWithLabel value={(singleCourse?.fullyCompleted / singleCourse?.totalSubUnits) * 100} color="green" />
+                                            <LinearProgressWithLabel value={Number(calculateCompletionPercentage(singleCourse?.start_date, singleCourse?.end_date)) ? Number(calculateCompletionPercentage(singleCourse?.start_date, singleCourse?.end_date)) : 0} color="skyblue" />
                                         </div>
                                         <strong className="text-white text-xl">
                                             Progress Widget
