@@ -114,7 +114,7 @@ const LearnerToData = () => {
               }}
             />
           </Tabs>
-          <Link to="/portfolio" className='!no-underline'>
+          <Link to="/learnerOverview" className='!no-underline'>
             <KeyboardBackspaceIcon />Back
           </Link>
         </Box>

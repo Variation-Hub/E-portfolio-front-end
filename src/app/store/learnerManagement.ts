@@ -3,6 +3,7 @@ import axios from 'axios';
 import jsonData from 'src/url.json';
 import { showMessage } from './fuse/messageSlice';
 import { userTableMetaData } from '../contanst/metaData';
+import LearnerDetails from '../main/portfolio/learnerDeatils';
 
 const initialState = {
     data: [],
@@ -21,6 +22,7 @@ const initialState = {
     },
     learner: {},
     singleData: {},
+    learnerDetails: {},
     courseData: {},
     user_course_id: ""
 };
@@ -83,7 +85,10 @@ const learnerManagementSlice = createSlice({
             state.courseData = action.payload.course
             if (action.payload.user_course_id)
                 state.user_course_id = action.payload.user_course_id
-        }
+        },
+        setLearnerDetail(state, action) {
+            state.learnerDetails = action.payload
+        },
 
     }
 });
@@ -182,9 +187,10 @@ export const getLearnerDetails = (learner_id = "") => async (dispatch, getStore)
     }
 }
 
-export const getLearnerDetailsReturn = (id = "") => async () => {
+export const getLearnerDetailsReturn = (id = "") => async (dispatch) => {
     try {
         const response = await axios.get(`${URL_BASE_LINK}/learner/get/${id}`,)
+        dispatch(slice.setLearnerDetail(response.data.data));
         return response.data.data;
     } catch (err) {
         return null;

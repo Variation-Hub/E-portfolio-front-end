@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Tabs, Tab, Avatar, Typography, Card, CardContent, Container, LinearProgress, Box, Stack, Grid, Button, Dialog, DialogTitle, DialogContent, TextField, DialogActions } from '@mui/material';
+import { Tabs, Tab, Avatar, Typography, Card, Container, LinearProgress, Box, Stack, Grid, Button, Dialog, DialogTitle, DialogContent, TextField, DialogActions } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { getLearnerDetailsReturn, selectLearnerManagement } from 'app/store/learnerManagement';
 import { FaFolderOpen } from 'react-icons/fa';
 import { getLightRandomColor, getRandomColor } from 'src/utils/randomColor';
-import UploadWorkDialog from 'src/app/component/Cards/uploadWorkDialog';
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
-import { slice as courseSlice } from "app/store/courseManagement";
-import { useNavigate } from 'react-router-dom';
+import { slice as courseSlice, selectCourseManagement } from "app/store/courseManagement";
+import { Link, useNavigate } from 'react-router-dom';
 import Calendar from './calendar';
 import { SecondaryButton, SecondaryButtonOutlined } from 'src/app/component/Buttons';
 import { useSelector } from 'react-redux';
@@ -16,6 +15,8 @@ import { sendMail } from 'app/store/userManagement';
 import NewSession from './newsession';
 import { UserRole } from 'src/enum';
 import { selectGlobalUser } from 'app/store/globalUser';
+import { selectstoreDataSlice } from 'app/store/reloadData';
+import { getAssignmentByCourseAPI, selectAssignment } from 'app/store/assignment';
 
 function LinearProgressWithLabel(props) {
     const { color, value } = props;
@@ -40,8 +41,12 @@ function LearnerPortfolio() {
     const { learner } = useSelector(
         selectLearnerManagement
     );
+    const { user_id } = useSelector(selectstoreDataSlice);
+    const { singleAssignmentData } = useSelector(selectAssignment)
 
     const navigate = useNavigate();
+    const dispatch: any = useDispatch();
+
     const [openSession, setOpenSession] = useState(false);
     const [openCalender, setOpenCalender] = useState(false);
     const [value, setValue] = useState<number>(0);
@@ -56,8 +61,11 @@ function LearnerPortfolio() {
         totalSubUnits: 0
     })
 
+    console.log(singleAssignmentData, "/////////////");
+
     const handleClickSingleData = (row) => {
-        dispatch(courseSlice.setSingleData(row));
+        dispatch(getAssignmentByCourseAPI(row?.course?.course_id, user_id || user?.user_id));
+        dispatch(courseSlice?.setSingleData(row));
     };
 
     const handleOTJHours = () => {
@@ -141,7 +149,6 @@ function LearnerPortfolio() {
         window.close();
     };
 
-    const dispatch: any = useDispatch();
     useEffect(() => {
         async function fetchLearner() {
             const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user;
@@ -166,7 +173,6 @@ function LearnerPortfolio() {
     }, [])
 
     const handleChange = (newValue) => {
-        console.log(newValue);
         setValue(newValue);
         setSingleCourse(course.find((item) => item.course?.course_id === newValue));
     };
@@ -379,12 +385,35 @@ function LearnerPortfolio() {
                                         </strong>
                                     </div>
                                 </Card>
-                                <Card className='h-160 cursor-pointer rounded-4 bg-[#04A4A4]' onClick={handleOpenUploadWork}>
+                                <Card className='h-160 rounded-4 bg-[#04A4A4]' >
                                     <div className='flex flex-col justify-between items-start h-full p-8'>
                                         <div className='w-full max-h-128 overflow-y-auto'>
-                                            <Typography className='text-white text-sm'>No files found.</Typography>
+                                            <div className='flex gap-4 p-4 flex-col'>
+                                                {singleAssignmentData?.length > 0 ? (
+                                                    singleAssignmentData?.map(item => (
+                                                        <Link
+                                                            key={item?.id}
+                                                            to={item?.file?.url}
+                                                            className='flex items-center gap-2'
+                                                            target="_blank"
+                                                            rel="noopener"
+                                                            style={{ border: '0px', backgroundColor: 'unset' }}
+                                                        >
+                                                            <FaFolderOpen className='text-white text-xl overflow-visible' />
+                                                            <Typography className='text-white text-sm whitespace-nowrap overflow-hidden text-ellipsis'>
+                                                                {item?.file?.name}
+                                                            </Typography>
+                                                        </Link>
+                                                    ))
+                                                ) : (
+                                                    <div className='w-full max-h-128 overflow-y-auto'>
+                                                        <Typography className='text-white text-sm'>No files found.</Typography>
+                                                    </div>
+                                                )}
+
+                                            </div>
                                         </div>
-                                        <strong className="text-white text-xl bg-[#04A4A4]">
+                                        <strong onClick={handleOpenUploadWork} className="cursor-pointer text-white text-xl bg-[#04A4A4]">
                                             Upload Work
                                         </strong>
                                     </div>
