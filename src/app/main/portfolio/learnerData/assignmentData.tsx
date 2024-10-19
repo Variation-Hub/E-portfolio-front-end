@@ -191,22 +191,24 @@ const AssignmentData = () => {
       <Card className="m-12 rounded-6" style={{ height: "87.3vh" }}>
         <div className="w-full h-full py-20">
           <div className={`${Style.create_user} flex justify-end`}>
-            <button onClick={handleBack} className='mb-10 text-[#5b718f]'>
-              <KeyboardBackspaceIcon /> Back
-            </button>
             {!user_id &&
-              <SecondaryButton
-                name="Upload Files"
-                className="py-6 px-12 mb-10"
-                startIcon={
-                  <img
-                    src="assets/images/svgimage/createcourseicon.svg"
-                    alt="Upload Files"
-                    className="w-6 h-6 mr-2 sm:w-8 sm:h-8 lg:w-10 lg:h-10"
-                  />
-                }
-                onClick={handleOpen}
-              />
+              <>
+                <button onClick={handleBack} className='mb-10 text-[#5b718f]'>
+                  <KeyboardBackspaceIcon /> Back
+                </button>
+                <SecondaryButton
+                  name="Upload Files"
+                  className="py-6 px-12 mb-10"
+                  startIcon={
+                    <img
+                      src="assets/images/svgimage/createcourseicon.svg"
+                      alt="Upload Files"
+                      className="w-6 h-6 mr-2 sm:w-8 sm:h-8 lg:w-10 lg:h-10"
+                    />
+                  }
+                  onClick={handleOpen}
+                />
+              </>
             }
           </div>
           {/* ) : null} */}
