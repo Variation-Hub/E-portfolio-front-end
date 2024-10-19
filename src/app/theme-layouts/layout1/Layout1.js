@@ -5,7 +5,7 @@ import FuseSuspense from '@fuse/core/FuseSuspense';
 import AppContext from 'app/AppContext';
 import { memo, useContext } from 'react';
 import { useSelector } from 'react-redux';
-import { useRoutes } from 'react-router-dom';
+import { useLocation, useRoutes } from 'react-router-dom';
 import { selectFuseCurrentLayoutConfig } from 'app/store/fuse/settingsSlice';
 import FooterLayout1 from './components/FooterLayout1';
 import LeftSideLayout1 from './components/LeftSideLayout1';
@@ -34,7 +34,8 @@ function Layout1(props) {
   const config = useSelector(selectFuseCurrentLayoutConfig);
   const appContext = useContext(AppContext);
   const { routes } = appContext;
-
+  const location = useLocation();
+  
   return (
     <Root id="fuse-layout" config={config} className="w-full flex">
       {config.leftSidePanel.display && <LeftSideLayout1 />}
@@ -51,7 +52,7 @@ function Layout1(props) {
             <SettingsPanel />
           </div> */}
 
-          <div className="flex flex-col flex-auto min-h-0 relative z-10 overflow-y-auto">
+          <div className={`flex flex-col flex-auto min-h-0 relative z-10 ${location.pathname !== '/' && "overflow-y-auto"}`}>
             <FuseDialog />
 
             <FuseSuspense>{useRoutes(routes)}</FuseSuspense>
