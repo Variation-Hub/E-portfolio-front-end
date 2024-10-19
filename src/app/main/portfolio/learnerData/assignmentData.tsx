@@ -74,6 +74,8 @@ const columns: readonly Column[] = [
 const AssignmentData = () => {
 
   const dispatch: any = useDispatch();
+  const navigate = useNavigate();
+
   const { user_id } = useSelector(selectstoreDataSlice);
   const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
   const { singleData } = useSelector(selectCourseManagement)
@@ -88,8 +90,6 @@ const AssignmentData = () => {
   const [updateData, setUpdateData] = useState("");
   const [openMenuDialog, setOpenMenuDialog] = useState<any>({});
   const [edit, setEdit] = useState("Save");
-
-  const navigate = useNavigate();
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const oopen = Boolean(anchorEl);
@@ -182,15 +182,18 @@ const AssignmentData = () => {
     setDeleteId("");
   };
 
+  const handleBack = () => {
+    navigate(-1);
+  };
 
   return (
     <>
       <Card className="m-12 rounded-6" style={{ height: "87.3vh" }}>
         <div className="w-full h-full py-20">
           <div className={`${Style.create_user} flex justify-end`}>
-            <Link to="/portfolio" className=' mb-10 !no-underline'>
-              <KeyboardBackspaceIcon />Back
-            </Link>
+            <button onClick={handleBack} className='mb-10 text-[#5b718f]'>
+              <KeyboardBackspaceIcon /> Back
+            </button>
             {!user_id &&
               <SecondaryButton
                 name="Upload Files"

@@ -2,7 +2,7 @@ import { Box, Card, LinearProgress, Stack, Typography } from '@mui/material';
 import { getLearnerDetailsReturn, selectLearnerManagement } from 'app/store/learnerManagement';
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { SecondaryButtonOutlined } from 'src/app/component/Buttons';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import { useSelector } from 'react-redux';
@@ -41,6 +41,7 @@ function LinearProgressWithLabel(props) {
 const ProgressWidget = () => {
 
   const dispatch: any = useDispatch();
+  const navigate = useNavigate();
 
   const { dataFetchLoading } = useSelector(selectLearnerManagement);
 
@@ -91,13 +92,17 @@ const ProgressWidget = () => {
     ? Math.min(...validDates)
     : null;
 
-    const validEndDates = course
-  .map(c => new Date(c?.end_date).getTime())
-  .filter(date => !isNaN(date));
+  const validEndDates = course
+    .map(c => new Date(c?.end_date).getTime())
+    .filter(date => !isNaN(date));
 
   const maxDateValue = validEndDates.length > 0
     ? Math.max(...validEndDates)
-    : null; 
+    : null;
+
+  const handleBack = () => {
+    navigate(-1);
+  };
 
   return (
     <>
@@ -107,9 +112,9 @@ const ProgressWidget = () => {
         <div className='p-10'>
           <div className='flex justify-between items-center p-10 border-b-1 !border-grey-400'>
             <Typography className='capitalize text-lg font-semibold'>Welcome,  {learnerDetails?.displayName}</Typography>
-            <Link to="/portfolio" className='!no-underline'>
-              <KeyboardBackspaceIcon />Back
-            </Link>
+            <button onClick={handleBack} className='mb-10 text-[#5b718f]'>
+              <KeyboardBackspaceIcon /> Back
+            </button>
           </div>
 
           <div className='m-14'>

@@ -8,10 +8,12 @@ import { OpenInNew } from '@mui/icons-material';
 import axiosInstance from 'src/utils/axios';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import { selectstoreDataSlice } from 'app/store/reloadData';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const ResourceData = () => {
   const dispatch: any = useDispatch();
+  const navigate = useNavigate();
+
   const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
   const { singleData } = useSelector(selectCourseManagement);
   const resource = useSelector(selectResourceManagement);
@@ -30,6 +32,10 @@ const ResourceData = () => {
     window.open(url, '_blank');
   };
 
+  const handleBack = () => {
+    navigate(-1);
+  };
+
   return (
     <div className="container mx-auto p-4">
       <div className='flex justify-between items-center mx-20'>
@@ -37,9 +43,9 @@ const ResourceData = () => {
         <Typography variant="h3" className="text-center font-bold mb-8 text-blue-700">
           Course Resources
         </Typography>
-        <Link to="/portfolio" className='!no-underline'>
-          <KeyboardBackspaceIcon />Back
-        </Link>
+        <button onClick={handleBack} className='mb-10 text-[#5b718f]'>
+          <KeyboardBackspaceIcon /> Back
+        </button>
       </div>
 
       <TableContainer component={Paper} style={{ borderRadius: 8, overflow: 'hidden' }}>

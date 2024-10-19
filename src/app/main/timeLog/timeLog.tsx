@@ -14,11 +14,13 @@ import CalendarComponent from './calendar';
 import { getLearnerDetails, selectLearnerManagement } from 'app/store/learnerManagement';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import CustomPagination from 'src/app/component/Pagination/CustomPagination';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useNavigationType } from 'react-router-dom';
 
 const TimeLog = (props) => {
 
   const dispatch: any = useDispatch();
+  const navigate = useNavigate();
+
   const { currentUser, selectedUser, selected } = useSelector(selectGlobalUser);
   const timeLog = useSelector(selectTimeLog);
   const { learner } = useSelector(selectLearnerManagement);
@@ -171,13 +173,19 @@ const TimeLog = (props) => {
   const handleToggleView = () => {
     setIsCalendarView(!isCalendarView);
   };
+  const navigationType = useNavigationType();
+
+  const handleBack = () => {
+    navigate(-1);
+  };
+
   return (
     <Grid className="flex flex-col m-10 p-10 gap-20" sx={{ minHeight: 600 }}>
       <Grid className='flex justify-between items-center'>
         <Typography className='h3 font-500 '>Welcome, {selected ? selectedUser?.user_name : currentUser?.user_name}</Typography>
-        <Link to="/portfolio" className='!no-underline'>
-          <KeyboardBackspaceIcon />Back
-        </Link>
+        <button onClick={handleBack} className='mb-10 text-[#5b718f]'>
+          <KeyboardBackspaceIcon /> Back
+        </button>
       </Grid>
 
       <hr style={{ borderBottom: "1px solid #ddd" }} />

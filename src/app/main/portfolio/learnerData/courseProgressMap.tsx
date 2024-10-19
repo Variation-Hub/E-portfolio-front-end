@@ -4,7 +4,7 @@ import { getLearnerDetailsReturn } from 'app/store/learnerManagement';
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { SecondaryButtonOutlined } from 'src/app/component/Buttons';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 
@@ -28,6 +28,7 @@ function LinearProgressWithLabel(props) {
 const CourseProgressMap = () => {
 
   const dispatch: any = useDispatch();
+  const navigate = useNavigate();
 
   const { selectedUser, dataFetchLoading } = useSelector(selectGlobalUser);
   const courseList = selectedUser?.course?.map((item) => (item?.course));
@@ -76,13 +77,17 @@ const CourseProgressMap = () => {
     )
   }
 
+  const handleBack = () => {
+    navigate(-1);
+  };
+
   return (
     <div>
       <div className='flex justify-between items-center p-10 border-b-1 !border-grey-400'>
         <Typography className='capitalize text-lg font-semibold'>Welcome,  {learnerDetails?.displayName}</Typography>
-        <Link to="/portfolio" className='!no-underline'>
-          <KeyboardBackspaceIcon />Back
-        </Link>
+        <button onClick={handleBack} className='mb-10 text-[#5b718f]'>
+          <KeyboardBackspaceIcon /> Back
+        </button>
       </div>
 
       <div className='m-14'>
