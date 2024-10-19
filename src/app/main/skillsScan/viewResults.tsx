@@ -1,13 +1,12 @@
 import { Card, FormControl, Grid, MenuItem, Select, Typography } from '@mui/material'
 import { selectLearnerManagement } from 'app/store/learnerManagement';
-import { selectSkillsScan } from 'app/store/skillsScan';
-import React, { forwardRef, useEffect, useRef, useState } from 'react'
+import { forwardRef, useRef, useState } from 'react'
 import { useSelector } from 'react-redux';
 import { SecondaryButton } from 'src/app/component/Buttons';
 import { Line } from 'react-chartjs-2';
 import 'chart.js/auto';
 import html2pdf from 'html2pdf.js';
-import { selectUser } from 'app/store/userSlice';
+import { selectGlobalUser } from 'app/store/globalUser';
 
 interface LineChartProps {
     data: { rating: any; name: any; }[];
@@ -75,9 +74,7 @@ const LineChart = forwardRef<any, LineChartProps>(({ data }, ref) => {
 
 const ViewResults = () => {
 
-    const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
-
-    const { singleData } = useSelector(selectSkillsScan);
+    const selectedUser = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectGlobalUser)?.selectedUser;
     const { courseData } = useSelector(selectLearnerManagement);
     const chartRef = useRef<any>(null);
 
@@ -165,8 +162,7 @@ const ViewResults = () => {
             <body class="bg-gray-100 flex justify-center items-center">
                 <div class="a4-container">
                     <div class="mb-6">
-                        <h2 class="text-lg font-semibold">${user?.displayName}</h2>
-                        <p class="text-base font-semibold">Results Chart for ${user?.displayName}</p>
+                        <p class="text-base font-semibold">Results Chart for ${selectedUser?.first_name + " " + selectedUser.last_name}</p>
                         <p class="text-sm text-gray-600 mt-2">${subTitle}</p>
                     </div>
                     <div class="flex gap-8 w-full">
@@ -231,9 +227,6 @@ const ViewResults = () => {
 
     return (
         <Grid className=' m-10 px-10 pt-10'>
-            <Grid >
-                <Typography className='h3'>Results chart for {user?.displayName}</Typography>
-            </Grid>
             <Grid className=' flex gap-28'>
                 <Grid className='w-1/2'>
                     <FormControl fullWidth size="small" className='pt-20'>

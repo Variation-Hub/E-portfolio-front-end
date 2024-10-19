@@ -65,7 +65,6 @@ export const PortfolioCard = ({ data, learner = undefined, handleClickData = (id
   const [open, setOpen] = useState(false);
   const dispatch: any = useDispatch();
   const navigate = useNavigate();
-  const learnerData = useSelector(selectstoreDataSlice);
   const { role } = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
 
   const { id = 0, name = "No title", color = "#FCA14E" } = data;
@@ -73,6 +72,7 @@ export const PortfolioCard = ({ data, learner = undefined, handleClickData = (id
 
     if (learner) {
       handleClickData(learner?.learner_id, learner?.user_id);
+      dispatch(globalSlice.setSelectedUser(learner))
     }
 
     if (id === 1) {
@@ -80,7 +80,6 @@ export const PortfolioCard = ({ data, learner = undefined, handleClickData = (id
     } else if (id === 2) {
       navigate('/portfolio/progress');
     } else if (id === 3) {
-      dispatch(globalSlice.setSelectedUser(row))
       navigate('/cpd')
     } else if (id === 5) {
       navigate('/timeLog');

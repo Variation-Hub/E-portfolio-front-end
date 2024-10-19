@@ -3,23 +3,23 @@ import { Autocomplete, Checkbox, FormControl, FormControlLabel, FormLabel, Grid,
 import { SecondaryButton } from 'src/app/component/Buttons'
 import { useSelector } from 'react-redux';
 import { getLearnerCourseDetails, selectLearnerManagement } from 'app/store/learnerManagement';
-import { selectUser } from 'app/store/userSlice';
 import { useDispatch } from 'react-redux';
+import { selectGlobalUser } from 'app/store/globalUser';
 
 const TNAUnits = (props) => {
 
     const { handleTabChange } = props
     const { learner, courseData, dataFetchLoading } = useSelector(selectLearnerManagement);
-    const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
-
+    const selectedUser = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectGlobalUser)?.selectedUser;
 
     const dispatch: any = useDispatch();
 
     const getCouseDetails = (value) => {
 
         const { course_id } = value.course
-        const learner_id = user?.learner_id
+        const learner_id = selectedUser?.learner_id
 
+        console.log(course_id, learner_id)
         dispatch(getLearnerCourseDetails({ course_id, learner_id }))
     }
 

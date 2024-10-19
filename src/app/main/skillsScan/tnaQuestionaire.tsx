@@ -13,7 +13,6 @@ const TNAQuestionaire = (props) => {
     const { singleData } = useSelector(selectSkillsScan);
     const { courseData } = useSelector(selectLearnerManagement);
 
-
     const dispatch: any = useDispatch();
 
     const [sampleData, setSampleData] = useState(courseData?.units || []);

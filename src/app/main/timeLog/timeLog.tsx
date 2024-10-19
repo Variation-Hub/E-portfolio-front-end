@@ -61,7 +61,6 @@ const TimeLog = (props) => {
   const [selectedRow, setSelectedRow] = useState<any>(null);
 
   const handleClick = (event, row) => {
-    console.log(row);
     setSelectedRow(row);
     setAnchorEl(event.currentTarget);
   };
@@ -88,7 +87,6 @@ const TimeLog = (props) => {
     jobType: "",
   });
   const [approvedFilter, setAprovedFilter] = useState("")
-  console.log(filterData);
 
   const handleFilterChange = (event) => {
     const { name, value } = event.target;
@@ -107,8 +105,10 @@ const TimeLog = (props) => {
   };
 
   useEffect(() => {
-    dispatch(getLearnerDetails(selected ? selectedUser?.learner_id : currentUser?.learner_id))
-  }, [dispatch])
+    if (selected) {
+      dispatch(getLearnerDetails(selected ? selectedUser?.learner_id : currentUser?.learner_id))
+    }
+  }, [dispatch, selected])
 
   useEffect(() => {
     if (selectedUser?.user_id || currentUser?.user_id) {
