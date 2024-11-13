@@ -60,9 +60,9 @@ const atoz = "abcdefghijklmnopqrstuvwxyz";
 export const IconsData = [
   { name: 'Nvq', color: '#717F84' },
   { name: 'Functional skills', color: '#904887' },
-  { name: 'Err', color: '#1D9EB4' },
-  { name: 'Technical Certificate', color: '#2FA286' },
-  { name: 'Plts', color: '#D06984' },
+  // { name: 'Err', color: '#1D9EB4' },
+  // { name: 'Technical Certificate', color: '#2FA286' },
+  // { name: 'Plts', color: '#D06984' },
   { name: 'Svq', color: '#C5975B' },
   { name: 'Vcq', color: '#D0AB3F' },
   { name: 'Vrq', color: '#816855' },

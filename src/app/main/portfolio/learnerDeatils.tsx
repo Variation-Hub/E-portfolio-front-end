@@ -234,24 +234,24 @@ const LearnerDetails = () => {
 
     return (
         <div>
-            <div className='flex border-2 p-5'>
-                <Grid className="w-4/5">
+            <div className='flex p-5'>
+                <Grid className="w-full">
                     <Grid className='my-20 mx-20 flex flex-col gap-20'>
 
-                        <div className='flex gap-5 items-center justify-end'>
-                            <SecondaryButtonOutlined className="bg-[#7DAFC9] !text-white hover:bg-[#264d62]" name="Create New Password" onClick={handleClickOpen} />
-                            <SecondaryButtonOutlined className="bg-[#7DAFC9] !text-white hover:bg-[#264d62]" name="Email Password Reset" onClick={handleEmailAlert} />
-                            <SecondaryButtonOutlined className="bg-[#7DAFC9] !text-white hover:bg-[#264d62]" name="Create Employer" onClick={handleCreateEmployer} />
+                        <div className='flex gap-5 items-center justify-start'>
+                            <SecondaryButtonOutlined className="bg-[#46c2c5] !text-white hover:bg-[#37a1a3]" name="Create New Password" onClick={handleClickOpen} />
+                            <SecondaryButtonOutlined className="bg-[#46c2c5] !text-white hover:bg-[#37a1a3]" name="Email Password Reset" onClick={handleEmailAlert} />
+                            <SecondaryButtonOutlined className="bg-[#46c2c5] !text-white hover:bg-[#37a1a3]" name="Create Employer" onClick={handleCreateEmployer} />
                         </div>
                         <Card className='rounded-6 items-center ' variant="outlined">
                             <Grid className='h-full flex flex-col'>
                                 <Box>
-                                    <Grid xs={12} className='p-10 border-b-2 bg-gray-100'>
-                                        <Typography className='font-600 '>Student ID</Typography>
+                                    <Grid xs={12} className='p-10 border-b-2 bg-[#007E84]'>
+                                        <Typography className='font-600 text-white'>Student ID</Typography>
                                     </Grid>
-                                    <Box className="m-12 flex flex-col justify-between gap-12 sm:flex-col">
-                                        <Grid className='w-full flex flex-row gap-20'>
-                                            <Grid className='w-1/2'>
+                                    <Box className="m-12 flex flex-row justify-between gap-20">
+                                        <Grid className='w-1/2 flex flex-col gap-20'>
+                                            <Grid className=''>
                                                 <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>ULN</Typography>
                                                 <TextField
                                                     name="uln"
@@ -262,7 +262,7 @@ const LearnerDetails = () => {
                                                     className='bg-none '
                                                 />
                                             </Grid>
-                                            <Grid className='w-1/2'>
+                                            <Grid className=''>
                                                 <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>MIS Learner ID</Typography>
                                                 <TextField
                                                     name="mis_learner_id"
@@ -273,9 +273,7 @@ const LearnerDetails = () => {
                                                     className='bg-none '
                                                 />
                                             </Grid>
-                                        </Grid>
-                                        <Grid className='w-full flex flex-row gap-20'>
-                                            <Grid className='w-1/2'>
+                                            <Grid className=''>
                                                 <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Student ID</Typography>
                                                 <TextField
                                                     name="student_id"
@@ -288,6 +286,11 @@ const LearnerDetails = () => {
                                                 />
                                             </Grid>
                                         </Grid>
+                                        <Grid className='w-1/2 flex justify-center items-center'>
+                                            {/* <div className='w-96'> */}
+                                            <UploadPhoto />
+                                            {/* </div> */}
+                                        </Grid>
                                     </Box>
 
                                 </Box>
@@ -297,8 +300,8 @@ const LearnerDetails = () => {
                         <Card className='rounded-6 items-center ' variant="outlined">
                             <Grid className='h-full flex flex-col'>
                                 <Box>
-                                    <Grid xs={12} className='p-10 border-b-2 bg-gray-100'>
-                                        <Typography className='font-600 '>About You</Typography>
+                                    <Grid xs={12} className='p-10 border-b-2 bg-[#007E84]'>
+                                        <Typography className='font-600 text-white'>About You</Typography>
                                     </Grid>
                                     <Box className="m-12 flex flex-col justify-between gap-12 sm:flex-col">
 
@@ -415,7 +418,7 @@ const LearnerDetails = () => {
                                         </Grid>
 
                                         <Grid className='w-full flex flex-row gap-20'>
-                                            <Grid className='w-1/4'>
+                                            <Grid className='w-1/3'>
                                                 <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>National Insurance No</Typography>
                                                 <TextField
                                                     name="national_ins_no"
@@ -428,7 +431,7 @@ const LearnerDetails = () => {
                                                 />
                                             </Grid>
 
-                                            <Grid className='w-1/4'>
+                                            <Grid className='w-1/3'>
                                                 <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Ethnicity</Typography>
                                                 <TextField
                                                     name="ethnicity"
@@ -441,7 +444,7 @@ const LearnerDetails = () => {
                                                 />
                                             </Grid>
 
-                                            <Grid className='w-1/4'>
+                                            <Grid className='w-1/3'>
                                                 <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Learner Disability</Typography>
                                                 <Select
                                                     name="learner_disability"
@@ -470,7 +473,11 @@ const LearnerDetails = () => {
                                                 </Select>
                                             </Grid>
 
-                                            <Grid className='w-1/4'>
+
+                                        </Grid>
+
+                                        <Grid className='w-full flex flex-row gap-20'>
+                                            <Grid className='w-1/3'>
                                                 <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Learning Difficulties</Typography>
                                                 <Select
                                                     name="learner_difficulity"
@@ -512,9 +519,6 @@ const LearnerDetails = () => {
                                                     <MenuItem value={"Does not apply"}>Does not apply</MenuItem>
                                                 </Select>
                                             </Grid>
-                                        </Grid>
-
-                                        <Grid className='w-full flex flex-row gap-20'>
                                             <Grid className='w-1/3'>
                                                 <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Initial Assessment Numeracy</Typography>
                                                 <TextField
@@ -541,7 +545,7 @@ const LearnerDetails = () => {
                                                 />
                                             </Grid>
 
-                                            <Grid className='w-1/3'>
+                                            {/* <Grid className='w-1/3'>
                                                 <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Initial Assessment ICT</Typography>
                                                 <TextField
                                                     name="Initial_Assessment_ICT"
@@ -552,11 +556,11 @@ const LearnerDetails = () => {
                                                     onChange={handleDataUpdate}
                                                     className='bg-none '
                                                 />
-                                            </Grid>
+                                            </Grid> */}
 
                                         </Grid>
 
-                                        <Grid className='w-full flex flex-row gap-20'>
+                                        {/* <Grid className='w-full flex flex-row gap-20'>
                                             <Grid className='w-1/3'>
                                                 <FormControlLabel
                                                     control={<Checkbox sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "200" }} />}
@@ -605,7 +609,7 @@ const LearnerDetails = () => {
                                                 />
                                             </Grid>
 
-                                        </Grid>
+                                        </Grid> */}
 
                                     </Box>
 
@@ -616,8 +620,8 @@ const LearnerDetails = () => {
                         <Card className='rounded-6 items-center ' variant="outlined">
                             <Grid className='h-full flex flex-col'>
                                 <Box>
-                                    <Grid xs={12} className='p-10 border-b-2 bg-gray-100'>
-                                        <Typography className='font-600 '>Address</Typography>
+                                    <Grid xs={12} className='p-10 border-b-2 bg-[#007E84]'>
+                                        <Typography className='font-600 text-white'>Address</Typography>
                                     </Grid>
                                     <Box className="m-12 flex flex-col justify-between gap-12 sm:flex-col">
                                         <Grid className='w-full flex flex-row gap-20'>
@@ -670,7 +674,7 @@ const LearnerDetails = () => {
                                         </Grid>
 
                                         <Grid className='w-full flex flex-row gap-20'>
-                                            <Grid className='w-1/3'>
+                                            <Grid className='w-1/2'>
                                                 <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Home Postcode</Typography>
                                                 <TextField
                                                     name="home_postcode"
@@ -683,7 +687,7 @@ const LearnerDetails = () => {
                                                 />
                                             </Grid>
 
-                                            <Grid className='w-1/3'>
+                                            <Grid className='w-1/2'>
                                                 <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Country of Domicile</Typography>
                                                 <Select
                                                     name="country_of_domicile"
@@ -706,7 +710,7 @@ const LearnerDetails = () => {
                                                 </Select>
                                             </Grid>
 
-                                            <Grid className='w-1/3'>
+                                            {/* <Grid className='w-1/3'>
                                                 <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>External Data Code</Typography>
                                                 <TextField
                                                     name="external_data_code"
@@ -717,7 +721,7 @@ const LearnerDetails = () => {
                                                     onChange={handleDataUpdate}
                                                     className='bg-none '
                                                 />
-                                            </Grid>
+                                            </Grid> */}
 
                                         </Grid>
                                     </Box>
@@ -729,8 +733,8 @@ const LearnerDetails = () => {
                         <Card className='rounded-6 items-center ' variant="outlined">
                             <Grid className='h-full flex flex-col'>
                                 <Box>
-                                    <Grid xs={12} className='p-10 border-b-2 bg-gray-100'>
-                                        <Typography className='font-600 '>Employer</Typography>
+                                    <Grid xs={12} className='p-10 border-b-2 bg-[#007E84]'>
+                                        <Typography className='font-600 text-white'>Employer</Typography>
                                     </Grid>
                                     <Box className="m-12 flex flex-col justify-between gap-12 sm:flex-col">
                                         <Grid className='w-full flex flex-row gap-20'>
@@ -767,7 +771,7 @@ const LearnerDetails = () => {
                                                 />
                                             </Grid>
                                             <Grid className='w-1/2'>
-                                                <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Cost Centre</Typography>
+                                                <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Branch Name</Typography>
                                                 <TextField
                                                     name="cost_centre"
                                                     value={learnerData?.cost_centre}
@@ -792,7 +796,7 @@ const LearnerDetails = () => {
                                                 />
                                             </Grid>
                                             <Grid className='w-1/2'>
-                                                <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Location</Typography>
+                                                <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Post Code</Typography>
                                                 <TextField
                                                     name="location"
                                                     value={learnerData?.location}
@@ -867,20 +871,6 @@ const LearnerDetails = () => {
                                                 />
                                             </Grid>
                                             <Grid className='w-1/2'>
-                                                <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Area</Typography>
-                                                <TextField
-                                                    name="area"
-                                                    value={learnerData?.area}
-                                                    size="small"
-                                                    fullWidth
-                                                    onChange={handleDataUpdate}
-                                                    className='bg-none '
-                                                />
-                                            </Grid>
-                                        </Grid>
-
-                                        <Grid className='w-full flex flex-row gap-20'>
-                                            <Grid className='w-1/2'>
                                                 <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Sub Area</Typography>
                                                 <TextField
                                                     name="sub_area"
@@ -891,6 +881,21 @@ const LearnerDetails = () => {
                                                     className='bg-none '
                                                 />
                                             </Grid>
+                                            {/* <Grid className='w-1/2'>
+                                                <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Area</Typography>
+                                                <TextField
+                                                    name="area"
+                                                    value={learnerData?.area}
+                                                    size="small"
+                                                    fullWidth
+                                                    onChange={handleDataUpdate}
+                                                    className='bg-none '
+                                                />
+                                            </Grid> */}
+                                        </Grid>
+
+                                        {/* <Grid className='w-full flex flex-row gap-20'>
+                                            
                                             <Grid className='w-1/2'>
                                                 <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Shift</Typography>
                                                 <TextField
@@ -902,7 +907,7 @@ const LearnerDetails = () => {
                                                     className='bg-none '
                                                 />
                                             </Grid>
-                                        </Grid>
+                                        </Grid> */}
 
                                         <Grid className='w-full flex flex-row gap-20'>
                                             <Grid className='w-1/2'>
@@ -916,7 +921,7 @@ const LearnerDetails = () => {
                                                     className='bg-none '
                                                 />
                                             </Grid>
-                                            <Grid className='w-1/2'>
+                                            {/* <Grid className='w-1/2'>
                                                 <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>LSF</Typography>
                                                 <TextField
                                                     name="lsf"
@@ -926,10 +931,7 @@ const LearnerDetails = () => {
                                                     onChange={handleDataUpdate}
                                                     className='bg-none '
                                                 />
-                                            </Grid>
-                                        </Grid>
-
-                                        <Grid className='w-full flex flex-row gap-20'>
+                                            </Grid> */}
                                             <Grid className='w-1/2'>
                                                 <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Curriculum Area</Typography>
                                                 <TextField
@@ -941,6 +943,9 @@ const LearnerDetails = () => {
                                                     className='bg-none '
                                                 />
                                             </Grid>
+                                        </Grid>
+
+                                        <Grid className='w-full flex flex-row gap-20'>
                                             <Grid className='w-1/2'>
                                                 <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>SSA1</Typography>
                                                 <TextField
@@ -952,9 +957,6 @@ const LearnerDetails = () => {
                                                     className='bg-none '
                                                 />
                                             </Grid>
-                                        </Grid>
-
-                                        <Grid className='w-full flex flex-row gap-20'>
                                             <Grid className='w-1/2'>
                                                 <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>SSA2</Typography>
                                                 <TextField
@@ -966,6 +968,9 @@ const LearnerDetails = () => {
                                                     className='bg-none '
                                                 />
                                             </Grid>
+                                        </Grid>
+
+                                        <Grid className='w-full flex flex-row gap-20'>
                                             <Grid className='w-1/2'>
                                                 <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Director of Curriculum</Typography>
                                                 <TextField
@@ -977,9 +982,10 @@ const LearnerDetails = () => {
                                                     className='bg-none '
                                                 />
                                             </Grid>
+                                            <Grid className='w-1/2'></Grid>
                                         </Grid>
 
-                                        <Grid className='w-full flex flex-row gap-20'>
+                                        {/* <Grid className='w-full flex flex-row gap-20'>
                                             <Grid className='w-1/2'>
                                                 <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Wage(£)</Typography>
                                                 <TextField
@@ -1007,7 +1013,7 @@ const LearnerDetails = () => {
                                                     <MenuItem value={"Per Annum"}>Per Annum</MenuItem>
                                                 </Select>
                                             </Grid>
-                                        </Grid>
+                                        </Grid> */}
 
                                     </Box>
 
@@ -1018,11 +1024,18 @@ const LearnerDetails = () => {
                         <Card className='rounded-6 items-center ' variant="outlined">
                             <Grid className='h-full flex flex-col'>
                                 <Box>
-                                    <Grid xs={12} className='p-10 border-b-2 bg-gray-100 flex justify-between items-center'>
-                                        <Typography className='font-600 '>Funding Body</Typography>
+                                    <Grid xs={12} className='p-10 border-b-2 bg-[#007E84] flex justify-between items-center'>
+                                        <Typography className='font-600 text-white'>Funding Body</Typography>
                                         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
-                                            <Typography className='font-600 '>User Archived </Typography>
-                                            <Checkbox sx={{ marginLeft: '8px' }} />
+                                            <Typography className='font-600 text-white'>User Archived </Typography>
+                                            <Checkbox sx={{
+                                                marginLeft: '8px',
+                                                color: 'white',
+                                                '&.Mui-checked': {
+                                                    color: 'white', // checked color
+                                                },
+                                            }} />
+
                                         </Box>
                                     </Grid>
                                     <Box className="m-12 flex flex-col justify-between gap-12 sm:flex-col">
@@ -1043,7 +1056,7 @@ const LearnerDetails = () => {
                                                     <MenuItem value={false as any}>No</MenuItem>
                                                 </Select>
                                             </Grid>
-                                            <Grid className='w-1/2'>
+                                            {/* <Grid className='w-1/2'>
                                                 <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Branding Type:</Typography>
                                                 <Select
                                                     name="branding_type"
@@ -1057,10 +1070,7 @@ const LearnerDetails = () => {
                                                 >
                                                     <MenuItem value={""}>Select Branding Type</MenuItem>
                                                 </Select>
-                                            </Grid>
-                                        </Grid>
-
-                                        <Grid className='w-full flex flex-row gap-20'>
+                                            </Grid> */}
                                             <Grid className='w-1/2'>
                                                 <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Learner Type</Typography>
                                                 <Select
@@ -1074,12 +1084,13 @@ const LearnerDetails = () => {
                                                     sx={{ ".muiltr-156t61m-MuiSvgIcon-root-MuiSelect-icon": { color: "black" } }}
                                                 >
                                                     <MenuItem value={"Apprentice"}>Apprentice</MenuItem>
-                                                    <MenuItem value={"Pending BIL"}>Pending BIL</MenuItem>
-                                                    <MenuItem value={"Pending WD"}>Pending WD</MenuItem>
-                                                    <MenuItem value={"Private"}>Private</MenuItem>
+                                                    <MenuItem value={"Commercial"}>Commercial</MenuItem>
+                                                    <MenuItem value={"Learner"}>Learner</MenuItem>
                                                 </Select>
                                             </Grid>
+                                        </Grid>
 
+                                        <Grid className='w-full flex flex-row gap-20'>
                                             <Grid className='w-1/2'>
                                                 <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Funding Body</Typography>
                                                 <Select
@@ -1118,17 +1129,6 @@ const LearnerDetails = () => {
                                                     <MenuItem value={"Student Loan"}>Student Loan</MenuItem>
                                                 </Select>
                                             </Grid>
-                                        </Grid>
-
-                                        <Grid className='w-yfull flex flex-row gap-20'>
-                                            <Grid className='w-1/2'>
-                                                <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Use specified Off the Job hours</Typography>
-                                                <Checkbox
-                                                    className='p-0'
-                                                    checked={isChecked}
-                                                    onChange={handleCheckboxChange}
-                                                />
-                                            </Grid>
                                             <Grid className='w-1/2'>
                                                 <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Expected off the Job hours</Typography>
                                                 <TextField
@@ -1146,6 +1146,17 @@ const LearnerDetails = () => {
                                             </Grid>
                                         </Grid>
 
+                                        <Grid className='w-yfull flex flex-row gap-20'>
+                                            <Grid className='w-1/2'>
+                                                <Typography sx={{ fontSize: "0.9vw", marginBottom: "0.5rem", fontWeight: "500" }}>Use specified Off the Job hours</Typography>
+                                                <Checkbox
+                                                    className='p-0'
+                                                    checked={isChecked}
+                                                    onChange={handleCheckboxChange}
+                                                />
+                                            </Grid>
+                                        </Grid>
+
                                     </Box>
 
                                 </Box>
@@ -1158,10 +1169,6 @@ const LearnerDetails = () => {
 
                     </Grid >
                 </Grid>
-
-                <div className='w-1/5 mt-72'>
-                    <UploadPhoto />
-                </div>
             </div>
 
             <Dialog

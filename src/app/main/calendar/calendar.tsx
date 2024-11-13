@@ -44,22 +44,27 @@ import { Link } from "react-router-dom";
 import { selectUser } from "app/store/userSlice";
 import { selectGlobalUser } from "app/store/globalUser";
 import CustomPagination from "src/app/component/Pagination/CustomPagination";
+import { getRoleAPI, selectLearnerManagement } from "app/store/learnerManagement";
 
 const Calendar = () => {
   const dispatch: any = useDispatch();
 
   const session = useSelector(selectSession);
   const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
-
+  const { trainer } = useSelector(selectLearnerManagement);
   const { pagination } = useSelector(selectGlobalUser);
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedRow, setSelectedRow] = useState<any>(null);
   const [dialogType, setDialogType] = useState(false);
   const [deleteId, setDeleteId] = useState("");
+  const [filter, setfilter] = useState({
+    Attended: "",
+    trainer_id: "",
+  })
 
   const fetchSessionData = (page = 1) => {
-    dispatch(getSessionAPI({ page, page_size: pagination?.page_size }));
+    dispatch(getSessionAPI({ page, page_size: pagination?.page_size }, filter));
   };
 
   const handleClick = (event, row) => {
@@ -99,10 +104,17 @@ const Calendar = () => {
   const handleChangePage = (event: unknown, newPage: number) => {
     fetchSessionData(newPage);
   };
+  const handleFilterChange = (event: string, value: string) => {
+    setfilter({ ...filter, [event]: value })
+  }
 
   useEffect(() => {
     fetchSessionData();
-  }, [dispatch, pagination]);
+  }, [dispatch, pagination, filter]);
+
+  useEffect(() => {
+    dispatch(getRoleAPI("Trainer"));
+  }, []);
 
   const formatDate = (date) => {
     if (!date) return "";
@@ -111,13 +123,75 @@ const Calendar = () => {
   };
   return (
     <>
-      <div className="m-10 mb-0 text-right">
-        {user?.role !== "Learner" && (
-          <Link to="/newsession">
-            <SecondaryButton name="New Session" />
-          </Link>
-        )}
-      </div>
+      {user?.role !== "Learner" &&
+        <div className="m-10 mb-0 flex justify-between">
+          <div className="w-1/3 flex gap-14">
+            <Autocomplete
+              fullWidth
+              size="small"
+              options={trainer}
+              getOptionLabel={(option: any) => option.user_name}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  placeholder="Search by Trainer"
+                  name="role"
+                  value={filter?.trainer_id}
+                />
+              )}
+              onChange={(e, value: any) =>
+                handleFilterChange("trainer_id", value?.user_id)
+              }
+              sx={{
+                ".MuiAutocomplete-clearIndicator": {
+                  color: "#5B718F",
+                },
+              }}
+              PaperComponent={({ children }) => (
+                <Paper style={{ borderRadius: "4px" }}>{children}</Paper>
+              )}
+            />
+            <Autocomplete
+              fullWidth
+              size="small"
+              value={filter.Attended}
+              options={[
+                "Not Set",
+                "Attended",
+                "Cancelled",
+                "Cancelled by Assessor",
+                "Cancelled by Learner",
+                "Cancelled by Employer",
+                "Learner Late",
+                "Assessor Late",
+                "Learner not Attended",
+              ].map((option) => option)}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  placeholder="Search by Attended"
+                  name="Attended"
+                />
+              )}
+              onChange={(e, value) => { handleFilterChange("Attended", value) }}
+              sx={{
+                ".MuiAutocomplete-clearIndicator": {
+                  color: "#5B718F",
+                },
+              }}
+              PaperComponent={({ children }) => (
+                <Paper style={{ borderRadius: "4px" }}>
+                  {children}
+                </Paper>
+              )}
+            />
+          </div>
+          <div className="items-end">
+            <Link to="/newsession" >
+              <SecondaryButton name="New Session" />
+            </Link>
+          </div>
+        </div >}
 
       <Grid className="m-10">
         <div>
@@ -159,6 +233,28 @@ const Calendar = () => {
                         whiteSpace: "nowrap",
                       }}
                     >
+                      Learners
+                    </TableCell>
+                    <TableCell
+                      align="left"
+                      sx={{
+                        width: "15rem",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      Trainer
+                    </TableCell>
+                    <TableCell
+                      align="left"
+                      sx={{
+                        width: "15rem",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
                       Location
                     </TableCell>
                     <TableCell align="left" sx={{ width: "15rem" }}>
@@ -170,9 +266,9 @@ const Calendar = () => {
                     <TableCell align="center" sx={{ width: "20rem" }}>
                       Attended
                     </TableCell>
-                    <TableCell align="left" sx={{ width: "15rem" }}>
+                    {/* <TableCell align="left" sx={{ width: "15rem" }}>
                       Type
-                    </TableCell>
+                    </TableCell> */}
                     <TableCell align="left" sx={{ width: "15rem" }}>
                       Action
                     </TableCell>
@@ -196,6 +292,32 @@ const Calendar = () => {
                         }}
                       >
                         {row?.title}
+                      </TableCell>
+                      <TableCell
+                        component="th"
+                        scope="row"
+                        sx={{
+                          borderBottom: "2px solid #F8F8F8",
+                          width: "15rem",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {row?.learners.map(learner => learner.user_name).join(", ")}
+                      </TableCell>
+                      <TableCell
+                        component="th"
+                        scope="row"
+                        sx={{
+                          borderBottom: "2px solid #F8F8F8",
+                          width: "15rem",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {row?.trainer_id?.user_name}
                       </TableCell>
                       <TableCell
                         align="left"
@@ -278,7 +400,7 @@ const Calendar = () => {
                           )}
                         />
                       </TableCell>
-                      <TableCell
+                      {/* <TableCell
                         align="left"
                         sx={{
                           borderBottom: "2px solid #F8F8F8",
@@ -286,7 +408,7 @@ const Calendar = () => {
                         }}
                       >
                         {row?.type}
-                      </TableCell>
+                      </TableCell> */}
                       <TableCell
                         align="left"
                         sx={{

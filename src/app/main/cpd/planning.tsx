@@ -96,7 +96,7 @@ const columns: readonly Column[] = [
   },
   {
     id: "impact_on_organisation",
-    label: "Organization",
+    label: "Organisation",
     minWidth: 70,
     align: "right",
     format: (value: number) => value.toLocaleString("en-US"),
@@ -229,7 +229,7 @@ const AddPlanDialogContent = (props) => {
               sx={{ fontSize: "0.9vw", marginRight: "0.5rem" }}
               className={Style.name}
             >
-              Impact
+              Desired Impact
             </Typography>
             <div
               className="border-2"
@@ -256,7 +256,7 @@ const AddPlanDialogContent = (props) => {
                   value: formData.impact_on_managers,
                 },
                 {
-                  label: "Organization:-",
+                  label: "Organisation:-",
                   name: "impact_on_organisation",
                   value: formData.impact_on_organisation,
                 },

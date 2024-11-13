@@ -36,17 +36,19 @@ import { fetchCourseById, selectCourseManagement } from "app/store/courseManagem
 import styles from './style.module.css';
 
 const assessmentMethod = [
-  { value: 'WO', title: 'Workplace Observation' },
-  { value: 'WP', title: 'Workplace Projects/Projects away from Work' },
-  { value: 'PW', title: 'Portfolio of Work' },
-  { value: 'VI', title: 'Viva' },
-  { value: 'LB', title: 'Log Book/Assignments' },
-  { value: 'PD', title: 'Professional Discussions' },
-  { value: 'PT', title: 'Practical Test' },
-  { value: 'TE', title: 'Tests/Examinations' },
-  { value: 'RJ', title: 'Reflective Journal' },
+  { value: 'Obs', title: 'Observations' },
+  { value: 'PA', title: 'Practical assessment' },
+  { value: 'ET', title: 'Exams and Tests' },
+  { value: 'PD', title: 'Professional discussion' },
+  { value: 'I', title: 'Interview' },
+  { value: 'Q&A', title: 'Question and Answers' },
+  { value: 'P', title: 'Project' },
+  { value: 'RA', title: 'Reflective Account' },
+  { value: 'WT', title: 'Witness Testimony' },
+  { value: 'PE', title: 'Product Evidence' },
+  { value: 'SI', title: 'Simulation' },
   { value: 'OT', title: 'Other' },
-  { value: 'RPL', title: 'Recognised Prior Learning' },
+  { value: 'RPL', title: 'Recognised prior learning' },
 ];
 
 const UploadedEvidenceFile = (props) => {

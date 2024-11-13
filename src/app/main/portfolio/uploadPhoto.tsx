@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Button, Box, Avatar } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { selectGlobalUser } from 'app/store/globalUser';
@@ -10,26 +10,23 @@ const UploadPhoto = () => {
 
     const dispatch: any = useDispatch();
     const globalUser = useSelector(selectGlobalUser);
+    const fileInputRef = useRef(null);
 
     const [selectedImage, setSelectedImage] = useState(null);
-    const [selectedFile, setSelectedFile] = useState(null);
 
     const handleImageChange = (e) => {
         if (e.target.files && e.target.files[0]) {
             const file = e.target.files[0];
             setSelectedImage(URL.createObjectURL(file));
-            setSelectedFile(file);
+            dispatch(uploadLearnerAvatar(file));
         }
     };
 
-    const handleUpload = (e) => {
-        e.preventDefault();
-        if (selectedFile) {
-            dispatch(uploadLearnerAvatar(selectedFile));
-        }
-        setSelectedFile(null)
-        setSelectedImage(null)
+
+    const handleAvatarClick = () => {
+        fileInputRef.current.click();
     };
+
 
     return (
         <Box
@@ -41,35 +38,23 @@ const UploadPhoto = () => {
             <Avatar
                 alt="Awaiting Photo"
                 src={selectedImage ? selectedImage : globalUser.selectedUser.avatar}
-                sx={{ width: 150, height: 200, mb: 2, border: '1px solid #ccc', borderRadius: 0, backgroundColor: getRandomColor(globalUser?.selectedUser?.user_name?.toLowerCase().charAt(0)) }}
-            >
-            </Avatar>
-
-            <div className='flex items-center justify-between w-full'>
-                <Button
-                    variant="contained"
-                    component="label"
-                    sx={{ backgroundColor: '#007E84', color: '#fff' }}
-                    className='hover:bg-[#007E84]'
-                >
-                    Browse
-                    <input
-                        type="file"
-                        accept="image/*"
-                        hidden
-                        onChange={handleImageChange}
-                    />
-                </Button>
-
-                <Button
-                    variant="contained"
-                    className='bg-[#007E84] text-white hover:bg-[#007E84]'
-                    disabled={!selectedImage}
-                    onClick={handleUpload}
-                >
-                    Upload photo
-                </Button>
-            </div>
+                sx={{
+                    width: 150,
+                    height: 200,
+                    border: '1px solid #ccc',
+                    borderRadius: 0,
+                    backgroundColor: getRandomColor(globalUser?.selectedUser?.user_name?.toLowerCase().charAt(0)),
+                    cursor: 'pointer'
+                }}
+                onClick={handleAvatarClick}  // Trigger file input on click
+            />
+            <input
+                type="file"
+                accept="image/*"
+                ref={fileInputRef}          // Attach ref to the input
+                hidden
+                onChange={handleImageChange} // Handle file change
+            />
         </Box>
     );
 };

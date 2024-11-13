@@ -34,7 +34,6 @@ import { TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { selectUser } from "app/store/userSlice";
 import AlertDialog from "src/app/component/Dialogs/AlertDialog";
 import FuseLoading from "@fuse/core/FuseLoading";
 import DataNotFound from "src/app/component/Pages/dataNotFound";
@@ -43,6 +42,7 @@ import { selectGlobalUser } from "app/store/globalUser";
 import CustomPagination from "src/app/component/Pagination/CustomPagination";
 import { createBroadcastAPI, deleteBroadcastHandler, getBroadcastDataAPI, selectBroadcast, updateBroadcastAPI, slice, BroadcastMessage } from "app/store/broadcast";
 import { fetchUserAllAPI, selectFormData } from "app/store/formData";
+import { selectCourseManagement } from "app/store/courseManagement";
 
 const AddRequest = (props) => {
   const { broadcastData = {}, handleChange = () => { } } = props;
@@ -93,6 +93,7 @@ const AddRequest = (props) => {
 const Broadcast = (props) => {
   const { singleData, dataUpdatingLoadding, dataFetchLoading, meta_data } = useSelector(selectBroadcast);
   const { users } = useSelector(selectFormData);
+  const { data: courseData } = useSelector(selectCourseManagement);
 
   const { pagination } = useSelector(selectGlobalUser)
 
@@ -155,7 +156,6 @@ const Broadcast = (props) => {
   };
 
   const broadcast = useSelector(selectBroadcast);
-  console.log(broadcast, "+++");
   useEffect(() => {
     fetchBroadcastData()
   }, [dispatch, pagination]);
@@ -208,6 +208,7 @@ const Broadcast = (props) => {
   const [selectedValue, setSelectedValue] = useState("");
   const [openBroadcast, setOpenBroadcast] = useState(false);
   const [userData, setuserData] = useState({ user_ids: [] });
+  const [courseSelectedData, setCourseSelectedData] = useState({ course_ids: [] });
 
   const handleRadioChange = (event) => {
     setSelectedValue(event.target.value);
@@ -218,6 +219,12 @@ const Broadcast = (props) => {
       user_ids: event.target.value,
     });
   };
+  const handleCourseDataUpdate = (event) => {
+    setCourseSelectedData({
+      ...courseSelectedData,
+      course_ids: event.target.value,
+    });
+  };
 
   const handleCloseBroadDialog = () => {
     clearSingleData();
@@ -226,10 +233,11 @@ const Broadcast = (props) => {
     setuserData({ user_ids: [] });
   };
 
-  console.log(selectedRow, "osososoo", "data++")
   const handleBroadcastSubmit = async () => {
     if (selectedValue === 'Individual') {
       await dispatch(BroadcastMessage({ user_ids: userData.user_ids, title: selectedRow.title, description: selectedRow.description }));
+    } else if (selectedValue === 'qualification') {
+      await dispatch(BroadcastMessage({ course_ids: courseSelectedData.course_ids, title: selectedRow.title, description: selectedRow.description }));
     } else {
       await dispatch(BroadcastMessage({ assign: selectedValue, title: selectedRow.title, description: selectedRow.description }));
     }
@@ -588,6 +596,44 @@ const Broadcast = (props) => {
                           <MenuItem key={data?.user_id} value={data?.user_id}>
                             <Checkbox checked={userData?.user_ids?.includes(data?.user_id)} />
                             <ListItemText primary={data?.user_name} />
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </Grid>
+                  )}
+
+                  <FormControlLabel
+                    value="qualification"
+                    control={<Radio checked={selectedValue === 'qualification'} onChange={handleRadioChange} />}
+                    label="Qualification"
+                    onChange={handleRadioChange}
+                  />
+                  {selectedValue === 'qualification' && (
+                    <Grid className="w-full">
+                      <Typography sx={{ fontSize: '0.9vw', marginBottom: '0.5rem', fontWeight: '500' }}>
+                        Select Courses
+                      </Typography>
+                      <Select
+                        name="courses"
+                        value={courseSelectedData.course_ids}
+                        size="small"
+                        placeholder="Select users"
+                        required
+                        fullWidth
+                        className="max-w-200 min-w-200"
+                        multiple
+                        onChange={handleCourseDataUpdate}
+                        renderValue={(selected) =>
+                          selected.map((id) => {
+                            const allusers = courseData?.find((user) => user?.course_id === id);
+                            return allusers ? allusers?.course_name : '';
+                          }).join(', ')
+                        }
+                      >
+                        {courseData?.map((data) => (
+                          <MenuItem key={data?.course_id} value={data?.course_id}>
+                            <Checkbox checked={courseSelectedData?.course_ids?.includes(data?.course_id)} />
+                            <ListItemText primary={data?.course_name} />
                           </MenuItem>
                         ))}
                       </Select>
