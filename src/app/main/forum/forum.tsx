@@ -162,7 +162,7 @@ const Forum = () => {
       {(screenSize > 600 || !selectedCourse) && <div className={`${screenSize > 600 ? 'w-[30%]' : "w-full"} p-4  rounded-0 shadow-2 overflow-hidden overflow-y-scroll`}>
         {/* <div className={`w-full md:w-1/3 p-1 rounded-lg shadow-lg overflow-hidden ${selectedCourse ? 'hidden max-[600px]:block' : ''}`}> */}
         <div className="flex flex-col space-y-4">
-          <div className="flex items-center justify-between p-2 sticky top-0 bg-white z-10">
+          <div className="flex items-center justify-between p-2 sticky top-0 z-10">
             <input
               type="text"
               placeholder="Search contacts..."
@@ -175,7 +175,7 @@ const Forum = () => {
           {filteredCourseData.map((msg) => (
             <div
               key={msg.course_course_id}
-              className="flex items-center cursor-pointer bg-white rounded-md p-2 hover:bg-gray-100 m-10 gap-10"
+              className="flex items-center cursor-pointer rounded-md p-2 m-10 gap-10"
               onClick={(e) => handleSendMessage(e, msg)}
             >
               <Avatar
@@ -211,7 +211,7 @@ const Forum = () => {
             <ArrowBackIosIcon />
           </IconButton>
           {forumData && (
-            <div className="flex items-start bg-white rounded-md p-2 border-b border-gray-200 m-10 gap-10">
+            <div className="flex items-start rounded-md p-2 border-b border-gray-200 m-10 gap-10">
               <Avatar className="mr-4" alt={forumData?.message?.course_course_name?.toUpperCase().charAt(0)} src="../" sx={{ bgcolor: getRandomColor(forumData?.message?.course_course_name?.toLowerCase().charAt(0)) }} />
               <div className="flex  flex-col pr-10 ">
                 <div className="flex justify-between flex-row ml-0 m-5">
@@ -236,7 +236,7 @@ const Forum = () => {
                 <>
                   {user?.user_id === message.sender.user_id ?
                     <Grid className="w-[80%] flex ml-auto text-justify justify-end pr-10 ">
-                      <Typography sx={{ overflowWrap: "anywhere" }} className=" bg-[#5B718F] p-10 rounded-md text-base text-white ">
+                      <Typography sx={{ overflowWrap: "anywhere" }} className=" bg-[#959CA9] p-10 rounded-md text-base">
                         {message?.message && message?.file ?
                           <>
                             <Link to={message?.file?.url} target="_blank" rel="noopener" style={{ border: '0px', backgroundColor: 'unset' }}>
@@ -250,18 +250,18 @@ const Forum = () => {
                               <FileCopyIcon style={{ fontSize: '2rem', color: "black" }} />
                             </Link>
                           )}
-                        <div className="flex justify-end text-xs text-gray-500">{timeAgo(message.created_at)}</div>
+                        <div className="flex justify-end text-xs opacity-50">{timeAgo(message.created_at)}</div>
                       </Typography>
                     </Grid>
                     :
                     <Grid >
                       {sendMessage && (
-                        <div className="flex items-start justify-start bg-[#F4F6F8] rounded-md m-10 gap-10 w-[80%] p-10">
+                        <div className="flex items-start justify-start bg-[#959ca960] rounded-md m-10 gap-10 w-[80%] p-10">
                           {<Avatar className="mr-4" alt="Cindy Baker" src={message.sender?.avatar?.url} />}
                           <div style={{ overflowWrap: "anywhere" }} className="flex flex-col w-full">
                             <div className="flex justify-between flex-row ml-0 m-5 pr-10 ">
                               <div className="font-semibold  text-base">{message.sender?.user_name}</div>
-                              <div className="text-xs text-gray-500">{timeAgo(message.created_at)}</div>
+                              <div className="text-xs opacity-50">{timeAgo(message.created_at)}</div>
                             </div>
                             <div className="text-justify text-base pr-10 ">
                               {message?.message && message?.file ?

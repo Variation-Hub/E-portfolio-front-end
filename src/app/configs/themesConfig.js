@@ -3,9 +3,6 @@ export const lightPaletteText = {
   primary: 'rgb(17, 24, 39)',
   secondary: 'rgb(107, 114, 128)',
   disabled: 'rgb(149, 156, 169)',
-  white: '#000000',
-  default: '#000000',
-  error: '#FF0000'
 };
 
 export const darkPaletteText = {
@@ -32,23 +29,19 @@ const themesConfig = {
       },
       secondary: {
         light: '#818cf8',
-        main: '#5B718F',
+        main: '#4f46e5',
         dark: '#3730a3',
         contrastText: darkPaletteText.primary,
       },
       background: {
         paper: '#FFFFFF',
         default: '#FFFFFF',
-        navbar: '#FFFFFF'
       },
       error: {
         light: '#ffcdd2',
         main: '#f44336',
         dark: '#b71c1c',
       },
-      action: {
-        active: '#FFFFFF'
-      }
     },
     status: {
       danger: 'orange',
@@ -77,15 +70,12 @@ const themesConfig = {
       },
       background: {
         paper: '#1e293b',
-        default: '#FFFFFF',
+        default: '#111827',
       },
       error: {
         light: '#ffcdd2',
         main: '#f44336',
         dark: '#b71c1c',
-      },
-      action: {
-        active: '#FFFFFF'
       },
       status: {
         danger: 'orange',
