@@ -1,8 +1,8 @@
 import { lazy } from "react";
-const AllLearnersView = lazy(() => import("./allLearners"));
+const BroadcastView = lazy(() => import("./broadcast"));
 import authRoles from 'src/app/auth/authRoles';
 
-const AllLearnersConfig = {
+const BroadcastConfig = {
   settings: {
     layout: {
       config: {
@@ -24,13 +24,13 @@ const AllLearnersConfig = {
       },
     },
   },
-  auth: [authRoles.Admin, authRoles.Trainer], 
+  auth: [authRoles.Admin],
   routes: [
     {
-      path: "/allLearners",
-      element: <AllLearnersView />
+      path: "/broadcast",
+      element: <BroadcastView />
     },
   ],
 };
 
-export default AllLearnersConfig;
+export default BroadcastConfig;

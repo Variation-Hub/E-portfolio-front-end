@@ -50,6 +50,8 @@ import { showMessage } from "app/store/fuse/messageSlice";
 import DataNotFound from "src/app/component/Pages/dataNotFound";
 import FuseLoading from "@fuse/core/FuseLoading";
 import Style from "./style.module.css";
+import CustomPagination from "src/app/component/Pagination/CustomPagination";
+import { selectGlobalUser } from "app/store/globalUser";
 
 interface Column {
   id:
@@ -84,20 +86,11 @@ const AddNewDialogContent = (props) => {
   const {
     edit = "Save",
     formData,
+    cpdData,
     setActivityData,
     activityData = {},
     handleChangeYear,
   } = props;
-
-  console.log(activityData);
-
-  const currentYear = new Date().getFullYear();
-
-  const years = [
-    `${currentYear - 1}-${currentYear.toString().slice(-2)}`,
-    `${currentYear}-${(currentYear + 1).toString().slice(-2)}`,
-    `${currentYear + 1}-${(currentYear + 2).toString().slice(-2)}`,
-  ];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -135,7 +128,7 @@ const AddNewDialogContent = (props) => {
   const dispatch: any = useDispatch();
 
   const handleUploadButtonClick = async () => {
-    if (files.length > 5) {
+    if (files?.length > 5) {
       dispatch(
         showMessage({
           message: "You can only upload up to 5 files.",
@@ -181,11 +174,15 @@ const AddNewDialogContent = (props) => {
                   onChange={handleChangeYear}
                   disabled={edit === "view" || edit === "edit"}
                 >
-                  {years?.map((year) => (
-                    <MenuItem key={year} value={year}>
-                      {year}
-                    </MenuItem>
-                  ))}
+                  {cpdData?.length ? (
+                    cpdData.map((yearItem) => (
+                      <MenuItem key={yearItem.year} value={yearItem.year}>
+                        {yearItem.year}
+                      </MenuItem>
+                    ))
+                  ) : (
+                    <MenuItem disabled>Cpd Data not found.</MenuItem>
+                  )}
                 </Select>
               </FormControl>
             </div>
@@ -404,7 +401,7 @@ const AddNewDialogContent = (props) => {
                         className="w-64 pb-8"
                       />
                     </div>
-                    {files.length > 0 ? (
+                    {files?.length > 0 ? (
                       files.map((file, index) => (
                         <p className="text-center mb-4" key={index}>
                           {file.name}
@@ -464,7 +461,7 @@ const AddNewDialogContent = (props) => {
               variant="contained"
               color="primary"
               onClick={handleUploadButtonClick}
-              disabled={files.length === 0}
+              disabled={files?.length === 0}
             >
               Upload
             </Button>
@@ -477,6 +474,7 @@ const AddNewDialogContent = (props) => {
 
 const Activity = (props) => {
   const {
+    cpdData,
     dialogType,
     dataFetchLoading,
     setDialogType,
@@ -509,12 +507,14 @@ const Activity = (props) => {
   const [openMenuDialog, setOpenMenuDialog] = useState<any>({});
   const [edit, setEdit] = useState("save");
   const [open, setOpen] = useState(false);
+  const { pagination } = useSelector(selectGlobalUser)
 
   const [page, setPage] = useState(1);
-  const rowsPerPage = 8;
+  const rowsPerPage = pagination.page_size;
 
   const dispatch: any = useDispatch();
-  const { data } = useSelector(selectUser);
+  const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
+
   const cpdPlanningData = useSelector(selectCpdPlanning);
 
   const handleChange = () => {
@@ -529,7 +529,7 @@ const Activity = (props) => {
 
 
   const fetchActivityData = () => {
-    dispatch(getCpdPlanningAPI(learnerId || data.user_id, "activities"));
+    dispatch(getCpdPlanningAPI(learnerId || user?.user_id, "activities"));
   }
 
   useEffect(() => {
@@ -579,15 +579,14 @@ const Activity = (props) => {
     }));
 
     if (name == "year") {
-      setcpdId(cpdPlanningData.data?.find((item) => item.year === value).id);
+      setcpdId(cpdPlanningData?.data?.find((item) => item?.year === value)?.id);
     }
-    console.log(cpdPlanningData.data?.find((item) => item.year === value).id);
   };
 
   const handleSubmit = async () => {
     try {
       let response;
-      let id = singleData.id;
+      let id = singleData?.id;
       if (dialogType === "addNew")
         response = await dispatch(
           createActivityAPI({ ...activityData, cpd_id: cpdId })
@@ -602,7 +601,7 @@ const Activity = (props) => {
   };
 
   const deleteIcon = (id) => {
-    setDeleteId(id.id);
+    setDeleteId(id?.id);
   };
 
   const openMenu = (e, id) => {
@@ -645,6 +644,10 @@ const Activity = (props) => {
     });
   };
 
+  useEffect(() => {
+    setPage(1);
+  }, [rowsPerPage]);
+
   const handlePageChange = (event, value) => {
     setPage(value);
   };
@@ -656,15 +659,18 @@ const Activity = (props) => {
     (page - 1) * rowsPerPage,
     page * rowsPerPage
   );
-  const pageCount = Math.ceil(allActivities.length / rowsPerPage);
+  const pageCount = Math.ceil(allActivities?.length / rowsPerPage);
+  console.log("page :", page);
+  console.log("pages :", pageCount);
+  console.log("items :", allActivities?.length);
 
   return (
     <>
       <div>
-        <TableContainer sx={{ maxHeight: 500 }} className="-m-12">
+        <TableContainer sx={{ minHeight: 580, display: "flex", flexDirection: "column", justifyContent: "space-between" }} className="-m-12">
           {dataFetchLoading ? (
             <FuseLoading />
-          ) : paginatedData.length ? (
+          ) : paginatedData?.length ? (
             <Table
               sx={{ minWidth: 650, height: "100%" }}
               size="small"
@@ -673,30 +679,30 @@ const Activity = (props) => {
               {" "}
               <TableHead>
                 <TableRow>
-                  {columns.map((column) => (
+                  {columns?.map((column) => (
                     <TableCell
-                      key={column.id}
+                      key={column?.id}
                       align={column.align}
                       style={{
                         minWidth: column.minWidth,
                         backgroundColor: "#F8F8F8",
                       }}
                     >
-                      {column.label}
+                      {column?.label}
                     </TableCell>
                   ))}
                 </TableRow>
               </TableHead>
               <TableBody>
-                {paginatedData.map((row) => (
+                {paginatedData?.map((row) => (
                   <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
-                    {columns.map((column) => {
-                      const value = row[column.id];
+                    {columns?.map((column) => {
+                      const value = row[column?.id];
                       return (
-                        <TableCell key={column.id} align={column.align}>
+                        <TableCell key={column?.id} align={column.align}>
                           {column.format && typeof value === "number" ? (
                             column.format(value)
-                          ) : column.id === "action" ? (
+                          ) : column?.id === "action" ? (
                             <IconButton
                               size="small"
                               sx={{ color: "#5B718F", marginRight: "4px" }}
@@ -704,7 +710,7 @@ const Activity = (props) => {
                             >
                               <MoreHorizIcon fontSize="small" />
                             </IconButton>
-                          ) : column.id === "files" ? (
+                          ) : column?.id === "files" ? (
                             <div style={{ display: "flex" }}>
                               <AvatarGroup
                                 max={4}
@@ -736,7 +742,7 @@ const Activity = (props) => {
                                 ))}
                               </AvatarGroup>
                             </div>
-                          ) : column.id === "date" ? (
+                          ) : column?.id === "date" ? (
                             formatDate(value)
                           ) : (
                             value
@@ -763,20 +769,13 @@ const Activity = (props) => {
               </div>
             </div>
           )}
+          <CustomPagination
+            pages={pageCount}
+            page={page}
+            handleChangePage={handlePageChange}
+            items={allActivities?.length}
+          />
         </TableContainer>
-        <div className="fixed bottom-0 left-0 w-full flex justify-center py-4 mb-14">
-          <Stack spacing={2}>
-            <Pagination
-              count={pageCount}
-              variant="outlined"
-              shape="rounded"
-              page={page}
-              onChange={handlePageChange}
-              siblingCount={1}
-              boundaryCount={1}
-            />
-          </Stack>
-        </div>
       </div>
       <AlertDialog
         open={Boolean(deleteId)}
@@ -846,6 +845,7 @@ const Activity = (props) => {
       >
         <DialogContent>
           <AddNewDialogContent
+            cpdData={cpdData}
             edit={edit}
             setActivityData={setActivityData}
             activityData={activityData}

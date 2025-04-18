@@ -2,31 +2,27 @@ import {
   Autocomplete,
   Box,
   IconButton,
-  MenuItem,
+  InputAdornment,
   Paper,
   TextField,
   Tooltip,
   Typography,
 } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
-import { fundingBodyData, roles } from "src/app/contanst";
 import {
   LoadingButton,
   SecondaryButton,
   SecondaryButtonOutlined,
 } from "src/app/component/Buttons";
-import { timezones } from "src/app/contanst/timezoneData";
 import {
-  emailValidationMsg,
-  mobileValidationMsg,
-  nameValidationMsg,
-  passwordValidation,
   usernameValidationMsg,
 } from "src/app/contanst/regValidation";
 import HelpOutlinedIcon from "@mui/icons-material/HelpOutlined";
 import Style from "./style.module.css";
 import { useSelector } from "react-redux";
 import { selectEmployer } from "app/store/employer";
+import { useState } from "react";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+import MobileNumberInput from "src/app/component/Input/MobileNumberInput";
 
 const UserDetails = (props) => {
   const { data } = useSelector(selectEmployer);
@@ -41,6 +37,22 @@ const UserDetails = (props) => {
     dataUpdatingLoadding,
     userDataError,
   } = props;
+
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const handleClickShowPassword = () => {
+    setShowPassword((prev) => !prev);
+  };
+
+  const handleClickShowConfirmPassword = () => {
+    setShowConfirmPassword((prev) => !prev);
+  };
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
 
   return (
     <div className="h-full flex flex-col">
@@ -151,6 +163,7 @@ const UserDetails = (props) => {
               fullWidth
               onChange={handleUpdate}
               error={userDataError?.email}
+              autoComplete="new-email"
             // InputProps={{
             //     endAdornment:
             //         <Tooltip title={emailValidationMsg} placement="bottom" arrow>
@@ -160,7 +173,7 @@ const UserDetails = (props) => {
             />
           </div>
         </Box>
-        <Box className="m-12 flex flex-col justify-between gap-12 sm:flex-row">
+        {!updateData && <Box className="m-12 flex flex-col justify-between gap-12 sm:flex-row">
           <div className="w-1/2">
             <Typography
               sx={{ fontSize: "0.9vw", marginBottom: "0.5rem" }}
@@ -174,23 +187,49 @@ const UserDetails = (props) => {
               placeholder="Enter Password"
               value={updateData ? "Locker@2024" : userData?.password}
               size="small"
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               required={!updateData}
               fullWidth
               onChange={handleUpdate}
               error={userDataError?.password}
+              helperText={userDataError?.password ? "Password: 6+ chars, with 1 each: A, a, 0-9." : ""}
+              autoComplete="new-password"
               InputProps={{
                 endAdornment: (
-                  <Tooltip title={passwordValidation} placement="bottom" arrow>
-                    <HelpOutlinedIcon
-                      sx={{
-                        fontSize: "16px",
-                        color: "gray",
-                        marginLeft: "2px",
-                        cursor: "help",
-                      }}
-                    />
-                  </Tooltip>
+                  // <Tooltip title={passwordValidation} placement="bottom" arrow>
+                  //   <HelpOutlinedIcon
+                  //     sx={{
+                  //       fontSize: "16px",
+                  //       color: "gray",
+                  //       marginLeft: "2px",
+                  //       cursor: "help",
+                  //     }}
+                  //   />
+                  // </Tooltip>
+                  <InputAdornment position="end" className="ml-0">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      edge="end"
+                    >
+                      {showPassword ?
+                        <VisibilityOff
+                          sx={{
+                            fontSize: "2rem",
+                            color: "gray",
+                            marginLeft: "2px",
+                          }}
+                        /> :
+                        <Visibility
+                          sx={{
+                            fontSize: "2rem",
+                            color: "gray",
+                            marginLeft: "2px",
+                          }}
+                        />}
+                    </IconButton>
+                  </InputAdornment>
                 ),
               }}
             />
@@ -208,20 +247,43 @@ const UserDetails = (props) => {
               placeholder="Enter confirm password"
               value={updateData ? "Locker@2024" : userData?.confrimpassword}
               size="small"
-              type={updateData ? "password" : "text"}
+              type={showConfirmPassword ? 'text' : 'password'}
               required={!updateData}
               fullWidth
               onChange={handleUpdate}
               error={userDataError?.confrimpassword}
-            // InputProps={{
-            //     endAdornment:
-            //         <Tooltip title="Password must be same" placement="bottom" arrow>
-            //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
-            //         </Tooltip>
-            // }}
+              helperText={userDataError?.password ? "Password must be same" : ""}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end" className="ml-0">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowConfirmPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      edge="end"
+                    >
+                      {showConfirmPassword ?
+                        <VisibilityOff
+                          sx={{
+                            fontSize: "2rem",
+                            color: "gray",
+                            marginLeft: "2px",
+                          }}
+                        /> :
+                        <Visibility
+                          sx={{
+                            fontSize: "2rem",
+                            color: "gray",
+                            marginLeft: "2px",
+                          }}
+                        />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
             />
           </div>
-        </Box>
+        </Box>}
 
         <Box className="m-12 flex flex-col justify-between gap-12 sm:flex-row">
           <div className="w-1/2">
@@ -237,17 +299,18 @@ const UserDetails = (props) => {
               size="small"
               options={data}
               getOptionLabel={(option: any) => option.employer_name}
+              isOptionEqualToValue={(option, value) => option.employer_id === value.employer_id}
               renderInput={(params) => (
                 <TextField
                   {...params}
                   placeholder="Select employer"
-                  value={userData?.employer_id}
                   name="employer_id"
                 />
               )}
+              value={data.find(option => option.employer_id === userData?.employer_id) || null}
               onChange={(e, value: any) =>
                 handleUpdate({
-                  target: { name: "employer_id", value: value.employer_id },
+                  target: { name: "employer_id", value: value ? value.employer_id : "" },
                 })
               }
               sx={{
@@ -259,6 +322,7 @@ const UserDetails = (props) => {
                 <Paper style={{ borderRadius: "4px" }}>{children}</Paper>
               )}
             />
+
           </div>
 
           <div className="w-1/2">
@@ -268,7 +332,7 @@ const UserDetails = (props) => {
             >
               Mobile
             </Typography>
-            <TextField
+            {/* <TextField
               name="mobile"
               value={userData?.mobile}
               size="small"
@@ -284,6 +348,11 @@ const UserDetails = (props) => {
             //             <HelpOutlinedIcon sx={{ fontSize: "16px", color: "gray", marginLeft: "2px", cursor: "help" }} />
             //         </Tooltip>
             // }}
+            /> */}
+            <MobileNumberInput
+              value={userData?.mobile}
+              handleChange={handleUpdate}
+              name={"mobile"}
             />
           </div>
         </Box>
@@ -362,7 +431,7 @@ const UserDetails = (props) => {
                   {...params}
                   placeholder="Select funding body"
                   name="funding_body"
-                  error={true || userDataError?.funding_body}
+                  error={userDataError?.funding_body}
                 />
               )}
               onChange={(e, value) =>

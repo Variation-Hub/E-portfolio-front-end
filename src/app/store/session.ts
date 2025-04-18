@@ -116,7 +116,7 @@ export const getLearnerAPI = () => async (dispatch) => {
 
 }
 // get session 
-export const getSessionAPI = (data = { page: 1, page_size: 10 }) => async (dispatch) => {
+export const getSessionAPI = (data = { page: 1, page_size: 10 }, filter = {}) => async (dispatch) => {
 
     try {
         dispatch(slice.setLoader());
@@ -124,6 +124,16 @@ export const getSessionAPI = (data = { page: 1, page_size: 10 }) => async (dispa
         const { page = 1, page_size = 10 } = data;
 
         let url = `${URL_BASE_LINK}/session/list?meta=true&page=${page}&limit=${page_size}`
+
+        const filterKeys = Object.keys(filter);
+        filterKeys.forEach((key) => {
+            const value = filter[key];
+            // Check if value is not null, undefined, or an empty string
+            if (value !== null && value !== undefined && value !== '') {
+                url += `&${key}=${encodeURIComponent(value)}`;
+            }
+        });
+
 
         const response = await axios.get(url);
         // dispatch(showMessage({ message: response.data.message, variant: "success" }))

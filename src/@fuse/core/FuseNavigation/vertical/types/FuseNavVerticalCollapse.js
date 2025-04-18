@@ -45,7 +45,7 @@ function isUrlInChildren(parent, url) {
     return false;
   }
 
-  for (let i = 0; i < parent.children.length; i += 1) {
+  for (let i = 0; i < parent.children?.length; i += 1) {
     if (parent.children[i].children) {
       if (isUrlInChildren(parent.children[i], url)) {
         return true;
@@ -74,7 +74,7 @@ function FuseNavVerticalCollapse(props) {
       }
     }
     // eslint-disable-next-line
-	}, [location, props.item]);
+  }, [location, props.item]);
 
   return useMemo(
     () => (

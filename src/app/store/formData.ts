@@ -19,7 +19,10 @@ const initialState = {
     },
     formDataDetails: {},
     users: {},
-    mode: ''
+    mode: '',
+    formTemplate: [],
+    singleFrom: {},
+    modeTemaplate: ''
 };
 
 const formDataSlice = createSlice({
@@ -47,6 +50,13 @@ const formDataSlice = createSlice({
         },
         setMode(state, action) {
             state.mode = action.payload
+        },
+        setFormTemplate(state, action) {
+            state.formTemplate = action.payload
+        },
+        storeFormData(state, action) {
+            state.singleFrom = action.payload.data
+            state.modeTemaplate = action.payload.mode
         }
     }
 });
@@ -104,7 +114,7 @@ export const deleteFormHandler = (id) => async (dispatch) => {
     }
 }
 
-export const getFormDataAPI = (data = { page: 1, page_size: 10 }, search_keyword = "") => async (dispatch) => {
+export const getFormDataAPI = (data = { page: 1, page_size: 10 }, search_keyword = "", user_id = "") => async (dispatch) => {
 
     try {
 
@@ -116,6 +126,9 @@ export const getFormDataAPI = (data = { page: 1, page_size: 10 }, search_keyword
 
         if (search_keyword) {
             url = `${url}&keyword=${search_keyword}`
+        }
+        if (user_id) {
+            url = `${url}&user_id=${user_id}`
         }
 
         const response = await axios.get(url);
@@ -148,13 +161,16 @@ export const createUserFormDataAPI = (data) => async (dispatch) => {
 }
 
 // get User form
-export const getUserFormDataAPI = (form_id) => async (dispatch) => {
+export const getUserFormDataAPI = (form_id, user_id) => async (dispatch) => {
 
     try {
 
         dispatch(slice.setLoader());
 
         let url = `${URL_BASE_LINK}/form/user/${form_id}`;
+        if (user_id) {
+            url = `${url}?user_id=${user_id}`
+        }
 
         const response = await axios.get(url);
         // dispatch(showMessage({ message: response.data.message, variant: "success" }))
@@ -179,7 +195,6 @@ export const fetchUserAllAPI = () => async (dispatch) => {
         let url = `${URL_BASE_LINK}/user/list`;
 
         const response = await axios.get(url);
-        // dispatch(showMessage({ message: response.data.message, variant: "success" }))
         dispatch(slice.setUsers(response.data));
         dispatch(slice.setLoader());
         return true;
@@ -239,4 +254,59 @@ export const getUserAllFormAPI = (data = { page: 1, page_size: 10 }, search_keyw
 
 }
 
+export const fetchTemplateData = () => async (dispatch) => {
+    try {
+        const response = await axios.get(`${URL_BASE_LINK}/form-template/list`);
+        if (response.data.status) {
+            dispatch(slice.setFormTemplate(response.data.data))
+        } else {
+            dispatch(showMessage({ message: response.data.message, variant: "error" }))
+        }
+    } catch (err) {
+        dispatch(showMessage({ message: err.response.data.message, variant: "error" }))
+        dispatch(slice.setFormTemplate([]));
+    }
+
+}
+
+export const createTemplateData = (data) => async (dispatch) => {
+    try {
+        const response = await axios.post(`${URL_BASE_LINK}/form-template/create`, data);
+        if (!response.data.status) {
+            dispatch(showMessage({ message: response.data.message, variant: "error" }))
+        }
+    } catch (err) {
+        dispatch(showMessage({ message: err.response.data.message, variant: "error" }))
+        dispatch(slice.setFormTemplate([]));
+    }
+
+}
+
+export const updateTemplate = (id, data) => async (dispatch) => {
+    try {
+        const response = await axios.patch(`${URL_BASE_LINK}/form-template/update/${id}`, data);
+        if (response.data.status) {
+            dispatch(fetchTemplateData())
+        } else {
+            dispatch(showMessage({ message: response.data.message, variant: "error" }))
+        }
+    } catch (err) {
+        dispatch(showMessage({ message: err.response.data.message, variant: "error" }))
+    }
+
+}
+
+export const deleteTemplate = (id) => async (dispatch) => {
+    try {
+        const response = await axios.delete(`${URL_BASE_LINK}/form-template/delete/${id}`);
+        if (response.data.status) {
+            dispatch(fetchTemplateData())
+        } else {
+            dispatch(showMessage({ message: response.data.message, variant: "error" }))
+        }
+    } catch (err) {
+        dispatch(showMessage({ message: err.response.data.message, variant: "error" }))
+    }
+
+}
 export default formDataSlice.reducer;

@@ -6,19 +6,24 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Typography, IconButton } from '@mui/material';
 import { OpenInNew } from '@mui/icons-material';
 import axiosInstance from 'src/utils/axios';
-import { roles } from 'src/app/contanst';
+import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
+import { selectstoreDataSlice } from 'app/store/reloadData';
+import { Link, useNavigate } from 'react-router-dom';
 
 const ResourceData = () => {
   const dispatch: any = useDispatch();
-  const user = useSelector(selectUser).data;
+  const navigate = useNavigate();
+
+  const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
   const { singleData } = useSelector(selectCourseManagement);
   const resource = useSelector(selectResourceManagement);
+  const { user_id } = useSelector(selectstoreDataSlice);
 
   useEffect(() => {
     if (singleData?.course?.course_id && user?.user_id) {
-      dispatch(fetchResourceByCourseAPI(singleData.course.course_id, user.user_id));
+      dispatch(fetchResourceByCourseAPI(singleData.course.course_id, user_id || user.user_id));
     }
-  }, [dispatch, singleData, user]);
+  }, [dispatch]);
 
   const handleOpenInNewTab = async (url, id) => {
     if (user?.role === "Learner") {
@@ -27,11 +32,21 @@ const ResourceData = () => {
     window.open(url, '_blank');
   };
 
+  const handleBack = () => {
+    navigate(-1);
+  };
+
   return (
     <div className="container mx-auto p-4">
-      <Typography variant="h3" className="text-center font-bold mb-8 text-blue-700">
-        Course Resources
-      </Typography>
+      <div className='flex justify-between items-center mx-20'>
+        <div></div>
+        <Typography variant="h3" className="text-center font-bold mb-8 text-blue-700">
+          Course Resources
+        </Typography>
+        <button onClick={handleBack} className='mb-10 text-[#5b718f]'>
+          <KeyboardBackspaceIcon /> Back
+        </button>
+      </div>
 
       <TableContainer component={Paper} style={{ borderRadius: 8, overflow: 'hidden' }}>
         <Table aria-label="resource table">

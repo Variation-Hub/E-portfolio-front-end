@@ -3,8 +3,7 @@ import axios from 'axios';
 import jsonData from 'src/url.json';
 import { showMessage } from './fuse/messageSlice';
 import { userTableMetaData } from '../contanst/metaData';
-import JwtService from '../auth/services/jwtService';
-import HelpOutlined from '@mui/icons-material/HelpOutlined';
+import LearnerDetails from '../main/portfolio/learnerDeatils';
 
 const initialState = {
     data: [],
@@ -23,6 +22,7 @@ const initialState = {
     },
     learner: {},
     singleData: {},
+    learnerDetails: {},
     courseData: {},
     user_course_id: ""
 };
@@ -45,17 +45,17 @@ const learnerManagementSlice = createSlice({
                 state.meta_data.pages = Math.ceil(items / userTableMetaData.page_size)
             }
         },
-        setLoader(state) {
-            state.dataFetchLoading = false;
+        setLoader(state, action) {
+            state.dataFetchLoading = action.payload;
         },
-        setUpdatingLoader(state) {
-            state.dataUpdatingLoadding = false;
+        setUpdatingLoader(state, action) {
+            state.dataUpdatingLoadding = action.payload;
         },
         updateLearnerById(state, action) {
             const { learner_id, ...rest } = action.payload;
             state.data = state.data.map((value) => {
                 if (value.learner_id === learner_id) {
-                    return action.payload;
+                    return { ...action.payload, course: value.course };
                 }
                 return value;
             })
@@ -85,7 +85,10 @@ const learnerManagementSlice = createSlice({
             state.courseData = action.payload.course
             if (action.payload.user_course_id)
                 state.user_course_id = action.payload.user_course_id
-        }
+        },
+        setLearnerDetail(state, action) {
+            state.learnerDetails = action.payload
+        },
 
     }
 });
@@ -98,24 +101,24 @@ const URL_BASE_LINK = jsonData.API_LOCAL_URL;
 // create learner
 export const createLearnerAPI = (data) => async (dispatch) => {
     try {
-        dispatch(slice.setUpdatingLoader());
+        dispatch(slice.setUpdatingLoader(true));
         const response = await axios.post(`${URL_BASE_LINK}/learner/create`, data)
         dispatch(showMessage({ message: response.data.message, variant: "success" }))
         dispatch(slice.updateLearner(response.data.data));
-        dispatch(slice.setUpdatingLoader());
         return true;
     } catch (err) {
         dispatch(showMessage({ message: err.response.data.message, variant: "error" }))
-        dispatch(slice.setUpdatingLoader());
         return false;
+    } finally {
+        dispatch(slice.setUpdatingLoader(false));
     }
 }
 
 // get learner
-export const fetchLearnerAPI = (data = { page: 1, page_size: 10 }, search_keyword = "", search_role = "") => async (dispatch) => {
+export const fetchLearnerAPI = (data = { page: 1, page_size: 10 }, search_keyword = "", search_course = "", search_employer = "", status = "") => async (dispatch) => {
 
     try {
-        // dispatch(slice.setLoader());
+        dispatch(slice.setLoader(true));
         const { page = 1, page_size = 10 } = data;
 
         let url = `${URL_BASE_LINK}/learner/list?page=${page}&limit=${page_size}&meta=true`;
@@ -124,31 +127,34 @@ export const fetchLearnerAPI = (data = { page: 1, page_size: 10 }, search_keywor
             url = `${url}&keyword=${search_keyword}`
         }
 
-        if (search_role) {
-            url = `${url}&role=${search_role}`
+        if (search_course) {
+            url = `${url}&course_id=${search_course}`
+        }
+
+        if (search_employer) {
+            url = `${url}&employer_id=${search_employer}`
+        }
+
+        if (status) {
+            url = `${url}&status=${status}`
         }
 
         const response = await axios.get(url);
-        // dispatch(showMessage({ message: response.data.message, variant: "success" }))
         dispatch(slice.updateLearner(response.data));
-        // alert("value")
-        dispatch(slice.setLoader());
         return true;
 
     } catch (err) {
         dispatch(showMessage({ message: err.response.data.message, variant: "error" }))
-        dispatch(slice.setLoader());
         return false
-    };
-
+    } finally {
+        dispatch(slice.setLoader(false));
+    }
 }
 
 export const getRoleAPI = (role) => async (dispatch) => {
     try {
-        dispatch(slice.setLoader());
         let url = `${URL_BASE_LINK}/user/list?role=${role}`
         const response = await axios.get(url);
-        // dispatch(showMessage({ message: response.data.message, variant: "success" }))
         if (role === "Trainer")
             dispatch(slice.setTrainer(response.data.data))
         else if (role === "IQA")
@@ -159,80 +165,92 @@ export const getRoleAPI = (role) => async (dispatch) => {
             dispatch(slice.setEmployer(response.data.data))
         else if (role === "LIQA")
             dispatch(slice.setLIQA(response.data.data))
-        dispatch(slice.setLoader());
         return true;
 
     } catch (err) {
-        dispatch(slice.setLoader());
         dispatch(slice.updateLearner([]))
         return false
     };
 }
-export const getLearnerDetails = (data = "") => async (dispatch, getStore) => {
+export const getLearnerDetails = (learner_id = "") => async (dispatch, getStore) => {
     try {
-        dispatch(slice.setUpdatingLoader());
-        const id = data || getStore()?.user?.data?.id
+        dispatch(slice.setUpdatingLoader(true));
+        const id = learner_id || getStore()?.user?.data?.id
         const response = await axios.get(`${URL_BASE_LINK}/learner/get/${id}`,)
-        dispatch(showMessage({ message: response.data.message, variant: "success" }))
         dispatch(slice.learnerDetails(response.data.data));
-        dispatch(slice.setUpdatingLoader());
-        return true;
+        return response.data.data;
     } catch (err) {
         dispatch(showMessage({ message: err.response.data.message, variant: "error" }))
-        dispatch(slice.setUpdatingLoader());
         return false;
+    } finally {
+        dispatch(slice.setUpdatingLoader(false));
+    }
+}
+
+export const getLearnerDetailsReturn = (id = "") => async (dispatch) => {
+    try {
+        dispatch(slice.setLoader(true));
+        const response = await axios.get(`${URL_BASE_LINK}/learner/get/${id}`,)
+        dispatch(slice.setLearnerDetail(response.data.data));
+        dispatch(slice.setLoader(false));
+        return response.data.data;
+    } catch (err) {
+        dispatch(slice.setLoader(true));
+        return null;
     }
 }
 
 export const getLearnerCourseDetails = (data) => async (dispatch) => {
-    dispatch(slice.setLoader());
     const response = await axios.get(`${URL_BASE_LINK}/course/user/get?learner_id=${data.learner_id}&course_id=${data.course_id}`,)
-    dispatch(showMessage({ message: response.data.message, variant: "success" }))
     dispatch(slice.setCourseData(response.data.data))
-    dispatch(slice.setLoader());
 }
 
 // update learner
 export const updateLearnerAPI = (id, data) => async (dispatch) => {
-
     try {
-        dispatch(slice.setUpdatingLoader());
+        dispatch(slice.setUpdatingLoader(true));
         const { password, confrimpassword, ...payload } = data
         const response = await axios.patch(`${URL_BASE_LINK}/learner/update/${id}`, payload)
         dispatch(showMessage({ message: response.data.message, variant: "success" }))
         dispatch(slice.updateLearnerById(response.data.data));
-        dispatch(slice.setUpdatingLoader());
         return true;
-
     } catch (err) {
-
         dispatch(showMessage({ message: err.response.data.message, variant: "error" }))
-        dispatch(slice.setUpdatingLoader());
         return false;
-    };
+    } finally {
+        dispatch(slice.setUpdatingLoader(false));
+    }
 }
 
 
 // Delete learner
-export const deleteLearnerHandler = (id, meta_data, search_keyword = "", search_role = "") => async (dispatch) => {
-
+export const deleteLearnerHandler = (id) => async (dispatch) => {
     try {
-        let { page, page_size, items } = meta_data;
-        dispatch(slice.setUpdatingLoader());
+        dispatch(slice.setUpdatingLoader(true));
         const response = await axios.delete(`${URL_BASE_LINK}/learner/delete/${id}`)
         dispatch(showMessage({ message: response.data.message, variant: "success" }))
-        dispatch(slice.setUpdatingLoader());
-        if (items % page_size === 1) {
-            page--;
-        }
-        dispatch(fetchLearnerAPI({ page, page_size }, search_keyword, search_role));
         return true;
-
     } catch (err) {
         dispatch(showMessage({ message: err.response.data.message, variant: "error" }))
-        dispatch(slice.setUpdatingLoader());
         return false;
-    };
+    } finally {
+        dispatch(slice.setUpdatingLoader(false));
+    }
+}
+
+// restore learner
+export const restoreLearnerHandler = (id) => async (dispatch) => {
+    try {
+        dispatch(slice.setUpdatingLoader(true));
+        const response = await axios.post(`${URL_BASE_LINK}/learner/restore/${id}`)
+        dispatch(showMessage({ message: response.data.message, variant: "success" }))
+        return true;
+    } catch (err) {
+        dispatch(showMessage({ message: err.response.data.message, variant: "error" }))
+        return false;
+    } finally {
+        dispatch(slice.setUpdatingLoader(false));
+    }
 }
 
 export default learnerManagementSlice.reducer;

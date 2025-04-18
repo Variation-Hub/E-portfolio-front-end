@@ -2,43 +2,28 @@ import {
     Box,
     Card,
     Grid,
-    IconButton,
     MenuItem,
-    Paper,
     Select,
     TextField,
-    Tooltip,
     Typography,
 } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
 import {
     AdminRedirect,
     EmployerRedirect,
-    fundingBodyData,
-    roles,
 } from "src/app/contanst";
 import {
     LoadingButton,
     SecondaryButton,
     SecondaryButtonOutlined,
 } from "src/app/component/Buttons";
-import { timezones } from "src/app/contanst/timezoneData";
-import {
-    emailValidationMsg,
-    mobileValidationMsg,
-    nameValidationMsg,
-    passwordValidation,
-    usernameValidationMsg,
-} from "src/app/contanst/regValidation";
-import HelpOutlinedIcon from "@mui/icons-material/HelpOutlined";
-import { DatePicker } from "@mui/x-date-pickers";
 import { FileUploader } from "react-drag-drop-files";
 import { useState } from "react";
 import Breadcrumb from "src/app/component/Breadcrumbs";
 import Style from "./style.module.css";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { createEmployerAPI, getEmployerAPI } from "app/store/employer";
+import { createEmployerAPI, uploadPDF } from "app/store/employer";
+import MobileNumberInput from "src/app/component/Input/MobileNumberInput";
 
 const CreateEmployerDetails = (props) => {
 
@@ -66,6 +51,10 @@ const CreateEmployerDetails = (props) => {
         email: "",
         business_description: "",
         comments: "",
+        assessment_date: "",
+        assessment_renewal_date: "",
+        insurance_renewal_date: "",
+        file: null
     });
 
     const handleDataUpdate = (e) => {
@@ -76,21 +65,7 @@ const CreateEmployerDetails = (props) => {
         }));
     };
 
-    const [date, setDate] = useState({
-        assessment_date: "",
-        renewal_date: "",
-        insurance_date: "",
-    });
-
-    const handleDateUpdate = (e) => {
-        const { name, value } = e.target;
-        setDate((prevState) => ({
-            ...prevState,
-            [name]: value,
-        }));
-    };
-
-    const {dataUpdatingLoadding} = props;
+    const { dataUpdatingLoadding } = props;
 
     const createUser = Object.values(employerData).find((data) => data === "") === undefined
 
@@ -98,30 +73,36 @@ const CreateEmployerDetails = (props) => {
         try {
             let response;
             response = await dispatch(createEmployerAPI(employerData));
-            dispatch(getEmployerAPI({ page: 1, page_size: 10 }));
         } catch (err) {
             console.log(err);
         } finally {
             handleClose();
         }
-
-        console.log("Employer Data: ", employerData);
-        console.log("Date Data: ", date);
-        console.log(createUser, "+++++++++++------------");
-
     };
 
     const fileTypes = ["PDF"];
-    const [file, setFile] = useState(null);
-    const handleChange = (file) => {
-        setFile(file);
-        console.log("File : ", file);
+    const handleChange = async (file) => {
+        const fromData = new FormData();
+        fromData.append("file", file);
+
+        const response = await dispatch(uploadPDF(fromData));
+        setEmployerDataData(prevState => ({
+            ...prevState,
+            file: response.data[0]
+        }));
     };
 
     const handleClose = () => {
         navigate("/admin/employer");
     };
 
+    const formatDate = (date) => {
+        if (!date) return "";
+        const formattedDate = date.substr(0, 10);
+        return formattedDate;
+    };
+
+    console.log(employerData)
     return (
         <div>
             <Breadcrumb
@@ -149,7 +130,7 @@ const CreateEmployerDetails = (props) => {
                                     </Typography>
                                     <TextField
                                         name="employer_name"
-                                        value={employerData.employer_name}
+                                        value={employerData?.employer_name}
                                         size="small"
                                         placeholder="Company name"
                                         required
@@ -172,7 +153,7 @@ const CreateEmployerDetails = (props) => {
                                     <TextField
                                         name="msi_employer_id"
                                         type="number"
-                                        value={employerData.msi_employer_id}
+                                        value={employerData?.msi_employer_id}
                                         size="small"
                                         placeholder="Enter ID"
                                         required
@@ -197,7 +178,7 @@ const CreateEmployerDetails = (props) => {
                                     <TextField
                                         name="business_department"
                                         placeholder="Business Department"
-                                        value={employerData.business_department}
+                                        value={employerData?.business_department}
                                         size="small"
                                         required
                                         fullWidth
@@ -219,7 +200,7 @@ const CreateEmployerDetails = (props) => {
                                     <TextField
                                         name="business_location"
                                         placeholder="Business Location"
-                                        value={employerData.business_location}
+                                        value={employerData?.business_location}
                                         size="small"
                                         required
                                         fullWidth
@@ -242,7 +223,7 @@ const CreateEmployerDetails = (props) => {
                                         name="branch_code"
                                         type="number"
                                         placeholder="Branch Code"
-                                        value={employerData.branch_code}
+                                        value={employerData?.branch_code}
                                         size="small"
                                         required
                                         fullWidth
@@ -264,7 +245,7 @@ const CreateEmployerDetails = (props) => {
                                     </Typography>
                                     <TextField
                                         name="address_1"
-                                        value={employerData.address_1}
+                                        value={employerData?.address_1}
                                         size="small"
                                         placeholder="Address"
                                         required
@@ -286,7 +267,7 @@ const CreateEmployerDetails = (props) => {
                                     </Typography>
                                     <TextField
                                         name="address_2"
-                                        value={employerData.address_2}
+                                        value={employerData?.address_2}
                                         size="small"
                                         placeholder="Address"
                                         required
@@ -311,7 +292,7 @@ const CreateEmployerDetails = (props) => {
                                     <TextField
                                         name="city"
                                         placeholder="City"
-                                        value={employerData.city}
+                                        value={employerData?.city}
                                         size="small"
                                         required
                                         fullWidth
@@ -333,7 +314,7 @@ const CreateEmployerDetails = (props) => {
                                     <TextField
                                         name="country"
                                         placeholder="Country"
-                                        value={employerData.country}
+                                        value={employerData?.country}
                                         size="small"
                                         required
                                         fullWidth
@@ -356,7 +337,7 @@ const CreateEmployerDetails = (props) => {
                                         name="postal_code"
                                         placeholder="Postal Code"
                                         type="number"
-                                        value={employerData.postal_code}
+                                        value={employerData?.postal_code}
                                         size="small"
                                         required
                                         fullWidth
@@ -386,7 +367,7 @@ const CreateEmployerDetails = (props) => {
                                     <TextField
                                         name="edrs_number"
                                         type="number"
-                                        value={employerData.edrs_number}
+                                        value={employerData?.edrs_number}
                                         size="small"
                                         placeholder="ID"
                                         required
@@ -408,7 +389,7 @@ const CreateEmployerDetails = (props) => {
                                     </Typography>
                                     <Select
                                         name="business_category"
-                                        value={employerData.business_category}
+                                        value={employerData?.business_category}
                                         size="small"
                                         required
                                         fullWidth
@@ -450,7 +431,7 @@ const CreateEmployerDetails = (props) => {
                                     <TextField
                                         name="number"
                                         type="number"
-                                        value={employerData.number}
+                                        value={employerData?.number}
                                         size="small"
                                         placeholder="number"
                                         required
@@ -477,7 +458,7 @@ const CreateEmployerDetails = (props) => {
                                         name="external_data_code"
                                         placeholder="Code"
                                         type="number"
-                                        value={employerData.external_data_code}
+                                        value={employerData?.external_data_code}
                                         size="small"
                                         required
                                         fullWidth
@@ -496,15 +477,20 @@ const CreateEmployerDetails = (props) => {
                                     >
                                         Telephone
                                     </Typography>
-                                    <TextField
+                                    {/* <TextField
                                         name="telephone"
                                         type="number"
                                         placeholder="Phone Number"
-                                        value={employerData.telephone}
+                                        value={employerData?.telephone}
                                         size="small"
                                         required
                                         fullWidth
                                         onChange={handleDataUpdate}
+                                    /> */}
+                                    <MobileNumberInput
+                                        value={employerData?.telephone}
+                                        handleChange={handleDataUpdate}
+                                        name={"telephone"}
                                     />
                                 </div>
 
@@ -522,7 +508,7 @@ const CreateEmployerDetails = (props) => {
                                     <TextField
                                         name="website"
                                         placeholder="Link"
-                                        value={employerData.website}
+                                        value={employerData?.website}
                                         size="small"
                                         required
                                         fullWidth
@@ -545,7 +531,7 @@ const CreateEmployerDetails = (props) => {
                                     </Typography>
                                     <TextField
                                         name="key_contact"
-                                        value={employerData.key_contact}
+                                        value={employerData?.key_contact}
                                         size="small"
                                         placeholder="Contact"
                                         required
@@ -568,7 +554,7 @@ const CreateEmployerDetails = (props) => {
                                     </Typography>
                                     <TextField
                                         name="email"
-                                        value={employerData.email}
+                                        value={employerData?.email}
                                         size="small"
                                         type="email"
                                         placeholder="Email"
@@ -599,7 +585,7 @@ const CreateEmployerDetails = (props) => {
                                     </Typography>
                                     <TextField
                                         name="business_description"
-                                        value={employerData.business_description}
+                                        value={employerData?.business_description}
                                         size="small"
                                         placeholder="Business Description"
                                         fullWidth
@@ -623,7 +609,7 @@ const CreateEmployerDetails = (props) => {
                                     </Typography>
                                     <TextField
                                         name="comments"
-                                        value={employerData.comments}
+                                        value={employerData?.comments}
                                         size="small"
                                         placeholder="Comments"
                                         required
@@ -639,7 +625,7 @@ const CreateEmployerDetails = (props) => {
 
                         <Grid>
                             <Grid xs={12} className="p-10 font-600 border-y-2 bg-gray-100 ">
-                                <p>Company Details</p>
+                                <p>Assesment Date</p>
                             </Grid>
 
                             <Grid className="m-12 flex flex-col justify-between gap-12 sm:flex-row">
@@ -657,8 +643,8 @@ const CreateEmployerDetails = (props) => {
                                     <TextField
                                         name="assessment_date"
                                         type="date"
-                                        value={date.assessment_date}
-                                        onChange={handleDateUpdate}
+                                        value={formatDate(employerData?.assessment_date)}
+                                        onChange={handleDataUpdate}
                                     />
                                 </div>
 
@@ -674,10 +660,10 @@ const CreateEmployerDetails = (props) => {
                                         Health and Safety Assessment renewal Date
                                     </Typography>
                                     <TextField
-                                        name="renewal_date"
+                                        name="assessment_renewal_date"
                                         type="date"
-                                        value={date.renewal_date}
-                                        onChange={handleDateUpdate}
+                                        value={formatDate(employerData?.assessment_renewal_date)}
+                                        onChange={handleDataUpdate}
                                     />
                                 </div>
 
@@ -693,19 +679,16 @@ const CreateEmployerDetails = (props) => {
                                         Liability Insurance renewal date
                                     </Typography>
                                     <TextField
-                                        name="insurance_date"
+                                        name="insurance_renewal_date"
                                         type="date"
-                                        value={date.insurance_date}
-                                        onChange={handleDateUpdate}
+                                        value={formatDate(employerData?.insurance_renewal_date)}
+                                        onChange={handleDataUpdate}
                                     />
                                 </div>
                             </Grid>
                         </Grid>
 
                         <Box>
-                            <Grid xs={12} className="p-10 font-600 border-y-2 bg-gray-100 ">
-                                <p>Assesment Date</p>
-                            </Grid>
 
                             <Box className="m-12 flex flex-col justify-between gap-12 sm:flex-row">
                                 <div className="w-full">
@@ -717,7 +700,7 @@ const CreateEmployerDetails = (props) => {
                                         }}
                                         className={Style.name}
                                     >
-                                        Choose resource for course
+                                        Choose File for Employer
                                     </Typography>
 
                                     <FileUploader
@@ -736,8 +719,8 @@ const CreateEmployerDetails = (props) => {
                                                         className="w-64 pb-8 "
                                                     />
                                                 </div>
-                                                {file ? (
-                                                    <p className="text-center mb-4">{file.name}</p>
+                                                {employerData?.file ? (
+                                                    <p className="text-center mb-4">{employerData?.file.name}</p>
                                                 ) : (
                                                     <>
                                                         <p className="text-center mb-4">
@@ -772,7 +755,7 @@ const CreateEmployerDetails = (props) => {
                                     <SecondaryButton
                                         name={"Save"}
                                         style={{ width: "10rem" }}
-                                        disable={!createUser}
+                                        // disable={!createUser}
                                         onClick={createUserHandler}
                                     />
                                     {/* <SecondaryButton name={updateData ? "Update" : "Save"} style={{ width: "10rem" }} onClick={updateData ? updateUserHandler : createUserHandler} /> */}

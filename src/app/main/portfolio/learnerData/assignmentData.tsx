@@ -43,6 +43,7 @@ import Uploading from "src/app/component/Cards/uploading";
 import UploadWorkDialog from "src/app/component/Cards/uploadWorkDialog";
 import { selectstoreDataSlice } from "app/store/reloadData";
 import { fetchCourseById, selectCourseManagement } from "app/store/courseManagement";
+import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 
 interface Column {
   id:
@@ -73,8 +74,10 @@ const columns: readonly Column[] = [
 const AssignmentData = () => {
 
   const dispatch: any = useDispatch();
+  const navigate = useNavigate();
+
   const { user_id } = useSelector(selectstoreDataSlice);
-  const user = useSelector(selectUser).data;
+  const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
   const { singleData } = useSelector(selectCourseManagement)
   const assingmentSingleData = useSelector(selectAssignment)?.singleData
   const { singleAssignmentData } = useSelector(selectAssignment)
@@ -87,8 +90,6 @@ const AssignmentData = () => {
   const [updateData, setUpdateData] = useState("");
   const [openMenuDialog, setOpenMenuDialog] = useState<any>({});
   const [edit, setEdit] = useState("Save");
-
-  const navigate = useNavigate();
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const oopen = Boolean(anchorEl);
@@ -181,90 +182,33 @@ const AssignmentData = () => {
     setDeleteId("");
   };
 
+  const handleBack = () => {
+    navigate(-1);
+  };
 
   return (
     <>
       <Card className="m-12 rounded-6" style={{ height: "87.3vh" }}>
         <div className="w-full h-full py-20">
-          {/* <Breadcrumb linkData={[AssignmentRedirect]} currPage="User" /> */}
-          {/* {data.length ? ( */}
-          <div className={Style.create_user}>
-            <div className={Style.search_filed}>
-              {/* <TextField
-              label="Search by keyword"
-              fullWidth
-              size="small"
-              // onKeyDown={searchByKeywordUser}
-              onChange={searchHandler}
-              value={searchKeyword}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    {searchKeyword ? (
-                      <Close
-                        // onClick={() => {
-                        //   setSearchKeyword("");
-                        //   dispatch(
-                        //     fetchUserAPI(
-                        //       { page: 1, page_size: 25 },
-                        //       "",
-                        //       filterValue
-                        //     )
-                        //   );
-                        // }}
-                        sx={{
-                          color: "#5B718F",
-                          fontSize: 18,
-                          cursor: "pointer",
-                        }}
-                      />
-                    ) : (
-                      <IconButton
-                        id="dashboard-search-events-btn"
-                        disableRipple
-                        sx={{ color: "#5B718F" }}
-                        // onClick={() => searchAPIHandler()}
-                        size="small"
-                      >
-                        <SearchIcon fontSize="small" />
-                      </IconButton>
-                    )}
-                  </InputAdornment>
-                ),
-              }}
-            />
-            <Autocomplete
-              fullWidth
-              size="small"
-              value={filterValue}
-              options={roles.map((option) => option.label)}
-              renderInput={(params) => (
-                <TextField {...params} label="Search by role" />
-              )}
-              // onChange={filterHandler}
-              sx={{
-                ".MuiAutocomplete-clearIndicator": {
-                  color: "#5B718F",
-                },
-              }}
-              PaperComponent={({ children }) => (
-                <Paper style={{ borderRadius: "4px" }}>{children}</Paper>
-              )}
-            /> */}
-            </div>
+          <div className={`${Style.create_user} flex justify-end`}>
             {!user_id &&
-              <SecondaryButton
-                name="Upload Files"
-                className="py-6 px-12 mb-10"
-                startIcon={
-                  <img
-                    src="assets/images/svgimage/createcourseicon.svg"
-                    alt="Upload Files"
-                    className="w-6 h-6 mr-2 sm:w-8 sm:h-8 lg:w-10 lg:h-10"
-                  />
-                }
-                onClick={handleOpen}
-              />
+              <>
+                <button onClick={handleBack} className='mb-10 text-[#5b718f]'>
+                  <KeyboardBackspaceIcon /> Back
+                </button>
+                <SecondaryButton
+                  name="Upload Files"
+                  className="py-6 px-12 mb-10"
+                  startIcon={
+                    <img
+                      src="assets/images/svgimage/createcourseicon.svg"
+                      alt="Upload Files"
+                      className="w-6 h-6 mr-2 sm:w-8 sm:h-8 lg:w-10 lg:h-10"
+                    />
+                  }
+                  onClick={handleOpen}
+                />
+              </>
             }
           </div>
           {/* ) : null} */}
@@ -272,7 +216,7 @@ const AssignmentData = () => {
             <TableContainer sx={{ maxHeight: 500 }}>
               {dataFetchLoading ? (
                 <FuseLoading />
-              ) : singleAssignmentData.length ? (
+              ) : singleAssignmentData?.length ? (
                 <Table
                   sx={{ minWidth: 650, height: "100%" }}
                   size="small"
@@ -327,8 +271,8 @@ const AssignmentData = () => {
                                       </AvatarGroup>
                                     </div>
                                   ) : column.id === "status" && user?.data?.role === "Trainer" ?
-                                      <TextField value={value}/>
-                                  :value}
+                                    <TextField value={value} />
+                                    : value}
                             </TableCell>
                           );
                         })}
@@ -397,7 +341,7 @@ const AssignmentData = () => {
             onClose={handleClose}
           >
 
-            {user.role === "Learner" &&
+            {/* {user.role === "Learner" &&
               <MenuItem
                 onClick={() => {
                   handleClose();
@@ -406,17 +350,7 @@ const AssignmentData = () => {
               >
                 Reupload
               </MenuItem>
-            }
-            {user.role === "Trainer" &&
-              <MenuItem
-                onClick={() => {
-                  handleClose();
-                  navigate('/assignment/review')
-                }}
-              >
-                Review
-              </MenuItem>
-            }
+            } */}
             <MenuItem
               onClick={() => {
                 handleClose();
@@ -435,7 +369,7 @@ const AssignmentData = () => {
                 setEdit("edit")
               }}
             >
-              Edit
+              {user.role === "Learner" ? "Edit" : "Edit & Review"}
             </MenuItem>
             {user.role === "Learner" &&
               <MenuItem

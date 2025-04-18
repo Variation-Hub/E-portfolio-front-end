@@ -24,7 +24,7 @@ const NotificationConfig = {
       },
     },
   },
-  auth: [authRoles.Admin, authRoles.Trainer, authRoles.Learner, authRoles.Employer, authRoles.EQA, authRoles.IQA],
+  auth: [authRoles.Admin, authRoles.Trainer, authRoles.Learner, authRoles.Employer, authRoles.EQA, authRoles.IQA, authRoles.LIQA],
   routes: [
     {
       path: "/notification",

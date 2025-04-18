@@ -53,6 +53,8 @@ import { showMessage } from "app/store/fuse/messageSlice";
 import FuseLoading from "@fuse/core/FuseLoading";
 import DataNotFound from "src/app/component/Pages/dataNotFound";
 import Style from "./style.module.css";
+import CustomPagination from "src/app/component/Pagination/CustomPagination";
+import { selectGlobalUser } from "app/store/globalUser";
 
 interface Column {
   id:
@@ -82,7 +84,7 @@ const columns: readonly Column[] = [
   {
     id: "feedback",
     label:
-      "Describe any feedback you have had from someone who your learning has had an impact on ir those who have been able to observe your performance",
+      "Describe any feedback you have had from someone who your learning has had an impact on or those who have been able to observe your performance",
     minWidth: 10,
   },
   { id: "files", label: "Files", minWidth: 10 },
@@ -92,6 +94,7 @@ const columns: readonly Column[] = [
 
 const AddNewEvaluationDialogContent = (props) => {
   const {
+    cpdData,
     edit = "Save",
     formData,
     setEvaluationData,
@@ -99,13 +102,6 @@ const AddNewEvaluationDialogContent = (props) => {
     handleChangeYear,
   } = props;
 
-  const currentYear = new Date().getFullYear();
-
-  const years = [
-    `${currentYear - 1}-${currentYear.toString().slice(-2)}`,
-    `${currentYear}-${(currentYear + 1).toString().slice(-2)}`,
-    `${currentYear + 1}-${(currentYear + 2).toString().slice(-2)}`,
-  ];
 
   const handleEvaluationChange = (e) => {
     const { name, value } = e.target;
@@ -127,7 +123,7 @@ const AddNewEvaluationDialogContent = (props) => {
 
   const handleUploadButtonClick = async () => {
     setUploadedFiles(files);
-    if (files.length > 5) {
+    if (files?.length > 5) {
       dispatch(
         showMessage({
           message: "You can only upload up to 5 files.",
@@ -175,11 +171,15 @@ const AddNewEvaluationDialogContent = (props) => {
                   onChange={handleChangeYear}
                   disabled={edit === "view" || edit === "edit"}
                 >
-                  {years?.map((year) => (
-                    <MenuItem key={year} value={year}>
-                      {year}
-                    </MenuItem>
-                  ))}
+                 {cpdData?.length ? (
+                    cpdData.map((yearItem) => (
+                      <MenuItem key={yearItem.year} value={yearItem.year}>
+                        {yearItem.year}
+                      </MenuItem>
+                    ))
+                  ) : (
+                    <MenuItem disabled>Cpd Data not found.</MenuItem>
+                  )}
                 </Select>
               </FormControl>
             </div>
@@ -305,7 +305,7 @@ const AddNewEvaluationDialogContent = (props) => {
                         className="w-64 pb-8"
                       />
                     </div>
-                    {files.length > 0 ? (
+                    {files?.length > 0 ? (
                       files.map((file, index) => (
                         <p className="text-center mb-4" key={index}>
                           {file.name}
@@ -365,7 +365,7 @@ const AddNewEvaluationDialogContent = (props) => {
               variant="contained"
               color="primary"
               onClick={handleUploadButtonClick}
-              disabled={files.length === 0}
+              disabled={files?.length === 0}
             >
               Upload
             </Button>
@@ -378,9 +378,12 @@ const AddNewEvaluationDialogContent = (props) => {
 
 const Evaluation = (props) => {
   const [page, setPage] = useState(1);
-  const rowsPerPage = 7;
+  const { pagination } = useSelector(selectGlobalUser)
+
+  const rowsPerPage = pagination.page_size;
 
   const {
+    cpdData,
     setUpdateData = () => { },
     dataUpdatingLoadding,
     dataFetchLoading,
@@ -408,7 +411,8 @@ const Evaluation = (props) => {
   const [open, setOpen] = useState(false);
 
   const dispatch: any = useDispatch();
-  const { data } = useSelector(selectUser);
+  const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
+
   const cpdPlanningData = useSelector(selectCpdPlanning);
 
   const handleChange = () => {
@@ -424,10 +428,8 @@ const Evaluation = (props) => {
   console.log(isFormValid);
 
   useEffect(() => {
-    dispatch(getCpdPlanningAPI(learnerId || data.user_id, "evaluations"));
+    dispatch(getCpdPlanningAPI(learnerId || user?.user_id, "evaluations"));
   }, [dispatch]);
-
-  // console.log(cpdPlanningData.data.map(item => item.activities));
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const oopen = Boolean(anchorEl);
@@ -467,14 +469,14 @@ const Evaluation = (props) => {
     }));
 
     if (name == "year") {
-      setcpdId(cpdPlanningData.data?.find((item) => item.year === value).id);
+      setcpdId(cpdPlanningData?.data?.find((item) => item?.year === value)?.id);
     }
   };
 
   const handleSubmit = async () => {
     try {
       let response;
-      let id = singleData.id;
+      let id = singleData?.id;
       if (dialogType === "addNewEvaluation")
         response = await dispatch(
           createEvaluationAPI({ ...evaluationData, cpd_id: cpdId })
@@ -489,7 +491,7 @@ const Evaluation = (props) => {
   };
 
   const deleteIcon = (id) => {
-    setDeleteId(id.id);
+    setDeleteId(id?.id);
   };
 
   const openMenu = (e, id) => {
@@ -518,6 +520,12 @@ const Evaluation = (props) => {
       files: [],
     });
   };
+
+
+  useEffect(() => {
+    setPage(1);
+  }, [rowsPerPage]);
+
   const handlePageChange = (event, value) => {
     setPage(value);
   };
@@ -529,48 +537,47 @@ const Evaluation = (props) => {
     (page - 1) * rowsPerPage,
     page * rowsPerPage
   );
-  const pageCount = Math.ceil(allEvaluations.length / rowsPerPage);
+  const pageCount = Math.ceil(allEvaluations?.length / rowsPerPage);
 
   return (
     <>
       <div>
-        <TableContainer sx={{ maxHeight: 500 }} className="-m-12">
+        <TableContainer sx={{ minHeight: 580, display: "flex", flexDirection: "column", justifyContent: "space-between" }} className="-m-12">
           {dataFetchLoading ? (
             <FuseLoading />
-          ) : paginatedData.length ? (
+          ) : paginatedData?.length ? (
             <Table stickyHeader aria-label="sticky table" size="small">
               <TableHead>
                 <TableRow>
-                  {columns.map((column) => (
+                  {columns?.map((column) => (
                     <TableCell
-                      key={column.id}
+                      key={column?.id}
                       align={column.align}
                       style={{
                         minWidth: column.minWidth,
                         backgroundColor: "#F8F8F8",
                       }}
                     >
-                      {column.label}
+                      {column?.label}
                     </TableCell>
                   ))}
                 </TableRow>
               </TableHead>
               <TableBody>
-                {paginatedData.map((row) => {
+                {paginatedData?.map((row) => {
                   return (
                     <TableRow
                       hover
                       role="checkbox"
                       tabIndex={-1}
-                    //   key={row.whosupportyou}
                     >
-                      {columns.map((column) => {
-                        const value = row[column.id];
+                      {columns?.map((column) => {
+                        const value = row[column?.id];
                         return (
-                          <TableCell key={column.id} align={column.align}>
+                          <TableCell key={column?.id} align={column.align}>
                             {column.format && typeof value === "number" ? (
                               column.format(value)
-                            ) : column.id === "action" ? (
+                            ) : column?.id === "action" ? (
                               <IconButton
                                 size="small"
                                 sx={{ color: "#5B718F", marginRight: "4px" }}
@@ -578,7 +585,7 @@ const Evaluation = (props) => {
                               >
                                 <MoreHorizIcon fontSize="small" />
                               </IconButton>
-                            ) : column.id === "files" ? (
+                            ) : column?.id === "files" ? (
                               <div style={{ display: "flex" }}>
                                 <AvatarGroup
                                   max={4}
@@ -637,20 +644,13 @@ const Evaluation = (props) => {
               </div>
             </div>
           )}
+          <CustomPagination
+            pages={pageCount}
+            page={page}
+            handleChangePage={handlePageChange}
+            items={allEvaluations?.length}
+          />
         </TableContainer>
-        <div className="fixed bottom-0 left-0 w-full flex justify-center py-4 mb-14">
-          <Stack spacing={2}>
-            <Pagination
-              count={pageCount}
-              variant="outlined"
-              shape="rounded"
-              page={page}
-              onChange={handlePageChange}
-              siblingCount={1}
-              boundaryCount={1}
-            />
-          </Stack>
-        </div>
       </div>
       <AlertDialog
         open={Boolean(deleteId)}
@@ -724,6 +724,7 @@ const Evaluation = (props) => {
       >
         <DialogContent>
           <AddNewEvaluationDialogContent
+            cpdData={cpdData}
             edit={edit}
             setEvaluationData={setEvaluationData}
             evaluationData={evaluationData}

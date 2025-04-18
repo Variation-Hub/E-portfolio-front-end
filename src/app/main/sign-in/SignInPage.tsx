@@ -167,7 +167,7 @@ const SignInPage = () => {
                   name="Sign in"
                   disable={
                     !emailReg.test(credentials.email) ||
-                    credentials.password.length < 1
+                    credentials.password?.length < 1
                   }
                 />
               )}

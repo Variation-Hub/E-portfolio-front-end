@@ -53,7 +53,7 @@ const Root = styled('div')(({ theme }) => ({
 }));
 
 function renderInputComponent(inputProps) {
-  const { variant, inputRef = () => {}, ref, ...other } = inputProps;
+  const { variant, inputRef = () => { }, ref, ...other } = inputProps;
   return (
     <div className="w-full relative">
       {variant === 'basic' ? (
@@ -137,20 +137,20 @@ function renderSuggestion(suggestion, { query, isHighlighted }) {
 
 function getSuggestions(value, data) {
   const inputValue = _.deburr(value.trim()).toLowerCase();
-  const inputLength = inputValue.length;
+  const inputLength = inputValue?.length;
   let count = 0;
 
   return inputLength === 0
     ? []
     : data.filter((suggestion) => {
-        const keep = count < 10 && match(suggestion.title, inputValue).length > 0;
+      const keep = count < 10 && match(suggestion.title, inputValue)?.length > 0;
 
-        if (keep) {
-          count += 1;
-        }
+      if (keep) {
+        count += 1;
+      }
 
-        return keep;
-      });
+      return keep;
+    });
 }
 
 function getSuggestionValue(suggestion) {
@@ -195,7 +195,7 @@ function reducer(state, action) {
     case 'updateSuggestions': {
       const suggestions = getSuggestions(action.value, state.navigation);
       const isInputBlank = action.value.trim() === '';
-      const noSuggestions = !isInputBlank && suggestions.length === 0;
+      const noSuggestions = !isInputBlank && suggestions?.length === 0;
 
       return {
         ...state,

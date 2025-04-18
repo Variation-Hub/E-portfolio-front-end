@@ -15,8 +15,9 @@ export const connectToSocket = async (id, dispatch) => {
     socket = await new WebSocket(`${SERVER_URL}?id=${id}`);
 
     socket.onmessage = (Data) => {
-        const { data, domain, } = JSON.parse(Data.data);
+        const { data = "", domain = "" } = JSON.parse(Data?.data);
 
+        console.log(data, domain, Data)
         if (domain === SocketDomain.CourseAllocation) {
             dispatch(showMessage({ message: data.message, variant: "success" }));
             dispatch(fetchNotifications())
@@ -28,8 +29,9 @@ export const connectToSocket = async (id, dispatch) => {
         } else if (domain === SocketDomain.MessageSend) {
             dispatch(slice.newMassageHandler(data))
         } else if (domain === SocketDomain.InnovationChat) {
-            console.log("helllllooooooooo", data)
             dispatch(InnovationSlice.setSingleDataForSocket(data))
+        } else if (domain === SocketDomain.Notification) {
+            dispatch(fetchNotifications())
         }
     };
 

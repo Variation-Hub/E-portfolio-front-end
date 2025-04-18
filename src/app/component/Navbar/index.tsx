@@ -7,15 +7,22 @@ import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import instance from "src/app/auth/services/jwtService/jwtService";
 import { SecondaryButton } from "../Buttons";
+import { useSelector } from "react-redux";
+import { selectUser } from "app/store/userSlice";
 
 const Index = () => {
   const navigate = useNavigate();
+
+  const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
 
   const [open, setOpen] = useState(false);
 
   const navigateLogin = () => {
     if (instance.getAccessToken()) {
-      navigate("/home");
+      if (user?.role === "Learner")
+        navigate("/portfolio");
+      else
+        navigate("/home");
     } else {
       navigate("/sign-in");
     }
@@ -38,25 +45,29 @@ const Index = () => {
           </div>
           <div className="flex items-center">
             <ul className={Style.menu}>
-              <li className={Style.navbar_link}>About Us</li>
-              <li className={Style.navbar_link}>Products</li>
-              <a href="#features">
+              <a href="#about-us">
+                <li className={Style.navbar_link}>About Us</li>
+              </a>
+              <a href="#products">
+                <li className={Style.navbar_link}>Products</li>
+              </a>
+              <a href="#features-section">
                 <li className={Style.navbar_link}>Features</li>
               </a>
               <a href="#why-locker">
                 <li className={Style.navbar_link}>Why Locker?</li>
               </a>
             </ul>
-          <SecondaryButton
-            onClick={navigateLogin}
-            className={`${Style.navbar_link} ${Style.login_button}`}
-            name={instance.getAccessToken() ? "Dashboard" : "Log in"}
-          >
-          </SecondaryButton>
+            <SecondaryButton
+              onClick={navigateLogin}
+              className={`${Style.navbar_link} ${Style.login_button}`}
+              name={instance.getAccessToken() ? "Dashboard" : "Log in"}
+            >
+            </SecondaryButton>
           </div>
           <div className={`${Style.navbar_link} ${Style.menu_open_icon}`}>
             <IconButton onClick={handleOpen}>
-              <MenuIcon className="text-[#5B718F] "/>
+              <MenuIcon className="text-[#5B718F] " />
             </IconButton>
           </div>
         </div>
@@ -77,13 +88,17 @@ const Index = () => {
             <CloseIcon />
           </IconButton>
           <Divider light />
-          <li className={`${Style.navbar_link_mobile}`} onClick={handleClose}>
-            About Us
-          </li>
-          <li className={`${Style.navbar_link_mobile}`} onClick={handleClose}>
-            Products
-          </li>
-          <a href="#features">
+          <a href="#about-us">
+            <li className={`${Style.navbar_link_mobile}`} onClick={handleClose}>
+              About Us
+            </li>
+          </a>
+          <a href="#products">
+            <li className={`${Style.navbar_link_mobile}`} onClick={handleClose}>
+              Products
+            </li>
+          </a>
+          <a href="#features-section">
             <li className={`${Style.navbar_link_mobile}`} onClick={handleClose}>
               Features
             </li>

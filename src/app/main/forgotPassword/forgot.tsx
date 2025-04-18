@@ -147,7 +147,7 @@ const forgot = () => {
                   ) : (
                     <SecondaryButton
                       name="Verify"
-                      disable={otp.otpValue.length === 6 ? false : true}
+                      disable={otp.otpValue?.length === 6 ? false : true}
                       onClick={verifyOTPHandler}
                     />
                   )}
@@ -228,7 +228,7 @@ const forgot = () => {
                   ) : (
                     <SecondaryButton
                       name="Verify"
-                      disable={otp.otpValue.length === 6 ? false : true}
+                      disable={otp.otpValue?.length === 6 ? false : true}
                       onClick={verifyOTPHandler}
                     />
                   )}

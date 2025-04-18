@@ -2,81 +2,48 @@ import {
   Box,
   Card,
   Grid,
-  IconButton,
   MenuItem,
-  Paper,
   Select,
   TextField,
-  Tooltip,
   Typography,
 } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
 import {
   AdminRedirect,
   EmployerRedirect,
-  fundingBodyData,
-  roles,
 } from "src/app/contanst";
 import {
   LoadingButton,
   SecondaryButton,
   SecondaryButtonOutlined,
 } from "src/app/component/Buttons";
-import { timezones } from "src/app/contanst/timezoneData";
-import {
-  emailValidationMsg,
-  mobileValidationMsg,
-  nameValidationMsg,
-  passwordValidation,
-  usernameValidationMsg,
-} from "src/app/contanst/regValidation";
-import HelpOutlinedIcon from "@mui/icons-material/HelpOutlined";
-import { DatePicker } from "@mui/x-date-pickers";
 import { FileUploader } from "react-drag-drop-files";
-import { useState } from "react";
 import Breadcrumb from "src/app/component/Breadcrumbs";
 import Style from "./style.module.css";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { createEmployerAPI, getEmployerAPI, updateEmployerAPI } from "app/store/employer";
+import { updateEmployerAPI, uploadPDF } from "app/store/employer";
+import MobileNumberInput from "src/app/component/Input/MobileNumberInput";
 
 const EmployerDetails = (props) => {
 
   const {
-    userData,
-    updateData,
-    dataUpdatingLoadding,
-    userDataError,
     setEditEmployer = () => { },
+    setEmployerData = () => { },
     employerData,
     handleDataUpdate,
+    refetchEmployer
   } = props;
 
   const navigate = useNavigate();
   const dispatch: any = useDispatch();
 
-  const [date, setDate] = useState({
-    assessment_date: "",
-    renewal_date: "",
-    insurance_date: "",
-  });
-
-  const handleDateUpdate = (e) => {
-    const { name, value } = e.target;
-    setDate((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
-
-  console.log(employerData)
   const createUser = Object.values(employerData).find((data) => data === "") === undefined;
 
   const updateUserHandler = async () => {
     try {
       let response;
       response = await dispatch(updateEmployerAPI(employerData));
-      dispatch(getEmployerAPI({ page: 1, page_size: 10 }));
+      refetchEmployer()
     } catch (err) {
       console.log(err);
     } finally {
@@ -85,15 +52,28 @@ const EmployerDetails = (props) => {
   };
 
   const fileTypes = ["PDF"];
-  const [file, setFile] = useState(null);
-  const handleChange = (file) => {
-    setFile(file);
-    console.log("File : ", file);
+
+  const handleChange = async (file) => {
+    const fromData = new FormData();
+    fromData.append("file", file);
+
+    const response = await dispatch(uploadPDF(fromData));
+    setEmployerData(prevState => ({
+      ...prevState,
+      file: response.data[0]
+    }));
   };
 
   const handleClose = () => {
     navigate("/admin/employer");
     setEditEmployer(false);
+  };
+
+
+  const formatDate = (date) => {
+    if (!date) return "";
+    const formattedDate = date.substr(0, 10);
+    return formattedDate;
   };
 
   return (
@@ -470,7 +450,7 @@ const EmployerDetails = (props) => {
                   >
                     Telephone
                   </Typography>
-                  <TextField
+                  {/* <TextField
                     name="telephone"
                     type="number"
                     placeholder="Phone Number"
@@ -479,6 +459,11 @@ const EmployerDetails = (props) => {
                     required
                     fullWidth
                     onChange={handleDataUpdate}
+                  /> */}
+                  <MobileNumberInput
+                    value={employerData?.telephone}
+                    handleChange={handleDataUpdate}
+                    name={"telephone"}
                   />
                 </div>
 
@@ -613,7 +598,7 @@ const EmployerDetails = (props) => {
 
             <Grid>
               <Grid xs={12} className="p-10 font-600 border-y-2 bg-gray-100 ">
-                <p>Company Details</p>
+                <p>Assesment Date</p>
               </Grid>
 
               <Grid className="m-12 flex flex-col justify-between gap-12 sm:flex-row">
@@ -631,8 +616,8 @@ const EmployerDetails = (props) => {
                   <TextField
                     name="assessment_date"
                     type="date"
-                    value={date.assessment_date}
-                    onChange={handleDateUpdate}
+                    value={formatDate(employerData?.assessment_date)}
+                    onChange={handleDataUpdate}
                   />
                 </div>
 
@@ -648,10 +633,10 @@ const EmployerDetails = (props) => {
                     Health and Safety Assessment renewal Date
                   </Typography>
                   <TextField
-                    name="renewal_date"
+                    name="assessment_renewal_date"
                     type="date"
-                    value={date.renewal_date}
-                    onChange={handleDateUpdate}
+                    value={formatDate(employerData?.assessment_renewal_date)}
+                    onChange={handleDataUpdate}
                   />
                 </div>
 
@@ -667,19 +652,15 @@ const EmployerDetails = (props) => {
                     Liability Insurance renewal date
                   </Typography>
                   <TextField
-                    name="insurance_date"
+                    name="insurance_renewal_date"
                     type="date"
-                    value={date.insurance_date}
-                    onChange={handleDateUpdate}
+                    value={formatDate(employerData?.insurance_renewal_date)}
+                    onChange={handleDataUpdate}
                   />
                 </div>
               </Grid>
             </Grid>
-
             <Box>
-              <Grid xs={12} className="p-10 font-600 border-y-2 bg-gray-100 ">
-                <p>Assesment Date</p>
-              </Grid>
 
               <Box className="m-12 flex flex-col justify-between gap-12 sm:flex-row">
                 <div className="w-full">
@@ -691,7 +672,7 @@ const EmployerDetails = (props) => {
                     }}
                     className={Style.name}
                   >
-                    Choose resource for course
+                    Choose File for Employer
                   </Typography>
 
                   <FileUploader
@@ -710,8 +691,8 @@ const EmployerDetails = (props) => {
                             className="w-64 pb-8 "
                           />
                         </div>
-                        {file ? (
-                          <p className="text-center mb-4">{file.name}</p>
+                        {employerData.file ? (
+                          <p className="text-center mb-4">{employerData.file.url}</p>
                         ) : (
                           <>
                             <p className="text-center mb-4">
@@ -734,7 +715,7 @@ const EmployerDetails = (props) => {
             </Box>
 
             <Box style={{ margin: "auto 1rem 1rem auto" }}>
-              {dataUpdatingLoadding ? (
+              {false ? (
                 <LoadingButton />
               ) : (
                 <>

@@ -27,7 +27,7 @@ const Root = styled('div')(({ theme }) => ({
 }));
 
 function UserNavbarHeader(props) {
-  const user = useSelector(selectUser);
+  const user = sessionStorage.getItem('learnerToken') ? JSON.parse(sessionStorage.getItem('learnerToken'))?.user : useSelector(selectUser);
 
   return (
     <Root className="user relative flex flex-col items-center justify-center p-16 pb-14 shadow-0">
@@ -40,16 +40,16 @@ function UserNavbarHeader(props) {
           }}
           className="avatar text-32 font-bold w-96 h-96"
           src={user?.data?.avatar?.url}
-          alt={user.data.displayName}
+          alt={user?.data?.displayName}
         >
-          {user.data.displayName.charAt(0)}
+          {user?.data?.displayName.charAt(0)}
         </Avatar>
       </div>
       <Typography className="username text-14 whitespace-nowrap font-medium">
-        {user.data.displayName}
+        {user?.data?.displayName}
       </Typography>
       <Typography className="email text-13 whitespace-nowrap font-medium" color="text.secondary">
-        {user.data.email}
+        {user?.data?.email}
       </Typography>
     </Root>
   );

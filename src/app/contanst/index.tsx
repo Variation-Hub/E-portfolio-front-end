@@ -289,6 +289,7 @@ export const learnerManagementTableColumn = [
   { id: "user_name", label: "Username", minWidth: 170, align: "left" },
   { id: "email", label: "Email", minWidth: 170, align: "left" },
   { id: "mobile", label: "Mobile", minWidth: 170, align: "left" },
+  { id: "course", label: "Course", minWidth: 170, align: "left" },
   { id: "status", label: "Status", minWidth: 100, align: "left" },
   { id: "actions", label: "Actions", minWidth: 170, align: "center" },
 ];
@@ -302,14 +303,6 @@ export const employerManagementTableColumn = [
   { id: "country", label: "Country", minWidth: 100, align: "left" },
   { id: "postal_code", label: "Postal Code", minWidth: 100, align: "left" },
   { id: "actions", label: "Actions", minWidth: 170, align: "center" },
-];
-
-export const learnerTableColumn = [
-  { id: "first_name", label: "Name", minWidth: 170, align: "left" },
-  { id: "user_name", label: "Username", minWidth: 170, align: "left" },
-  { id: "email", label: "Email", minWidth: 170, align: "left" },
-  { id: "mobile", label: "Mobile", minWidth: 170, align: "left" },
-  { id: "status", label: "Status", minWidth: 100, align: "left" },
 ];
 
 export const roles = [
@@ -377,6 +370,7 @@ export const portfolioCard = [
   { id: 3, name: "Actions and Activities", color: "#F44771" },
   { id: 4, name: "Resources", color: "#009FB7" },
   { id: 5, name: "Time Log", color: "#E95ACB" },
+  { id: 6, name: "Skill Scan", color: "#489E20" }
 ];
 
 // export const portfolioCard = [

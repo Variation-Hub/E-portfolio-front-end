@@ -32,7 +32,7 @@ mock.onGet('/api/auth/sign-in').reply(async (config) => {
     });
   }
 
-  if (error.length === 0) {
+  if (error?.length === 0) {
     delete user.password;
 
     const access_token = generateJWTToken({ id: user.uuid });
@@ -85,7 +85,7 @@ mock.onPost('/api/auth/sign-up').reply((request) => {
     });
   }
 
-  if (error.length === 0) {
+  if (error?.length === 0) {
     const newUser = {
       uuid: FuseUtils.generateGUID(),
       from: 'custom-db',

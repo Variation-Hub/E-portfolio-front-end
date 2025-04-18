@@ -55,7 +55,7 @@ class FuseAuthorization extends Component {
         User is guest
         Redirect to Login Page
         */
-    if (!userRole || userRole.length === 0) {
+    if (!userRole || userRole?.length === 0) {
       setTimeout(() => history.push('/sign-in'), 0);
       loginRedirectUrl = pathname;
     } else {

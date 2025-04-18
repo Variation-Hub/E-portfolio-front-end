@@ -99,16 +99,15 @@ export const getMessageAPI = (data, course_id) => async (dispatch, getStore) => 
 }
 
 //get chat list
-export const getChatListAPI = () => async (dispatch) => {
-
+export const getChatListAPI = (user_id = "") => async (dispatch) => {
     try {
-
         dispatch(slice.setLoader());
 
         let url = `${URL_BASE_LINK}/forum/list`
-
+        if (user_id) {
+            url = `${url}?user_id=${user_id}`
+        }
         const response = await axios.get(url);
-        // dispatch(showMessage({ message: response.data.message, variant: "success" }))
         dispatch(slice.setCourseData(response.data.data))
         dispatch(slice.setLoader());
         return true;

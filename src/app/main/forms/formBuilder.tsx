@@ -1,5 +1,4 @@
 import {
-    Autocomplete,
     Checkbox,
     Dialog,
     DialogActions,
@@ -13,8 +12,6 @@ import {
     ListItemText,
     Menu,
     MenuItem,
-    Pagination,
-    Paper,
     Radio,
     RadioGroup,
     Select,
@@ -27,7 +24,6 @@ import {
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
-import { Stack } from "@mui/system";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import NorthEastIcon from '@mui/icons-material/NorthEast';
 import React, { useEffect, useState } from "react";
@@ -39,27 +35,31 @@ import {
 } from "src/app/component/Buttons";
 import { TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import { tr } from "date-fns/locale";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { selectUser } from "app/store/userSlice";
 import AlertDialog from "src/app/component/Dialogs/AlertDialog";
 import FuseLoading from "@fuse/core/FuseLoading";
 import DataNotFound from "src/app/component/Pages/dataNotFound";
-import { FormBuilder as FormBuilderIo } from "react-formio";
-import "formiojs/dist/formio.full.css";
 import './style.css'
 import { useNavigate } from "react-router-dom";
-import { AddUsersToForm, deleteFormHandler, fetchUserAllAPI, getFormDataAPI, getUserFormDataAPI, selectFormData, slice } from "app/store/formData";
-import { userTableMetaData } from "src/app/contanst/metaData";
+import { AddUsersToForm, deleteFormHandler, fetchUserAllAPI, getFormDataAPI, selectFormData, slice } from "app/store/formData";
 import { UserRole } from "src/enum";
-import { fetchUserAPI } from "app/store/userManagement";
 import Close from "@mui/icons-material/Close";
+import { selectGlobalUser } from "app/store/globalUser";
+import CustomPagination from "src/app/component/Pagination/CustomPagination";
 
 const FormBuilder = (props) => {
-    const { data } = useSelector(selectUser);
+    const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
+    const currentUser = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectGlobalUser)?.currentUser;
+
     const { singleData, users, meta_data, dataUpdatingLoadding, dataFetchLoading } = useSelector(selectFormData);
-    console.log(users.data);
+
+    const dispatch: any = useDispatch();
+
+    const navigate = useNavigate();
+
+    const { pagination } = useSelector(selectGlobalUser)
 
     const [anchorEl, setAnchorEl] = useState(null);
     const [selectedRow, setSelectedRow] = useState<any>(null);
@@ -67,19 +67,26 @@ const FormBuilder = (props) => {
     const [deleteId, setDeleteId] = useState("");
     const [searchKeyword, setSearchKeyword] = useState("");
 
+
+    const fetchFormData = (a = searchKeyword, page = 1) => {
+        const userId = currentUser.role !== UserRole.Admin ? currentUser.user_id : undefined;
+
+        dispatch(getFormDataAPI({ page, page_size: pagination?.page_size }, a, userId));
+    }
+
+    useEffect(() => {
+        fetchFormData()
+    }, [dispatch, pagination]);
+
     const deleteIcon = (id) => {
         setDeleteId(selectedRow?.id);
     };
 
     const deleteConfromation = async () => {
         await dispatch(deleteFormHandler(deleteId));
-        dispatch(getFormDataAPI({ page: 1, page_size: 10 }, ""));
+        fetchFormData()
         setDeleteId("");
     };
-
-    const dispatch: any = useDispatch();
-
-    const navigate = useNavigate();
 
     const handleClickOpen = () => {
         navigate("/forms/create");
@@ -99,8 +106,6 @@ const FormBuilder = (props) => {
     const handleEdit = (edit) => {
         dispatch(slice.setMode(edit));
         navigate("/forms/create");
-        // setSupportData(singleData);
-        // handleClickOpen();
     };
 
     const handleApply = (e, row, edit) => {
@@ -112,14 +117,8 @@ const FormBuilder = (props) => {
 
     const formdata = useSelector(selectFormData);
 
-    useEffect(() => {
-        dispatch(getFormDataAPI({ page: 1, page_size: 10 }, ""));
-    }, [dispatch]);
-
     const handleChangePage = (event: unknown, newPage: number) => {
-        dispatch(
-            getFormDataAPI({ page: newPage, page_size: userTableMetaData.page_size })
-        );
+        fetchFormData(searchKeyword, newPage)
     };
 
     const formatDate = (date) => {
@@ -154,7 +153,6 @@ const FormBuilder = (props) => {
     };
 
     const handleSubmit = async () => {
-        // Capture the form values here
         if (selectedValue === 'Individual') {
             await dispatch(AddUsersToForm(singleData.id, { user_ids: userData.user_ids }));
         } else {
@@ -176,15 +174,17 @@ const FormBuilder = (props) => {
     };
 
     const searchAPIHandler = () => {
+        const userId = currentUser.role !== UserRole.Admin ? currentUser.user_id : undefined;
+
         dispatch(
-            getFormDataAPI({ page: 1, page_size: 10 }, searchKeyword)
+            getFormDataAPI({ page: 1, page_size: pagination?.page_size }, searchKeyword, userId)
         );
     };
 
     return (
         <>
             <Grid className="m-10" sx={{ minHeight: 600 }}>
-                {data.role === "Admin" &&
+                {user?.role === "Admin" &&
                     <Box className="flex justify-between pb-10"
                         sx={{
                             borderBottom: 1,
@@ -208,9 +208,7 @@ const FormBuilder = (props) => {
                                                 <Close
                                                     onClick={() => {
                                                         setSearchKeyword("");
-                                                        dispatch(
-                                                            getFormDataAPI({ page: 1, page_size: 10 })
-                                                        );
+                                                        fetchFormData("")
                                                     }}
                                                     sx={{
                                                         color: "#5B718F",
@@ -244,10 +242,10 @@ const FormBuilder = (props) => {
                         </Grid>
                     </Box>}
                 <div>
-                    <TableContainer sx={{ maxHeight: 530 }} >
+                    <TableContainer sx={{ minHeight: 580, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
                         {dataFetchLoading ? (
                             <FuseLoading />
-                        ) : formdata.data.length ? (
+                        ) : formdata.data?.length ? (
                             <Table
                                 sx={{ minWidth: 650, heighFaddt: "100%" }}
                                 size="small"
@@ -297,7 +295,7 @@ const FormBuilder = (props) => {
                                                 align="left"
                                                 sx={{ borderBottom: "2px solid #F8F8F8" }}
                                             >
-                                                {data.role === UserRole.Admin ?
+                                                {user?.role === UserRole.Admin ?
                                                     <IconButton
                                                         size="small"
                                                         sx={{ color: "#5B718F", marginRight: "4px" }}
@@ -332,23 +330,13 @@ const FormBuilder = (props) => {
                                 </Typography>
                             </div>
                         )}
+                        <CustomPagination
+                            pages={meta_data?.pages}
+                            page={meta_data?.page}
+                            handleChangePage={handleChangePage}
+                            items={meta_data?.items}
+                        />
                     </TableContainer>
-                    <div className="fixed bottom-0 left-0 w-full flex justify-center py-4">
-                        <Stack
-                            spacing={2}
-                            className="flex justify-center items-center w-full my-12"
-                        >
-                            <Pagination
-                                count={meta_data?.pages}
-                                page={meta_data?.page}
-                                variant="outlined"
-                                onChange={handleChangePage}
-                                shape="rounded"
-                                siblingCount={1}
-                                boundaryCount={1}
-                            />
-                        </Stack>
-                    </div>
                 </div>
 
                 <AlertDialog
@@ -383,7 +371,6 @@ const FormBuilder = (props) => {
                 >
                     <MenuItem
                         onClick={() => {
-                            // handleUser("user");
                             handleOpen();
                             handleClose();
                         }}>
@@ -424,14 +411,13 @@ const FormBuilder = (props) => {
                     }}
                 >
                     <DialogContent >
-                        <Grid /* className="flex flex-col items-start" */>
+                        <Grid>
                             <FormControl component="fieldset">
                                 <FormLabel component="legend">Select Asign Users</FormLabel>
                                 <RadioGroup
                                     aria-label="options"
                                     defaultValue="outlined"
                                     name="radio-buttons-group"
-                                // orientation="vertical"
                                 >
                                     <FormControlLabel
                                         value="All"
@@ -493,6 +479,7 @@ const FormBuilder = (props) => {
                                                 placeholder="Select users"
                                                 required
                                                 fullWidth
+                                                className="max-w-200 min-w-200"
                                                 multiple
                                                 onChange={handleDataUpdate}
                                                 renderValue={(selected) =>

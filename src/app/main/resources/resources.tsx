@@ -16,8 +16,6 @@ import { selectUser } from "app/store/userSlice";
 const Resources = () => {
 
   const { data, dataFetchLoading } = useSelector(selectResourceManagement)
-  const user = useSelector(selectUser);
-  console.log(user, "{{{{{{")
   const [open, setOpen] = useState(false);
   const dispatch: any = useDispatch();
 
@@ -34,7 +32,7 @@ const Resources = () => {
 
   return (
     <>
-      {data.length ?
+      {data?.length ?
         <div className="m-4 flex items-center justify-between">
           <div className="w-2/4 flex gap-12">
             {/* <TextField
@@ -111,7 +109,7 @@ const Resources = () => {
         : null}
 
       {dataFetchLoading ? <FuseLoading /> :
-        data.length ?
+        data?.length ?
           <ResouresManagementTable
             columns={resourceManagementTableColumn}
             rows={data}

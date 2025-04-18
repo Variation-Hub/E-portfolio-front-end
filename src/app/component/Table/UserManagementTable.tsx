@@ -35,6 +35,7 @@ import {
 } from "app/store/courseManagement";
 import { Stack } from "@mui/system";
 import { getRandomColor } from "src/utils/randomColor";
+import CustomPagination from "../Pagination/CustomPagination";
 
 export default function UserManagementTable(props) {
   const {
@@ -47,6 +48,7 @@ export default function UserManagementTable(props) {
     dataUpdatingLoadding,
     search_keyword = "",
     search_role = "",
+    handleChangePage,
   } = props;
 
   const [deleteId, setDeleteId] = useState("");
@@ -68,16 +70,11 @@ export default function UserManagementTable(props) {
     setAnchorEl(null);
   };
 
-
-  const handleChangePage = (event: unknown, newPage: number) => {
-    dispatch(
-      fetchUserAPI({ page: newPage, page_size: userTableMetaData.page_size })
-    )
-  };
-
   const openMenu = (e, id) => {
+    console.log(e, id);
+
     handleClick(e);
-    setOpenMenuDialog(id);
+    setOpenMenuDialog(id?.user_id);
   };
 
   const editIcon = () => {
@@ -138,7 +135,7 @@ export default function UserManagementTable(props) {
   return (
     <>
       <div style={{ width: "100%", overflow: "hidden", marginTop: "0.5rem" }}>
-        <TableContainer sx={{ maxHeight: 530, minHeight: 530 }}>
+        <TableContainer sx={{ minHeight: 550, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
           <Table stickyHeader aria-label="sticky table" size="small">
             <TableHead>
               <TableRow>
@@ -189,7 +186,7 @@ export default function UserManagementTable(props) {
                             <IconButton
                               size="small"
                               sx={{ color: "#5B718F", marginRight: "4px" }}
-                              onClick={(e) => openMenu(e, row.user_id)}
+                              onClick={(e) => openMenu(e, row)}
                             >
                               <MoreHorizIcon fontSize="small" />
                             </IconButton>
@@ -231,22 +228,12 @@ export default function UserManagementTable(props) {
               })}
             </TableBody>
           </Table>
-          <div className="absolute bottom-0 left-0 w-full flex justify-center py-4 mb-14">
-            <Stack
-              spacing={2}
-              className="flex justify-center items-center w-full mt-14"
-            >
-              <Pagination
-                count={meta_data?.pages}
-                page={meta_data?.page}
-                variant="outlined"
-                onChange={handleChangePage}
-                shape="rounded"
-                siblingCount={1}
-                boundaryCount={1}
-              />
-            </Stack>
-          </div>
+          <CustomPagination
+            pages={meta_data?.pages}
+            page={meta_data?.page}
+            handleChangePage={handleChangePage}
+            items={meta_data?.items}
+          />
         </TableContainer>
       </div>
       <AlertDialog

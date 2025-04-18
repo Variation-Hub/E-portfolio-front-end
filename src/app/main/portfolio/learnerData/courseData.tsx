@@ -1,8 +1,10 @@
-import { selectCourseManagement } from 'app/store/courseManagement';
-import React from 'react';
+import { selectCourseManagement, updateUserCourse } from 'app/store/courseManagement';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Card, CardContent, Typography, Grid, Avatar } from '@mui/material';
+import { Card, CardContent, Typography, Grid, Avatar, TextField, Autocomplete } from '@mui/material';
 import dayjs from 'dayjs';
+import { useDispatch } from 'react-redux';
+import { showMessage } from 'app/store/fuse/messageSlice';
 
 const UserCard = ({ user }) => {
     return (
@@ -64,10 +66,37 @@ function getUniqueUserData(singleData) {
 
 }
 
+const courseStatusOptions = [
+    "Awaiting Induction",
+    "Certificated",
+    "Completed",
+    "Early Leaver",
+    "Exempt",
+    "In Training",
+    "IQA Approved",
+    "Training Suspended",
+    "Transferred"
+];
 
 const CourseData = () => {
     const { singleData } = useSelector(selectCourseManagement);
     const course = singleData?.course;
+    console.log(singleData?.user_course_id);
+
+    const [courseStatus, setCourseStatus] = useState(singleData.course_status || '');
+
+    const dispatch: any = useDispatch();
+
+    const handleStatusChange = async (event, newValue) => {
+        setCourseStatus(newValue);
+
+        if (singleData?.user_course_id && newValue) {
+            const success = await dispatch(updateUserCourse(singleData.user_course_id, { course_status: newValue }));
+            if (success) {
+                dispatch(showMessage({ message: "Course status updated successfully", variant: "success" }));
+            }
+        }
+    };
 
     const formatDate = (dateString) => {
         return dayjs(dateString).format('D MMMM YYYY');
@@ -75,10 +104,22 @@ const CourseData = () => {
 
     return (
         <div className="container mx-auto p-4">
-            <Typography variant="h5" className="font-bold mb-8 text-blue-700">
-                Course Details
-            </Typography>
-
+            <div className='flex justify-between my-8'>
+                <Typography variant="h5" className="font-bold text-blue-700">
+                    Course Details
+                </Typography>
+                <Autocomplete
+                    className='w-200'
+                    size="small"
+                    sx={{
+                        ".muiltr-1okx3q8-MuiButtonBase-root-MuiIconButton-root-MuiAutocomplete-popupIndicator": { color: "black" }
+                    }}
+                    options={courseStatusOptions}
+                    value={courseStatus}
+                    onChange={handleStatusChange}
+                    renderInput={(params) => <TextField  {...params} placeholder="Status" />}
+                />
+            </div>
             <Grid container spacing={4}>
                 {/* Card 1 */}
                 <Grid item xs={12} md={6}>

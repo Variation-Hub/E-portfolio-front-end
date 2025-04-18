@@ -13,6 +13,7 @@ import { useDispatch } from "react-redux";
 import { slice as globalSlice } from "app/store/globalUser"
 import { useSelector } from "react-redux";
 import { selectstoreDataSlice } from "app/store/reloadData";
+import { selectUser } from "app/store/userSlice";
 
 export const Card = (props) => {
   const {
@@ -53,7 +54,7 @@ export const Card = (props) => {
       )}
       <Tooltip title={title} arrow>
         <Typography>
-          {title.length > 20 && !isMobile ? `${title.slice(0, 17)}...` : title}
+          {title?.length > 20 && !isMobile ? `${title.slice(0, 17)}...` : title}
         </Typography>
       </Tooltip>
     </div>
@@ -64,32 +65,37 @@ export const PortfolioCard = ({ data, learner = undefined, handleClickData = (id
   const [open, setOpen] = useState(false);
   const dispatch: any = useDispatch();
   const navigate = useNavigate();
-  const learnerData = useSelector(selectstoreDataSlice);
+  const { role } = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
 
   const { id = 0, name = "No title", color = "#FCA14E" } = data;
   const handleClick = (row = "") => {
+
+    if (learner) {
+      handleClickData(learner?.learner_id, learner?.user_id);
+      dispatch(globalSlice.setSelectedUser(learner))
+    }
+
     if (id === 1) {
       setOpen(true);
     } else if (id === 2) {
       navigate('/portfolio/progress');
-      if (learner) {
-        handleClickData(learner?.learner_id, learner?.user_id);
-      }
     } else if (id === 3) {
-      dispatch(globalSlice.setSelectedUser(row))
       navigate('/cpd')
     } else if (id === 5) {
       navigate('/timeLog');
     } else if (id === 4) {
       navigate('/resources-card');
+    } else if (id === 6) {
+      navigate('/skillsScan');
     }
+
   };
   const handleClose = () => {
     setOpen(false);;
   };
 
   return (
-    learnerData?.user_id ?
+    role !== "Learner" ?
       !["Upload Work"].includes(name) ?
         <>
           <div
@@ -120,33 +126,36 @@ export const PortfolioCard = ({ data, learner = undefined, handleClickData = (id
           </Dialog>
         </> :
         null
-      : <>
-        <div
-          className={Style.cardContain}
-          style={{ background: color }}
-          onClick={() => {
-            handleClick();
-          }}
-        >
-          <div>
-            <div className={Style.index}>{index}</div>
-            <div className={Style.emptyRing}></div>
-            <div className={Style.filledRing}></div>
+      :
+      !["Skill Scan"].includes(name) ?
+        <>
+          <div
+            className={Style.cardContain}
+            style={{ background: color }}
+            onClick={() => {
+              handleClick();
+            }}
+          >
+            <div>
+              <div className={Style.index}>{index}</div>
+              <div className={Style.emptyRing}></div>
+              <div className={Style.filledRing}></div>
+            </div>
+            <div className={Style.title}>{name}</div>
           </div>
-          <div className={Style.title}>{name}</div>
-        </div>
-        <Dialog
-          open={open}
-          onClose={handleClose}
-          sx={{
-            ".MuiDialog-paper": {
-              borderRadius: "4px",
-              padding: "1rem",
-            },
-          }}
-        >
-          <UploadWorkDialog dialogFn={{ handleClose }} />
-        </Dialog>
-      </>
+          <Dialog
+            open={open}
+            onClose={handleClose}
+            sx={{
+              ".MuiDialog-paper": {
+                borderRadius: "4px",
+                padding: "1rem",
+              },
+            }}
+          >
+            <UploadWorkDialog dialogFn={{ handleClose }} />
+          </Dialog>
+        </> :
+        null
   );
 };

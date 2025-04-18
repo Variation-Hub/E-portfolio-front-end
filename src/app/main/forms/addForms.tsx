@@ -12,35 +12,37 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import {
   createFormDataAPI,
+  createTemplateData,
   createUserFormDataAPI,
-  getFormDataAPI,
   getUserFormDataAPI,
   selectFormData,
   slice,
   updateFormDataAPI,
+  updateTemplate,
 } from "app/store/formData";
 import { useSelector } from "react-redux";
 import "formiojs/dist/formio.full.css";
-import { display } from "@mui/system";
 import { UserRole } from "src/enum";
 import { selectUser } from "app/store/userSlice";
-import { User } from "@auth0/auth0-react";
+import { selectGlobalUser } from "app/store/globalUser";
 
 const AddForms = (props) => {
-  const { data, formDataDetails, dataUpdatingLoadding, singleData, mode } =
-    useSelector(selectFormData);
-  console.log(formDataDetails);
+  const { data, formDataDetails, dataUpdatingLoadding, singleData, mode, singleFrom = null, modeTemaplate = '' } = useSelector(selectFormData);
 
-  const user = useSelector(selectUser)?.data;
+  const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
+  const currentUser = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectGlobalUser)?.currentUser;
 
   const navigate = useNavigate();
   const dispatch: any = useDispatch();
 
   const [formData, setFormData] = useState({
-    id: null,
-    form_name: "",
+    id: singleFrom?.id || null,
+    form_name: singleFrom?.template_name || "",
     description: "",
-    form_data: [],
+    form_data: singleFrom?.data?.map((item: any) => {
+      const { id, ...rest } = item;
+      return rest;
+    }) || [],
     type: "",
   });
 
@@ -76,7 +78,9 @@ const AddForms = (props) => {
 
   const handleCloseForm = () => {
     navigate("/forms");
-    dispatch(slice.setSingleData({}));
+    dispatch(slice.setSingleData({
+      form_data: []
+    }));
     dispatch(slice.setMode(""));
     setFormData({
       id: null,
@@ -101,21 +105,23 @@ const AddForms = (props) => {
   };
 
   useEffect(() => {
-    if (user.role !== UserRole.Admin)
-      dispatch(getUserFormDataAPI(singleData.id));
+    if (user.role !== UserRole.Admin) {
+      const userId = currentUser.role !== UserRole.Admin ? currentUser.user_id : undefined;
+      dispatch(getUserFormDataAPI(singleData.id, userId));
+    }
   }, [dispatch]);
 
   const handleSubmitForm = async (data) => {
     try {
-      let response;
       if (user.role !== UserRole.Admin) {
-        response = await dispatch(
-          createUserFormDataAPI({ form_id: singleData.id, form_data: data })
+        await dispatch(
+          createUserFormDataAPI({ form_id: singleData.id, form_data: data, user_id: currentUser.user_id })
         );
-        navigate("/forms");
       }
     } catch (err) {
       console.log(err);
+    } finally {
+      handleCloseForm()
     }
   };
 
@@ -126,6 +132,23 @@ const AddForms = (props) => {
       [name]: value,
     }));
   };
+
+  const handleSubmitTemplate = async () => {
+    try {
+      let response;
+      const data = {
+        template_name: formData.form_name || " ",
+        data: formData.form_data,
+      }
+      if (modeTemaplate == "") response = await dispatch(createTemplateData(data));
+      else if (modeTemaplate == "T")
+        response = await dispatch(updateTemplate(formData?.id, data));
+    } catch (err) {
+      console.log(err);
+    } finally {
+      handleCloseForm();
+    }
+  }
 
   const isFormData =
     Object.values(formData).find((data) => data === "") === undefined;
@@ -250,6 +273,13 @@ const AddForms = (props) => {
                 name={mode === "edit" ? "Update Form" : "Create Form"}
                 onClick={handleSubmit}
                 disable={!isFormData}
+              />
+            )}
+
+            {mode !== "view" && user.role === UserRole.Admin && (
+              <SecondaryButton
+                name={modeTemaplate === "T" ? "Update Template" : "Create template"}
+                onClick={handleSubmitTemplate}
               />
             )}
           </>

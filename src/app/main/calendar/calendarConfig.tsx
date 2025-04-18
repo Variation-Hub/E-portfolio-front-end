@@ -24,7 +24,7 @@ const CalendarConfig = {
       },
     },
   },
-  auth: [authRoles.Trainer, authRoles.Learner, authRoles.IQA, authRoles.LIQA], 
+  auth: [authRoles.Admin, authRoles.Employer, authRoles.Trainer, authRoles.IQA, authRoles.LIQA],
   routes: [
     {
       path: "/calendar",

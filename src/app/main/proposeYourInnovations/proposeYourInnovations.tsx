@@ -5,8 +5,6 @@ import {
   IconButton,
   Menu,
   MenuItem,
-  Pagination,
-  Paper,
   Table,
   TableBody,
   TableCell,
@@ -20,7 +18,6 @@ import {
   Avatar,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import { Stack } from "@mui/system";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import React, { useEffect, useRef, useState } from "react";
 import {
@@ -45,11 +42,12 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { selectUser } from "app/store/userSlice";
 import AlertDialog from "src/app/component/Dialogs/AlertDialog";
-import { Link } from "react-router-dom";
 import FuseLoading from "@fuse/core/FuseLoading";
 import DataNotFound from "src/app/component/Pages/dataNotFound";
 import Style from "./style.module.css"
 import { getRandomColor } from "src/utils/randomColor";
+import CustomPagination from "src/app/component/Pagination/CustomPagination";
+import { selectGlobalUser } from "app/store/globalUser";
 
 
 const timeAgo = (timestamp) => {
@@ -80,7 +78,7 @@ const timeAgo = (timestamp) => {
 
 const AddInnocations = (props) => {
   const { yourInnovation = {}, handleChange = () => { } } = props;
-  const { data } = useSelector(selectUser);
+  const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
 
   return (
     <>
@@ -100,7 +98,7 @@ const AddInnocations = (props) => {
             multiline
             value={yourInnovation.topic}
             onChange={handleChange}
-            disabled={data.role === "Admin"}
+            disabled={user?.role === "Admin"}
           />
         </div>
         <div>
@@ -119,10 +117,10 @@ const AddInnocations = (props) => {
             rows={6}
             value={yourInnovation.description}
             onChange={handleChange}
-            disabled={data.role === "Admin"}
+            disabled={user?.role === "Admin"}
           />
         </div>
-        {data.role === "Admin" &&
+        {user?.role === "Admin" &&
           <div>
             <Typography
               sx={{
@@ -156,32 +154,34 @@ const AddInnocations = (props) => {
 
 const ProposeYourInnovations = (props) => {
   const chatEndRef = useRef(null);
-  const { data } = useSelector(selectUser);
+  const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
+
   const { singleData, dataUpdatingLoadding, dataFetchLoading, meta_data } = useSelector(selectYourInnovation);
+
+  const { pagination } = useSelector(selectGlobalUser)
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedRow, setSelectedRow] = useState<any>(null);
   const [dialogType, setDialogType] = useState(null);
-  const [chatDrawerOpen, setChatDrawerOpen] = useState(false); // State for chat drawer
-  const [chatMessages, setChatMessages] = useState([]); // State to store chat messages
+  const [chatDrawerOpen, setChatDrawerOpen] = useState(false);
+  const [chatMessages, setChatMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
 
   const [deleteId, setDeleteId] = useState("");
 
   const [yourInnovation, setYourInnovation] = useState({
-    innovation_propose_by_id: data.user_id,
+    innovation_propose_by_id: user?.user_id,
     topic: "",
     description: "",
     status: "",
   });
 
-  const fetchInnovationsData = (newPage = 1) => {
-    dispatch(getYourInnovationAPI({ page: newPage, page_size: 10 }, data.user_id));
+  const fetchInnovationsData = (page = 1) => {
+    dispatch(getYourInnovationAPI({ page, page_size: pagination?.page_size }, user?.user_id));
   }
 
   const deleteIcon = (id) => {
     setDeleteId(selectedRow?.id);
-    console.log(selectedRow);
   };
 
   const deleteConfromation = async () => {
@@ -193,9 +193,9 @@ const ProposeYourInnovations = (props) => {
   const dispatch: any = useDispatch();
 
   const clearSingleData = () => {
-    // dispatch(slice.setSingleData({}));
+    dispatch(slice.setSingleData({}));
     setYourInnovation({
-      innovation_propose_by_id: data.user_id,
+      innovation_propose_by_id: user?.user_id,
       topic: "",
       description: "",
       status: ""
@@ -208,12 +208,12 @@ const ProposeYourInnovations = (props) => {
   const handleCloseDialog = () => {
     setDialogType(null);
     clearSingleData();
+    setDeleteId("");
   };
 
   const handleClick = (event, row) => {
     dispatch(slice.setSingleData(row));
     setSelectedRow(row);
-    console.log(row);
     setAnchorEl(event.currentTarget);
   };
 
@@ -221,7 +221,6 @@ const ProposeYourInnovations = (props) => {
     setAnchorEl(null);
     setDialogType(null);
     setDeleteId("");
-    clearSingleData();
   };
 
   const handleEdit = () => {
@@ -251,7 +250,7 @@ const ProposeYourInnovations = (props) => {
 
   useEffect(() => {
     fetchInnovationsData();
-  }, [dispatch]);
+  }, [dispatch, pagination]);
 
   const handleSubmit = async () => {
     try {
@@ -289,7 +288,7 @@ const ProposeYourInnovations = (props) => {
 
   const handleSendChatMessage = async () => {
     if (newMessage.trim() !== "") {
-      const isAdmin = data.roles.includes("Admin");
+      const isAdmin = user?.roles.includes("Admin");
       const messageType = isAdmin ? "Response" : "Reply";
 
       const newChatMessage = {
@@ -337,7 +336,7 @@ const ProposeYourInnovations = (props) => {
     scrollToBottom();
   }, [singleData.comment]);
 
-  const isAdmin = data.roles.includes('Admin');
+  const isAdmin = user?.roles.includes('Admin');
 
   const isInnovations =
     Object.values(yourInnovation).find((data) => data === "") === undefined;
@@ -351,7 +350,7 @@ const ProposeYourInnovations = (props) => {
   return (
     <>
       <div className="m-10">
-        {data.role !== "Admin" &&
+        {user?.role !== "Admin" &&
           <Box
             className="flex justify-end mb-10"
             sx={{
@@ -363,16 +362,16 @@ const ProposeYourInnovations = (props) => {
             }}
           >
             <SecondaryButton
-              name="Add Innovation"
+              name="Submit An Idea"
               className="py-6 px-12 mb-10"
               startIcon={<AddIcon sx={{ mx: -0.5 }} />}
               onClick={() => handleClickOpen("add")}
             />
           </Box>}
-        <TableContainer sx={{ maxHeight: 500 }}>
+        <TableContainer sx={{ minHeight: 550, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
           {dataFetchLoading ? (
             <FuseLoading />
-          ) : innovation.data.length ? (
+          ) : innovation.data?.length ? (
             <Table
               sx={{ minWidth: 650, height: "100%" }}
               size="small"
@@ -402,7 +401,7 @@ const ProposeYourInnovations = (props) => {
                   >
                     Description
                   </TableCell>
-                  {data.role === "Admin" &&
+                  {user?.role === "Admin" &&
                     <>
                       <TableCell align="left"
                         sx={{
@@ -460,7 +459,7 @@ const ProposeYourInnovations = (props) => {
                     >
                       {row?.description}
                     </TableCell>
-                    {data?.role === "Admin" &&
+                    {user?.role === "Admin" &&
                       <>
                         <TableCell
                           align="left"
@@ -521,21 +520,13 @@ const ProposeYourInnovations = (props) => {
               </Typography>
             </div>
           )}
+          <CustomPagination
+            pages={meta_data?.pages}
+            page={meta_data?.page}
+            handleChangePage={handleChangePage}
+            items={meta_data?.items}
+          />
         </TableContainer>
-        <div className="fixed bottom-0 left-0 w-full flex justify-center py-4 mb-14">
-          <Stack
-            spacing={2}
-            className="flex justify-center items-center w-full my-12"
-          >
-            <Pagination
-              count={meta_data?.pages}
-              page={meta_data?.page} variant="outlined" shape="rounded"
-              siblingCount={1}
-              boundaryCount={1}
-              onChange={handleChangePage}
-            />
-          </Stack>
-        </div>
 
         <AlertDialog
           open={Boolean(deleteId)}
@@ -578,14 +569,14 @@ const ProposeYourInnovations = (props) => {
               handleView();
             }}
           >
-            View
+            View & Chat
           </MenuItem>
           <MenuItem
             onClick={() => {
               handleClose();
               handleEdit();
             }}
-            disabled={data.role !== "Admin" && singleData.status === "Closed"}
+            disabled={user?.role !== "Admin" && singleData.status === "Closed"}
           >
             Edit
           </MenuItem>
@@ -620,11 +611,11 @@ const ProposeYourInnovations = (props) => {
               <LoadingButton />
             ) : (
               <>
-                <SecondaryButtonOutlined onClick={handleClose} name="Cancel" />
+                <SecondaryButtonOutlined onClick={handleCloseDialog} name="Cancel" />
                 <SecondaryButton
-                  name={Object.keys(singleData).length !== 0 ? "Edit" : "Save"}
+                  name={Object.keys(singleData)?.length !== 0 ? "Edit" : "Save"}
                   onClick={
-                    Object.keys(singleData).length !== 0
+                    Object.keys(singleData)?.length !== 0
                       ? handleUpdate
                       : handleSubmit
                   }
@@ -667,7 +658,7 @@ const ProposeYourInnovations = (props) => {
             <Box sx={{ flexGrow: 1, overflowY: "auto", p: 2 }}>
               {singleData.comment?.map((message) => (
                 <Box key={message.id} mb={2} >
-                  {singleData.innovation_propose_by_id?.user_id === data?.user_id ? (
+                  {singleData.innovation_propose_by_id?.user_id === user?.user_id ? (
                     message.type == "Response" ? (
 
                       <Grid className="w-[80%] flex text-justify justify-start pr-10">
@@ -676,7 +667,7 @@ const ProposeYourInnovations = (props) => {
                           <div style={{ overflowWrap: "anywhere" }} className="flex flex-col w-full">
                             <div className="flex justify-between flex-row m-5 pr-10">
                               <div className="font-semibold text-base">
-                                {singleData.innovation_propose_by_id?.user_id === data?.user_id ? "Admin" : singleData.innovation_propose_by_id?.user_name}
+                                {singleData.innovation_propose_by_id?.user_id === user?.user_id ? "Admin" : singleData.innovation_propose_by_id?.user_name}
                               </div>
                               <div className="text-xs text-gray-500">{timeAgo(message?.date)}</div>
                             </div>

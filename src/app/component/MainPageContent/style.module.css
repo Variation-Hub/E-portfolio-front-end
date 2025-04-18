@@ -1,8 +1,3 @@
-/* .screenshort {
-    height: 70vh;
-    background-color: rgb(41, 173, 156);
-} */
-
 .features_container {
     display: flex;
     justify-content: space-evenly;

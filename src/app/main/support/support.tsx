@@ -5,8 +5,6 @@ import {
   IconButton,
   Menu,
   MenuItem,
-  Pagination,
-  Paper,
   Select,
   Table,
   TableBody,
@@ -16,9 +14,8 @@ import {
   TableRow,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import { Stack } from "@mui/system";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   DangerButton,
   LoadingButton,
@@ -27,7 +24,6 @@ import {
 } from "src/app/component/Buttons";
 import { TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import { tr } from "date-fns/locale";
 import {
   createSupportDataAPI,
   deleteSupportHandler,
@@ -40,22 +36,16 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { selectUser } from "app/store/userSlice";
 import AlertDialog from "src/app/component/Dialogs/AlertDialog";
-import { log } from "console";
 import FuseLoading from "@fuse/core/FuseLoading";
 import DataNotFound from "src/app/component/Pages/dataNotFound";
 import Style from "./style.module.css";
-
-// function createData(title: string, description: string, status: string) {
-//   return {
-//     title,
-//     description,
-//     status,
-//   };
-// }
+import { selectGlobalUser } from "app/store/globalUser";
+import CustomPagination from "src/app/component/Pagination/CustomPagination";
+import { UserRole } from "src/enum";
 
 const AddRequest = (props) => {
   const { supportData = {}, handleChange = () => { } } = props;
-  const { data } = useSelector(selectUser);
+  const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
 
   return (
     <>
@@ -95,7 +85,7 @@ const AddRequest = (props) => {
             onChange={handleChange}
           />
         </div>
-        {data.role === "Admin" &&
+        {user?.role === "Admin" &&
           <div>
             <Typography
               sx={{
@@ -130,8 +120,11 @@ const AddRequest = (props) => {
 };
 
 const Support = (props) => {
-  const { data } = useSelector(selectUser);
+  const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
+
   const { singleData, dataUpdatingLoadding, dataFetchLoading, meta_data } = useSelector(selectSupportData);
+
+  const { pagination } = useSelector(selectGlobalUser)
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedRow, setSelectedRow] = useState<any>(null);
@@ -140,7 +133,7 @@ const Support = (props) => {
   const [deleteId, setDeleteId] = useState("");
 
   const [supportData, setSupportData] = useState({
-    request_id: data.user_id,
+    request_id: user?.user_id,
     title: "",
     description: "",
   });
@@ -151,16 +144,20 @@ const Support = (props) => {
 
   const deleteConfromation = async () => {
     await dispatch(deleteSupportHandler(deleteId));
-    dispatch(getSupportDataAPI({ page: 1, page_size: 10 }, data.user_id));
+    fetchSupportData()
     setDeleteId("");
   };
 
   const dispatch: any = useDispatch();
 
+  const fetchSupportData = (page = 1) => {
+    dispatch(getSupportDataAPI({ page, page_size: pagination.page_size }, user?.role !== UserRole.Admin && user?.user_id));
+  }
+
   const clearSingleData = () => {
     dispatch(slice.setSingleData({}));
     setSupportData({
-      request_id: data.user_id,
+      request_id: user?.user_id,
       title: "",
       description: "",
     });
@@ -194,14 +191,14 @@ const Support = (props) => {
   const support = useSelector(selectSupportData);
 
   useEffect(() => {
-    dispatch(getSupportDataAPI({ page: 1, page_size: 10 }, data.user_id));
-  }, [dispatch]);
+    fetchSupportData()
+  }, [dispatch, pagination]);
 
   const handleSubmit = async () => {
     try {
       let response;
       response = await dispatch(createSupportDataAPI(supportData));
-      dispatch(getSupportDataAPI({ page: 1, page_size: 10 }, data.user_id));
+      fetchSupportData()
     } catch (err) {
       console.log(err);
     } finally {
@@ -214,7 +211,7 @@ const Support = (props) => {
     try {
       let response;
       response = await dispatch(updateSupportDataAPI(supportData));
-      dispatch(getSupportDataAPI({ page: 1, page_size: 10 }, data.user_id));
+      fetchSupportData()
     } catch (err) {
       console.log(err);
     } finally {
@@ -232,9 +229,7 @@ const Support = (props) => {
   };
 
   const handleChangePage = (event: unknown, newPage: number) => {
-    dispatch(
-      getSupportDataAPI({ page: newPage, page_size: 10 }, data.user_id)
-    );
+    fetchSupportData(newPage)
   };
 
   const isSupport = Object.values(supportData).find(data => data === "") === undefined;
@@ -248,7 +243,7 @@ const Support = (props) => {
   return (
     <>
       <div className="m-10">
-        {data.role !== "Admin" && <Box
+        {user?.role !== "Admin" && <Box
           className="flex justify-end mb-10"
           sx={{
             borderBottom: 1,
@@ -266,10 +261,10 @@ const Support = (props) => {
           />
         </Box>}
         <div>
-          <TableContainer sx={{ maxHeight: 500 }}>
+          <TableContainer sx={{ minHeight: 550, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
             {dataFetchLoading ? (
               <FuseLoading />
-            ) : support.data.length ? (
+            ) : support.data?.length ? (
               <Table
                 sx={{ minWidth: 650, height: "100%" }}
                 size="small"
@@ -296,7 +291,7 @@ const Support = (props) => {
                       }}>
                       Description
                     </TableCell>
-                    {data.role === "Admin" &&
+                    {user?.role === "Admin" &&
                       <>
                         <TableCell align="left"
                           sx={{
@@ -316,7 +311,7 @@ const Support = (props) => {
                       Date
                     </TableCell>
                     <TableCell align="left" sx={{ width: "15rem" }}>Status</TableCell>
-                    {data.role === "Admin" &&
+                    {user?.role === "Admin" &&
                       <TableCell align="left" sx={{ width: "15rem" }}>Action</TableCell>}
                   </TableRow>
                 </TableHead>
@@ -351,7 +346,7 @@ const Support = (props) => {
                       >
                         {row.description}
                       </TableCell>
-                      {data.role === "Admin" &&
+                      {user?.role === "Admin" &&
                         <>
                           <TableCell
                             align="left"
@@ -383,7 +378,7 @@ const Support = (props) => {
                       >
                         {row.status}
                       </TableCell>
-                      {data.role === "Admin" &&
+                      {user?.role === "Admin" &&
                         <TableCell
                           align="left"
                           sx={{ borderBottom: "2px solid #F8F8F8", width: "15rem" }}
@@ -413,22 +408,13 @@ const Support = (props) => {
                 </Typography>
               </div>
             )}
+            <CustomPagination
+              pages={meta_data?.pages}
+              page={meta_data?.page}
+              handleChangePage={handleChangePage}
+              items={meta_data?.items}
+            />
           </TableContainer>
-          <div className="fixed bottom-0 left-0 w-full flex justify-center py-4 mb-14">
-            <Stack
-              spacing={2}
-              className="flex justify-center items-center w-full my-12"
-            >
-              <Pagination
-                count={meta_data?.pages}
-                page={meta_data?.page}
-                variant="outlined" shape="rounded"
-                siblingCount={1}
-                boundaryCount={1}
-                onChange={handleChangePage}
-              />
-            </Stack>
-          </div>
         </div>
 
         <AlertDialog
@@ -466,7 +452,7 @@ const Support = (props) => {
               handleEdit();
               handleClose();
             }}
-            disabled={data.role !== "Admin" && singleData.status === "Closed"}
+            disabled={user?.role !== "Admin" && singleData.status === "Closed"}
           >
             Edit
           </MenuItem>
@@ -503,9 +489,9 @@ const Support = (props) => {
                   name="Cancel"
                 />
                 <SecondaryButton
-                  name={Object.keys(singleData).length !== 0 ? "Edit" : "Save"}
+                  name={Object.keys(singleData)?.length !== 0 ? "Edit" : "Save"}
                   onClick={
-                    Object.keys(singleData).length !== 0
+                    Object.keys(singleData)?.length !== 0
                       ? handleUpdate
                       : handleSubmit
                   }

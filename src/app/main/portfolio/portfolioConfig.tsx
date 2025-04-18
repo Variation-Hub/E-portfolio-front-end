@@ -1,11 +1,18 @@
 import { lazy } from "react";
-const PortfolioView = lazy(() => import("./portfolio"));
 import authRoles from "src/app/auth/authRoles";
+import ProgressMap from "../createAssignment/progressMap";
+const PortfolioView = lazy(() => import("./portfolio"));
 import UploadedEvidenceFile from "src/app/component/Cards/uploadedEvidenceFile";
 import NewSession from "./newsession";
 import NewAssignment from "src/app/component/Cards/newAssignment";
 import LearnerToData from "./learnerData/learnertodata";
-import ProgressMap from "../createAssignment/progressMap";
+import LearnerDetails from "./learnerDeatils";
+import ResourceData from "./learnerData/resourse";
+import ProgressWidget from "./learnerData/progressWidget";
+import AssignmentData from "./learnerData/assignmentData";
+import CourseProgressMap from "./learnerData/courseProgressMap";
+const NewPortfolio = lazy(() => import("./newPortfolio"));
+
 
 const PortfolioConfig = {
   settings: {
@@ -33,7 +40,7 @@ const PortfolioConfig = {
   routes: [
     {
       path: "/portfolio",
-      element: <PortfolioView />,
+      element: <NewPortfolio />,
     },
     {
       path: "/portfolio/assingment",
@@ -44,8 +51,24 @@ const PortfolioConfig = {
       element: <NewAssignment />,
     },
     {
-      path: "/portfolio/newsession",
+      path: "/newsession",
       element: <NewSession />,
+    },
+    {
+      path: "/portfolio/resourceData",
+      element: <ResourceData />,
+    },
+    {
+      path: "/portfolio/assignmentData",
+      element: <AssignmentData />,
+    },
+    {
+      path: "/portfolio/progressWidget",
+      element: <ProgressWidget />,
+    },
+    {
+      path: "/portfolio/courseProgressMap",
+      element: <CourseProgressMap />,
     },
     {
       path: "/portfolio/learnertodata",
@@ -54,7 +77,11 @@ const PortfolioConfig = {
     {
       path: "/portfolio/progress",
       element: <ProgressMap />,
-    }
+    },
+    {
+      path: "/portfolio/learner-details",
+      element: <LearnerDetails />,
+    },
   ],
 };
 

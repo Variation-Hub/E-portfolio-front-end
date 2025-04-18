@@ -5,8 +5,7 @@ import { showMessage } from './fuse/messageSlice';
 import { userTableMetaData } from '../contanst/metaData';
 import JwtService from '../auth/services/jwtService';
 import instance from '../auth/services/jwtService/jwtService';
-import {slice as globalSlice} from './globalUser'
-import { setUser } from './userSlice';
+import { slice as globalSlice } from './globalUser'
 
 const initialState = {
     data: [],
@@ -19,8 +18,20 @@ const initialState = {
         page_size: userTableMetaData.page_size,
         pages: 1
     },
+    learner_meta_data: {
+        page: 1,
+        items: 0,
+        page_size: userTableMetaData.page_size,
+        pages: 1
+    },
+    trainer_meta_data: {
+        page: 1,
+        items: 0,
+        page_size: userTableMetaData.page_size,
+        pages: 1
+    },
     learnerData: [],
-    trainerData: []
+    trainerData: [],
 };
 
 const userManagementSlice = createSlice({
@@ -28,7 +39,6 @@ const userManagementSlice = createSlice({
     initialState,
     reducers: {
         updateUser(state, action) {
-            console.log("loglog", action.payload.data, Array.isArray(action.payload.data))
             if (Array.isArray(action.payload.data)) {
                 state.data = action.payload.data;
                 state.meta_data = action.payload.meta_data
@@ -42,20 +52,20 @@ const userManagementSlice = createSlice({
                 state.meta_data.pages = Math.ceil(items / userTableMetaData.page_size)
             }
         },
-        setLoader(state) {
-            state.dataFetchLoading = !state.dataFetchLoading;
+        setLoader(state, action) {
+            state.dataFetchLoading = action.payload;
         },
-        setUpdatingLoader(state) {
-            state.dataUpdatingLoadding = !state.dataUpdatingLoadding
+        setUpdatingLoader(state, action) {
+            state.dataUpdatingLoadding = action.payload;
         },
         updateUserById(state, action) {
             const { user_id, ...rest } = action.payload;
             state.data = state.data.map((value) => {
                 if (value.user_id === user_id) {
-                    return rest;
+                    return { ...value, ...rest };
                 }
                 return value;
-            })
+            });
         },
         updateAvatar(state, action) {
             state.avarat = action.payload;
@@ -63,9 +73,15 @@ const userManagementSlice = createSlice({
         setEQALearnerData(state, action) {
             state.learnerData = action.payload;
         },
+        setLearnerMetadata(state, action) {
+            state.learner_meta_data = action.payload
+        },
         setEQATrainerData(state, action) {
             state.trainerData = action.payload;
-        }
+        },
+        setTrainerMetadata(state, action) {
+            state.trainer_meta_data = action.payload
+        },
     }
 });
 
@@ -135,10 +151,41 @@ export const resetPasswordHandler = (data) => async (dispatch) => {
             await JwtService.emit('onLogin', data.decoded);
             sessionStorage.removeItem("reset");
             sessionStorage.removeItem("email");
-            return "/home"
+            if (data.decoded?.role === "Learner")
+                return "/portfolio";
+              else
+                return "/home";
         }
         sessionStorage.removeItem("email");
         return "/sign-in";
+
+    } catch (err) {
+        dispatch(showMessage({ message: err.response.data.message, variant: "error" }))
+        return false;
+
+    }
+}
+
+// update password
+export const updatePasswordHandler = (data) => async (dispatch) => {
+
+    try {
+        const response = await axios.post(`${URL_BASE_LINK}/user/updatepassword`, data);
+        dispatch(showMessage({ message: response.data.message, variant: "success" }));
+
+    } catch (err) {
+        dispatch(showMessage({ message: err.response.data.message, variant: "error" }))
+        return false;
+
+    }
+}
+
+// reset password mail
+export const resetPasswordMail = (data) => async (dispatch) => {
+
+    try {
+        const response = await axios.post(`${URL_BASE_LINK}/user/password-mail`, data);
+        dispatch(showMessage({ message: response.data.message, variant: "success" }));
 
     } catch (err) {
         dispatch(showMessage({ message: err.response.data.message, variant: "error" }))
@@ -151,15 +198,31 @@ export const resetPasswordHandler = (data) => async (dispatch) => {
 // create user
 export const createUserAPI = (data) => async (dispatch) => {
     try {
-        dispatch(slice.setUpdatingLoader());
+        dispatch(slice.setUpdatingLoader(true));
         const response = await axios.post(`${URL_BASE_LINK}/user/create`, data)
         dispatch(showMessage({ message: response.data.message, variant: "success" }))
         dispatch(slice.updateUser(response.data.data));
-        dispatch(slice.setUpdatingLoader());
+        dispatch(slice.setUpdatingLoader(false));
         return true;
     } catch (err) {
         dispatch(showMessage({ message: err.response.data.message, variant: "error" }))
-        dispatch(slice.setUpdatingLoader());
+        dispatch(slice.setUpdatingLoader(false));
+        return false;
+    }
+}
+
+
+// send mail
+export const sendMail = (data) => async (dispatch) => {
+    try {
+        dispatch(slice.setUpdatingLoader(true));
+        const response = await axios.post(`${URL_BASE_LINK}/user/mail`, data)
+        dispatch(showMessage({ message: response.data.message, variant: "success" }))
+        dispatch(slice.setUpdatingLoader(false));
+        return true;
+    } catch (err) {
+        dispatch(showMessage({ message: err.response.data.message, variant: "error" }))
+        dispatch(slice.setUpdatingLoader(false));
         return false;
     }
 }
@@ -168,7 +231,7 @@ export const createUserAPI = (data) => async (dispatch) => {
 export const fetchUserAPI = (data = { page: 1, page_size: 10 }, search_keyword = "", search_role = "") => async (dispatch) => {
 
     try {
-        dispatch(slice.setLoader());
+        dispatch(slice.setLoader(true));
         const { page = 1, page_size = 10 } = data;
 
         let url = `${URL_BASE_LINK}/user/list?page=${page}&limit=${page_size}&meta=true`;
@@ -184,12 +247,12 @@ export const fetchUserAPI = (data = { page: 1, page_size: 10 }, search_keyword =
         const response = await axios.get(url);
         // dispatch(showMessage({ message: response.data.message, variant: "success" }))
         dispatch(slice.updateUser(response.data));
-        dispatch(slice.setLoader());
+        dispatch(slice.setLoader(false));
         return true;
 
     } catch (err) {
         dispatch(showMessage({ message: err.response.data.message, variant: "error" }))
-        dispatch(slice.setLoader());
+        dispatch(slice.setLoader(false));
         return false
     };
 
@@ -200,18 +263,18 @@ export const updateUserAPI = (id, data) => async (dispatch) => {
 
     try {
 
-        dispatch(slice.setUpdatingLoader());
+        dispatch(slice.setUpdatingLoader(true));
         const { password, confrimpassword, ...payload } = data
         const response = await axios.patch(`${URL_BASE_LINK}/user/update/${id}`, payload)
         dispatch(showMessage({ message: response.data.message, variant: "success" }))
         dispatch(slice.updateUserById(response.data.data));
-        dispatch(slice.setUpdatingLoader());
+        dispatch(slice.setUpdatingLoader(false));
         return true;
 
     } catch (err) {
 
         dispatch(showMessage({ message: err.response.data.message, variant: "error" }))
-        dispatch(slice.setUpdatingLoader());
+        dispatch(slice.setUpdatingLoader(false));
         return false;
     };
 }
@@ -222,10 +285,10 @@ export const deleteUserHandler = (id, meta_data, search_keyword = "", search_rol
 
     try {
         let { page, page_size, items } = meta_data;
-        dispatch(slice.setUpdatingLoader());
+        dispatch(slice.setUpdatingLoader(true));
         const response = await axios.delete(`${URL_BASE_LINK}/user/delete/${id}`)
         dispatch(showMessage({ message: response.data.message, variant: "success" }))
-        dispatch(slice.setUpdatingLoader());
+        dispatch(slice.setUpdatingLoader(false));
         if (items % page_size === 1) {
             page--;
         }
@@ -234,7 +297,7 @@ export const deleteUserHandler = (id, meta_data, search_keyword = "", search_rol
 
     } catch (err) {
         dispatch(showMessage({ message: err.response.data.message, variant: "error" }))
-        dispatch(slice.setUpdatingLoader());
+        dispatch(slice.setUpdatingLoader(false));
         return false;
     };
 }
@@ -245,14 +308,28 @@ export const uploadAvatar = (file) => async (dispatch, getStore) => {
         const formData = new FormData();
         formData.append('avatar', file);
         formData.append('role', getStore()?.user?.data?.role)
-        dispatch(slice.setUpdatingLoader());
+        dispatch(slice.setUpdatingLoader(true));
         const response = await axios.post(`${URL_BASE_LINK}/user/avatar`, formData);
         await JwtService.setSession(response.data.data)
         window.location.reload();
-        dispatch(slice.setUpdatingLoader());
+        dispatch(slice.setUpdatingLoader(false));
         return true;
     } catch (err) {
-        dispatch(slice.setUpdatingLoader());
+        dispatch(slice.setUpdatingLoader(false));
+        return false;
+    }
+}
+
+// Upload learner avatar by admin 
+export const uploadLearnerAvatar = (file) => async (dispatch, getStore) => {
+    try {
+        const formData = new FormData();
+        formData.append('avatar', file);
+        formData.append('user_id', getStore()?.globalUser?.selectedUser?.user_id)
+        const response: any = await axios.post(`${URL_BASE_LINK}/user/avatar`, formData);
+        dispatch(globalSlice.setSelectedUser({ ...getStore()?.globalUser?.selectedUser, avatar: response.data.avatar.url }))
+        return true;
+    } catch (err) {
         return false;
     }
 }
@@ -260,18 +337,18 @@ export const uploadAvatar = (file) => async (dispatch, getStore) => {
 // chnage user role
 export const changeUserRoleHandler = (role) => async (dispatch) => {
     try {
-        dispatch(slice.setUpdatingLoader());
+        dispatch(slice.setUpdatingLoader(true));
         const response = await axios.post(`${URL_BASE_LINK}/user/changerole/`, { role })
         if (response.data.status) {
             dispatch(globalSlice.setCurrentUser(response.data.data.user))
             instance.chnageRole(response.data.data.accessToken);
         }
         dispatch(showMessage({ message: response.data.message, variant: "success" }))
-        dispatch(slice.setUpdatingLoader());
+        dispatch(slice.setUpdatingLoader(false));
         return true;
     } catch (err) {
         dispatch(showMessage({ message: err.response.data.message, variant: "error" }))
-        dispatch(slice.setUpdatingLoader());
+        dispatch(slice.setUpdatingLoader(false));
         return false;
     };
 }
@@ -280,14 +357,14 @@ export const changeUserRoleHandler = (role) => async (dispatch) => {
 // Change Password
 export const changePassword = (data) => async (dispatch) => {
     try {
-        dispatch(slice.setUpdatingLoader());
+        dispatch(slice.setUpdatingLoader(true));
         const response = await axios.post(`${URL_BASE_LINK}/user/password/change`, data)
         dispatch(showMessage({ message: response.data.message, variant: "success" }))
-        dispatch(slice.setUpdatingLoader());
+        dispatch(slice.setUpdatingLoader(false));
         return true;
     } catch (err) {
         dispatch(showMessage({ message: err.response?.data.message, variant: "error" }))
-        dispatch(slice.setUpdatingLoader());
+        dispatch(slice.setUpdatingLoader(false));
         return false;
     };
 }
@@ -297,7 +374,7 @@ export const changePassword = (data) => async (dispatch) => {
 export const getEQAUserData = (data = { page: 1, page_size: 5 }, user, user_id) => async (dispatch) => {
 
     try {
-        dispatch(slice.setLoader());
+        dispatch(slice.setLoader(true));
         const { page = 1, page_size = 5 } = data;
 
         let url = `${URL_BASE_LINK}/user/list/eqa?meta=true&page=${page}&limit=${page_size}&user=${user}&EQA_id=${user_id}`;
@@ -306,16 +383,18 @@ export const getEQAUserData = (data = { page: 1, page_size: 5 }, user, user_id) 
         // dispatch(showMessage({ message: response.data.message, variant: "success" }))
         if (user === "trainer_id") {
             dispatch(slice.setEQATrainerData(response.data.data));
+            dispatch(slice.setTrainerMetadata(response.data.meta_data))
         }
         if (user === "learner_id") {
             dispatch(slice.setEQALearnerData(response.data.data));
+            dispatch(slice.setLearnerMetadata(response.data.meta_data))
         }
-        dispatch(slice.setLoader());
+        dispatch(slice.setLoader(false));
         return true;
 
     } catch (err) {
         dispatch(showMessage({ message: err.response.data.message, variant: "error" }))
-        dispatch(slice.setLoader());
+        dispatch(slice.setLoader(false));
         return false
     };
 

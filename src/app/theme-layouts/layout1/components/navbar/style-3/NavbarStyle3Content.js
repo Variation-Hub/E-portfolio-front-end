@@ -40,7 +40,7 @@ function isUrlInChildren(parent, url) {
     return false;
   }
 
-  for (let i = 0; i < parent.children.length; i += 1) {
+  for (let i = 0; i < parent.children?.length; i += 1) {
     if (parent.children[i].children) {
       if (isUrlInChildren(parent.children[i], url)) {
         return true;
@@ -124,7 +124,7 @@ function NavbarStyle3Content(props) {
           </FuseScrollbars>
         </div>
 
-        {selectedNavigation.length > 0 && (
+        {selectedNavigation?.length > 0 && (
           <StyledPanel
             id="fuse-navbar-panel"
             opened={panelOpen}

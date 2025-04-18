@@ -1,4 +1,4 @@
-export const emailReg = /^[\a-z0-9\.]+@([\a-z0-9]+\.)+[\a-z]{2,4}$/;
+export const emailReg = /^[a-zA -Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 export const emailValidationMsg = "Enter a valid email address. It should contain alphanumeric characters, dots, and be in the format 'example@example.com'."
 
 export const nameReg = /^[\a-zA-Z\]]{3,20}$/;

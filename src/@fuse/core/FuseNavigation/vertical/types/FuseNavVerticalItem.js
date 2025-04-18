@@ -8,6 +8,9 @@ import { useMemo } from 'react';
 import FuseNavBadge from '../../FuseNavBadge';
 import FuseSvgIcon from '../../../FuseSvgIcon';
 import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { slice } from 'app/store/reloadData';
+import { selectUser } from 'app/store/userSlice';
 
 const Root = styled(ListItem)(({ theme, ...props }) => ({
   minHeight: 44,
@@ -23,11 +26,11 @@ const Root = styled(ListItem)(({ theme, ...props }) => ({
   textDecoration: 'none!important',
   '&:hover': {
     color: "#FFFFFF",
-    backgroundColor:"#5B718F !important"
+    backgroundColor: "#5B718F !important"
   },
   '&.active': {
     color: "#FFFFFF",
-    backgroundColor:"#5B718F",
+    backgroundColor: "#5B718F",
     pointerEvents: 'none',
     transition: 'border-radius .15s cubic-bezier(0.4,0.0,0.2,1)',
     '& > .fuse-list-item-text-primary': {
@@ -46,20 +49,24 @@ const Root = styled(ListItem)(({ theme, ...props }) => ({
 
 function FuseNavVerticalItem(props) {
   const { item, nestedLevel, onItemClick } = props;
-  const { role } = useSelector(state => state.user.data)
+  const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
+
+  const dispach = useDispatch();
 
   const itempadding = nestedLevel > 0 ? 38 + nestedLevel * 16 : 16;
 
   return useMemo(
     () => (
-      item?.visible.includes(role) &&
+      item?.visible.includes(user?.role) &&
       <Root
         button
         component={NavLinkAdapter}
         to={item.url || ''}
         activeClassName={item.url ? 'active' : ''}
         className={clsx('fuse-list-item', item.active && 'active')}
-        onClick={() => onItemClick && onItemClick(item)}
+        onClick={() => {
+          dispach(slice.setLeanerId({ id: null, user_id: null }))
+        }}
         end={item.end}
         itempadding={itempadding}
         role="button"

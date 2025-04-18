@@ -99,8 +99,11 @@ export const getSupportDataAPI = (data = { page: 1, page_size: 10 }, id) => asyn
 
         const { page = 1, page_size = 10 } = data;
 
-        let url = `${URL_BASE_LINK}/support/list?meta=true&page=${page}&limit=${page_size}&request_id=${id}`
+        let url = `${URL_BASE_LINK}/support/list?meta=true&page=${page}&limit=${page_size}`
 
+        if (id) {
+            url = `${url}&request_id=${id}`
+        }
         const response = await axios.get(url);
         // dispatch(showMessage({ message: response.data.message, variant: "success" }))
         dispatch(slice.setSupportData(response.data.data))

@@ -3,7 +3,8 @@ import React, { useState } from 'react'
 import CourseData from './courseData';
 import AssignmentData from './assignmentData';
 import ResourseData from './resourse';
-
+import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
+import { Link, useNavigate } from 'react-router-dom';
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
@@ -39,12 +40,17 @@ function a11yProps(index: number) {
 
 const LearnerToData = () => {
 
+  const navigate = useNavigate();
+
   const [value, setValue] = useState(0);
 
   const handleTabChange = (event, newValue) => {
     setValue(newValue);
   };
 
+  const handleBack = () => {
+    navigate(-1);
+  };
   return (
     <>
       <Grid className="m-10" sx={{ minHeight: 600 }}>
@@ -113,6 +119,9 @@ const LearnerToData = () => {
               }}
             />
           </Tabs>
+          <button onClick={handleBack} className='mb-10 text-[#5b718f]'>
+            <KeyboardBackspaceIcon /> Back
+          </button>
         </Box>
 
         <CustomTabPanel value={value} index={0} >

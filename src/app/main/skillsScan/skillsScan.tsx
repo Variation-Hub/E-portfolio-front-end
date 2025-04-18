@@ -5,6 +5,8 @@ import TNAQuestionaire from './tnaQuestionaire';
 import ViewResults from './viewResults';
 import { useDispatch } from 'react-redux';
 import { getLearnerDetails } from 'app/store/learnerManagement';
+import { useSelector } from 'react-redux';
+import { selectGlobalUser } from 'app/store/globalUser';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -43,19 +45,21 @@ const SkillsScan = () => {
 
   const [value, setValue] = useState(0);
   const dispatch: any = useDispatch();
+  const selectedUser = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectGlobalUser)?.selectedUser;
 
   const handleTabChange = (event, newValue) => {
     setValue(newValue);
   };
 
   useEffect(() => {
-    dispatch(getLearnerDetails())
-  }, [])
+    if (selectedUser?.learner_id)
+      dispatch(getLearnerDetails(selectedUser.learner_id))
+  }, [selectedUser])
 
   return (
     <>
       <Grid className="m-10" sx={{ minHeight: 600 }}>
-        <Typography className='h1 pl-10'>Daniel Stefan Ciapa</Typography>
+        <Typography className='h1 pl-10'>{selectedUser?.first_name + " " + selectedUser?.last_name}</Typography>
         <Box
           sx={{
             borderBottom: 1,

@@ -20,6 +20,9 @@ import skillsScan from './skillsScan';
 import employer from './employer';
 import globalUser from './globalUser';
 import timeLog from './timeLog';
+import broadcast from './broadcast';
+import contractWork from './contractedWork';
+
 const createReducer = (asyncReducers) => (state, action) => {
     const combinedReducer = combineReducers({
         fuse,
@@ -42,6 +45,8 @@ const createReducer = (asyncReducers) => (state, action) => {
         employer,
         globalUser,
         timeLog,
+        broadcast,
+        contractWork,
 
         ...asyncReducers,
     });

@@ -14,6 +14,12 @@ import {
   MenuItem,
   OutlinedInput,
   Select,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
   TextField,
   Tooltip,
   Typography,
@@ -25,26 +31,32 @@ import { selectUser } from "app/store/userSlice";
 import { useNavigate } from "react-router-dom";
 import { createAssignmentAPI, selectAssignment, updateAssignmentAPI } from "app/store/assignment";
 import { useDispatch } from "react-redux";
-import CreateAssignment from "src/app/main/createAssignment/createAssignment";
 import { fetchCourseById, selectCourseManagement } from "app/store/courseManagement";
+import styles from './style.module.css';
 
 const assessmentMethod = [
-  { value: 'WO', title: 'Workplace Observation' },
-  { value: 'WP', title: 'Workplace Projects/Projects away from Work' },
-  { value: 'PW', title: 'Portfolio of Work' },
-  { value: 'VI', title: 'Viva' },
-  { value: 'LB', title: 'Log Book/Assignments' },
-  { value: 'PD', title: 'Professional Discussions' },
-  { value: 'PT', title: 'Practical Test' },
-  { value: 'TE', title: 'Tests/Examinations' },
-  { value: 'RJ', title: 'Reflective Journal' },
+  { value: 'Obs', title: 'Observations' },
+  { value: 'PA', title: 'Practical assessment' },
+  { value: 'ET', title: 'Exams and Tests' },
+  { value: 'PD', title: 'Professional discussion' },
+  { value: 'I', title: 'Interview' },
+  { value: 'Q&A', title: 'Question and Answers' },
+  { value: 'P', title: 'Project' },
+  { value: 'RA', title: 'Reflective Account' },
+  { value: 'WT', title: 'Witness Testimony' },
+  { value: 'PE', title: 'Product Evidence' },
+  { value: 'SI', title: 'Simulation' },
   { value: 'OT', title: 'Other' },
-  { value: 'RPL', title: 'Recognised Prior Learning' },
+  { value: 'RPL', title: 'Recognised prior learning' },
 ];
 
 const NewAssignment = (props) => {
+  const { edit = "Save" } = props;
+
   const dispatch: any = useDispatch();
   const { singleData, dataUpdatingLoadding } = useSelector(selectAssignment)
+  const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
+
   const navigate = useNavigate();
   const singleCouse = useSelector(selectCourseManagement);
 
@@ -111,7 +123,6 @@ const NewAssignment = (props) => {
   const handleClose = () => {
     navigate("/portfolio");
   };
-  const user = useSelector(selectUser);
 
   const formatDate = (date) => {
     if (!date) return "";
@@ -122,7 +133,6 @@ const NewAssignment = (props) => {
 
 
   const handleCheckboxUnits = (event, method) => {
-    console.log(method, formData.units)
     let updatedData = formData.units || []
     if (formData.units.find(item => item.id === method.id)) {
       updatedData = formData.units.filter(item => item.id !== method.id)
@@ -130,7 +140,44 @@ const NewAssignment = (props) => {
       updatedData = [...(formData.units || []), method];
     }
     handleChange({ target: { name: 'units', value: updatedData } });
+    console.log(method, formData.units, updatedData);
   };
+
+  const learnerMapHandler = (row) => {
+    const copyObject = JSON.parse(JSON.stringify(formData));
+    const unit = copyObject?.units?.find(item => item.subUnit.find(i => i.id === row.id))?.subUnit?.find(item => item.id === row.id);
+    if (unit) {
+      if (unit.learnerMap) {
+        unit.learnerMap = !unit.learnerMap
+      } else {
+        unit.learnerMap = true
+      }
+    }
+    setFormData(copyObject)
+
+  }
+
+  const trainerMapHandler = (row) => {
+    const copyObject = JSON.parse(JSON.stringify(formData));
+    const unit = copyObject?.units?.find(item => item.subUnit.find(i => i.id === row.id))?.subUnit?.find(item => item.id === row.id);
+    if (unit) {
+      if (unit.trainerMap) {
+        unit.trainerMap = !unit.trainerMap
+      } else {
+        unit.trainerMap = true
+      }
+    }
+    setFormData(copyObject)
+  }
+
+  const commentHandler = (e, id) => {
+    const copyObject = JSON.parse(JSON.stringify(formData));
+    const unit = copyObject?.units?.find(item => item.subUnit.find(i => i.id === id))?.subUnit?.find(item => item.id === id);
+    if (unit) {
+      unit.comment = e.target.value
+    }
+    setFormData(copyObject)
+  }
 
   return (
     <div>
@@ -179,8 +226,8 @@ const NewAssignment = (props) => {
               rows={5}
               value={formData.trainer_feedback}
               onChange={handleChange}
-              disabled={user.data.role !== "Trainer"}
-              style={user.data.role !== "Trainer" ? { backgroundColor: "whitesmoke" } : {}}
+              disabled={user?.role !== "Trainer"}
+              style={user?.role !== "Trainer" ? { backgroundColor: "whitesmoke" } : {}}
             />
           </div>
 
@@ -211,7 +258,7 @@ const NewAssignment = (props) => {
               rows={5}
               value={formData.learner_comments}
               onChange={handleChange}
-              disabled={user.data.role !== "Learner"}
+              disabled={user?.role !== "Learner"}
             />
           </div>
           <div className="w-full">
@@ -227,8 +274,8 @@ const NewAssignment = (props) => {
               rows={5}
               value={formData?.points_for_improvement}
               onChange={handleChange}
-              disabled={user.data.role !== "Trainer"}
-              style={user.data.role !== "Trainer" ? { backgroundColor: "whitesmoke" } : {}}
+              disabled={user?.role !== "Trainer"}
+              style={user?.role !== "Trainer" ? { backgroundColor: "whitesmoke" } : {}}
             />
           </div>
 
@@ -244,15 +291,60 @@ const NewAssignment = (props) => {
                       checked={formData?.units?.find((unit) => unit.id === method.id)}
                       onChange={(e) => handleCheckboxUnits(e, method)}
                       name="units"
-                      disabled={user.data.role !== "Learner"}
-                      style={user.data.role !== "Learner" ? { backgroundColor: "whitesmoke" } : {}}
+                      disabled={user?.role !== "Learner"}
+                      style={user?.role !== "Learner" ? { backgroundColor: "whitesmoke" } : {}}
                     />
                   }
                   label={method.title}
                 />
               ))}
             </FormGroup>
+            {formData?.units?.map((units) => {
+              return (
+                <Box key={units.id} className="flex flex-col gap-2">
+                  <Typography variant="h5">
+                    {units.title}
+                  </Typography>
+                  <TableContainer>
+                    <Table sx={{ minWidth: 650 }} aria-label="simple table" size="small">
+                      <TableHead>
+                        <TableRow>
+                          <TableCell style={{ width: 130 }} align="center">Learner's Map</TableCell>
+                          <TableCell style={{ width: 400 }}>Subunit name</TableCell>
+                          <TableCell style={{ width: 400 }}>Trainer Commnet</TableCell>
+                          <TableCell align="left" style={{ width: 1 }}>Gap</TableCell>
+                          <TableCell style={{ width: 130 }} align="center">Trainer's Map</TableCell>
 
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {units?.subUnit?.map((row) => (
+                          <TableRow
+                            key={row.name}
+                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                          >
+                            <TableCell align="center"><Checkbox checked={row.learnerMap} onChange={() => learnerMapHandler(row)} /></TableCell>
+                            <TableCell>{row?.subTitle}</TableCell>
+                            <TableCell>
+                              {user?.role === "Learner" ? row?.comment :
+                                (
+                                  <TextField size="small" value={row?.comment} onChange={(e) => commentHandler(e, row.id)} />
+                                )
+                              }</TableCell>
+                            <TableCell align="center">
+                              <div className={styles.gap}>
+                                <div style={{ backgroundColor: (row.learnerMap && row.trainerMap) ? "green" : (row.learnerMap || row.trainerMap) ? "orange" : "maroon", width: "100%", height: "100%" }}></div>
+                              </div>
+                            </TableCell>
+                            <TableCell align="center"><Checkbox checked={row?.trainerMap} disabled={user?.role === "Learner" || edit === "view"} onChange={() => trainerMapHandler(row)} /></TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </Box>
+              )
+            })}
           </Grid>
 
           <div className="w-full">
@@ -269,7 +361,7 @@ const NewAssignment = (props) => {
                         checked={formData?.assessment_method?.includes(method.value) || false}
                         onChange={(e) => handleCheckbox(e, method.value)}
                         name="assessment_method"
-                        disabled={user.data.role !== "Trainer"}
+                        disabled={user?.role !== "Trainer"}
                       />
                     }
                     label={method.value}
@@ -297,14 +389,14 @@ const NewAssignment = (props) => {
                   required
                   fullWidth
                   onChange={handleChange}
-                  disabled={user.data.role !== "Trainer"}
-                  style={user.data.role !== "Trainer" ? { backgroundColor: "whitesmoke" } : {}}
+                  disabled={user?.role !== "Trainer"}
+                  style={user?.role !== "Trainer" ? { backgroundColor: "whitesmoke" } : {}}
                 />
               </Grid>
               <Grid className='w-full flex gap-10'>
                 <TextField
-                  disabled={user.data.role !== "Trainer"}
-                  style={user.data.role !== "Trainer" ? { backgroundColor: "whitesmoke" } : {}}
+                  disabled={user?.role !== "Trainer"}
+                  style={user?.role !== "Trainer" ? { backgroundColor: "whitesmoke" } : {}}
                   placeholder='Hours'
                   name="hours"
                   size="small"
@@ -326,8 +418,8 @@ const NewAssignment = (props) => {
                   }}
                 />
                 <TextField
-                  disabled={user.data.role !== "Trainer"}
-                  style={user.data.role !== "Trainer" ? { backgroundColor: "whitesmoke" } : {}}
+                  disabled={user?.role !== "Trainer"}
+                  style={user?.role !== "Trainer" ? { backgroundColor: "whitesmoke" } : {}}
                   placeholder='Minutes'
                   name="minutes"
                   required
@@ -363,8 +455,8 @@ const NewAssignment = (props) => {
               fullWidth
               value={formData.grade}
               onChange={handleChange}
-              disabled={user.data.role !== "Trainer"}
-              style={user.data.role !== "Trainer" ? { backgroundColor: "whitesmoke" } : {}}
+              disabled={user?.role !== "Trainer"}
+              style={user?.role !== "Trainer" ? { backgroundColor: "whitesmoke" } : {}}
             />
           </div>
         </Box>

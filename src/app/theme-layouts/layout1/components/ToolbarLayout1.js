@@ -3,22 +3,45 @@ import AppBar from '@mui/material/AppBar';
 import Hidden from '@mui/material/Hidden';
 import Toolbar from '@mui/material/Toolbar';
 import clsx from 'clsx';
-import { memo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { memo, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { selectFuseCurrentLayoutConfig, selectToolbarTheme } from 'app/store/fuse/settingsSlice';
 import { selectFuseNavbar } from 'app/store/fuse/navbarSlice';
 import AdjustFontSize from '../../shared-components/AdjustFontSize';
-import LanguageSwitcher from '../../shared-components/LanguageSwitcher';
-import NotificationPanelToggleButton from '../../shared-components/notificationPanel/NotificationPanelToggleButton';
 import Notification from './notification';
 import NavbarToggleButton from '../../shared-components/NavbarToggleButton';
 import UserMenu from '../../shared-components/UserMenu';
-import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
 import { Typography } from '@mui/material';
+import { selectGlobalUser } from 'app/store/globalUser';
+import { RoleShortForm } from 'src/utils/randomColor';
+import { UserRole } from 'src/enum';
 function ToolbarLayout1(props) {
   const config = useSelector(selectFuseCurrentLayoutConfig);
   const navbar = useSelector(selectFuseNavbar);
   const toolbarTheme = useSelector(selectToolbarTheme);
+  const { currentUser, selectedUser, selected } = useSelector(selectGlobalUser);
+
+  const googleTranslateElementInit = () => {
+    // @ts-ignore
+    new window.google.translate.TranslateElement(
+      {
+        autoDisplay: false,
+        pageLanguage: "en",
+      },
+      "google_translate_element"
+    );
+  };
+
+  useEffect(() => {
+    var addScript = document.createElement("script");
+    addScript.setAttribute(
+      "src",
+      "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
+    );
+    document.body.appendChild(addScript);
+    // @ts-ignore
+    window.googleTranslateElementInit = googleTranslateElementInit;
+  }, []);
 
   return (
     <ThemeProvider theme={toolbarTheme}>
@@ -37,8 +60,8 @@ function ToolbarLayout1(props) {
 
         <Toolbar className="p-0 min-h-64 md:min-h-64" >
 
-          <Typography className='ml-12' variant='h6'>Welcome</Typography>
-          
+          <Typography className='ml-12' variant='h6'>Welcome{currentUser?.role !== UserRole.Learner && ", " + currentUser?.first_name + " " + currentUser?.last_name + " " + "(" + RoleShortForm[currentUser?.role] + ")"}</Typography>
+
           <div className="flex flex-1 px-16">
             {config.navbar.display && config.navbar.position === 'left' && (
               <>
@@ -62,7 +85,9 @@ function ToolbarLayout1(props) {
           </div>
 
           <div className="flex items-center px-8 h-full overflow-x-auto">
-            <LanguageSwitcher />
+            <div id="google_translate_element" style={{ borderBottom: "1px solid lightgray", padding: 0, fontSize: "14px", width: "100px" }}></div>
+
+            {/* <LanguageSwitcher /> */}
             <AdjustFontSize />
             {/* <NotificationPanelToggleButton /> */}
             <Notification />

@@ -96,7 +96,7 @@ const columns: readonly Column[] = [
   },
   {
     id: "impact_on_organisation",
-    label: "Organization",
+    label: "Organisation",
     minWidth: 70,
     align: "right",
     format: (value: number) => value.toLocaleString("en-US"),
@@ -229,7 +229,7 @@ const AddPlanDialogContent = (props) => {
               sx={{ fontSize: "0.9vw", marginRight: "0.5rem" }}
               className={Style.name}
             >
-              Impact
+              Desired Impact
             </Typography>
             <div
               className="border-2"
@@ -256,7 +256,7 @@ const AddPlanDialogContent = (props) => {
                   value: formData.impact_on_managers,
                 },
                 {
-                  label: "Organization:-",
+                  label: "Organisation:-",
                   name: "impact_on_organisation",
                   value: formData.impact_on_organisation,
                 },
@@ -327,7 +327,8 @@ const Planning = (props) => {
   const [open, setOpen] = useState(false);
 
   const dispatch: any = useDispatch();
-  const { data } = useSelector(selectUser);
+  const user = JSON.parse(sessionStorage.getItem('learnerToken'))?.user || useSelector(selectUser)?.data;
+
   const cpdPlanningData = useSelector(selectCpdPlanning);
 
   const handleChange = (event) => {
@@ -342,7 +343,7 @@ const Planning = (props) => {
     Object.values(formData).find((data) => data === "") === undefined;
 
   const fetchPlanningData = () => {
-    dispatch(getCpdPlanningAPI(learnerId || data.user_id, ""));
+    dispatch(getCpdPlanningAPI(learnerId || user?.user_id, ""));
   }
 
   useEffect(() => {
@@ -440,7 +441,7 @@ const Planning = (props) => {
       <TableContainer sx={{ maxHeight: 440 }} className="-m-12">
         {dataFetchLoading ? (
           <FuseLoading />
-        ) : cpdPlanningData.data.length ? (
+        ) : cpdPlanningData.data?.length ? (
           <Table stickyHeader aria-label="sticky table" size="small">
             <TableHead>
               <TableRow>
@@ -519,7 +520,7 @@ const Planning = (props) => {
         <TablePagination
           rowsPerPageOptions={[10, 25, 100]}
           component="div"
-          count={rows.length}
+          count={rows?.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}

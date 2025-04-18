@@ -34,15 +34,15 @@ const emotionCacheOptions = {
 };
 
 function App() {
-  const user = useSelector(selectUser);
   const langDirection = useSelector(selectCurrentLanguageDirection);
   const mainTheme = useSelector(selectMainTheme);
+  let user = useSelector(selectUser)?.data;
 
   useEffect(() => {
     return () => {
       disconnectFromSocket()
     }
-  },[])
+  }, [])
 
   return (
     <CacheProvider value={createCache(emotionCacheOptions[langDirection])}>
@@ -50,7 +50,7 @@ function App() {
         <AuthProvider>
           <BrowserRouter>
             <FuseAuthorization
-              userRole={user.data.role}
+              userRole={user?.role}
               loginRedirectUrl={settingsConfig.loginRedirectUrl}
             >
               <SnackbarProvider
